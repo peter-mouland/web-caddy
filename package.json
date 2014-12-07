@@ -1,6 +1,6 @@
 {
   "name": "gulp-sky-component-helper",
-  "version": "0.0.2-rc8",
+  "version": "0.0.3",
   "description": "A way to help ensure the common tasks are consistant across sky components",
   "main": "index.js",
   "files": [
