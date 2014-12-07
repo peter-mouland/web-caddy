@@ -44,9 +44,8 @@ Once the above is complete should have the conventional directory structure as w
 The gulp tasks provided (and available on the command line) are:
 
  * `gulp serve`.  Serves your demo page locally with compiled assets
- * `gulp release:gh-pages`.  Pushes compiled assets to gh-pages branch
- * `gulp release:bower`.  Tags github release to make assets  (compiled and source) available to bower 
- * `gulp release:cdn`.  Pushes assets to AWS S3 and available via akamai
+ * `gulp release`. Automatically bump ('patch') the version number, you can also use `major|minor|patch|prerelease` e.g. :
+ * `gulp release --version prerelease`
 
 ### Pre-build Hook
 

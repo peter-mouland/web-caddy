@@ -39,4 +39,4 @@ To build the Gulp Sky Component Helper locally, you'll need to install:
  * `gulp release:bower` : release the code to bower
  * `gulp release:cdn` : push the latest version to Akamai
  * `npm adduser` (first time only)
- * `npm publish` : https://www.npmjs.org/package/npm-release
+ * `npm publish` : (needs npm v2.1.0+) https://www.npmjs.org/package/npm-release
