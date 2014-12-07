@@ -48,27 +48,26 @@ function updateDocs(files){
 
 
 function initBower(cb){
-//    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
-    console.log('\n' + 'Use bower register:' +
+    console.log('\n' + 'Now register bower :' +
         '\n' +
         '\n' + '$ bower register <my-package-name> <git-endpoint>' +
         '\n' + '# for example' +
         '\n' + '$ bower register example git://github.com/skyglobal/component.git' +
         '\n');
+    return cb;
 }
 
 function initGHPages(cb){
-//    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
-    console.log('\n' +'After commiting to master run:' +
-        '\n' +
-        '\n' +'git checkout --orphan gh-pages' +
-        '\n' +'git rm -rf .' +
-        '\n' +'touch README.md' +
-        '\n' +'git add README.md' +
-        '\n' +'git commit -m "Init gh-pages"' +
-        '\n' +'git push --set-upstream origin gh-pages' +
-        '\n' +'git checkout master' +
-        '\n');
+    console.log('Initialising GH-Pages...');
+    return plugins.run(
+        '\n' +'git checkout --orphan gh-pages;' +
+        '\n' +'git rm -rf .;' +
+        '\n' +'touch README.md;' +
+        '\n' +'git add README.md;' +
+        '\n' +'git commit -m "Init gh-pages";' +
+        '\n' +'git push --set-upstream origin gh-pages;' +
+        '\n' +'git checkout master;' +
+        '\n').exec();
 }
 
 function gulpTasks(globalGulp, globalPkg){
@@ -216,10 +215,11 @@ function gulpTasks(globalGulp, globalPkg){
             ['./dot.gitignore', './src/js/main.js', './src/scss/main.scss' ],
             cb);
     });
-    gulp.task('manual-steps', function(cb) {
-        initGHPages();
-        initBower();
-        return cb;
+
+    gulp.task('git-commit-push', function(cb){
+        return plugins.run(
+                'git commit -am "Version bump for release";' +
+                'git push origin master').exec();
     });
 
     /*
@@ -237,7 +237,10 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
     gulp.task('run-release-bower', function(cb) {
-        plugins.run('git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; git push origin master v'+ pkg.version).exec();
+        plugins.run(
+            'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; ' +
+            'git push origin master v'+ pkg.version
+        ).exec();
     });
 
     gulp.task('bower', function() {
@@ -303,7 +306,8 @@ function gulpTasks(globalGulp, globalPkg){
             'rename-js',
             'rename-scss',
             'remove-renamed-files',
-            'manual-steps',
+            'initGHPages',
+            'initBower',
             cb);
     });
 
@@ -319,6 +323,7 @@ function gulpTasks(globalGulp, globalPkg){
         return runSequence(
             'bump-version',
             'build',
+            'git-commit-push',
             ['run-release-bower',
                 'gh-pages',
                 'aws'],
