@@ -16,7 +16,8 @@ var plugins = {
     'if' : require('gulp-if'),
     bump : require('gulp-bump'),
     rename : require("gulp-rename"),
-    uglify : require('gulp-uglify')
+    uglify : require('gulp-uglify'),
+    semver : require('semver')
 };
 var paths = require('./paths');
 var knownOptions = {
@@ -54,20 +55,20 @@ function initBower(cb){
         '\n' + '# for example' +
         '\n' + '$ bower register example git://github.com/skyglobal/component.git' +
         '\n');
-    return cb;
+    return cb();
 }
 
 function initGHPages(cb){
     console.log('Initialising GH-Pages...');
     return plugins.run(
-        '\n' +'git checkout --orphan gh-pages;' +
-        '\n' +'git rm -rf .;' +
-        '\n' +'touch README.md;' +
-        '\n' +'git add README.md;' +
-        '\n' +'git commit -m "Init gh-pages";' +
-        '\n' +'git push --set-upstream origin gh-pages;' +
-        '\n' +'git checkout master;' +
-        '\n').exec();
+            '\n' +'git checkout --orphan gh-pages;' +
+            '\n' +'git rm -rf .;' +
+            '\n' +'touch README.md;' +
+            '\n' +'git add README.md;' +
+            '\n' +'git commit -m "Init gh-pages";' +
+            '\n' +'git push --set-upstream origin gh-pages;' +
+            '\n' +'git checkout master;' +
+            '\n').exec('', cb);
 }
 
 function gulpTasks(globalGulp, globalPkg){
@@ -177,6 +178,7 @@ function gulpTasks(globalGulp, globalPkg){
         return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
     });
     gulp.task('bump-version', function(cb){
+        pkg.version = plugins.semver.inc(pkg.version, options.version);
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: options.version}))
             .pipe(gulp.dest('./'));
@@ -219,7 +221,7 @@ function gulpTasks(globalGulp, globalPkg){
     gulp.task('git-commit-push', function(cb){
         return plugins.run(
                 'git commit -am "Version bump for release";' +
-                'git push origin master').exec();
+                'git push origin master').exec('', cb);
     });
 
     /*
@@ -237,10 +239,10 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
     gulp.task('run-release-bower', function(cb) {
-        plugins.run(
-            'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; ' +
-            'git push origin master v'+ pkg.version
-        ).exec();
+        return plugins.run(
+                'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; ' +
+                'git push origin master v'+ pkg.version
+        ).exec('', cb);
     });
 
     gulp.task('bower', function() {

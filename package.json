@@ -34,6 +34,7 @@
   },
   "author": "Pete Mouland",
   "devDependencies": {
-    "gulp": "^3.8.10"
+    "gulp": "^3.8.10",
+    "semver": "^4.1.0"
   }
 }
