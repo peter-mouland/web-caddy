@@ -1,7 +1,7 @@
 [{{ component }}](http://skyglobal.github.io/{{ component }}/) 
 ========================
 
-> A collection of brand approved {{ component }} for use across Sky.com
+> {{ component }} for use across Sky.com
 
 See http://skyglobal.github.io/{{ component }}/ for a demo of the Component
 
@@ -9,11 +9,11 @@ See http://skyglobal.github.io/{{ component }}/ for a demo of the Component
 
 ### As CSS
 
-http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/css/main.css
+http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/css/{{ component }}.css
 
 ### As JS
 
-http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/main.js
+http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/{{ component }}.js
 
 ### As a Sass Module
 

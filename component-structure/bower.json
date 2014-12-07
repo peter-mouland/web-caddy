@@ -1,11 +1,11 @@
 {
     "name": "bskyb-{{ component }}",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "homepage": "https://github.com/skyglobal/{{ component }}",
     "authors": [
         "Peter Mouland <peter.mouland@gmail.com>"
     ],
-    "description": "A collection of brand approved {{ component }} for use across Sky.com",
+    "description": "{{ component }} for use across Sky.com",
     "main": "dist",
     "license": "MIT",
     "ignore": [
