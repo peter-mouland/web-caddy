@@ -2,9 +2,18 @@
 var gulp;
 var pkg;
 var browserSync = require('browser-sync');
-var plugins = require('gulp-load-plugins')();
+var plugins = {
+    autoprefixer: require('gulp-autoprefixer'),
+    awsS3: require('gulp-aws-s3'),
+    bower: require('gulp-bower'),
+    clean: require('gulp-clean'),
+    concat: require('gulp-concat'),
+    ghPages: require('gulp-gh-pages'),
+    replace: require('gulp-replace'),
+    run: require('gulp-run'),
+    sass: require('gulp-sass')
+};
 var paths = require('./paths');
-
 
 function copyDir(location, fileType){
     var files = (fileType === 'css') ? '/main.css' : '/**/*';
