@@ -4,14 +4,14 @@ var pkg;
 var browserSync = require('browser-sync');
 var plugins = {
     autoprefixer: require('gulp-autoprefixer'),
-    awsS3: require('gulp-aws-s3'),
-    bower: require('gulp-bower'),
-    clean: require('gulp-clean'),
-    concat: require('gulp-concat'),
-    ghPages: require('gulp-gh-pages'),
-    replace: require('gulp-replace'),
-    run: require('gulp-run'),
-    sass: require('gulp-sass')
+    awsS3 : require('gulp-aws-s3'),
+    bower : require('gulp-bower'),
+    concat : require('gulp-concat'),
+    ghPages : require('gulp-gh-pages'),
+    replace : require('gulp-replace'),
+    run : require('gulp-run'),
+    sass : require('gulp-sass'),
+    del : require('del')
 };
 var paths = require('./paths');
 
@@ -55,7 +55,7 @@ function gulpTasks(globalGulp, globalPkg){
 
 
     gulp.task('pre-build', function(cb){
-        //
+        return cb();
     });
 
     gulp.task('sass', function() {
@@ -79,7 +79,7 @@ function gulpTasks(globalGulp, globalPkg){
 
     gulp.task('gh-pages', function () {
         gulp.src(paths.site['root'] + "/**/*")
-            .pipe(plugins.deploy({
+            .pipe(plugins.ghPages({
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
     });
@@ -103,6 +103,7 @@ function gulpTasks(globalGulp, globalPkg){
         copyDir('site', 'css');
         copyDir('site','sass');
         copyDir('site','fonts');
+        copyDir('source','fonts');
         return copyDir('source','sass');
 
     });
@@ -116,16 +117,30 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
     gulp.task('watch', function() {
-        gulp.watch(paths.site['root'], ['create-site']);
+        gulp.watch([paths.site['root'], paths.demo['root']], ['create-site']);
         gulp.watch([paths.source['sass'] + '/**/*',paths.demo['sass']], ['sass']);
     });
 
-    gulp.task('create-site', function createSite() {
+    gulp.task('create-site-html', function createSite() {
         return gulp.src([paths.demo['root'] + '/index.html',
                 paths.demo['root'] +'/_includes/*.html'])
             .pipe(plugins.concat('index.html'))
             .pipe(gulp.dest(paths.site['root']));
     });
+
+    gulp.task('create-site-images', function createSite() {
+        return gulp.src(paths.demo['images'] + '/**/*')
+            .pipe(gulp.dest(paths.site['images']));
+    });
+
+    gulp.task('create-site-fonts', function createSite() {
+        return gulp.src(paths.source['fonts'] + '/**/*')
+            .pipe(gulp.dest(paths.site['fonts']));
+    });
+    gulp.task('create-site', function createSite() {
+        return runSequence(['create-site-html', 'create-site-images', 'create-site-fonts']);
+    });
+
 
     gulp.task('build', function(cb) {
         return runSequence('clean', 'pre-build', ['create-site','bower'], ['update-docs-version', 'sass'],'create-bower-dist',
@@ -135,12 +150,11 @@ function gulpTasks(globalGulp, globalPkg){
 
 //remove temporary directors
     gulp.task('clean', function(cb) {
-        return gulp.src([
-            './.tmp',
+        return plugins.del([
+            '.tmp',
             paths.site['root'],
             paths.dist['root']
-        ], {base: './'})
-            .pipe(plugins.clean());
+        ], cb);
     });
 
 //update the version number used within all documentation and html
