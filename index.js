@@ -49,22 +49,26 @@ function updateDocs(files){
 
 function initBower(){
 //    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
-    console.log('Use bower register:\n' +
+    console.log('\n' + 'Use bower register:' +
     '\n' +
-    '\n' + '$ bower register <my-package-name> <git-endpoint>\n' +
-    '\n' + '# for example\n' +
-    '\n' + '$ bower register example git://github.com/skyglobal/component.git');
+    '\n' + '$ bower register <my-package-name> <git-endpoint>' +
+    '\n' + '# for example' +
+    '\n' + '$ bower register example git://github.com/skyglobal/component.git' +
+    '\n');
 }
 
 function initGHPages(){
-    return plugins.run('' +
+//    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
+    console.log('\n' +'After commiting to master run:' +
+        '\n' +
         'git checkout --orphan gh-pages' +
-    'git rm -rf .' +
-    '    touch README.md' +
-    'git add README.md' +
-    'git commit -m "Init gh-pages"' +
-    'git push --set-upstream origin gh-pages' +
-    'git checkout master');
+        'git rm -rf .' +
+        'touch README.md' +
+        'git add README.md' +
+        'git commit -m "Init gh-pages"' +
+        'git push --set-upstream origin gh-pages' +
+        'git checkout master' +
+        '\n');
 }
 
 function gulpTasks(globalGulp, globalPkg){
