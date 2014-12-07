@@ -1,6 +1,7 @@
 'use strict';
 var gulp;
 var pkg;
+var componentName;
 var browserSync = require('browser-sync');
 var plugins = {
     autoprefixer: require('gulp-autoprefixer'),
@@ -15,7 +16,8 @@ var plugins = {
     minimist : require('minimist'),
     'if' : require('gulp-if'),
     bump : require('gulp-bump'),
-    rename : require("gulp-rename")
+    rename : require("gulp-rename"),
+    uglify : require('gulp-uglify')
 };
 var paths = require('./paths');
 
@@ -75,6 +77,8 @@ function initGHPages(cb){
 function gulpTasks(globalGulp, globalPkg){
     gulp = globalGulp;
     pkg = globalPkg;
+    componentName = pkg.name;
+
     var runSequence = require('run-sequence').use(gulp);
 
 
@@ -97,7 +101,24 @@ function gulpTasks(globalGulp, globalPkg){
             .pipe(browserSync.reload({stream:true}));
     });
 
+    gulp.task('js-min', function() {
+        return gulp.src(paths.source['js'] + '/**/*')
+            .pipe(plugins.concat('main.min.js'))
+            .pipe(plugins.uglify())
+            .pipe(gulp.dest(paths.site['js']));
+    });
 
+    gulp.task('js-dev', function() {
+        return gulp.src(paths.source['js'] + '/**/*')
+            .pipe(plugins.concat('main.js'))
+            .pipe(gulp.dest(paths.site['js']));
+    });
+
+    gulp.task('js', function(cb) {
+        return runSequence(['js-dev','js-min'],
+            cb
+        );
+    });
 
     gulp.task('browserSync', function() {
         browserSync({
@@ -134,7 +155,6 @@ function gulpTasks(globalGulp, globalPkg){
     gulp.task('create-site', function createSite() {
         return runSequence(['create-site-html', 'create-site-images', 'create-site-fonts']);
     });
-
 
     gulp.task('build', function(cb) {
         return runSequence('clean', 'pre-build', ['create-site','bower'], ['update-docs-version', 'sass'],'create-bower-dist',
@@ -174,11 +194,12 @@ function gulpTasks(globalGulp, globalPkg){
 
 //  RELEASING:  Bower tasks
     gulp.task('create-bower-dist', function() {
+        copyDir('site', 'js');
         copyDir('site', 'css');
-        copyDir('site','sass');
-        copyDir('site','fonts');
-        copyDir('source','fonts');
-        return copyDir('source','sass');
+        copyDir('site', 'sass');
+        copyDir('site', 'fonts');
+        copyDir('source', 'fonts');
+        return copyDir('source', 'sass');
     });
 
     gulp.task('run-release-bower', function(cb) {
@@ -240,7 +261,7 @@ function gulpTasks(globalGulp, globalPkg){
             .pipe(plugins.replace(/{{ component }}/g, pkg.name))
             .pipe(gulp.dest('./'));
     });
-    gulp.task('sort-gitignore', function(cb) {
+    gulp.task('rename-dot-gitignore', function(cb) {
         return gulp.src('./dot.gitignore')
             .pipe(plugins.rename('.gitignore'))
             .pipe(gulp.dest('./'));
@@ -254,7 +275,7 @@ function gulpTasks(globalGulp, globalPkg){
     gulp.task('init', function(cb) {
         return runSequence(
             'copy-structure',
-            'sort-gitignore',
+            'rename-dot-gitignore',
             'remove-dot-gitignore',
             'manual-steps',
             cb);
