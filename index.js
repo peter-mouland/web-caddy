@@ -224,10 +224,9 @@ function gulpTasks(globalGulp, globalPkg){
                 'git push origin master').exec('', cb);
     });
 
-    /*
-     * RELEASING
-     */
-
+/*
+ * RELEASING
+ */
 //  RELEASING:  Bower tasks
     gulp.task('create-bower-dist', function() {
         copyDir('site', 'js');
@@ -238,7 +237,7 @@ function gulpTasks(globalGulp, globalPkg){
         return copyDir('source', 'sass');
     });
 
-    gulp.task('run-release-bower', function(cb) {
+    gulp.task('release:bower', function(cb) {
         return plugins.run(
                 'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; ' +
                 'git push origin master v'+ pkg.version
@@ -249,46 +248,22 @@ function gulpTasks(globalGulp, globalPkg){
         return plugins.bower()
     });
 
-    gulp.task('release:bower', function(cb) {
-        return runSequence(
-            'build',
-            'run-release-bower',
-            cb
-        );
-    });
-
 //  RELEASING:  GH Pages
-    gulp.task('gh-pages', function () {
+    gulp.task('release:gh-pages', function () {
         gulp.src(paths.site['root'] + "/**/*")
             .pipe(plugins.ghPages({
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
     });
 
-    gulp.task('release:gh-pages', function(cb) {
-        return runSequence(
-            'build',
-            'gh-pages',
-            cb
-        );
-    });
-
 //  RELEASING:  Amazon Web Services
-    gulp.task('aws', function() {
+    gulp.task('release:cdn', function() {
         var awsS3 = plugins.awsS3.setup({bucket: process.env.AWS_SKYGLOBAL_BUCKET});
         awsUpload('css',awsS3);
         awsUpload('js', awsS3);
         awsUpload('fonts', awsS3);
         awsUpload('icons', awsS3);
     });
-    gulp.task('release:cdn', function(cb) {
-        return runSequence(
-            'build',
-            'aws',
-            cb
-        );
-    });
-
 
 
 
@@ -326,9 +301,7 @@ function gulpTasks(globalGulp, globalPkg){
             'bump-version',
             'build',
             'git-commit-push',
-            ['run-release-bower',
-                'gh-pages',
-                'aws'],
+            ['release:bower', 'release:gh-pages', 'release:cdn'],
             cb
         );
     });
@@ -337,6 +310,5 @@ function gulpTasks(globalGulp, globalPkg){
         paths: paths
     }
 }
-
 
 module.exports = gulpTasks;
