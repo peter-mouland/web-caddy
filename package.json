@@ -1,6 +1,6 @@
 {
   "name": "gulp-sky-component-helper",
-  "version": "0.0.2-rc3",
+  "version": "0.0.2-rc4",
   "description": "A way to help ensure the common tasks are consistant across sky components",
   "main": "index.js",
   "dependencies": {
@@ -25,6 +25,7 @@
   },
   "author": "Pete Mouland",
   "devDependencies": {
-      "gulp": "^3.8.10"
+    "gulp": "^3.8.10",
+    "gulp-rename": "^1.2.0"
   }
 }

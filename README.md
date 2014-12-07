@@ -14,6 +14,8 @@ Gulp Sky Component Helper
 2. Install the helper and requireed node modules using `npm install`
 3. Create a `gulpfile.js` using [examples/gulpfile.js](test/gulpfile.js) 
 4. intialise your component `gulp init`
+5. Register your bower component using the commands from the console output
+5. initalise gh-pages using the commands from the console output
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
 

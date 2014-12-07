@@ -14,7 +14,8 @@ var plugins = {
     del : require('del'),
     minimist : require('minimist'),
     'if' : require('gulp-if'),
-    bump : require('gulp-bump')
+    bump : require('gulp-bump'),
+    rename : require("gulp-rename")
 };
 var paths = require('./paths');
 
@@ -47,27 +48,27 @@ function updateDocs(files){
 }
 
 
-function initBower(){
+function initBower(cb){
 //    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
     console.log('\n' + 'Use bower register:' +
-    '\n' +
-    '\n' + '$ bower register <my-package-name> <git-endpoint>' +
-    '\n' + '# for example' +
-    '\n' + '$ bower register example git://github.com/skyglobal/component.git' +
-    '\n');
+        '\n' +
+        '\n' + '$ bower register <my-package-name> <git-endpoint>' +
+        '\n' + '# for example' +
+        '\n' + '$ bower register example git://github.com/skyglobal/component.git' +
+        '\n');
 }
 
-function initGHPages(){
+function initGHPages(cb){
 //    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
     console.log('\n' +'After commiting to master run:' +
         '\n' +
-        'git checkout --orphan gh-pages' +
-        'git rm -rf .' +
-        'touch README.md' +
-        'git add README.md' +
-        'git commit -m "Init gh-pages"' +
-        'git push --set-upstream origin gh-pages' +
-        'git checkout master' +
+        '\n' +'git checkout --orphan gh-pages' +
+        '\n' +'git rm -rf .' +
+        '\n' +'touch README.md' +
+        '\n' +'git add README.md' +
+        '\n' +'git commit -m "Init gh-pages"' +
+        '\n' +'git push --set-upstream origin gh-pages' +
+        '\n' +'git checkout master' +
         '\n');
 }
 
@@ -167,9 +168,9 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
 
-/*
- * RELEASING
- */
+    /*
+     * RELEASING
+     */
 
 //  RELEASING:  Bower tasks
     gulp.task('create-bower-dist', function() {
@@ -229,16 +230,34 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
 
+    gulp.task('manual-steps', function(cb) {
+        initGHPages();
+        initBower();
+        return cb;
+    });
+    gulp.task('copy-structure', function(cb) {
+        return gulp.src(__dirname + '/component-structure/**/*')
+            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
+            .pipe(gulp.dest('./'));
+    });
+    gulp.task('sort-gitignore', function(cb) {
+        return gulp.src('./dot.gitignore')
+            .pipe(plugins.rename('.gitignore'))
+            .pipe(gulp.dest('./'));
+    });
+    gulp.task('remove-dot-gitignore', function(cb) {
+        return plugins.del('./dot.gitignore', cb);
+    });
     /*
      * Common/public Gulp tasks
      */
-    gulp.task('init', function() {
-         gulp.src(__dirname + '/component-structure/**/*')
-            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
-            .pipe(gulp.dest('./'));
-        initGHPages();
-        initBower();
-        return;
+    gulp.task('init', function(cb) {
+        return runSequence(
+            'copy-structure',
+            'sort-gitignore',
+            'remove-dot-gitignore',
+            'manual-steps',
+            cb);
     });
 
     gulp.task('serve', function(callback) {
