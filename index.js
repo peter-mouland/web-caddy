@@ -20,7 +20,7 @@ var paths = require('./paths');
 
 var knownOptions = {
     string: 'version',
-    default: { env: 'patch' }
+    default: { version: 'patch' }
 };
 
 var options = plugins.minimist(process.argv.slice(2), knownOptions);
@@ -48,11 +48,23 @@ function updateDocs(files){
 
 
 function initBower(){
-    //todo
+//    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
+    console.log('Use bower register:\n' +
+    '\n' +
+    '\n' + '$ bower register <my-package-name> <git-endpoint>\n' +
+    '\n' + '# for example\n' +
+    '\n' + '$ bower register example git://github.com/skyglobal/component.git');
 }
 
 function initGHPages(){
-    //todo
+    return plugins.run('' +
+        'git checkout --orphan gh-pages' +
+    'git rm -rf .' +
+    '    touch README.md' +
+    'git add README.md' +
+    'git commit -m "Init gh-pages"' +
+    'git push --set-upstream origin gh-pages' +
+    'git checkout master');
 }
 
 function gulpTasks(globalGulp, globalPkg){
@@ -217,9 +229,12 @@ function gulpTasks(globalGulp, globalPkg){
      * Common/public Gulp tasks
      */
     gulp.task('init', function() {
-        return gulp.src(__dirname + '/component-structure/**/*')
+         gulp.src(__dirname + '/component-structure/**/*')
             .pipe(plugins.replace(/{{ component }}/g, pkg.name))
             .pipe(gulp.dest('./'));
+        initGHPages();
+        initBower();
+        return;
     });
 
     gulp.task('serve', function(callback) {
