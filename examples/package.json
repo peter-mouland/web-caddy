@@ -1,0 +1,17 @@
+{
+    "name": "example-package",
+    "version": "0.0.1",
+    "description": "Example package.json. Feel free to copy!",
+    "main": "index.js",
+    "devDependencies": {
+        "browser-sync": "^1.5.9",
+        "gulp": "^3.8.10",
+        "gulp-sky-component-helper": "~0.0.1",
+        "run-sequence": "^1.0.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/skyglobal/{{ component }}.git"
+    },
+    "author": "Pete Mouland"
+}

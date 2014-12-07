@@ -5,19 +5,14 @@ Gulp Sky Component Helper
 
 > This helper used to create and deploy Sky Components via Gulp tasks.
 
+`npm install --save-dev gulp-sky-component-helper`
+
 ## Creating a Component
  
 1. Intialise github repo and clone locally
-2. Create a `package.json` (for [node](https://www.npmjs.org/doc/files/package.json.html)) updating `name` to your component name (lower case).
-2. Install the helper using `npm install --save-dev gulp-sky-component-helper`
-3. Create a `gulpfile.js` containing the following:
-```
-var gulp = require('gulp');
-var pkg = require('./package.json');
-// run 'gulp help' for available helper commands
-var skyComponentHelper = require('./gulp-sky-component-helper')(gulp, pkg);
-var paths = skyComponentHelper.paths;
-```
+2. Create a `package.json` using [examples/package.json](test/package.json) (updating `name` to your component name  in lower case).
+2. Install the helper and requireed node modules using `npm install`
+3. Create a `gulpfile.js` using [examples/gulpfile.js](test/gulpfile.js) 
 4. intialise your component `gulp init`
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
