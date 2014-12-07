@@ -33,11 +33,11 @@ Once the above is complete should have the conventional directory structure as w
     │   ├- scss         => any Sass needed to get the demo working
     │   ├- images etc.  => demo assets directories
     │   └- index.html
-    ├── src             => source code for the component.
-    │   ├- js           => component javascript
-    │   ├- scss         => component Sass
-    │   ├- images etc.  => component assets directories
-    │   └- index.html
+    └── src             => source code for the component.
+        ├- js           => component javascript
+        ├- scss         => component Sass
+        ├- images etc.  => component assets directories
+        └- index.html
 
 
 ## Gulp Tasks

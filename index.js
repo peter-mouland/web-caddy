@@ -11,9 +11,19 @@ var plugins = {
     replace : require('gulp-replace'),
     run : require('gulp-run'),
     sass : require('gulp-sass'),
-    del : require('del')
+    del : require('del'),
+    minimist : require('minimist'),
+    'if' : require('gulp-if'),
+    bump : require('gulp-bump')
 };
 var paths = require('./paths');
+
+var knownOptions = {
+    string: 'version',
+    default: { env: 'patch' }
+};
+
+var options = plugins.minimist(process.argv.slice(2), knownOptions);
 
 function copyDir(location, fileType){
     var files = (fileType === 'css') ? '/main.css' : '/**/*';
@@ -36,9 +46,6 @@ function updateDocs(files){
         .pipe(gulp.dest('./'));
 }
 
-function createBaseStructure(){
-    //todo
-}
 
 function initBower(){
     //todo
@@ -73,22 +80,7 @@ function gulpTasks(globalGulp, globalPkg){
             .pipe(browserSync.reload({stream:true}));
     });
 
-    gulp.task('bower', function() {
-        return plugins.bower()
-    });
 
-    gulp.task('gh-pages', function () {
-        gulp.src(paths.site['root'] + "/**/*")
-            .pipe(plugins.ghPages({
-                cacheDir: '.tmp'
-            })).pipe(gulp.dest('/tmp/gh-pages'));
-    });
-
-
-
-    gulp.task('run-release-bower', function(cb) {
-        plugins.run('git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; git push origin master v'+ pkg.version).exec();
-    });
 
     gulp.task('browserSync', function() {
         browserSync({
@@ -99,28 +91,13 @@ function gulpTasks(globalGulp, globalPkg){
         });
     });
 
-    gulp.task('create-bower-dist', function() {
-        copyDir('site', 'css');
-        copyDir('site','sass');
-        copyDir('site','fonts');
-        copyDir('source','fonts');
-        return copyDir('source','sass');
-
-    });
-
-    gulp.task('aws', function() {
-        var awsS3 = plugins.awsS3.setup({bucket: process.env.AWS_SKYGLOBAL_BUCKET});
-        awsUpload('css',awsS3);
-        awsUpload('js', awsS3);
-        awsUpload('fonts', awsS3);
-        awsUpload('icons', awsS3);
-    });
-
     gulp.task('watch', function() {
         gulp.watch([paths.site['root'], paths.demo['root']], ['create-site']);
         gulp.watch([paths.source['sass'] + '/**/*',paths.demo['sass']], ['sass']);
     });
 
+
+//    create the _ste directories ready for demo
     gulp.task('create-site-html', function createSite() {
         return gulp.src([paths.demo['root'] + '/index.html',
                 paths.demo['root'] +'/_includes/*.html'])
@@ -167,10 +144,77 @@ function gulpTasks(globalGulp, globalPkg){
     gulp.task('update-docs-version', function(cb){
         return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
     });
+    gulp.task('bump-version', function(cb){
+        return gulp.src('./*.json')
+            .pipe(plugins.bump({type: options.version}))
+            .pipe(gulp.dest('./'));
+    });
+
+
+/*
+ * RELEASING
+ */
+
+//  RELEASING:  Bower tasks
+    gulp.task('create-bower-dist', function() {
+        copyDir('site', 'css');
+        copyDir('site','sass');
+        copyDir('site','fonts');
+        copyDir('source','fonts');
+        return copyDir('source','sass');
+    });
+
+    gulp.task('run-release-bower', function(cb) {
+        plugins.run('git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; git push origin master v'+ pkg.version).exec();
+    });
+
+    gulp.task('bower', function() {
+        return plugins.bower()
+    });
+
+    gulp.task('release:bower', function(cb) {
+        return runSequence(
+            'build',
+            'run-release-bower',
+            cb
+        );
+    });
+
+//  RELEASING:  GH Pages
+    gulp.task('gh-pages', function () {
+        gulp.src(paths.site['root'] + "/**/*")
+            .pipe(plugins.ghPages({
+                cacheDir: '.tmp'
+            })).pipe(gulp.dest('/tmp/gh-pages'));
+    });
+
+    gulp.task('release:gh-pages', function(cb) {
+        return runSequence(
+            'build',
+            'gh-pages',
+            cb
+        );
+    });
+
+//  RELEASING:  Amazon Web Services
+    gulp.task('aws', function() {
+        var awsS3 = plugins.awsS3.setup({bucket: process.env.AWS_SKYGLOBAL_BUCKET});
+        awsUpload('css',awsS3);
+        awsUpload('js', awsS3);
+        awsUpload('fonts', awsS3);
+        awsUpload('icons', awsS3);
+    });
+    gulp.task('release:cdn', function(cb) {
+        return runSequence(
+            'build',
+            'aws',
+            cb
+        );
+    });
 
 
     /*
-     * Common Gulp tasks
+     * Common/public Gulp tasks
      */
     gulp.task('init', function() {
         return gulp.src(__dirname + '/component-structure/**/*')
@@ -186,26 +230,13 @@ function gulpTasks(globalGulp, globalPkg){
         );
     });
 
-    gulp.task('release:bower', function(cb) {
+    gulp.task('release', function(cb) {
         return runSequence(
+            'bump-version',
             'build',
-            'run-release-bower',
-            cb
-        );
-    });
-
-    gulp.task('release:gh-pages', function(cb) {
-        return runSequence(
-            'build',
-            'gh-pages',
-            cb
-        );
-    });
-
-    gulp.task('release:cdn', function(cb) {
-        return runSequence(
-            'build',
-            'aws',
+            ['run-release-bower',
+                'gh-pages',
+                'aws'],
             cb
         );
     });

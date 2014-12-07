@@ -5,7 +5,6 @@
   "main": "index.js",
   "dependencies": {
     "browser-sync": "^1.5.9",
-    "gulp": "^3.8.10",
     "gulp-autoprefixer": "^2.0.0",
     "gulp-aws-s3": "0.0.10",
     "gulp-bower": "0.0.7",
@@ -17,11 +16,17 @@
     "gulp-run": "^1.6.4",
     "gulp-sass": "^1.2.4",
     "run-sequence": "^1.0.1",
-    "del": "^1.1.0"
+    "del": "^1.1.0",
+      "gulp-bump": "^0.1.11",
+      "gulp-if": "^1.2.5",
+      "minimist": "^1.1.0"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/skyglobal/gulp-sky-component-helper.git"
   },
-  "author": "Pete Mouland"
+  "author": "Pete Mouland",
+  "devDependencies": {
+      "gulp": "^3.8.10"
+  }
 }

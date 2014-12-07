@@ -30,7 +30,7 @@ To build the Gulp Sky Component Helper locally, you'll need to install:
 
 ## Running Locally
 
- * `gulp serve` :  Run server on port 3456
+ * ?
  
 ## Releasing (admin only)
 
