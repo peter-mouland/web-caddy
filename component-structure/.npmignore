@@ -1,0 +1,6 @@
+.idea/
+.sass-cache/
+*.iml
+.npmignore
+examples
+test
