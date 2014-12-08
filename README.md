@@ -1,27 +1,26 @@
 Gulp Sky Component Helper 
 ========================
 
-> A `Sky Component` is self-contained functionality, that can be re-used in many web projects i.e. a Carousel.
+> A Sky Component is self-contained functionality, that can be re-used in many web projects i.e. a Carousel.
 
 > This helper used to create and deploy Sky Components via Gulp tasks.
 
 `npm install --save-dev gulp-sky-component-helper`
 
 Using the steps for [Creating a Component](#creating-a-component) you can then automatically and quickly complete common tasks e.g.
- * Build and serve demo page
- * compile Sass / JS to a single file (and .min.js)
- * deploy to github.io / Bower / Amazon S3
+ * Build and serve a demo page
+ * Compile Sass / JS to a single file (and `.min.js`)
+ * Deploy to github.io / Bower / Amazon S3
  
 ## Creating a Component
  
-1. Intialise github repo and clone locally
-2. Create a `package.json` using [examples/package.json](test/package.json) 
+1. Intialise a repo within github and clone it locally
+2. Create a `gulpfile.js` using [examples/gulpfile.js](examples/gulpfile.js) 
+3. Create a `package.json` using [examples/package.json](examples/package.json) 
     * Update `name` to your component name in lower case.
     * Ensure the `repository.url` is the correct github address.
-2. Install the helper and requireed node modules using `npm install`
-3. Create a `gulpfile.js` using [examples/gulpfile.js](test/gulpfile.js) 
-4. intialise your component using `gulp init`
-5. Register your bower component using the commands from the console output
+4. Run `npm install` to install the required node modules. 
+5. Run `gulp init` to intialise your component. 
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
 
