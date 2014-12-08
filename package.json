@@ -1,6 +1,6 @@
 {
   "name": "gulp-sky-component-helper",
-  "version": "0.0.4-rc3",
+  "version": "0.0.4-rc4",
   "description": "A way to help ensure the common tasks are consistant across sky components",
   "main": "index.js",
   "files": [
@@ -12,22 +12,23 @@
   ],
   "dependencies": {
     "browser-sync": "^1.5.9",
-    "run-sequence": "^1.0.1",
     "del": "^1.1.0",
-    "minimist": "^1.1.0",
     "gulp-autoprefixer": "^2.0.0",
     "gulp-aws-s3": "0.0.10",
     "gulp-bower": "0.0.7",
+    "gulp-bump": "^0.1.11",
     "gulp-concat": "^2.4.1",
+    "gulp-flatten": "0.0.4",
     "gulp-gh-pages": "^0.4.0",
+    "gulp-if": "^1.2.5",
+    "gulp-rename": "^1.2.0",
     "gulp-replace": "^0.5.0",
     "gulp-run": "^1.6.4",
     "gulp-sass": "^1.2.4",
-    "gulp-bump": "^0.1.11",
-    "gulp-if": "^1.2.5",
-    "gulp-rename": "^1.2.0",
     "gulp-uglify": "^1.0.2",
-      "semver": "^4.1.0"
+    "minimist": "^1.1.0",
+    "run-sequence": "^1.0.1",
+    "semver": "^4.1.0"
   },
   "repository": {
     "type": "git",

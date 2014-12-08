@@ -1,7 +1,6 @@
 'use strict';
 var gulp;
 var pkg;
-var componentName;
 var browserSync = require('browser-sync');
 var plugins = {
     autoprefixer: require('gulp-autoprefixer'),
@@ -17,25 +16,24 @@ var plugins = {
     'if' : require('gulp-if'),
     bump : require('gulp-bump'),
     rename : require("gulp-rename"),
-    uglify : require('gulp-uglify')
+    uglify : require('gulp-uglify'),
+    flatten : require('gulp-flatten')
 };
 var paths = require('./paths');
-
 var knownOptions = {
     string: 'version',
     default: { version: 'patch' }
 };
-
 var options = plugins.minimist(process.argv.slice(2), knownOptions);
 
 function copyDir(location, fileType){
-    var files = (fileType === 'css') ? '/main.css' : '/**/*';
+    var files = (fileType === 'css') ? '/' + pkg.name + '.css' : '/**/*';
     return gulp.src([paths[location][fileType] + files])
         .pipe(gulp.dest(paths.dist[fileType]));
 }
 
 function awsUpload(fileType, awsS3){
-    var path = 'components/' + pkg.name.replace('bskyb-','') + '/' + pkg.version + '/' + fileType + '/';
+    var path = 'components/' + pkg.name + '/' + pkg.version + '/' + fileType + '/';
     return gulp.src(paths.dist[fileType] + '/**/*')
         .pipe(awsS3.upload({ path: path } ));
 }
@@ -62,22 +60,20 @@ function initBower(cb){
 
 function initGHPages(cb){
 //    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint)
-    console.log('\n' +'After commiting to master run:' +
-        '\n' +
-        '\n' +'git checkout --orphan gh-pages' +
-        '\n' +'git rm -rf .' +
-        '\n' +'touch README.md' +
-        '\n' +'git add README.md' +
-        '\n' +'git commit -m "Init gh-pages"' +
-        '\n' +'git push --set-upstream origin gh-pages' +
-        '\n' +'git checkout master' +
-        '\n');
+    return plugins.run(
+            '\n' +'git checkout --orphan gh-pages;' +
+            '\n' +'git rm -rf .;' +
+            '\n' +'touch README.md;' +
+            '\n' +'git add README.md;' +
+            '\n' +'git commit -m "Init gh-pages";' +
+            '\n' +'git push --set-upstream origin gh-pages;' +
+            '\n' +'git checkout master;' +
+            '\n').exec();
 }
 
 function gulpTasks(globalGulp, globalPkg){
     gulp = globalGulp;
     pkg = globalPkg;
-    componentName = pkg.name;
 
     var runSequence = require('run-sequence').use(gulp);
 
@@ -149,7 +145,11 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
     gulp.task('create-site-fonts', function createSite() {
-        return gulp.src(paths.source['fonts'] + '/**/*')
+        return gulp.src([
+                paths.source['fonts'] + '/**/*',
+                paths.bower['fonts'] + '/**/*.{eot,ttf,woff,svg}'
+        ])
+            .pipe(plugins.flatten())
             .pipe(gulp.dest(paths.site['fonts']));
     });
     gulp.task('create-site', function createSite() {
@@ -157,7 +157,7 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create-site','bower'], ['update-docs-version', 'js', 'sass'],'create-bower-dist',
+        return runSequence('clean', 'pre-build', ['create-site','bower'], ['update-docs-version', 'sass'],'create-bower-dist',
             cb
         );
     });
@@ -187,6 +187,50 @@ function gulpTasks(globalGulp, globalPkg){
             .pipe(gulp.dest('./'));
     });
 
+    /*
+     * Initialising the component
+     */
+    gulp.task('copy-structure', function(cb) {
+        return gulp.src(__dirname + '/component-structure/**/*')
+            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
+            .pipe(gulp.dest('./'));
+    });
+    gulp.task('name-component', function(cb) {
+        return gulp.src('./package.json', { base : './' })
+            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
+            .pipe(gulp.dest('./'));
+    });
+    gulp.task('rename-js', function(cb) {
+        return gulp.src(['./src/js/main.js'], { base : './' })
+            .pipe(plugins.rename(pkg.name + '.js'))
+            .pipe(gulp.dest('./src/js/'));
+    });
+    gulp.task('rename-scss', function(cb) {
+        return gulp.src(['./src/scss/main.scss'], { base : './' })
+            .pipe(plugins.rename(pkg.name + '.scss'))
+            .pipe(gulp.dest('./src/scss/'));
+    });
+    gulp.task('rename-dot-gitignore', function(cb) {
+        return gulp.src('./dot.gitignore', { base : './' })
+            .pipe(plugins.rename('.gitignore'))
+            .pipe(gulp.dest('./'));
+    });
+    gulp.task('remove-renamed-files', function(cb) {
+        return plugins.del(
+            ['./dot.gitignore', './src/js/main.js', './src/scss/main.scss' ],
+            cb);
+    });
+    gulp.task('manual-steps', function(cb) {
+        initGHPages();
+        initBower();
+        return cb;
+    });
+
+    gulp.task('git-commit-push', function(cb){
+        return plugins.run(
+                'git commit -am "Version bump for release";' +
+                'git push origin master').exec();
+    });
 
     /*
      * RELEASING
@@ -203,7 +247,10 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
     gulp.task('run-release-bower', function(cb) {
-        plugins.run('git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; git push origin master v'+ pkg.version).exec();
+        plugins.run(
+                'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; ' +
+                'git push origin master v'+ pkg.version
+        ).exec();
     });
 
     gulp.task('bower', function() {
@@ -251,32 +298,24 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
 
-    gulp.task('manual-steps', function(cb) {
-        initGHPages();
-        initBower();
-        return cb;
-    });
-    gulp.task('copy-structure', function(cb) {
-        return gulp.src(__dirname + '/component-structure/**/*')
-            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
-            .pipe(gulp.dest('./'));
-    });
-    gulp.task('rename-dot-gitignore', function(cb) {
-        return gulp.src('./dot.gitignore')
-            .pipe(plugins.rename('.gitignore'))
-            .pipe(gulp.dest('./'));
-    });
-    gulp.task('remove-dot-gitignore', function(cb) {
-        return plugins.del('./dot.gitignore', cb);
-    });
+
+
     /*
      * Common/public Gulp tasks
      */
     gulp.task('init', function(cb) {
+        if (pkg.name.indexOf(' ') >0){
+            return console.error('\nSky Component Name Error:' +
+                '\nPlease update `package.json` name (without spaces): ' +
+                '\n  i.e. `"name" : "responsive-images"`' +
+                '\n')
+        }
         return runSequence(
             'copy-structure',
             'rename-dot-gitignore',
-            'remove-dot-gitignore',
+            'rename-js',
+            'rename-scss',
+            'remove-renamed-files',
             'manual-steps',
             cb);
     });
@@ -293,6 +332,7 @@ function gulpTasks(globalGulp, globalPkg){
         return runSequence(
             'bump-version',
             'build',
+            'git-commit-push',
             ['run-release-bower',
                 'gh-pages',
                 'aws'],

@@ -1,4 +1,8 @@
 module.exports = {
+    "bower": {
+        root: './bower_components',
+        fonts: './bower_components/*/dist/fonts'
+    },
     "site": {
         root: './_site',
         js: "./_site/js",
