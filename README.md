@@ -37,21 +37,11 @@ Once the above is complete should have the conventional directory structure as w
         └- images etc.  => component assets directories
 
 
-## Gulp Tasks
+## Serving your Component locally
 
-### Common Tasks
+`gulp serve`
 
-The gulp tasks provided (and available on the command line) are:
-
- * `gulp serve`
-   * Compiles your assets (JS, Sass)
-   * Serves your demo page to [http://localhost:3456](http://localhost:3456) 
- * `gulp release`
-   * This will push the demo site to github.io 
-   * It will push the compiled asstes as well as the source files to Bower
-   * It will also push the compiled assets to the S3
-   * The version number is bumped ('patch' incremented). 
-   * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
+This will compile your assets (JS, Sass) and serves your demo page to [http://localhost:3456](http://localhost:3456) 
 
 ### Pre-build Hook
 
@@ -71,7 +61,15 @@ BSkyB components depends on collaboration between developers across Sky. Contrib
 [Read More >](CONTRIBUTING.md)
 
 
-## Releasing
+## Releasing your Component
+
+`gulp release`
+
+   * This will push the demo site to github.io 
+   * Tag the version number in Git (Bower will use this if within a `skyglobal` repo)
+   * It will also push the compiled assets to the S3
+   * The version number is bumped ('patch' incremented). 
+   * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
 
 To release, you must have the AWS environment variables set up. These are:
   * AWS_ACCESS_KEY_ID
@@ -79,4 +77,3 @@ To release, you must have the AWS environment variables set up. These are:
   * AWS_SKYGLOBAL_BUCKET
   * AWS_REGION
   
-The component will only be registered with Bower if the component is in a `skyglobal` repo.
