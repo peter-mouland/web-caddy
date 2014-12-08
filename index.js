@@ -157,7 +157,7 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create-site','bower'], ['update-docs-version', 'sass'],'create-bower-dist',
+        return runSequence('clean', 'pre-build', ['create-site','bower'], ['update-docs-version', 'sass', 'js'],'create-bower-dist',
             cb
         );
     });
