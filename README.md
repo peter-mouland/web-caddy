@@ -47,10 +47,10 @@ Once the above is complete should have the conventional directory structure as w
 
 The gulp tasks provided (and available on the command line) are:
 
- * `gulp serve`.  
+ * `gulp serve`
    * Compiles your assets (JS, Sass)
    * Serves your demo page to [http://localhost:3456](http://localhost:3456) 
- * `gulp release`. 
+ * `gulp release`
    * This will push the demo site to github.io 
    * It will push the compiled asstes as well as the source files to Bower
    * It will also push the compiled assets to the S3
