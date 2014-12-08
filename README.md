@@ -8,10 +8,6 @@ This helper is used to create and deploy Sky Components via Gulp tasks. You can 
  * Compile Sass / JS to a single file (and `.min.js`)
  * Deploy to github.io / Bower / Amazon S3
 
-## Add the Helper to an Existing Project
-
-`npm install --save-dev gulp-sky-component-helper`
- 
 ## Creating a New Component
  
 1. Intialise a repo within github and clone it locally
