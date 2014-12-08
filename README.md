@@ -1,18 +1,20 @@
 Gulp Sky Component Helper 
 ========================
 
-> A Sky Component is self-contained functionality, that can be re-used in many web projects i.e. a Carousel.
+> A Sky Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
 
 > This helper used to create and deploy Sky Components via Gulp tasks.
 
-`npm install --save-dev gulp-sky-component-helper`
-
-Using the steps for [Creating a Component](#creating-a-component) you can then automatically and quickly complete common tasks e.g.
+Using the steps for [Creating a New Component](#creating-a-new-component) you can then automatically and quickly complete common tasks e.g.
  * Build and serve a demo page
  * Compile Sass / JS to a single file (and `.min.js`)
  * Deploy to github.io / Bower / Amazon S3
+
+## Add the Helper to an Existing Project
+
+`npm install --save-dev gulp-sky-component-helper`
  
-## Creating a Component
+## Creating a New Component
  
 1. Intialise a repo within github and clone it locally
 2. Create a `gulpfile.js` using [examples/gulpfile.js](examples/gulpfile.js) 
