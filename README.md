@@ -7,6 +7,11 @@ Gulp Sky Component Helper
 
 `npm install --save-dev gulp-sky-component-helper`
 
+Using the steps for [Creating a Component](#creating-a-component) you can then automatically and quickly complete common tasks e.g.
+ * Build and serve demo page
+ * compile Sass / JS to a single file (and .min.js)
+ * deploy to github.io / Bower / Amazon S3
+ 
 ## Creating a Component
  
 1. Intialise github repo and clone locally
@@ -42,9 +47,15 @@ Once the above is complete should have the conventional directory structure as w
 
 The gulp tasks provided (and available on the command line) are:
 
- * `gulp serve`.  Serves your demo page locally with compiled assets
- * `gulp release`. Automatically bump ('patch') the version number, you can also use `major|minor|patch|prerelease` e.g. :
- * `gulp release --version prerelease`
+ * `gulp serve`.  
+   * Compiles your assets (JS, Sass)
+   * Serves your demo page to [http://localhost:3456](http://localhost:3456) 
+ * `gulp release`. 
+   * This will push the demo site to github.io 
+   * It will push the compiled asstes as well as the source files to Bower
+   * It will also push the compiled assets to the S3
+   * The version number is bumped ('patch' incremented). 
+   * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
 
 ### Pre-build Hook
 
