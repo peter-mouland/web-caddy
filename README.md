@@ -37,8 +37,7 @@ Once the above is complete should have the conventional directory structure as w
     └── src             => source code for the component.
         ├- js           => component javascript
         ├- scss         => component Sass
-        ├- images etc.  => component assets directories
-        └- index.html
+        └- images etc.  => component assets directories
 
 
 ## Gulp Tasks
