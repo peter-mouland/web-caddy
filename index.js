@@ -49,14 +49,12 @@ function updateDocs(files){
 
 
 function initBower(cb){
-//    plugins.run('bower register bskyb-' + pkg.name + ' ' + gitEndPoint).exec('', cb);
-    console.log('\n' + 'Use bower register:' +
-        '\n' +
-        '\n' + '$ bower register <my-package-name> <git-endpoint>' +
-        '\n' + '# for example' +
-        '\n' + '$ bower register example git://github.com/skyglobal/component.git' +
-        '\n');
-    return cb();
+    if (pkg.repository.url.indexOf('/skyglobal/')>0){
+        return plugins.run('bower register bskyb-' + pkg.name + ' ' + pkg.repository.url).exec('', cb);
+    } else {
+        console.log('**Bower skipped as its not a SkyGlobal Repo**');
+        return cb();
+    }
 }
 
 function initGHPages(cb){
@@ -267,12 +265,17 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
 //  RELEASING:  Amazon Web Services
-    gulp.task('release:cdn', function() {
-        var awsS3 = plugins.awsS3.setup({bucket: process.env.AWS_SKYGLOBAL_BUCKET});
-        awsUpload('css',awsS3);
-        awsUpload('js', awsS3);
-        awsUpload('fonts', awsS3);
-        awsUpload('icons', awsS3);
+    gulp.task('release:cdn', function(cb) {
+        if (process.env.AWS_SKYGLOBAL_BUCKET) {
+            var awsS3 = plugins.awsS3.setup({bucket: process.env.AWS_SKYGLOBAL_BUCKET});
+            awsUpload('css',awsS3);
+            awsUpload('js', awsS3);
+            awsUpload('fonts', awsS3);
+            return awsUpload('icons', awsS3);
+        } else {
+            console.log('**Amazon S3 skipped as AWS env variables are not set**');
+            return cb();
+        }
     });
 
 

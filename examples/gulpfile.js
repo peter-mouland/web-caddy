@@ -7,6 +7,11 @@ var paths = skyComponentHelper.paths;
 var runSequence = require('run-sequence');
 
 gulp.task('pre-build', function(cb){
-    //this task is a part of the build process
-//    return runSequence('custom-gulp-task-1','custom-gulp-task-2', cb);
+    //example pre-build task, which is automatically part of the build process
+    return runSequence('custom-gulp-task-1', cb);
+});
+
+gulp.task('custom-gulp-task-1', function(cb){
+    //exmape empty task
+   return cb();
 });

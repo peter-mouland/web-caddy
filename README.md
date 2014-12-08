@@ -15,7 +15,9 @@ Using the steps for [Creating a Component](#creating-a-component) you can then a
 ## Creating a Component
  
 1. Intialise github repo and clone locally
-2. Create a `package.json` using [examples/package.json](test/package.json) (updating `name` to your component name  in lower case).
+2. Create a `package.json` using [examples/package.json](test/package.json) 
+    * Update `name` to your component name in lower case.
+    * Ensure the `repository.url` is the correct github address.
 2. Install the helper and requireed node modules using `npm install`
 3. Create a `gulpfile.js` using [examples/gulpfile.js](test/gulpfile.js) 
 4. intialise your component using `gulp init`
@@ -72,3 +74,14 @@ gulp.task('pre-build', function(cb){
 BSkyB components depends on collaboration between developers across Sky. Contributions of any size are actively encouraged.
 
 [Read More >](CONTRIBUTING.md)
+
+
+## Releasing
+
+To release, you must have the AWS environment variables set up. These are:
+  * AWS_ACCESS_KEY_ID
+  * AWS_SECRET_ACCESS_KEY
+  * AWS_SKYGLOBAL_BUCKET
+  * AWS_REGION
+  
+The component will only be registered with Bower if the component is in a `skyglobal` repo.
