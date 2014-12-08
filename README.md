@@ -41,7 +41,7 @@ Once the above is complete should have the conventional directory structure as w
 
 `gulp serve`
 
-This will compile your assets (JS, Sass) and serves your demo page to [http://localhost:3456](http://localhost:3456) 
+This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456) 
 
 ### Pre-build Hook
 
@@ -53,13 +53,6 @@ gulp.task('pre-build', function(cb){
 });
 
 ```
-
-## Contribution
-
-BSkyB components depends on collaboration between developers across Sky. Contributions of any size are actively encouraged.
-
-[Read More >](CONTRIBUTING.md)
-
 
 ## Releasing your Component
 
@@ -76,4 +69,11 @@ To release, you must have the AWS environment variables set up. These are:
   * AWS_SECRET_ACCESS_KEY
   * AWS_SKYGLOBAL_BUCKET
   * AWS_REGION
+
+## Contribution
+
+BSkyB components depends on collaboration between developers across Sky. Contributions of any size are actively encouraged.
+
+[Read More >](CONTRIBUTING.md)
+
   
