@@ -64,7 +64,7 @@ gulp.task('pre-build', function(cb){
    * The version number is bumped ('patch' incremented). 
    * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
 
-To release, you must have the AWS environment variables set up. These are:
+To release to the `SkyGlobal` repo, you must have the AWS environment variables set up. These are:
   * AWS_ACCESS_KEY_ID
   * AWS_SECRET_ACCESS_KEY
   * AWS_SKYGLOBAL_BUCKET
