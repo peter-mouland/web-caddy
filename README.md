@@ -1,18 +1,14 @@
 Gulp Sky Component Helper 
 ========================
 
-> A Sky Component is self-contained functionality, that can be re-used in many web projects i.e. a Carousel.
+> A Sky Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
 
-> This helper used to create and deploy Sky Components via Gulp tasks.
-
-`npm install --save-dev gulp-sky-component-helper`
-
-Using the steps for [Creating a Component](#creating-a-component) you can then automatically and quickly complete common tasks e.g.
+This helper is used to create and deploy Sky Components via Gulp tasks. You can :
  * Build and serve a demo page
  * Compile Sass / JS to a single file (and `.min.js`)
  * Deploy to github.io / Bower / Amazon S3
- 
-## Creating a Component
+
+## Creating a New Component
  
 1. Intialise a repo within github and clone it locally
 2. Create a `gulpfile.js` using [examples/gulpfile.js](examples/gulpfile.js) 
@@ -41,21 +37,11 @@ Once the above is complete should have the conventional directory structure as w
         └- images etc.  => component assets directories
 
 
-## Gulp Tasks
+## Serving your Component locally
 
-### Common Tasks
+`gulp serve`
 
-The gulp tasks provided (and available on the command line) are:
-
- * `gulp serve`
-   * Compiles your assets (JS, Sass)
-   * Serves your demo page to [http://localhost:3456](http://localhost:3456) 
- * `gulp release`
-   * This will push the demo site to github.io 
-   * It will push the compiled asstes as well as the source files to Bower
-   * It will also push the compiled assets to the S3
-   * The version number is bumped ('patch' incremented). 
-   * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
+This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456) 
 
 ### Pre-build Hook
 
@@ -68,19 +54,26 @@ gulp.task('pre-build', function(cb){
 
 ```
 
-## Contribution
+## Releasing your Component
 
-BSkyB components depends on collaboration between developers across Sky. Contributions of any size are actively encouraged.
+`gulp release`
 
-[Read More >](CONTRIBUTING.md)
-
-
-## Releasing
+   * This will push the demo site to github.io 
+   * Tag the version number in Git (Bower will use this if within a `skyglobal` repo)
+   * It will also push the compiled assets to the S3
+   * The version number is bumped ('patch' incremented). 
+   * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
 
 To release, you must have the AWS environment variables set up. These are:
   * AWS_ACCESS_KEY_ID
   * AWS_SECRET_ACCESS_KEY
   * AWS_SKYGLOBAL_BUCKET
   * AWS_REGION
+
+## Contribution
+
+BSkyB components depends on collaboration between developers across Sky. Contributions of any size are actively encouraged.
+
+[Read More >](CONTRIBUTING.md)
+
   
-The component will only be registered with Bower if the component is in a `skyglobal` repo.
