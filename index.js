@@ -17,6 +17,7 @@ var plugins = {
     bump : require('gulp-bump'),
     rename : require("gulp-rename"),
     uglify : require('gulp-uglify'),
+    semver : require('gulp-semver'),
     flatten : require('gulp-flatten')
 };
 var paths = require('./paths');
@@ -180,6 +181,7 @@ function gulpTasks(globalGulp, globalPkg){
         return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
     });
     gulp.task('bump-version', function(cb){
+        pkg.version = plugins.semver.inc(pkg.version, options.version);
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: options.version}))
             .pipe(gulp.dest('./'));
