@@ -17,7 +17,7 @@ var plugins = {
     bump : require('gulp-bump'),
     rename : require("gulp-rename"),
     uglify : require('gulp-uglify'),
-    semver : require('gulp-semver'),
+    semver : require('semver'),
     flatten : require('gulp-flatten')
 };
 var paths = require('./paths');
