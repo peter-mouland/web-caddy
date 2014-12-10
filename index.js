@@ -65,8 +65,12 @@ function setupHasErrors(){
     return error;
 }
 
+function isSkyGlobal(){
+    return pkg.repository.url.indexOf('/skyglobal/')>0;
+}
+
 function initBower(cb){
-    if (pkg.repository.url.indexOf('/skyglobal/')>0){
+    if (isSkyGlobal()){
         return plugins.run('bower register bskyb-' + pkg.name + ' ' + pkg.repository.url).exec('', cb);
     } else {
         console.log('**Bower skipped as its not a SkyGlobal Repo**');
@@ -298,14 +302,17 @@ function gulpTasks(globalGulp, globalPkg){
 
 //  RELEASING:  Amazon Web Services
     gulp.task('release:cdn', function(cb) {
-        if (process.env.AWS_SKYGLOBAL_BUCKET) {
+        if (process.env.AWS_SKYGLOBAL_BUCKET && isSkyGlobal()) {
             var awsS3 = plugins.awsS3.setup({bucket: process.env.AWS_SKYGLOBAL_BUCKET});
             awsUpload('css',awsS3);
             awsUpload('js', awsS3);
             awsUpload('fonts', awsS3);
             return awsUpload('icons', awsS3);
         } else {
-            console.log('**Amazon S3 skipped as AWS env variables are not set**');
+            console.log('** Amazon S3 skipped **\n' +
+                'AWS env variables are not set \n' +
+                ' or \n' +
+                ' This is not a `skyglobal` repo\n');
             return cb();
         }
     });
