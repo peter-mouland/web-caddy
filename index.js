@@ -2,6 +2,7 @@
 var gulp;
 var pkg;
 var browserSync = require('browser-sync');
+var debug = require('gulp-debug');
 var plugins = {
     autoprefixer: require('gulp-autoprefixer'),
     awsS3 : require('gulp-aws-s3'),
@@ -278,7 +279,6 @@ function gulpTasks(globalGulp, globalPkg){
         copyDir('site', 'js');
         copyDir('site', 'css');
         copyDir('site', 'sass');
-        copyDir('site', 'fonts');
         copyDir('source', 'fonts');
         return copyDir('source', 'sass');
     });
