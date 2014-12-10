@@ -48,6 +48,22 @@ function updateDocs(files){
         .pipe(gulp.dest('./'));
 }
 
+function setupHasErrors(){
+    var errorText = '\nSky Component %s Error:' +
+        '\nPlease update `package.json` (without spaces): \n  i.e.' +
+        '%s\n';
+    var error = false;
+
+    if (pkg.name.indexOf(' ') >0){
+        console.error(errorText, 'Name',' `"name" : "responsive-images"`');
+        error = true;
+    }
+    if (pkg.repository.url.indexOf(' ') >0){
+        console.error(errorText, 'URL', '`"url": "git://github.com/skyglobal/gulp-helper-test.git"`');
+        error = true;
+    }
+    return error;
+}
 
 function initBower(cb){
     if (pkg.repository.url.indexOf('/skyglobal/')>0){
@@ -58,12 +74,23 @@ function initBower(cb){
     }
 }
 
+function initMaster(cb){
+    //lines commented out as not needed for a 'cloned' repo
+    return plugins.run(
+//            '\n' +'git init;' +
+            '\n' +'git add gulpfile.js;' +
+            '\n' +'git add package.json;' +
+            '\n' +'git commit -m "first commit";' +
+//            '\n' +'git remote add origin ' + pkg.repository.url.replace('git://github.com/','git@github.com:') + ';' +
+            '\n' +'git push -u origin master;' +
+            '\n').exec('', cb);
+}
 function initGHPages(cb){
     return plugins.run(
             '\n' +'git checkout --orphan gh-pages;' +
             '\n' +'git rm -rf .;' +
-            '\n' +'touch README.md;' +
-            '\n' +'git add README.md;' +
+            '\n' +'touch anyfile.md;' +
+            '\n' +'git add anyfile.md;' +
             '\n' +'git commit -m "Init gh-pages";' +
             '\n' +'git push --set-upstream origin gh-pages;' +
             '\n' +'git checkout master;' +
@@ -220,6 +247,9 @@ function gulpTasks(globalGulp, globalPkg){
             ['./dot.gitignore', './src/js/main.js', './src/scss/main.scss' ],
             cb);
     });
+    gulp.task('initMaster', function(cb) {
+        return initMaster(cb);
+    });
     gulp.task('initGHPages', function(cb) {
         return initGHPages(cb);
     });
@@ -287,15 +317,12 @@ function gulpTasks(globalGulp, globalPkg){
      * Common/public Gulp tasks
      */
     gulp.task('init', function(cb) {
-        if (pkg.name.indexOf(' ') >0){
-            return console.error('\nSky Component Name Error:' +
-                '\nPlease update `package.json` name (without spaces): ' +
-                '\n  i.e. `"name" : "responsive-images"`' +
-                '\n')
+        if (setupHasErrors()){
+            return;
         }
         return runSequence(
             'copy-structure',
-            ['rename-dot-gitignore', 'rename-js', 'rename-scss'],
+            ['initMaster','rename-dot-gitignore', 'rename-js', 'rename-scss'],
             ['initGHPages'],
             'remove-renamed-files',
             'initBower', //move with other init once automatic
