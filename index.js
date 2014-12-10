@@ -28,8 +28,7 @@ var knownOptions = {
 var options = plugins.minimist(process.argv.slice(2), knownOptions);
 
 function copyDir(location, fileType){
-    var files = (fileType === 'css') ? '/' + pkg.name + '.css' : '/**/*';
-    return gulp.src([paths[location][fileType] + files])
+    return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
         .pipe(gulp.dest(paths.dist[fileType]));
 }
 
