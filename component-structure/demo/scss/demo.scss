@@ -3,24 +3,22 @@
 @import 'bskyb-typography/dist/scss/typography';
 
 /* Common demo Sass here */
-.demo-updated {
-  display: block;
-  font-size: 0.3em;
-}
-
 .demo-block{
   margin-bottom: 20px;
   display: block;
   clear: both;
 }
+.demo-version{
+  font-size: 0.5em;
+}
 .demo-icon{
   display: inline-block;
-  width: 32px; height: 32px;
-  margin-left: 4px;
+  width: 20px;
+  height: 20px
 }
 .demo-icon--github{
-  background: url(/images/GitHub-Mark-32px.png) no-repeat 5px 5px;
-  background-size: 75%;
+  background: url(../images/GitHub-Mark-32px.png) no-repeat 0px 0px;
+  background-size: 100%;
 }
 
 .speak {
