@@ -66,12 +66,12 @@ gulp.task('pre-build', function(cb){
 
 ### Bower
 
-To release to `bower` please update [config/index.js](config/index.js) and run once :
+To release to `bower` please update your `config/index.js` and run once :
  * `gulp init:bower`
  
 ### Amazon Web Services (AWS)
 
-To release to AWS please update [config/index.js](config/index.js).
+To release to AWS please update your `config/index.js`.
 
 
 ## Contribution
