@@ -11,7 +11,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/{{ organisation }}/{{ component }}.git"
+        "url": "git://github.com/{{ git.user }}/{{ component }}.git"
     },
     "author": "Pete Mouland"
 }

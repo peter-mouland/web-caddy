@@ -3,7 +3,7 @@
 
 > {{ component }} for use across Sky.com
 
-See http://skyglobal.github.io/{{ component }}/ for a demo of the Component
+See http://{{ git.user }}.github.io/{{ component }}/ for a demo of the Component
 
 ## Usage
 

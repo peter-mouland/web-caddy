@@ -104,7 +104,7 @@ function initGHPages(cb){
 function gulpTasks(globalGulp, globalPkg){
     gulp = globalGulp;
     pkg = globalPkg;
-
+    var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
     var runSequence = require('run-sequence').use(gulp);
 
 
@@ -224,11 +224,13 @@ function gulpTasks(globalGulp, globalPkg){
     gulp.task('copy-structure', function(cb) {
         return gulp.src(__dirname + '/component-structure/**/*')
             .pipe(plugins.replace(/{{ component }}/g, pkg.name))
+            .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
     gulp.task('name-component', function(cb) {
         return gulp.src('./package.json', { base : './' })
             .pipe(plugins.replace(/{{ component }}/g, pkg.name))
+            .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
     gulp.task('rename-js', function(cb) {
