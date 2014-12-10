@@ -281,6 +281,7 @@ function gulpTasks(globalGulp){
     });
 
     gulp.task('git-tag', function(cb) {
+        console.log('** Tagging Git : v' +  pkg.version + ' **\n');
         return plugins.run(
                 'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +'"; ' +
                 'git push origin master v'+ pkg.version
@@ -302,6 +303,7 @@ function gulpTasks(globalGulp){
     gulp.task('release:aws', function(cb) {
         var config = require('../../config');
         if (config.aws && config.aws.bucket && config.aws.release) {
+            console.log('** Pushin to Amazon S3 : ' + config.aws.bucket + ' **\n');
             var awsS3 = plugins.awsS3.setup(config.aws);
             awsUpload('css',awsS3);
             awsUpload('js', awsS3);
