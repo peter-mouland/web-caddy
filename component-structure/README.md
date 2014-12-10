@@ -1,7 +1,7 @@
 [{{ component }}](http://{{ git.user }}.github.io/{{ component }}/) 
 ========================
 
-> {{ component }} for use across Sky.com
+> {{ component }}
 
 See http://{{ git.user }}.github.io/{{ component }}/ for a demo of the Component
 
@@ -25,7 +25,7 @@ http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/{{ compone
 
 ## Contribution
 
-BSkyB components depends on collaboration between developers across Sky. Contributions of any size are actively encouraged.
+Components depends on collaboration between developers. Contributions of any size are actively encouraged.
 
 [Read More >](CONTRIBUTING.md)
 

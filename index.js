@@ -49,7 +49,7 @@ function updateDocs(files){
 }
 
 function setupHasErrors(){
-    var errorText = '\nSky Component %s Error:' +
+    var errorText = '\Component %s Error:' +
         '\nPlease update `package.json` (without spaces): \n  i.e.' +
         '%s\n';
     var error = false;

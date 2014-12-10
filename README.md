@@ -1,9 +1,9 @@
-Gulp Sky Component Helper 
+Gulp Component Helper 
 ========================
 
-> A Sky Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
+> A Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
 
-This helper is used to create and deploy Sky Components via Gulp tasks. You can :
+This helper is used to create and deploy Components via Gulp tasks. You can :
  * Build and serve a demo page
  * Compile Sass / JS to a single file (and `.min.js`)
  * Deploy to github.io / Bower / Amazon S3
@@ -76,7 +76,7 @@ To release to AWS please update your `config/index.js`.
 
 ## Contribution
 
-BSkyB components depends on collaboration between developers across Sky. Contributions of any size are actively encouraged.
+This project depends on collaboration between developers. Contributions of any size are actively encouraged.
 
 [Read More >](CONTRIBUTING.md)
 

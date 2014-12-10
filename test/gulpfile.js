@@ -2,8 +2,8 @@
 
 var gulp = require('gulp');
 var pkg = require('../package.json');
-var skyComponentHelper = require('../')(gulp, pkg);
-var paths = skyComponentHelper.paths;
+var componentHelper = require('../')(gulp, pkg);
+var paths = componentHelper.paths;
 
 
 gulp.task('pre-build', function(cb){

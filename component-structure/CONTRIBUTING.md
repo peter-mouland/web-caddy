@@ -6,7 +6,7 @@ We encourage small change pull requests, the smaller the change the quicker and 
 
 ## Dependencies
 
-To build the Gulp Sky Component Helper locally, you'll need to install:
+To build the Gulp Component Helper locally, you'll need to install:
  * [node.js](http://nodejs.org),
  * [Gulp](http://gulpjs.com),
 

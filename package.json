@@ -1,7 +1,7 @@
 {
-  "name": "gulp-sky-component-helper",
+  "name": "gulp-component-helper",
   "version": "0.1.0",
-  "description": "A way to help ensure the common tasks are consistant across sky components",
+  "description": "A way to help ensure the common tasks are consistant across components",
   "main": "index.js",
   "files": [
     "component-structure",
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/skyglobal/gulp-sky-component-helper.git"
+    "url": "git://github.com/skyglobal/gulp-component-helper.git"
   },
   "author": "Pete Mouland",
   "devDependencies": {

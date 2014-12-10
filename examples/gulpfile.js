@@ -2,8 +2,8 @@
 
 var gulp = require('gulp');
 var config = require('./config');
-var skyComponentHelper = require('gulp-sky-component-helper')(gulp, config);
-var paths = skyComponentHelper.paths;
+var componentHelper = require('gulp-component-helper')(gulp, config);
+var paths = componentHelper.paths;
 var runSequence = require('run-sequence');
 
 gulp.task('pre-build', function(cb){

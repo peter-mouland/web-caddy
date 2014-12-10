@@ -1,11 +1,11 @@
 {
     "name": "{{ component }}",
     "version": "0.0.0",
-    "homepage": "https://github.com/skyglobal/{{ component }}",
+    "homepage": "https://github.com/{{ git.user }}/{{ component }}",
     "authors": [
-        "Peter Mouland <peter.mouland@gmail.com>"
+        "git.user-name <{{ git.user-email }}>"
     ],
-    "description": "{{ component }} for use across Sky.com",
+    "description": "{{ component }}",
     "main": "dist",
     "license": "MIT",
     "ignore": [
