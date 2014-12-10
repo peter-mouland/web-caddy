@@ -105,7 +105,6 @@ function initGHPages(cb){
 function gulpTasks(globalGulp){
     gulp = globalGulp;
     var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
-    console.log(gitUser)
     var runSequence = require('run-sequence').use(gulp);
 
 
