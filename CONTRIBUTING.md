@@ -15,7 +15,7 @@ To build the Gulp Sky Component Helper locally, you'll need to install:
 
 1. Fork the project
 2. Clone down your fork
-`git clone git://github.com/<username>/gulp-sky-component-helper.git`
+`git clone git://github.com/skyglobal/gulp-sky-component-helper.git`
 3. Setup your 'upstream'
 `git remote add upstream https://github.com/skyglobal/gulp-sky-component-helper.git`
 4. Create a topic branch to contain your change

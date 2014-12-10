@@ -1,4 +1,4 @@
-[{{ component }}](http://skyglobal.github.io/{{ component }}/) 
+[{{ component }}](http://{{ git.user }}.github.io/{{ component }}/) 
 ========================
 
 > {{ component }} for use across Sky.com

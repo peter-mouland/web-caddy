@@ -1,10 +1,8 @@
-var pkg = require('../package.json');
 var bower = require('../bower.json');
 bower.release = false;
 
 
 module.exports = {
-    pkg: pkg,
     bower: bower,
     aws:{
         release: false,

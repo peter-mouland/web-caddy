@@ -1,6 +1,6 @@
 'use strict';
 var gulp;
-var config;
+var pkg = require('../../package.json');
 var browserSync = require('browser-sync');
 var plugins = {
     autoprefixer: require('gulp-autoprefixer'),
@@ -28,13 +28,13 @@ var knownOptions = {
 var options = plugins.minimist(process.argv.slice(2), knownOptions);
 
 function copyDir(location, fileType){
-    var files = (fileType === 'css') ? '/' + config.pkg.name + '.css' : '/**/*';
+    var files = (fileType === 'css') ? '/' + pkg.name + '.css' : '/**/*';
     return gulp.src([paths[location][fileType] + files])
         .pipe(gulp.dest(paths.dist[fileType]));
 }
 
 function awsUpload(fileType, awsS3){
-    var path = 'components/' + config.pkg.name + '/' + config.pkg.version + '/' + fileType + '/';
+    var path = 'components/' + pkg.name + '/' + pkg.version + '/' + fileType + '/';
     return gulp.src(paths.dist[fileType] + '/**/*')
         .pipe(awsS3.upload({ path: path } ));
 }
@@ -42,8 +42,8 @@ function awsUpload(fileType, awsS3){
 function updateDocs(files){
     var now = Date().split(' ').splice(0,5).join(' ');
     return gulp.src(files, { base : './' })
-        .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, config.pkg.version))
-        .pipe(plugins.replace(/{{ site.version }}/g, config.pkg.version))
+        .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, pkg.version))
+        .pipe(plugins.replace(/{{ site.version }}/g, pkg.version))
         .pipe(plugins.replace(/{{ site.time }}/g, now))
         .pipe(gulp.dest('./'));
 }
@@ -54,11 +54,11 @@ function setupHasErrors(){
         '%s\n';
     var error = false;
 
-    if (config.pkg.name.indexOf(' ') >0){
+    if (pkg.name.indexOf(' ') >0){
         console.error(errorText, 'Name',' `"name" : "responsive-images"`');
         error = true;
     }
-    if (config.pkg.repository.url.indexOf(' ') >0){
+    if (pkg.repository.url.indexOf(' ') >0){
         console.error(errorText, 'URL', '`"url": "git://github.com/username/component-name.git"`');
         error = true;
     }
@@ -66,8 +66,9 @@ function setupHasErrors(){
 }
 
 function initBower(cb){
+    var config = require('../../config');
     if (config.bower && config.bower.release && config.bower.name){
-        return plugins.run('bower register ' + config.bower.name + ' ' + config.pkg.repository.url).exec('', cb);
+        return plugins.run('bower register ' + config.bower.name + ' ' + pkg.repository.url).exec('', cb);
     } else {
         console.log('** Not intialising Bower ** ' +
             'Config is set to false in config/index.js');
@@ -82,26 +83,29 @@ function initMaster(cb){
             '\n' +'git add gulpfile.js;' +
             '\n' +'git add package.json;' +
             '\n' +'git commit -m "first commit";' +
-//            '\n' +'git remote add origin ' + config.pkg.repository.url.replace('git://github.com/','git@github.com:') + ';' +
+//            '\n' +'git remote add origin ' + pkg.repository.url.replace('git://github.com/','git@github.com:') + ';' +
             '\n' +'git push -u origin master;' +
             '\n').exec('', cb);
 }
+
+
 function initGHPages(cb){
     return plugins.run(
             '\n' +'git checkout --orphan gh-pages;' +
+            '\n' +'git checkout gh-pages;' +
             '\n' +'git rm -rf .;' +
-            '\n' +'touch anyfile.md;' +
-            '\n' +'git add anyfile.md;' +
+            '\n' +'touch gh-pages-initialised.md;' +
+            '\n' +'git add gh-pages-initialised.md;' +
             '\n' +'git commit -m "Init gh-pages";' +
             '\n' +'git push --set-upstream origin gh-pages;' +
             '\n' +'git checkout master;' +
             '\n').exec('', cb);
 }
 
-function gulpTasks(globalGulp, globalConfig){
+function gulpTasks(globalGulp){
     gulp = globalGulp;
-    config = globalConfig || {};
-    var gitUser = config.pkg.repository.url.match(/.com\/(.*)\//)[1];
+    var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
+    console.log(gitUser)
     var runSequence = require('run-sequence').use(gulp);
 
 
@@ -126,14 +130,14 @@ function gulpTasks(globalGulp, globalConfig){
 
     gulp.task('js-min', function() {
         return gulp.src(paths.source['js'] + '/**/*')
-            .pipe(plugins.concat(config.pkg.name + '.min.js'))
+            .pipe(plugins.concat(pkg.name + '.min.js'))
             .pipe(plugins.uglify())
             .pipe(gulp.dest(paths.site['js']));
     });
 
     gulp.task('js-dev', function() {
         return gulp.src(paths.source['js'] + '/**/*')
-            .pipe(plugins.concat(config.pkg.name + '.js'))
+            .pipe(plugins.concat(pkg.name + '.js'))
             .pipe(gulp.dest(paths.site['js']));
     });
 
@@ -209,7 +213,7 @@ function gulpTasks(globalGulp, globalConfig){
         return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
     });
     gulp.task('bump-version', function(cb){
-        config.pkg.version = plugins.semver.inc(config.pkg.version, options.version);
+        pkg.version = plugins.semver.inc(pkg.version, options.version);
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: options.version}))
             .pipe(gulp.dest('./'));
@@ -219,25 +223,25 @@ function gulpTasks(globalGulp, globalConfig){
      * Initialising the component
      */
     gulp.task('copy-structure', function(cb) {
-        return gulp.src('./component-structure/**/*')
-            .pipe(plugins.replace(/{{ component }}/g, config.pkg.name))
+        return gulp.src(__dirname + '/component-structure/**/*')
+            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
             .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
     gulp.task('name-component', function(cb) {
         return gulp.src('./package.json', { base : './' })
-            .pipe(plugins.replace(/{{ component }}/g, config.pkg.name))
+            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
             .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
     gulp.task('rename-js', function(cb) {
         return gulp.src(['./src/js/main.js'], { base : './' })
-            .pipe(plugins.rename(config.pkg.name + '.js'))
+            .pipe(plugins.rename(pkg.name + '.js'))
             .pipe(gulp.dest('./src/js/'));
     });
     gulp.task('rename-scss', function(cb) {
         return gulp.src(['./src/scss/main.scss'], { base : './' })
-            .pipe(plugins.rename(config.pkg.name + '.scss'))
+            .pipe(plugins.rename(pkg.name + '.scss'))
             .pipe(gulp.dest('./src/scss/'));
     });
     gulp.task('rename-dot-gitignore', function(cb) {
@@ -278,8 +282,8 @@ function gulpTasks(globalGulp, globalConfig){
 
     gulp.task('git-tag', function(cb) {
         return plugins.run(
-                'git tag -a v'+ config.pkg.version +' -m "release v' + config.pkg.version +'"; ' +
-                'git push origin master v'+ config.pkg.version
+                'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +'"; ' +
+                'git push origin master v'+ pkg.version
         ).exec('', cb);
     });
     gulp.task('bower', function() {
@@ -296,6 +300,7 @@ function gulpTasks(globalGulp, globalConfig){
 
 //  RELEASING:  Amazon Web Services
     gulp.task('release:aws', function(cb) {
+        var config = require('../../config');
         if (config.aws && config.aws.bucket && config.aws.release) {
             var awsS3 = plugins.awsS3.setup(config.aws);
             awsUpload('css',awsS3);
