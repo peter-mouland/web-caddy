@@ -1,8 +1,8 @@
 'use strict';
 
 var gulp = require('gulp');
-var pkg = require('./package.json');
-var skyComponentHelper = require('gulp-sky-component-helper')(gulp, pkg);
+var config = require('./config');
+var skyComponentHelper = require('gulp-sky-component-helper')(gulp, config);
 var paths = skyComponentHelper.paths;
 var runSequence = require('run-sequence');
 

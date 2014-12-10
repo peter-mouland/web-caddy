@@ -16,7 +16,7 @@ This helper is used to create and deploy Sky Components via Gulp tasks. You can 
     * Update `name` to your component name in lower case.
     * Ensure the `repository.url` is the correct github address.
 4. Run `npm install` to install the required node modules. 
-5. Run `gulp init` to intialise your component. 
+5. Run `gulp init:component` to intialise your component. 
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
 
@@ -59,16 +59,20 @@ gulp.task('pre-build', function(cb){
 `gulp release`
 
    * This will push the demo site to github.io 
-   * Tag the version number in Git (Bower will use this if within a `skyglobal` repo)
-   * It will also push the compiled assets to the S3
+   * Tag the version number in Git (Bower will use this if configured))
+   * It will also push the compiled assets to the S3 (if configured)
    * The version number is bumped ('patch' incremented). 
    * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
 
-To release to the `SkyGlobal` repo, you must have the AWS environment variables set up. These are:
-  * AWS_ACCESS_KEY_ID
-  * AWS_SECRET_ACCESS_KEY
-  * AWS_SKYGLOBAL_BUCKET
-  * AWS_REGION
+### Bower
+
+To release to `bower` please update [config/index.js](config/index.js) and run once :
+ * `gulp init:bower`
+ 
+### Amazon Web Services (AWS)
+
+To release to AWS please update [config/index.js](config/index.js).
+
 
 ## Contribution
 

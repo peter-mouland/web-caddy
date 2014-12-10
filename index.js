@@ -1,8 +1,7 @@
 'use strict';
 var gulp;
-var pkg;
+var config;
 var browserSync = require('browser-sync');
-var debug = require('gulp-debug');
 var plugins = {
     autoprefixer: require('gulp-autoprefixer'),
     awsS3 : require('gulp-aws-s3'),
@@ -29,13 +28,13 @@ var knownOptions = {
 var options = plugins.minimist(process.argv.slice(2), knownOptions);
 
 function copyDir(location, fileType){
-    var files = (fileType === 'css') ? '/' + pkg.name + '.css' : '/**/*';
+    var files = (fileType === 'css') ? '/' + config.pkg.name + '.css' : '/**/*';
     return gulp.src([paths[location][fileType] + files])
         .pipe(gulp.dest(paths.dist[fileType]));
 }
 
 function awsUpload(fileType, awsS3){
-    var path = 'components/' + pkg.name + '/' + pkg.version + '/' + fileType + '/';
+    var path = 'components/' + config.pkg.name + '/' + config.pkg.version + '/' + fileType + '/';
     return gulp.src(paths.dist[fileType] + '/**/*')
         .pipe(awsS3.upload({ path: path } ));
 }
@@ -43,8 +42,8 @@ function awsUpload(fileType, awsS3){
 function updateDocs(files){
     var now = Date().split(' ').splice(0,5).join(' ');
     return gulp.src(files, { base : './' })
-        .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, pkg.version))
-        .pipe(plugins.replace(/{{ site.version }}/g, pkg.version))
+        .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, config.pkg.version))
+        .pipe(plugins.replace(/{{ site.version }}/g, config.pkg.version))
         .pipe(plugins.replace(/{{ site.time }}/g, now))
         .pipe(gulp.dest('./'));
 }
@@ -55,26 +54,23 @@ function setupHasErrors(){
         '%s\n';
     var error = false;
 
-    if (pkg.name.indexOf(' ') >0){
+    if (config.pkg.name.indexOf(' ') >0){
         console.error(errorText, 'Name',' `"name" : "responsive-images"`');
         error = true;
     }
-    if (pkg.repository.url.indexOf(' ') >0){
-        console.error(errorText, 'URL', '`"url": "git://github.com/skyglobal/gulp-helper-test.git"`');
+    if (config.pkg.repository.url.indexOf(' ') >0){
+        console.error(errorText, 'URL', '`"url": "git://github.com/username/component-name.git"`');
         error = true;
     }
     return error;
 }
 
-function isSkyGlobal(){
-    return pkg.repository.url.indexOf('/skyglobal/')>0;
-}
-
 function initBower(cb){
-    if (isSkyGlobal()){
-        return plugins.run('bower register bskyb-' + pkg.name + ' ' + pkg.repository.url).exec('', cb);
+    if (config.bower && config.bower.release && config.bower.name){
+        return plugins.run('bower register ' + config.bower.name + ' ' + config.pkg.repository.url).exec('', cb);
     } else {
-        console.log('**Bower skipped as its not a SkyGlobal Repo**');
+        console.log('** Not intialising Bower ** ' +
+            'Config is set to false in config/index.js');
         return cb();
     }
 }
@@ -86,7 +82,7 @@ function initMaster(cb){
             '\n' +'git add gulpfile.js;' +
             '\n' +'git add package.json;' +
             '\n' +'git commit -m "first commit";' +
-//            '\n' +'git remote add origin ' + pkg.repository.url.replace('git://github.com/','git@github.com:') + ';' +
+//            '\n' +'git remote add origin ' + config.pkg.repository.url.replace('git://github.com/','git@github.com:') + ';' +
             '\n' +'git push -u origin master;' +
             '\n').exec('', cb);
 }
@@ -102,10 +98,10 @@ function initGHPages(cb){
             '\n').exec('', cb);
 }
 
-function gulpTasks(globalGulp, globalPkg){
+function gulpTasks(globalGulp, globalConfig){
     gulp = globalGulp;
-    pkg = globalPkg;
-    var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
+    config = globalConfig || {};
+    var gitUser = config.pkg.repository.url.match(/.com\/(.*)\//)[1];
     var runSequence = require('run-sequence').use(gulp);
 
 
@@ -130,14 +126,14 @@ function gulpTasks(globalGulp, globalPkg){
 
     gulp.task('js-min', function() {
         return gulp.src(paths.source['js'] + '/**/*')
-            .pipe(plugins.concat(pkg.name + '.min.js'))
+            .pipe(plugins.concat(config.pkg.name + '.min.js'))
             .pipe(plugins.uglify())
             .pipe(gulp.dest(paths.site['js']));
     });
 
     gulp.task('js-dev', function() {
         return gulp.src(paths.source['js'] + '/**/*')
-            .pipe(plugins.concat(pkg.name + '.js'))
+            .pipe(plugins.concat(config.pkg.name + '.js'))
             .pipe(gulp.dest(paths.site['js']));
     });
 
@@ -213,7 +209,7 @@ function gulpTasks(globalGulp, globalPkg){
         return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
     });
     gulp.task('bump-version', function(cb){
-        pkg.version = plugins.semver.inc(pkg.version, options.version);
+        config.pkg.version = plugins.semver.inc(config.pkg.version, options.version);
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: options.version}))
             .pipe(gulp.dest('./'));
@@ -223,25 +219,25 @@ function gulpTasks(globalGulp, globalPkg){
      * Initialising the component
      */
     gulp.task('copy-structure', function(cb) {
-        return gulp.src(__dirname + '/component-structure/**/*')
-            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
+        return gulp.src('./component-structure/**/*')
+            .pipe(plugins.replace(/{{ component }}/g, config.pkg.name))
             .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
     gulp.task('name-component', function(cb) {
         return gulp.src('./package.json', { base : './' })
-            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
+            .pipe(plugins.replace(/{{ component }}/g, config.pkg.name))
             .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
     gulp.task('rename-js', function(cb) {
         return gulp.src(['./src/js/main.js'], { base : './' })
-            .pipe(plugins.rename(pkg.name + '.js'))
+            .pipe(plugins.rename(config.pkg.name + '.js'))
             .pipe(gulp.dest('./src/js/'));
     });
     gulp.task('rename-scss', function(cb) {
         return gulp.src(['./src/scss/main.scss'], { base : './' })
-            .pipe(plugins.rename(pkg.name + '.scss'))
+            .pipe(plugins.rename(config.pkg.name + '.scss'))
             .pipe(gulp.dest('./src/scss/'));
     });
     gulp.task('rename-dot-gitignore', function(cb) {
@@ -259,9 +255,6 @@ function gulpTasks(globalGulp, globalPkg){
     });
     gulp.task('initGHPages', function(cb) {
         return initGHPages(cb);
-    });
-    gulp.task('initBower', function(cb) {
-        return initBower(cb);
     });
 
     gulp.task('git-commit-push', function(cb){
@@ -283,13 +276,12 @@ function gulpTasks(globalGulp, globalPkg){
         return copyDir('source', 'sass');
     });
 
-    gulp.task('release:bower', function(cb) {
+    gulp.task('git-tag', function(cb) {
         return plugins.run(
-                'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +' for bower"; ' +
-                'git push origin master v'+ pkg.version
+                'git tag -a v'+ config.pkg.version +' -m "release v' + config.pkg.version +'"; ' +
+                'git push origin master v'+ config.pkg.version
         ).exec('', cb);
     });
-
     gulp.task('bower', function() {
         return plugins.bower()
     });
@@ -303,18 +295,18 @@ function gulpTasks(globalGulp, globalPkg){
     });
 
 //  RELEASING:  Amazon Web Services
-    gulp.task('release:cdn', function(cb) {
-        if (process.env.AWS_SKYGLOBAL_BUCKET && isSkyGlobal()) {
-            var awsS3 = plugins.awsS3.setup({bucket: process.env.AWS_SKYGLOBAL_BUCKET});
+    gulp.task('release:aws', function(cb) {
+        if (config.aws && config.aws.bucket && config.aws.release) {
+            var awsS3 = plugins.awsS3.setup(config.aws);
             awsUpload('css',awsS3);
             awsUpload('js', awsS3);
             awsUpload('fonts', awsS3);
             return awsUpload('icons', awsS3);
         } else {
-            console.log('** Amazon S3 skipped **\n' +
-                'AWS env variables are not set \n' +
+            console.log('** Amazon S3 release skipped **\n' +
+                'AWS variables are not set \n' +
                 ' or \n' +
-                ' This is not a `skyglobal` repo\n');
+                ' aws.release in config/index.js set to false\n');
             return cb();
         }
     });
@@ -325,7 +317,7 @@ function gulpTasks(globalGulp, globalPkg){
     /*
      * Common/public Gulp tasks
      */
-    gulp.task('init', function(cb) {
+    gulp.task('init:component', function(cb) {
         if (setupHasErrors()){
             return;
         }
@@ -334,8 +326,10 @@ function gulpTasks(globalGulp, globalPkg){
             ['initMaster','rename-dot-gitignore', 'rename-js', 'rename-scss'],
             ['initGHPages'],
             'remove-renamed-files',
-            'initBower', //move with other init once automatic
             cb);
+    });
+    gulp.task('init:bower', function(cb) {
+        return initBower(cb);
     });
 
     gulp.task('serve', function(callback) {
@@ -351,7 +345,9 @@ function gulpTasks(globalGulp, globalPkg){
             'bump-version',
             'build',
             'git-commit-push',
-            ['release:bower', 'release:gh-pages', 'release:cdn'],
+            'git-tag',
+            'release:gh-pages',
+            'release:aws',
             cb
         );
     });
