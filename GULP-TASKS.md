@@ -6,13 +6,13 @@ These tasks are documented for those who want to know what is going on under the
 
 `gulp sass`
 
-Using [gulp-sass](https://github.com/dlmanning/gulp-sass), this task create a `.css` for each non-underscore (`_`) prefixed `.scss` file it finds. 
+Using [gulp-sass](https://github.com/dlmanning/gulp-sass), this task create a `.css` for each `.scss` file (without an underscore `_` prefix) it finds. 
 
 ### JS
 
 `gulp js`
 
-Using [browserify](https://www.npmjs.com/package/browserify) dependency management to create a single javascript files (for each .js file in the src root) and also provide a `.min.js` version using [gulp-uglify](https://www.npmjs.com/package/gulp-uglify). 
+Using [browserify](https://www.npmjs.com/package/browserify) dependency management to create a single javascript files (for each .js file in `/src/js`) and also provide a `.min.js` version using [gulp-uglify](https://www.npmjs.com/package/gulp-uglify). 
 
 
 ### Clean
@@ -25,7 +25,7 @@ Using Gulp to remove all directories created when compiling your assets.
 
 `gulp create-site`
 
-Using Gulp to simply concatinate all html files found in `demo/_includes` to `demo/index.html`. Also copies none js/css assets across to the demo site. Nothing fancy, yet
+Using Gulp to simply concatinate all html files found in `demo/_includes` onto `demo/index.html`. Also copies none-js/css assets across to the demo site. Nothing fancy, yet.
 
 
 ### Create Distributable
