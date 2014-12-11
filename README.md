@@ -33,7 +33,7 @@ Once the above is complete should have the conventional directory structure as w
     │   ├- images etc.  => demo assets directories
     │   └- index.html
     └── src             => source code for the component.
-        ├- js           => component javascript
+        ├- js           => component javascript [more info](GULP-TASKS.md#js)
         ├- scss         => component Sass
         └- images etc.  => component assets directories
 
