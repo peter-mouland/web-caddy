@@ -38,7 +38,7 @@ Once the above is complete should have the conventional directory structure as w
         └- images etc.  => component assets directories
 
 
-## `gulp serve`
+## gulp serve
 
 This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456) 
 
