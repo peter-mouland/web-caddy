@@ -43,7 +43,7 @@ Once the above is complete should have the conventional directory structure as w
 
 This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456) 
 
-### Pre-build Hook
+### Pre-build Task
 
 To enable you to build a custom step into the build process, you can use the `pre-build` within your gulp file:
 
@@ -54,25 +54,17 @@ gulp.task('pre-build', function(cb){
 
 ```
 
+## Gulp Tasks
+
+You can also hook into any predefined helper gulp task and over-write it with your own.  i.e. if you want to use requireJS rather than browserify you can change the 'js' task.
+
+[Read More >](GULP-TASKS.md)
+
 ## Releasing your Component
 
-`gulp release`
+If you are ready for your component to go public, you can release the code to Bower, github.io (gh-pages branch) and to the cloud (AWS).
 
-   * This will push the demo site to github.io 
-   * Tag the version number in Git (Bower will use this if configured))
-   * It will also push the compiled assets to the S3 (if configured)
-   * The version number is bumped ('patch' incremented). 
-   * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
-
-### Bower
-
-To release to `bower` please update your `config/index.js` and run once :
- * `gulp init:bower`
- 
-### Amazon Web Services (AWS)
-
-To release to AWS please update your `config/index.js`.
-
+[Read More >](RELEASING.md)
 
 ## Contribution
 

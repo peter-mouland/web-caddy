@@ -18,7 +18,9 @@ var plugins = {
     rename : require("gulp-rename"),
     uglify : require('gulp-uglify'),
     semver : require('semver'),
-    flatten : require('gulp-flatten')
+    flatten : require('gulp-flatten'),
+    browserify : require('browserify'),
+    transform : require('vinyl-transform')
 };
 var paths = require('./paths');
 var knownOptions = {
@@ -126,23 +128,24 @@ function gulpTasks(globalGulp){
             .pipe(browserSync.reload({stream:true}));
     });
 
-    gulp.task('js-min', function() {
-        return gulp.src(paths.source['js'] + '/**/*')
-            .pipe(plugins.concat(pkg.name + '.min.js'))
+    gulp.task('js:dev', function() {
+
+        var browserified = plugins.transform(function(filename) {
+            var b = plugins.browserify(filename);
+            return b.bundle();
+        });
+
+        return gulp.src(paths.source['js'] + '/*.js')
+            .pipe(browserified)
+            .pipe(gulp.dest(paths.site['js']));
+    });
+
+
+    gulp.task('js', ['js:dev'], function() {
+        return gulp.src(paths.site['js'] + '/*.js')
+            .pipe(plugins.rename({suffix:'.min'}))
             .pipe(plugins.uglify())
             .pipe(gulp.dest(paths.site['js']));
-    });
-
-    gulp.task('js-dev', function() {
-        return gulp.src(paths.source['js'] + '/**/*')
-            .pipe(plugins.concat(pkg.name + '.js'))
-            .pipe(gulp.dest(paths.site['js']));
-    });
-
-    gulp.task('js', function(cb) {
-        return runSequence(['js-dev','js-min'],
-            cb
-        );
     });
 
     gulp.task('browserSync', function() {
@@ -186,7 +189,7 @@ function gulpTasks(globalGulp){
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create-site','bower'], ['update-docs-version', 'sass', 'js'],'create-bower-dist',
+        return runSequence('clean', 'pre-build', ['create-site', 'bower'], ['update-docs-version', 'sass', 'js'], 'create-dist',
             cb
         );
     });
@@ -268,9 +271,7 @@ function gulpTasks(globalGulp){
     /*
      * RELEASING
      */
-
-//  RELEASING:  Bower tasks
-    gulp.task('create-bower-dist', function() {
+    gulp.task('create-dist', function() {
         copyDir('site', 'js');
         copyDir('site', 'css');
         copyDir('site', 'sass');
@@ -288,16 +289,12 @@ function gulpTasks(globalGulp){
     gulp.task('bower', function() {
         return plugins.bower()
     });
-
-//  RELEASING:  GH Pages
     gulp.task('release:gh-pages', function () {
         gulp.src(paths.site['root'] + "/**/*")
             .pipe(plugins.ghPages({
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
     });
-
-//  RELEASING:  Amazon Web Services
     gulp.task('release:aws', function(cb) {
         var config = require('../../config');
         if (config.aws && config.aws.bucket && config.aws.release) {
