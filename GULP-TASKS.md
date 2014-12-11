@@ -14,6 +14,9 @@ Using [gulp-sass](https://github.com/dlmanning/gulp-sass), this task create a `.
 
 Using [browserify](https://www.npmjs.com/package/browserify) dependency management to create a single javascript files (for each .js file in `/src/js`) and also provide a `.min.js` version using [gulp-uglify](https://www.npmjs.com/package/gulp-uglify). 
 
+If you wish, you can use plain JS (without browserify) but do not forget to set your globals on `window`.
+
+If you wish to use any other tool (i.e. requirejs) feel free to do this and recreate `gulp.tasks('js',function(){ ... })` in your own gulp file.
 
 ### Clean
 
