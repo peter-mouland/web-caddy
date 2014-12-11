@@ -16,8 +16,6 @@ This task can handle plain JS as well as files written using CommonJS. For each 
 
 To handle dependency management, we use [browserify](https://www.npmjs.com/package/browserify) which creates a single javascript file found in the `src/js` root.
 
-You can use plain JS but do not forget to set your globals on `window`.
-
 If you wish to use any other tool (i.e. requirejs) feel free to do this and recreate `gulp.tasks('js',function(){ ... })` in your own gulp file.
 
 ### Clean
