@@ -1,6 +1,6 @@
 # Gulp Tasks
 
-These tasks are documented for those who want to know what is going on under the hood.  If you need to change the way your component works, you may also want to override these tasks within your own `gulpfile.js`. i.e. use requirejs instead of browserify within the `js` task.
+These tasks are documented for those who want to know what is going on under the hood.  If you need to change the way your component works, you may also want to override these tasks within your own `gulpfile.js`. i.e. using `requirejs` instead of `browserify` for your own component.
 
 ### Sass
 
