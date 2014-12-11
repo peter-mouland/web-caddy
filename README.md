@@ -17,6 +17,7 @@ This helper is used to create and deploy Components via Gulp tasks. You can :
     * Ensure the `repository.url` is the correct github address.
 4. Run `npm install` to install the required node modules. 
 5. Run `gulp init:component` to intialise your component. 
+6. Run `gulp serve`, stick a fork in yourself - you're done.
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
 
@@ -37,13 +38,11 @@ Once the above is complete should have the conventional directory structure as w
         └- images etc.  => component assets directories
 
 
-## Serving your Component locally
+## Running Locally
 
 `gulp serve`
 
 This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456) 
-
-### Pre-build Task
 
 To enable you to build a custom step into the build process, you can use the `pre-build` within your gulp file:
 

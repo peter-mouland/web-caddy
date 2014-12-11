@@ -61,4 +61,4 @@ This will [build](#build) your site then using [browserSync](https://www.npmjs.c
 
 This will [build](#build) your site, then using [gulp-bump](https://www.npmjs.com/package/gulp-bump) with [gulp-replace](https://www.npmjs.com/package/gulp-replace) patch the version number in all the docs (package.json, bower.js, *.md and *.html).
 
-This will then push the committed code to github and tag github with the new version. If configured (within config/index.js) it will also push to the AWS using [gulp-aws](https://www.npmjs.com/package/gulp-aws) and push to the gh-pages branch for github.io using (gulp-gh-pages)[https://www.npmjs.com/package/gulp-gh-pages].
+This will then push the committed code to github and tag github with the new version. If configured (within config/index.js) it will also push to the AWS using [gulp-aws](https://www.npmjs.com/package/gulp-aws) and push to the gh-pages branch for github.io using [gulp-gh-pages](https://www.npmjs.com/package/gulp-gh-pages).
