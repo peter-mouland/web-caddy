@@ -24,17 +24,17 @@ To build the Gulp Component Helper locally, you'll need to install:
 6. Make sure you are still up to date with master
 `git pull upstream master`
 7. If necessary, rebase your commits into logical chunks, without errors.
-8. Push the branch up 
+8. Push the branch up
 `git push origin my-awesome-feature`
 9. Create a pull request and describe what your change does and the why you think it should be merged.
 
 ## Running Locally
 
  * ?
- 
+
 ## Releasing (admin only)
 
- * Update [package.json](package.json) version number appropriately
+ * Update [package.json](package.json) and [examples/package.json](examples/package.json) version number appropriately
  * `npm adduser` (first time only)
  * `npm pack` : to see what files will be in your package
  * `npm publish` : (needs npm v2.1.0+) https://www.npmjs.org/package/npm-release
