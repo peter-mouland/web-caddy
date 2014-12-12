@@ -120,7 +120,6 @@ function gulpTasks(globalGulp){
                 paths.demo['sass'] + '/**/*.scss',
                 paths.site['sass'] + '/**/*.scss'])
             .pipe(plugins.sass({
-                includePaths: ['bower_components'],
                 outputStyle: 'nested'
             }))
             .pipe(plugins.autoprefixer())
