@@ -134,7 +134,9 @@ function gulpTasks(globalGulp){
             return b.bundle();
         });
 
-        return gulp.src(paths.source['js'] + '/*.js')
+        return gulp.src([
+                paths.source['js'] + '/*.js',
+                paths.demo['js'] + '/*.js' ])
             .pipe(browserified)
             .pipe(gulp.dest(paths.site['js']));
     });
