@@ -10,7 +10,8 @@
     "license": "MIT",
     "ignore": [
         "**/*",
-        "!dist/**/*"
+        "!dist/**/*",
+        "!src/**/*"
     ],
     "devDependencies": {
         "bskyb-colours": "~0.0.9",

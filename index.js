@@ -275,9 +275,7 @@ function gulpTasks(globalGulp){
     gulp.task('create-dist', function() {
         copyDir('site', 'js');
         copyDir('site', 'css');
-        copyDir('site', 'sass');
-        copyDir('source', 'fonts');
-        return copyDir('source', 'sass');
+        return copyDir('site', 'sass');
     });
 
     gulp.task('git-tag', function(cb) {

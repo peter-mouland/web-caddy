@@ -13,7 +13,7 @@ http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/css/{{ compon
 
 ### As JS
 
-http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/{{ component }}.js
+http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/{{ component }}.min.js
 
 ### As a Sass Module
 
