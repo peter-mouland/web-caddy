@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.3.0
+
+ * Updated default bower directories to include `src`
+
+## 0.2.2
+
+ * Fixed some bugs in teh examples code
+
 ## 0.2.1
 
  * Components have to explicitly import sass dependencies from bower_components
