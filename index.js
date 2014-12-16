@@ -196,9 +196,13 @@ function gulpTasks(globalGulp){
     });
 
 //remove temporary directors
-    gulp.task('clean', function(cb) {
+    gulp.task('clean:tmp', function(cb) {
         return plugins.del([
-            '.tmp',
+            '.tmp'
+        ], cb);
+    });
+    gulp.task('clean', ['clean:tmp'], function(cb) {
+        return plugins.del([
             paths.site['root'],
             paths.dist['root']
         ], cb);
@@ -289,7 +293,7 @@ function gulpTasks(globalGulp){
         return plugins.bower()
     });
     gulp.task('release:gh-pages', function () {
-        gulp.src(paths.site['root'] + "/**/*")
+        return gulp.src(paths.site['root'] + "/**/*")
             .pipe(plugins.ghPages({
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
@@ -297,7 +301,7 @@ function gulpTasks(globalGulp){
     gulp.task('release:aws', function(cb) {
         var config = require('../../config');
         if (config.aws && config.aws.bucket && config.aws.release) {
-            console.log('** Pushin to Amazon S3 : ' + config.aws.bucket + ' **\n');
+            console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
             var awsS3 = plugins.awsS3.setup(config.aws);
             awsUpload('css',awsS3);
             awsUpload('js', awsS3);
@@ -349,6 +353,7 @@ function gulpTasks(globalGulp){
             'git-tag',
             'release:gh-pages',
             'release:aws',
+            'clean:tmp',
             cb
         );
     });
