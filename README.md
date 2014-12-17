@@ -5,7 +5,8 @@ Gulp Component Helper
 
 This helper is used to create and deploy Components via Gulp tasks. You can :
  * Build and serve a demo page
- * Compile Sass / JS to a single file (and `.min.js`)
+ * Compile Sass to CSS
+ * Compile JS to 'browserify' / 'requireJS' files (plus .min.js files)
  * Deploy to github.io / Bower / Amazon S3
 
 ## Creating a New Component
@@ -17,7 +18,7 @@ This helper is used to create and deploy Components via Gulp tasks. You can :
     * Ensure the `repository.url` is the correct github address.
 4. Run `npm install` to install the required node modules. 
 5. Run `gulp init:component` to intialise your component. 
-6. Run `gulp serve`, stick a fork in yourself - you're done.
+6. Run `gulp serve`, stick a fork in it - you're done.
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
 
@@ -25,6 +26,7 @@ Once the above is complete should have the conventional directory structure as w
 
     $ component
     ├── _site           => Generated / Compiled demo site
+    ├── config          => Store the build config including the AWS variables
     ├── dist            => Compiled code and source code to be distrubtuted via bower
     ├── demo            => source code used soley for demoing the functionality
     │   ├- _includes    => Contains any html files to be concatinated to index.html
