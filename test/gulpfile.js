@@ -6,7 +6,7 @@ var paths = componentHelper.paths;
 var runSequence = require('run-sequence');
 var del = require('del');
 
-gulp.task('test:clean', function(cb){
+gulp.task('test:clean', ['clean'], function(cb){
     return del([
         './demo',
         './src',

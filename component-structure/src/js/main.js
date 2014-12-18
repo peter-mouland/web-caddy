@@ -8,4 +8,4 @@ module.exports = {
 };
 
 if (typeof skyComponents === "undefined") window.skyComponents = {};
-skyComponents.{{ component }} = module.exports;
+skyComponents['{{ component }}'] = module.exports;

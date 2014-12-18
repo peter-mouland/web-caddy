@@ -233,8 +233,11 @@ function gulpTasks(globalGulp, optsIn){
             .pipe(gulp.dest('./'));
     });
     gulp.task('rename-js', function(cb) {
-        return gulp.src(['./src/js/main.js'], { base : './' })
-            .pipe(plugins.rename(pkg.name + '.js'))
+        return gulp.src(['./src/js/*.js'], { base : './' })
+            .pipe(plugins.rename(function(path){
+                path.dirname = "";
+                path.basename = path.basename.replace('main', pkg.name);
+            }))
             .pipe(gulp.dest('./src/js/'));
     });
     gulp.task('rename-scss', function(cb) {
@@ -249,7 +252,7 @@ function gulpTasks(globalGulp, optsIn){
     });
     gulp.task('remove-renamed-files', function(cb) {
         return del(
-            ['./dot.gitignore', './src/js/main.js', './src/scss/main.scss' ],
+            ['./dot.gitignore', './src/js/main.*', './src/scss/main.scss' ],
             cb);
     });
     gulp.task('init:master', function(cb) {
