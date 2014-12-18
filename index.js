@@ -1,5 +1,6 @@
 'use strict';
 var gulp;
+var awsS3;
 var pkg = require('../../package.json');
 var browserSync = require('browser-sync');
 var plugins = {
@@ -34,9 +35,9 @@ function copyDir(location, fileType){
         .pipe(gulp.dest(paths.dist[fileType]));
 }
 
-function awsUpload(fileType, awsS3){
+function awsUpload(location, fileType){
     var path = 'components/' + pkg.name + '/' + pkg.version + '/' + fileType + '/';
-    return gulp.src(paths.dist[fileType] + '/**/*')
+    return gulp.src(paths[location][fileType] + '/**/*')
         .pipe(awsS3.upload({ path: path } ));
 }
 
@@ -302,11 +303,11 @@ function gulpTasks(globalGulp){
         var config = require('../../config');
         if (config.aws && config.aws.bucket && config.aws.release) {
             console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
-            var awsS3 = plugins.awsS3.setup(config.aws);
-            awsUpload('css',awsS3);
-            awsUpload('js', awsS3);
-            awsUpload('fonts', awsS3);
-            return awsUpload('icons', awsS3);
+            awsS3 = plugins.awsS3.setup(config.aws);
+            awsUpload('dist', 'css');
+            awsUpload('dist', 'js');
+            awsUpload('dist', 'fonts');
+            return awsUpload('dist', 'icons');
         } else {
             console.log('** Amazon S3 release skipped **\n' +
                 'AWS variables are not set \n' +
