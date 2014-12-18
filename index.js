@@ -160,8 +160,12 @@ function gulpTasks(globalGulp, optsIn){
     gulp.task('watch', function() {
         gulp.watch(paths.demo['root'] + '/**/*.html', ['create:site-html']);
         gulp.watch(paths.site['root'] + '/**/*.html', ['update-docs-version-within-site']);
-        gulp.watch([paths.source['sass'] + '/**/*', paths.demo['sass']], ['sass']);
-        gulp.watch([paths.source['js'] + '/**/*', paths.demo['js']], ['js']);
+        gulp.watch([
+            paths.source['sass'] + '/**/*',
+            paths.demo['sass'] + '/**/*'], ['sass']);
+        gulp.watch([
+            paths.source['js'] + '/**/*',
+            paths.demo['js'] + '/**/*'], ['js']);
     });
 
 
