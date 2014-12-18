@@ -1,5 +1,5 @@
 'use strict';
-
+console.log('Gulp started: ', Date());
 var gulp = require('gulp');
 var componentHelper = require('../index.js')(gulp, {root: '.'});
 var paths = componentHelper.paths;

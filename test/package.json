@@ -1,10 +1,14 @@
 {
-    "name": "{{ component }}",
-    "version": "0.0.1",
-    "description": "used to test version bump manually!",
-    "main": "index.js",
-    "devDependencies": {
-        "test-dep": "^1.5.9"
-    },
-    "author": "Pete Mouland"
+  "name": "test-helper",
+  "version": "0.0.1",
+  "description": "used to test version bump manually!",
+  "main": "index.js",
+  "devDependencies": {
+    "test-dep": "^1.5.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/skyglobal/test-helper.git"
+  },
+  "author": "Pete Mouland"
 }

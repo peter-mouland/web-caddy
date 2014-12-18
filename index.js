@@ -3,36 +3,30 @@ var gulp;
 var awsS3;
 var opts;
 var pkg;
+
+var browserSync = require('browser-sync');
+var del = require('del');
+var semver = require('semver');
+var browserify = require('browserify');
+var minimist = require('minimist');
+var transform = require('vinyl-transform');
+var paths = require('./paths');
+
+var plugins = require('gulp-load-plugins')({
+    rename: {
+        'gulp-gh-pages': 'gh-pages',
+        'gulp-aws-s3': 'gh-aws-s3'
+    }
+});
+
 var optsDefault = {
     root: '../..'
 };
-var browserSync = require('browser-sync');
-var plugins = {
-    autoprefixer: require('gulp-autoprefixer'),
-    awsS3 : require('gulp-aws-s3'),
-    bower : require('gulp-bower'),
-    concat : require('gulp-concat'),
-    ghPages : require('gulp-gh-pages'),
-    replace : require('gulp-replace'),
-    run : require('gulp-run'),
-    sass : require('gulp-sass'),
-    del : require('del'),
-    minimist : require('minimist'),
-    'if' : require('gulp-if'),
-    bump : require('gulp-bump'),
-    rename : require("gulp-rename"),
-    uglify : require('gulp-uglify'),
-    semver : require('semver'),
-    flatten : require('gulp-flatten'),
-    browserify : require('browserify'),
-    transform : require('vinyl-transform')
-};
-var paths = require('./paths');
 var knownArgs = {
     string: 'version',
     default: { version: 'patch' }
 };
-var args = plugins.minimist(process.argv.slice(2), knownArgs);
+var args = minimist(process.argv.slice(2), knownArgs);
 
 function copyDir(location, fileType){
     return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
@@ -83,13 +77,10 @@ function initBower(cb){
 }
 
 function initMaster(cb){
-    //lines commented out as not needed for a 'cloned' repo
     return plugins.run(
-//            '\n' +'git init;' +
             '\n' +'git add gulpfile.js;' +
             '\n' +'git add package.json;' +
             '\n' +'git commit -m "first commit";' +
-//            '\n' +'git remote add origin ' + pkg.repository.url.replace('git://github.com/','git@github.com:') + ';' +
             '\n' +'git push -u origin master;' +
             '\n').exec('', cb);
 }
@@ -136,8 +127,8 @@ function gulpTasks(globalGulp, optsIn){
 
     gulp.task('js:dev', function() {
 
-        var browserified = plugins.transform(function(filename) {
-            var b = plugins.browserify(filename);
+        var browserified = transform(function(filename) {
+            var b = browserify(filename);
             return b.bundle();
         });
 
@@ -204,12 +195,12 @@ function gulpTasks(globalGulp, optsIn){
 
 //remove temporary directors
     gulp.task('clean:tmp', function(cb) {
-        return plugins.del([
+        return del([
             '.tmp'
         ], cb);
     });
     gulp.task('clean', ['clean:tmp'], function(cb) {
-        return plugins.del([
+        return del([
             paths.site['root'],
             paths.dist['root']
         ], cb);
@@ -226,7 +217,7 @@ function gulpTasks(globalGulp, optsIn){
         return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
     });
     gulp.task('bump-version', function(cb){
-        pkg.version = plugins.semver.inc(pkg.version, args.version);
+        pkg.version = semver.inc(pkg.version, args.version);
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: args.version}))
             .pipe(gulp.dest('./'));
@@ -237,12 +228,6 @@ function gulpTasks(globalGulp, optsIn){
      */
     gulp.task('copy-structure', function(cb) {
         return gulp.src(__dirname + '/component-structure/**/*')
-            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
-            .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
-            .pipe(gulp.dest('./'));
-    });
-    gulp.task('name-component', function(cb) {
-        return gulp.src('./package.json', { base : './' })
             .pipe(plugins.replace(/{{ component }}/g, pkg.name))
             .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
@@ -263,7 +248,7 @@ function gulpTasks(globalGulp, optsIn){
             .pipe(gulp.dest('./'));
     });
     gulp.task('remove-renamed-files', function(cb) {
-        return plugins.del(
+        return del(
             ['./dot.gitignore', './src/js/main.js', './src/scss/main.scss' ],
             cb);
     });
@@ -301,7 +286,7 @@ function gulpTasks(globalGulp, optsIn){
     });
     gulp.task('release:gh-pages', function () {
         return gulp.src(paths.site['root'] + "/**/*")
-            .pipe(plugins.ghPages({
+            .pipe(plugins['gh-pages']({
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
     });
@@ -309,7 +294,7 @@ function gulpTasks(globalGulp, optsIn){
         var config = require(opts.root + '/config');
         if (config.aws && config.aws.bucket && config.aws.release) {
             console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
-            awsS3 = plugins.awsS3.setup(config.aws);
+            awsS3 = plugins['aws-s3'].setup(config.aws);
             awsUpload('dist', 'css');
             awsUpload('dist', 'js');
             awsUpload('dist', 'fonts');
