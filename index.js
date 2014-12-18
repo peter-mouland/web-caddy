@@ -267,10 +267,10 @@ function gulpTasks(globalGulp, optsIn){
             ['./dot.gitignore', './src/js/main.js', './src/scss/main.scss' ],
             cb);
     });
-    gulp.task('initMaster', function(cb) {
+    gulp.task('init:master', function(cb) {
         return initMaster(cb);
     });
-    gulp.task('initGHPages', function(cb) {
+    gulp.task('init:gh-pages', function(cb) {
         return initGHPages(cb);
     });
 
@@ -331,12 +331,12 @@ function gulpTasks(globalGulp, optsIn){
      */
     gulp.task('init:component', function(cb) {
         if (setupHasErrors()){
-            return;
+            return cb();
         }
         return runSequence(
             'copy-structure',
-            ['initMaster','rename-dot-gitignore', 'rename-js', 'rename-scss'],
-            ['initGHPages'],
+            ['init:master','rename-dot-gitignore', 'rename-js', 'rename-scss'],
+            ['init:gh-pages'],
             'remove-renamed-files',
             cb);
     });

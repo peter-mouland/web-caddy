@@ -1,6 +1,0 @@
-{
-  "name": "test json",
-  "version": "0.1.0",
-  "description": "A way to test version bump through gulp",
-  "main": "index.js"
-}

@@ -1,5 +1,5 @@
 {
-    "name": "test-package",
+    "name": "{{ component }}",
     "version": "0.0.1",
     "description": "used to test version bump manually!",
     "main": "index.js",
