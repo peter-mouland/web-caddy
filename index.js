@@ -125,7 +125,7 @@ function gulpTasks(globalGulp, optsIn){
             .pipe(browserSync.reload({stream:true}));
     });
 
-    gulp.task('js:dev', function() {
+    gulp.task('js:dev', ['clean:js'], function() {
 
         var browserified = transform(function(filename) {
             var b = browserify(filename);
@@ -144,7 +144,8 @@ function gulpTasks(globalGulp, optsIn){
         return gulp.src(paths.site['js'] + '/*.js')
             .pipe(plugins.rename({suffix:'.min'}))
             .pipe(plugins.uglify())
-            .pipe(gulp.dest(paths.site['js']));
+            .pipe(gulp.dest(paths.site['js']))
+            .pipe(browserSync.reload({stream:true}));
     });
 
     gulp.task('browserSync', function() {
@@ -157,8 +158,10 @@ function gulpTasks(globalGulp, optsIn){
     });
 
     gulp.task('watch', function() {
-        gulp.watch([paths.site['root'], paths.demo['root']], ['create-site']);
-        gulp.watch([paths.source['sass'] + '/**/*',paths.demo['sass']], ['sass']);
+        gulp.watch(paths.demo['root'] + '/**/*.html', ['create-site-html']);
+        gulp.watch(paths.site['root'] + '/**/*.html', ['update-docs-version-within-site']);
+        gulp.watch([paths.source['sass'] + '/**/*', paths.demo['sass']], ['sass']);
+        gulp.watch([paths.source['js'] + '/**/*', paths.demo['js']], ['js']);
     });
 
 
@@ -167,7 +170,8 @@ function gulpTasks(globalGulp, optsIn){
         return gulp.src([paths.demo['root'] + '/index.html',
                 paths.demo['root'] +'/_includes/*.html'])
             .pipe(plugins.concat('index.html'))
-            .pipe(gulp.dest(paths.site['root']));
+            .pipe(gulp.dest(paths.site['root']))
+            .pipe(browserSync.reload({stream:true}));
     });
 
     gulp.task('create-site-images', function createSite() {
@@ -194,6 +198,11 @@ function gulpTasks(globalGulp, optsIn){
     });
 
 //remove temporary directors
+    gulp.task('clean:js', function(cb) {
+        return del([
+            paths.site['js']
+        ], cb);
+    });
     gulp.task('clean:tmp', function(cb) {
         return del([
             '.tmp'

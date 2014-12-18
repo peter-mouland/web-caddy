@@ -8,6 +8,7 @@ var del = require('del');
 
 gulp.task('test:clean', ['clean'], function(cb){
     return del([
+        './bower_components',
         './demo',
         './src',
         './*.md',
