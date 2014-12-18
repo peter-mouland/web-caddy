@@ -30,7 +30,12 @@ To build the Gulp Component Helper locally, you'll need to install:
 
 ## Running Locally
 
- * ?
+There is a test directory where your changes can be tried out.
+All Git/Upload tasks are currently mocked to prevent accidental commits.
+
+ * `cd test`
+ * `gulp init:component`
+ * `gulp ...`
 
 ## Releasing (admin only)
 

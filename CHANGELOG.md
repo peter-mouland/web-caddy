@@ -1,12 +1,17 @@
 # Change Log
 
+## 0.3.1
+
+ * Updated test area. Can test all gulp tasks (Dangerous tasks are mocked).
+ * Fixed gulp watch
+
 ## 0.3.0
 
  * Updated default bower directories to include `src`
 
 ## 0.2.2
 
- * Fixed some bugs in teh examples code
+ * Fixed some bugs in the examples code
 
 ## 0.2.1
 
