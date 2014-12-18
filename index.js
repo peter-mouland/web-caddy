@@ -1,7 +1,11 @@
 'use strict';
 var gulp;
 var awsS3;
-var pkg = require('../../package.json');
+var opts;
+var pkg;
+var optsDefault = {
+    root: '../..'
+};
 var browserSync = require('browser-sync');
 var plugins = {
     autoprefixer: require('gulp-autoprefixer'),
@@ -24,11 +28,11 @@ var plugins = {
     transform : require('vinyl-transform')
 };
 var paths = require('./paths');
-var knownOptions = {
+var knownArgs = {
     string: 'version',
     default: { version: 'patch' }
 };
-var options = plugins.minimist(process.argv.slice(2), knownOptions);
+var args = plugins.minimist(process.argv.slice(2), knownArgs);
 
 function copyDir(location, fileType){
     return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
@@ -68,7 +72,7 @@ function setupHasErrors(){
 }
 
 function initBower(cb){
-    var config = require('../../config');
+    var config = require(opts.root + '/config');
     if (config.bower && config.bower.release && config.bower.name){
         return plugins.run('bower register ' + config.bower.name + ' ' + pkg.repository.url).exec('', cb);
     } else {
@@ -104,8 +108,10 @@ function initGHPages(cb){
             '\n').exec('', cb);
 }
 
-function gulpTasks(globalGulp){
+function gulpTasks(globalGulp, optsIn){
     gulp = globalGulp;
+    opts = optsIn || optsDefault;
+    pkg = require(opts.root + '/package.json');
     var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
     var runSequence = require('run-sequence').use(gulp);
 
@@ -220,9 +226,9 @@ function gulpTasks(globalGulp){
         return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
     });
     gulp.task('bump-version', function(cb){
-        pkg.version = plugins.semver.inc(pkg.version, options.version);
+        pkg.version = plugins.semver.inc(pkg.version, args.version);
         return gulp.src('./*.json')
-            .pipe(plugins.bump({type: options.version}))
+            .pipe(plugins.bump({type: args.version}))
             .pipe(gulp.dest('./'));
     });
 
@@ -300,7 +306,7 @@ function gulpTasks(globalGulp){
             })).pipe(gulp.dest('/tmp/gh-pages'));
     });
     gulp.task('release:aws', function(cb) {
-        var config = require('../../config');
+        var config = require(opts.root + '/config');
         if (config.aws && config.aws.bucket && config.aws.release) {
             console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
             awsS3 = plugins.awsS3.setup(config.aws);

@@ -1,9 +1,9 @@
 'use strict';
 
 var gulp = require('gulp');
-var pkg = require('../package.json');
-var componentHelper = require('../')(gulp, pkg);
+var componentHelper = require('../index.js')(gulp, {root: '.'});
 var paths = componentHelper.paths;
+var runSequence = require('run-sequence');
 
 
 gulp.task('pre-build', function(cb){
