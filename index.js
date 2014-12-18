@@ -158,7 +158,7 @@ function gulpTasks(globalGulp, optsIn){
     });
 
     gulp.task('watch', function() {
-        gulp.watch(paths.demo['root'] + '/**/*.html', ['create-site-html']);
+        gulp.watch(paths.demo['root'] + '/**/*.html', ['create:site-html']);
         gulp.watch(paths.site['root'] + '/**/*.html', ['update-docs-version-within-site']);
         gulp.watch([paths.source['sass'] + '/**/*', paths.demo['sass']], ['sass']);
         gulp.watch([paths.source['js'] + '/**/*', paths.demo['js']], ['js']);
@@ -166,7 +166,7 @@ function gulpTasks(globalGulp, optsIn){
 
 
 //    create the _ste directories ready for demo
-    gulp.task('create-site-html', function createSite() {
+    gulp.task('create:site-html', function createSite() {
         return gulp.src([paths.demo['root'] + '/index.html',
                 paths.demo['root'] +'/_includes/*.html'])
             .pipe(plugins.concat('index.html'))
@@ -174,12 +174,12 @@ function gulpTasks(globalGulp, optsIn){
             .pipe(browserSync.reload({stream:true}));
     });
 
-    gulp.task('create-site-images', function createSite() {
+    gulp.task('create:site-images', function createSite() {
         return gulp.src(paths.demo['images'] + '/**/*')
             .pipe(gulp.dest(paths.site['images']));
     });
 
-    gulp.task('create-site-fonts', function createSite() {
+    gulp.task('create:site-fonts', function createSite() {
         return gulp.src([
                 paths.source['fonts'] + '/**/*',
                 paths.bower['fonts'] + '/**/*.{eot,ttf,woff,svg}'
@@ -187,12 +187,12 @@ function gulpTasks(globalGulp, optsIn){
             .pipe(plugins.flatten())
             .pipe(gulp.dest(paths.site['fonts']));
     });
-    gulp.task('create-site', function createSite() {
-        return runSequence(['create-site-html', 'create-site-images', 'create-site-fonts']);
+    gulp.task('create:site', function createSite() {
+        return runSequence(['create:site-html', 'create:site-images', 'create:site-fonts']);
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create-site', 'bower'], ['update-docs-version', 'sass', 'js'], 'create-dist',
+        return runSequence('clean', 'pre-build', ['create:site', 'bower'], ['update-docs-version', 'sass', 'js'], 'create:dist',
             cb
         );
     });
@@ -241,7 +241,7 @@ function gulpTasks(globalGulp, optsIn){
             .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
-    gulp.task('rename-js', function(cb) {
+    gulp.task('rename:js', function(cb) {
         return gulp.src(['./src/js/*.js'], { base : './' })
             .pipe(plugins.rename(function(path){
                 path.dirname = "";
@@ -249,12 +249,12 @@ function gulpTasks(globalGulp, optsIn){
             }))
             .pipe(gulp.dest('./src/js/'));
     });
-    gulp.task('rename-scss', function(cb) {
+    gulp.task('rename:scss', function(cb) {
         return gulp.src(['./src/scss/main.scss'], { base : './' })
             .pipe(plugins.rename(pkg.name + '.scss'))
             .pipe(gulp.dest('./src/scss/'));
     });
-    gulp.task('rename-dot-gitignore', function(cb) {
+    gulp.task('rename:gitignore', function(cb) {
         return gulp.src('./dot.gitignore', { base : './' })
             .pipe(plugins.rename('.gitignore'))
             .pipe(gulp.dest('./'));
@@ -271,7 +271,7 @@ function gulpTasks(globalGulp, optsIn){
         return initGHPages(cb);
     });
 
-    gulp.task('git-commit-push', function(cb){
+    gulp.task('git:commit-push', function(cb){
         return plugins.run(
                 'git commit -am "Version bump for release";' +
                 'git push origin master').exec('', cb);
@@ -280,13 +280,13 @@ function gulpTasks(globalGulp, optsIn){
     /*
      * RELEASING
      */
-    gulp.task('create-dist', function() {
+    gulp.task('create:dist', function() {
         copyDir('site', 'js');
         copyDir('site', 'css');
         return copyDir('site', 'sass');
     });
 
-    gulp.task('git-tag', function(cb) {
+    gulp.task('git:tag', function(cb) {
         console.log('** Tagging Git : v' +  pkg.version + ' **\n');
         return plugins.run(
                 'git tag -a v'+ pkg.version +' -m "release v' + pkg.version +'"; ' +
@@ -332,7 +332,7 @@ function gulpTasks(globalGulp, optsIn){
         }
         return runSequence(
             'copy-structure',
-            ['init:master','rename-dot-gitignore', 'rename-js', 'rename-scss'],
+            ['init:master','rename:gitignore', 'rename:js', 'rename:scss'],
             ['init:gh-pages'],
             'remove-renamed-files',
             cb);
@@ -353,8 +353,8 @@ function gulpTasks(globalGulp, optsIn){
         return runSequence(
             'bump-version',
             'build',
-            'git-commit-push',
-            'git-tag',
+            'git:commit-push',
+            'git:tag',
             'release:gh-pages',
             'release:aws',
             'clean:tmp',
