@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.2
+
+ * Fixed aws-s3 plugin name
+
 ## 0.3.1
 
  * Updated test area. Can test all gulp tasks (Dangerous tasks are mocked).
