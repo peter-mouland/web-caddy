@@ -4,6 +4,7 @@ var awsS3;
 var opts;
 var pkg;
 
+var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var del = require('del');
 var semver = require('semver');
@@ -102,7 +103,8 @@ function initGHPages(cb){
 function gulpTasks(globalGulp, optsIn){
     gulp = globalGulp;
     opts = optsIn || optsDefault;
-    pkg = require(opts.root + '/package.json');
+    var packageFilePath = findup('package.json');
+    pkg = require(packageFilePath);
     var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
     var runSequence = require('run-sequence').use(gulp);
 
