@@ -15,7 +15,7 @@ var paths = require('./paths');
 var plugins = require('gulp-load-plugins')({
     rename: {
         'gulp-gh-pages': 'gh-pages',
-        'gulp-aws-s3': 'gh-aws-s3'
+        'gulp-aws-s3': 'aws-s3'
     }
 });
 
