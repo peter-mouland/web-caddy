@@ -37,6 +37,14 @@ All Git/Upload tasks are currently mocked to prevent accidental commits.
  * `gulp init:component`
  * `gulp ...`
 
+If you want to upgrade or test an existing component locally, you can link the component to `gulp-component-helper`.
+Any changes made to the gulp-component-helper will be picked up by the component. Useful for modifying the gulp tasks.
+
+ * `cd gulp-component-helper`
+ * `npm link`
+ * `cd some-component`
+ * `npm link gulp-component-helper`
+
 ## Releasing (admin only)
 
  * Update [package.json](package.json) and [examples/package.json](examples/package.json) version number appropriately
