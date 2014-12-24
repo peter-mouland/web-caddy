@@ -7,7 +7,7 @@
     ],
     "description": "{{ component }}",
     "main": "dist",
-    "license": "MIT",
+    "license": "BSD3",
     "ignore": [
         "**/*",
         "!dist/**/*",
