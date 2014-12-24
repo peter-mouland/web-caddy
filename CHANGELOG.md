@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.3
+
+ * Fixed how config files were found
+
 ## 0.3.2
 
  * Fixed aws-s3 plugin name
