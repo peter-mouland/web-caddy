@@ -14,7 +14,7 @@
         "!src/**/*"
     ],
     "devDependencies": {
-        "bskyb-colours": "~0.0.9",
-        "bskyb-typography": "~0.0.6"
+        "bskyb-colours": "~0.1.0",
+        "bskyb-typography": "~0.1.0"
     }
 }
