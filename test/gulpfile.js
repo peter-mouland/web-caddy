@@ -1,7 +1,7 @@
 'use strict';
 console.log('Gulp started: ', Date());
 var gulp = require('gulp');
-var componentHelper = require('../index.js')(gulp, {root: '.'});
+var componentHelper = require('../index.js')(gulp);
 var paths = componentHelper.paths;
 var runSequence = require('run-sequence');
 var del = require('del');

@@ -1,7 +1,6 @@
 'use strict';
 var gulp;
 var awsS3;
-var opts;
 var pkg;
 
 var findup = require('findup-sync');
@@ -20,9 +19,6 @@ var plugins = require('gulp-load-plugins')({
     }
 });
 
-var optsDefault = {
-    root: '../..'
-};
 var knownArgs = {
     string: 'version',
     default: { version: 'patch' }
@@ -67,7 +63,8 @@ function setupHasErrors(){
 }
 
 function initBower(cb){
-    var config = require(opts.root + '/config');
+    var configPath = findup('config/index.js');
+    var config = require(configPath);
     if (config.bower && config.bower.release && config.bower.name){
         return plugins.run('bower register ' + config.bower.name + ' ' + pkg.repository.url).exec('', cb);
     } else {
@@ -100,9 +97,8 @@ function initGHPages(cb){
             '\n').exec('', cb);
 }
 
-function gulpTasks(globalGulp, optsIn){
+function gulpTasks(globalGulp){
     gulp = globalGulp;
-    opts = optsIn || optsDefault;
     var packageFilePath = findup('package.json');
     pkg = require(packageFilePath);
     var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
@@ -323,7 +319,8 @@ function gulpTasks(globalGulp, optsIn){
     });
 
     gulp.task('release:aws', function(cb) {
-        var config = require(opts.root + '/config');
+        var configPath = findup('config/index.js');
+        var config = require(configPath);
         if (config.aws && config.aws.bucket && config.aws.release) {
             console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
             awsS3 = plugins['aws-s3'].setup(config.aws);
