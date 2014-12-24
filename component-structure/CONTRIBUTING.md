@@ -24,19 +24,28 @@ To build the Gulp Component Helper locally, you'll need to install:
 6. Make sure you are still up to date with master
 `git pull upstream master`
 7. If necessary, rebase your commits into logical chunks, without errors.
-8. Push the branch up 
+8. Push the branch up
 `git push origin my-awesome-feature`
 9. Create a pull request and describe what your change does and the why you think it should be merged.
 
 ## Running Locally
 
  * `gulp serve` :  Run server on port 3456
- 
+
+## Working with dependencies
+
+If you want to make changes to the bower dependencies, you can clone them down from [here](http://github.com/skyglobal) and do the following.
+
+ * `cd some-bower-dependency/`
+ * `bower link`
+ * `cd {{ component }}/`
+ * `bower link some-bower-dependency`
+
 ## Releasing (admin only)
 
 `gulp release`
 
-This will automatically bump the 'patch' section of the version number.  
+This will automatically bump the 'patch' section of the version number.
 
 To bump a different area of the version number you can also use `major|minor|patch|prerelease` e.g. :
 
