@@ -308,15 +308,28 @@ function gulpTasks(globalGulp, optsIn){
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
     });
+
+    gulp.task('aws-upload:css', function(cb) {
+        return awsUpload('dist', 'css');
+    });
+    gulp.task('aws-upload:js', function(cb) {
+        return awsUpload('dist', 'js');
+    });
+    gulp.task('aws-upload:fonts', function(cb) {
+        return awsUpload('dist', 'fonts');
+    });
+    gulp.task('aws-upload:icons', function(cb) {
+        return awsUpload('dist', 'icons');
+    });
+
     gulp.task('release:aws', function(cb) {
         var config = require(opts.root + '/config');
         if (config.aws && config.aws.bucket && config.aws.release) {
             console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
             awsS3 = plugins['aws-s3'].setup(config.aws);
-            awsUpload('dist', 'css');
-            awsUpload('dist', 'js');
-            awsUpload('dist', 'fonts');
-            return awsUpload('dist', 'icons');
+            return runSequence(
+                ['aws-upload:css','aws-upload:js', 'aws-upload:fonts', 'aws-upload:icons'],
+                cb);
         } else {
             console.log('** Amazon S3 release skipped **\n' +
                 'AWS variables are not set \n' +
@@ -362,7 +375,7 @@ function gulpTasks(globalGulp, optsIn){
             'git:commit-push',
             'git:tag',
             'release:gh-pages',
-            'release:aws',
+            'release:aws', //doesnt complete properly
             'clean:tmp',
             cb
         );
