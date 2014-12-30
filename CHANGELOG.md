@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.3.5
+
+ * Fixed 'version update' to only update placeholders within html files i.e. not versioned dependencies
+
 ## 0.3.3
 
  * Fixed how config files were found
