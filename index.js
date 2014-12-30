@@ -36,15 +36,6 @@ function awsUpload(location, fileType){
         .pipe(awsS3.upload({ path: path } ));
 }
 
-function updateDocs(files){
-    var now = Date().split(' ').splice(0,5).join(' ');
-    return gulp.src(files, { base : './' })
-        .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, pkg.version))
-        .pipe(plugins.replace(/{{ site.version }}/g, pkg.version))
-        .pipe(plugins.replace(/{{ site.time }}/g, now))
-        .pipe(gulp.dest('./'));
-}
-
 function setupHasErrors(){
     var errorText = '\Component %s Error:' +
         '\nPlease update `package.json` (without spaces): \n  i.e.' +
@@ -194,7 +185,7 @@ function gulpTasks(globalGulp){
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create:site', 'bower'], ['update-docs-version', 'sass', 'js'], 'create:dist',
+        return runSequence('clean', 'pre-build', ['create:site', 'bower'], ['update-version-in-site', 'sass', 'js'], 'create:dist',
             cb
         );
     });
@@ -218,14 +209,20 @@ function gulpTasks(globalGulp){
     });
 
 //update the version number used within all documentation and html
-    gulp.task('update-docs-version-within-md', function(){
-        return updateDocs(['README.md']);
+    gulp.task('update-version-in-md', function(){
+        return gulp.src(['README.md'], { base : './' })
+            .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, pkg.version))
+            .pipe(gulp.dest('./'));
     });
-    gulp.task('update-docs-version-within-site', function(){
-        return updateDocs([paths.site['root'] + '/**/*.html']);
+    gulp.task('update-version-in-html', function(){
+        var now = Date().split(' ').splice(0,5).join(' ');
+        return gulp.src([paths.site['root'] + '/**/*.html'], { base : './' })
+            .pipe(plugins.replace(/{{ site.version }}/g, pkg.version))
+            .pipe(plugins.replace(/{{ site.time }}/g, now))
+            .pipe(gulp.dest('./'));
     });
-    gulp.task('update-docs-version', function(cb){
-        return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
+    gulp.task('update-version-in-site', function(cb){
+        return runSequence(['update-version-in-html', 'update-version-in-md'],cb);
     });
     gulp.task('bump-version', function(cb){
         pkg.version = semver.inc(pkg.version, args.version);
