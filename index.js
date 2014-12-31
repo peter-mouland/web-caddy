@@ -288,7 +288,7 @@ function gulpTasks(globalGulp){
     });
     gulp.task('test:tdd', function (done) {
         karma.start({
-            configFile: findup('/test/karma.conf.js'),
+            configFile: findup('/test/karma.conf.js')
         }, done);
     });
 
