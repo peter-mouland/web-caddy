@@ -282,13 +282,13 @@ function gulpTasks(globalGulp){
      */
     gulp.task('test', function (done) {
         karma.start({
-            configFile: __dirname + '/test/karma.conf.js',
+            configFile: findup('/test/karma.conf.js'),
             singleRun: true
         }, done);
     });
     gulp.task('test:tdd', function (done) {
         karma.start({
-            configFile: __dirname + '/test/karma.conf.js'
+            configFile: findup('/test/karma.conf.js'),
         }, done);
     });
 
