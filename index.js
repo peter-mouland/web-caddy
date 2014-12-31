@@ -11,6 +11,7 @@ var browserify = require('browserify');
 var minimist = require('minimist');
 var transform = require('vinyl-transform');
 var paths = require('./paths');
+var karma = require('karma').server;
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -277,6 +278,22 @@ function gulpTasks(globalGulp){
     });
 
     /*
+     * TESTING
+     */
+    gulp.task('test', function (done) {
+        karma.start({
+            configFile: __dirname + '/test/karma.conf.js',
+            singleRun: true
+        }, done);
+    });
+    gulp.task('test:tdd', function (done) {
+        karma.start({
+            configFile: __dirname + '/test/karma.conf.js'
+        }, done);
+    });
+
+
+    /*
      * RELEASING
      */
     gulp.task('create:dist', function() {
@@ -366,10 +383,11 @@ function gulpTasks(globalGulp){
         return runSequence(
             'bump-version',
             'build',
+            'test',
             'git:commit-push',
             'git:tag',
             'release:gh-pages',
-            'release:aws', //doesnt complete properly
+            'release:aws',
             'clean:tmp',
             cb
         );

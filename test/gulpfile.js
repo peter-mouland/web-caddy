@@ -5,10 +5,12 @@ var componentHelper = require('../index.js')(gulp);
 var paths = componentHelper.paths;
 var runSequence = require('run-sequence');
 var del = require('del');
+var karma = require('karma').server;
 
 gulp.task('test:clean', ['clean'], function(cb){
     return del([
         './bower_components',
+        './test',
         './demo',
         './src',
         './*.md',
@@ -62,4 +64,19 @@ gulp.task('init:bower', function(cb) {
 gulp.task('release:aws', function(cb) {
     console.log('in "mock" release:aws');
     return cb();
+});
+
+
+
+/* SORT OUT TEST CONFIG */
+gulp.task('test', function (done) {
+    karma.start({
+        configFile: __dirname + '/test/karma.conf.js',
+        singleRun: true
+    }, done);
+});
+gulp.task('test:tdd', function (done) {
+    karma.start({
+        configFile: __dirname + '/test/karma.conf.js'
+    }, done);
 });
