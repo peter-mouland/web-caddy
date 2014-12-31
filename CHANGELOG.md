@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.0
+
+ * Added Jasmine test framework with coverage
+
 ## 0.3.5
 
  * Fixed 'version update' to only update placeholders within html files i.e. not versioned dependencies
