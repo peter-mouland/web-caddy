@@ -1,27 +1,45 @@
 [{{ component }}](http://{{ git.user }}.github.io/{{ component }}/) 
 ========================
 
-> {{ component }}
+> Please take a look at the [demo page](http://skyglobal.github.io/{{ component }}/)
 
-See http://{{ git.user }}.github.io/{{ component }}/ for a demo of the Component
 
-## Usage
+## Quick-Start
 
-### As CSS
+Include the Share assets in your project either as **Static Resources**
 
-http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/css/{{ component }}.css
+```
+<link rel="stylesheet" href="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/css/{{ component }}.css" />
+<script type="text/javascript" src="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/{{ component }}.min.js"></script>
 
-### As JS
+or alternatively, **Via Bower**
 
-http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/{{ component }}.min.js
+ * Run: `bower install --save-dev bskyb-{{ component }}`
+ * Include Sass: `@import 'bower_components/bskyb-{{ component }}/src/scss/{{ component }}';`
+ * Include JS: `var share = require('../../bower_components/bskyb-{{ component }}/src/js/{{ component }}');`
 
-### As a Sass Module
 
-`bower install --save-dev bskyb-{{ component }}`
+#### Dependencies
 
-### Locally
+This component relies on other components and you must also include these in your project.
 
-`gulp serve`
+ * [Dependency Name](https://github.com/skyglobal/DependencyName)
+
+#### Developer Notes
+
+Choose a type of {{ component }} component and copy the relevant html.
+ * [example](demo/_includes/example.html)
+ * [example](demo/_includes/example.html),
+
+#### Initialise
+
+To enable --descrition here--, the JS must be initialised:
+
+```
+<script type="text/javascript">
+  skyComponents.{{ component }}.init();
+</script>
+```
 
 ## Contribution
 
