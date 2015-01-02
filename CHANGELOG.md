@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.1
+
+ * Updated test task to fail if coverage is too low
+
 ## 0.4.0
 
  * Added Jasmine test framework with coverage
