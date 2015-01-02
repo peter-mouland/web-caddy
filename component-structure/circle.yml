@@ -1,0 +1,16 @@
+test:
+  pre:
+    - npm install -g gulp
+    - npm install karma-chrome-launcher
+    - npm install karma-commonjs
+    - npm install karma-coverage
+    - npm install karma-jasmine
+    - npm install karma-phantomjs-launcher
+    - npm install karma-html2js-preprocessor
+    - npm install karma-html2js-preprocessor
+    - gulp build
+  override:
+    - gulp test
+machine:
+  node:
+    version: v0.10.33

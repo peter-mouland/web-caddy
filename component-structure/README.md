@@ -1,4 +1,4 @@
-[{{ component }}](http://{{ git.user }}.github.io/{{ component }}/) 
+[{{ component }}](http://{{ git.user }}.github.io/{{ component }}/)  [![Circle CI](https://circleci.com/gh/skyglobal/{{ component }}/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/{{ component }}/tree/master)
 ========================
 
 > Please take a look at the [demo page](http://skyglobal.github.io/{{ component }}/)
