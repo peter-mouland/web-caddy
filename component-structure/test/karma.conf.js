@@ -6,8 +6,10 @@ module.exports = function(config) {
         reporters: ['progress', 'coverage'],
         preprocessors: {
             'src/**/*.js': ['commonjs', 'coverage'],
-            'test/**/*.js': ['commonjs']
+            'test/**/*.js': ['commonjs'],
+            '_site/*.html': ['html2js']
         },
+        plugins:['karma-html2js-preprocessor', 'karma-coverage', 'karma-commonjs', 'karma-jasmine', 'karma-phantomjs-launcher', 'karma-chrome-launcher'],
         coverageReporter: {
             dir : 'test/coverage/',
             reporters: [
@@ -25,6 +27,7 @@ module.exports = function(config) {
             ]
         },
         files: [
+            {pattern: '_site/index.html', watched: false },
             'src/**/*.js',
             'test/**/*.spec.js'
         ],
