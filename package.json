@@ -1,6 +1,6 @@
 {
   "name": "gulp-component-helper",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A way to help ensure the common tasks are consistent across components",
   "main": "index.js",
   "files": [
@@ -27,6 +27,7 @@
     "gulp-run": "^1.6.4",
     "gulp-sass": "^1.2.4",
     "gulp-uglify": "^1.0.2",
+    "gulp-util": "^3.0.1",
     "jasmine-core": "^2.1.3",
     "karma": "^0.12.30",
     "karma-chrome-launcher": "^0.1.7",

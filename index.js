@@ -19,12 +19,19 @@ var plugins = require('gulp-load-plugins')({
         'gulp-aws-s3': 'aws-s3'
     }
 });
-
 var knownArgs = {
     string: 'version',
     default: { version: 'patch' }
 };
 var args = minimist(process.argv.slice(2), knownArgs);
+
+
+function handleError(err, exitOnError) {
+    var displayErr = plugins.util.colors.red(err);
+    plugins.util.log(displayErr);
+    if (exitOnError) process.exit(1);
+}
+
 
 function copyDir(location, fileType){
     return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
@@ -280,16 +287,33 @@ function gulpTasks(globalGulp){
     /*
      * TESTING
      */
-    gulp.task('test', function (done) {
+    gulp.task('test:single-run', function (done) {
         karma.start({
-            configFile: findup('test/karma.conf.js'),
+            configFile: findup(paths.test.config),
             singleRun: true
         }, done);
     });
     gulp.task('test:tdd', function (done) {
         karma.start({
-            configFile: findup('test/karma.conf.js')
+            configFile: findup(paths.test.config)
         }, done);
+    });
+    gulp.task('test', ['test:single-run'], function(cb){
+        var results = require(findup(paths.test.summary));
+        var config = require(findup(paths.test.config));
+        var coverage = config({set: function(conf){return conf;}}).coverageReporter;
+        var thresholds = coverage.reporters[0].watermarks;
+        var err = false;
+        for (var file in results){
+            for (var threshold in thresholds){
+                if (results[file][threshold].pct < thresholds[threshold][0]){
+                    handleError(file + ' : ' + threshold + ' Coverage is too low (<' + thresholds[threshold][0] + '%)');
+                    err = true;
+                }
+            }
+        }
+        if (err) process.exit(1);
+        cb();
     });
 
 

@@ -1,7 +1,7 @@
 module.exports = function(config) {
-    config.set({
+    return config.set({
         basePath: '..',
-        browsers: ['Chrome', 'PhantomJS'],
+        browsers: ['PhantomJS'],
         frameworks: ['commonjs', 'jasmine'],
         reporters: ['progress', 'coverage'],
         preprocessors: {
@@ -9,8 +9,20 @@ module.exports = function(config) {
             'test/**/*.js': ['commonjs']
         },
         coverageReporter: {
-            type : 'html',
-            dir : 'test/coverage/'
+            dir : 'test/coverage/',
+            reporters: [
+                { type: 'html',
+                    subdir: function(browser) {
+                        return browser.toLowerCase().split(/[ /-]/)[0];
+                    },
+                    watermarks: {
+                        statements: [75, 85],
+                        lines: [75, 85],
+                        functions: [75, 85],
+                        branches:[50, 70]
+                    }},
+                { type: 'json-summary', subdir: '.', file: 'summary.json' },
+            ]
         },
         files: [
             'src/**/*.js',
@@ -18,9 +30,6 @@ module.exports = function(config) {
         ],
         exclude: [
             'src/**/*.requirejs.js'
-        ],
-        browserify: {
-            debug: false
-        }
+        ]
     });
 };
