@@ -405,9 +405,10 @@ function gulpTasks(globalGulp){
 
     gulp.task('release', function(cb) {
         return runSequence(
-            'bump-version',
             'build',
             'test',
+            'bump-version',
+            'update-version-in-site',
             'git:commit-push',
             'git:tag',
             'release:gh-pages',
