@@ -1,5 +1,25 @@
 # Change Log
 
+## 0.4.2
+
+ * Updated tests to include bower dependencies if required
+
+## 0.4.1
+
+ * Updated test task to fail if coverage is too low
+
+## 0.4.0
+
+ * Added Jasmine test framework with coverage
+
+## 0.3.5
+
+ * Fixed 'version update' to only update placeholders within html files i.e. not versioned dependencies
+
+## 0.3.3
+
+ * Fixed how config files were found
+
 ## 0.3.2
 
  * Fixed aws-s3 plugin name

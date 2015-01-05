@@ -1,6 +1,6 @@
 {
   "name": "gulp-component-helper",
-  "version": "0.3.2",
+  "version": "0.4.2",
   "description": "A way to help ensure the common tasks are consistent across components",
   "main": "index.js",
   "files": [
@@ -13,8 +13,6 @@
     "index.js"
   ],
   "dependencies": {
-    "browser-sync": "^1.5.9",
-    "del": "^1.1.0",
     "gulp-load-plugins": "^0.8.0",
     "gulp-autoprefixer": "^2.0.0",
     "gulp-aws-s3": "0.0.10",
@@ -29,6 +27,17 @@
     "gulp-run": "^1.6.4",
     "gulp-sass": "^1.2.4",
     "gulp-uglify": "^1.0.2",
+    "gulp-util": "^3.0.1",
+    "jasmine-core": "^2.1.3",
+    "karma": "^0.12.30",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-commonjs": "0.0.13",
+    "karma-coverage": "^0.2.7",
+    "karma-jasmine": "^0.3.3",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-html2js-preprocessor": "^0.1.0",
+    "browser-sync": "^1.5.9",
+    "del": "^1.1.0",
     "minimist": "^1.1.0",
     "run-sequence": "^1.0.1",
     "semver": "^4.1.0",

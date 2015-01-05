@@ -3,6 +3,12 @@ module.exports = {
         root: './bower_components',
         fonts: './bower_components/*/dist/fonts'
     },
+    "test": {
+        root: './test',
+        config: './test/karma.conf.js',
+        phantom: './test/coverage/phantomjs',
+        summary: './test/coverage/summary.json'
+    },
     "site": {
         root: './_site',
         js: "./_site/js",

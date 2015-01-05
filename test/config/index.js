@@ -3,7 +3,6 @@ var bowerPath = findup('bower.json');
 var bower = (bowerPath) ? require(bowerPath) : {};
 bower.release = false;
 
-
 module.exports = {
     bower: bower,
     aws:{

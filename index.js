@@ -11,6 +11,7 @@ var browserify = require('browserify');
 var minimist = require('minimist');
 var transform = require('vinyl-transform');
 var paths = require('./paths');
+var karma = require('karma').server;
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -18,12 +19,19 @@ var plugins = require('gulp-load-plugins')({
         'gulp-aws-s3': 'aws-s3'
     }
 });
-
 var knownArgs = {
     string: 'version',
     default: { version: 'patch' }
 };
 var args = minimist(process.argv.slice(2), knownArgs);
+
+
+function handleError(err, exitOnError) {
+    var displayErr = plugins.util.colors.red(err);
+    plugins.util.log(displayErr);
+    if (exitOnError) process.exit(1);
+}
+
 
 function copyDir(location, fileType){
     return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
@@ -34,15 +42,6 @@ function awsUpload(location, fileType){
     var path = 'components/' + pkg.name + '/' + pkg.version + '/' + fileType + '/';
     return gulp.src(paths[location][fileType] + '/**/*')
         .pipe(awsS3.upload({ path: path } ));
-}
-
-function updateDocs(files){
-    var now = Date().split(' ').splice(0,5).join(' ');
-    return gulp.src(files, { base : './' })
-        .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, pkg.version))
-        .pipe(plugins.replace(/{{ site.version }}/g, pkg.version))
-        .pipe(plugins.replace(/{{ site.time }}/g, now))
-        .pipe(gulp.dest('./'));
 }
 
 function setupHasErrors(){
@@ -157,7 +156,7 @@ function gulpTasks(globalGulp){
 
     gulp.task('watch', function() {
         gulp.watch(paths.demo['root'] + '/**/*.html', ['create:site-html']);
-        gulp.watch(paths.site['root'] + '/**/*.html', ['update-docs-version-within-site']);
+        gulp.watch(paths.site['root'] + '/**/*.html', ['update-version-in-site']);
         gulp.watch([
             paths.source['sass'] + '/**/*',
             paths.demo['sass'] + '/**/*'], ['sass']);
@@ -194,7 +193,7 @@ function gulpTasks(globalGulp){
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create:site', 'bower'], ['update-docs-version', 'sass', 'js'], 'create:dist',
+        return runSequence('clean', 'pre-build', ['create:site', 'bower'], ['update-version-in-site', 'sass', 'js'], 'create:dist',
             cb
         );
     });
@@ -218,14 +217,20 @@ function gulpTasks(globalGulp){
     });
 
 //update the version number used within all documentation and html
-    gulp.task('update-docs-version-within-md', function(){
-        return updateDocs(['README.md']);
+    gulp.task('update-version-in-md', function(){
+        return gulp.src(['README.md'], { base : './' })
+            .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, pkg.version))
+            .pipe(gulp.dest('./'));
     });
-    gulp.task('update-docs-version-within-site', function(){
-        return updateDocs([paths.site['root'] + '/**/*.html']);
+    gulp.task('update-version-in-html', function(){
+        var now = Date().split(' ').splice(0,5).join(' ');
+        return gulp.src([paths.site['root'] + '/**/*.html'], { base : './' })
+            .pipe(plugins.replace(/{{ site.version }}/g, pkg.version))
+            .pipe(plugins.replace(/{{ site.time }}/g, now))
+            .pipe(gulp.dest('./'));
     });
-    gulp.task('update-docs-version', function(cb){
-        return runSequence(['update-docs-version-within-site', 'update-docs-version-within-md'],cb);
+    gulp.task('update-version-in-site', function(cb){
+        return runSequence(['update-version-in-html', 'update-version-in-md'],cb);
     });
     gulp.task('bump-version', function(cb){
         pkg.version = semver.inc(pkg.version, args.version);
@@ -278,6 +283,39 @@ function gulpTasks(globalGulp){
                 'git commit -am "Version bump for release";' +
                 'git push origin master').exec('', cb);
     });
+
+    /*
+     * TESTING
+     */
+    gulp.task('test:single-run', function (done) {
+        karma.start({
+            configFile: findup(paths.test.config),
+            singleRun: true
+        }, done);
+    });
+    gulp.task('test:tdd', function (done) {
+        karma.start({
+            configFile: findup(paths.test.config)
+        }, done);
+    });
+    gulp.task('test', ['test:single-run'], function(cb){
+        var results = require(findup(paths.test.summary));
+        var config = require(findup(paths.test.config));
+        var coverage = config({set: function(conf){return conf;}}).coverageReporter;
+        var thresholds = coverage.reporters[0].watermarks;
+        var err = false;
+        for (var file in results){
+            for (var threshold in thresholds){
+                if (results[file][threshold].pct < thresholds[threshold][0]){
+                    handleError(file + ' : ' + threshold + ' Coverage is too low (<' + thresholds[threshold][0] + '%)');
+                    err = true;
+                }
+            }
+        }
+        if (err) process.exit(1);
+        cb();
+    });
+
 
     /*
      * RELEASING
@@ -367,12 +405,14 @@ function gulpTasks(globalGulp){
 
     gulp.task('release', function(cb) {
         return runSequence(
-            'bump-version',
             'build',
+            'test',
+            'bump-version',
+            'update-version-in-site',
             'git:commit-push',
             'git:tag',
             'release:gh-pages',
-            'release:aws', //doesnt complete properly
+            'release:aws',
             'clean:tmp',
             cb
         );

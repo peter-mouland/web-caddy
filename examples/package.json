@@ -4,10 +4,10 @@
     "description": "Example package.json. Feel free to copy!",
     "main": "index.js",
     "devDependencies": {
-        "browser-sync": "^1.5.9",
         "gulp": "^3.8.10",
-        "gulp-component-helper": "^0.3.2",
-        "run-sequence": "^1.0.1"
+        "gulp-component-helper": "^0.4.2",
+        "run-sequence": "^1.0.1",
+        "browser-sync": "^1.5.9"
     },
     "repository": {
         "type": "git",
