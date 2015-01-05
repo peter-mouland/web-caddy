@@ -72,3 +72,5 @@ This will then push the committed code to github and tag github with the new ver
 First make sure that the component is not in the bower repo by running `bower search my-component`. If the component exists, run `curl -X DELETE "https://bower.herokuapp.com/packages/PACKAGE?access_token=TOKEN"`.
 
 `gulp transferOwnership --oldUser=someone --newUser=someone-else`
+
+You can run this task before or after transferring the component repo to the new owner.
