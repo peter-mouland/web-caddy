@@ -27,7 +27,8 @@ Once the above is complete should have the conventional directory structure as w
     $ component
     ├── _site           => Generated / Compiled demo site
     ├── config          => Store the build config including the AWS variables
-    ├── dist            => Compiled code and source code to be distrubtuted via bower
+    ├── dist            => Compiled code to be distrubtuted via bower
+    ├── test            => Home of your test config plus test specs
     ├── demo            => source code used soley for demoing the functionality
     │   ├- _includes    => Contains any html files to be concatinated to index.html
     │   ├- js           => any javascript needed to get the demo working
