@@ -6,6 +6,7 @@ module.exports = function(config) {
         reporters: ['progress', 'coverage'],
         preprocessors: {
             'src/**/*.js': ['commonjs', 'coverage'],
+            'bower_components/*/src/**/*.js': ['commonjs'],
             'test/**/*.js': ['commonjs'],
             '_site/*.html': ['html2js']
         },
@@ -28,6 +29,7 @@ module.exports = function(config) {
         },
         files: [
             {pattern: '_site/index.html', watched: false },
+            {pattern: 'bower_components/*/src/**/*.js', included: true },
             'src/**/*.js',
             'test/**/*.spec.js'
         ],

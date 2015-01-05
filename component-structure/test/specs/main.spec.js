@@ -1,7 +1,10 @@
-var {{ component }} = require('../../src/js/{{ component }}');
+document.body.innerHTML = __html__['_site/index.html'];
+
+var {{ component }} = skyComponents['{{ component }}'];
+
+//{{ component }}.init(); //live events don't init for karma, so init them here if you need to
 
 describe('{{ component }} module can ', function () {
-    document.body.innerHTML = __html__['_site/index.html'];
 
     it('sum an array of numbers', function () {
 
