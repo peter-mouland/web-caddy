@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.2
+
+ * Updated tests to include bower dependencies if required
+
 ## 0.4.1
 
  * Updated test task to fail if coverage is too low
