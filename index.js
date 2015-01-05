@@ -378,6 +378,14 @@ function gulpTasks(globalGulp){
         );
     });
 
+    gulp.task('transferOwnership', function() {
+      console.log("Make sure that the bower component has been deleted from the bower repo!!");
+      var user = gulp.env.oldUser;
+      return gulp.src('./*')
+        .pipe(plugins.replace(user, gulp.env.newUser))
+        .pipe(gulp.dest('./'));
+    });
+
     return {
         paths: paths
     }
