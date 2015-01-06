@@ -96,6 +96,12 @@ function initGHPages(cb){
             '\n').exec('', cb);
 }
 
+function versionGHPage(version){
+    return gulp.src([paths.site['root'] + '/**/*',
+            '!' + paths.site['root'] + '/v**/**'])
+        .pipe(gulp.dest(paths.site['root'] + '/v' + version));
+}
+
 function gulpTasks(globalGulp){
     gulp = globalGulp;
     var packageFilePath = findup('package.json');
@@ -211,7 +217,8 @@ function gulpTasks(globalGulp){
     });
     gulp.task('clean', ['clean:tmp'], function(cb) {
         return del([
-            paths.site['root'],
+            paths.site['root'] + '/*',
+            '!' + paths.site['root'] + '/v*',
             paths.dist['root']
         ], cb);
     });
@@ -337,6 +344,7 @@ function gulpTasks(globalGulp){
         return plugins.bower()
     });
     gulp.task('release:gh-pages', function () {
+        versionGHPage(pkg.version);
         return gulp.src(paths.site['root'] + "/**/*")
             .pipe(plugins['gh-pages']({
                 cacheDir: '.tmp'
