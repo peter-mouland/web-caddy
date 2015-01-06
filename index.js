@@ -96,12 +96,6 @@ function initGHPages(cb){
             '\n').exec('', cb);
 }
 
-function versionGHPage(version){
-    return gulp.src([paths.site['root'] + '/**/*',
-            '!' + paths.site['root'] + '/v**/**'])
-        .pipe(gulp.dest(paths.site['root'] + '/v' + version));
-}
-
 function gulpTasks(globalGulp){
     gulp = globalGulp;
     var packageFilePath = findup('package.json');
@@ -173,6 +167,11 @@ function gulpTasks(globalGulp){
 
 
 //    create the _ste directories ready for demo
+    gulp.task('create:site-versioning', function() {
+        return gulp.src([paths.site['root'] + '/**/*',
+            '!' + paths.site['root'] + '/v**/**'])
+            .pipe(gulp.dest(paths.site['root'] + '/v' + pkg.version));
+    });
     gulp.task('create:site-html', function createSite() {
         return gulp.src([paths.demo['root'] + '/index.html',
                 paths.demo['root'] +'/_includes/*.html'])
@@ -343,8 +342,7 @@ function gulpTasks(globalGulp){
     gulp.task('bower', function() {
         return plugins.bower()
     });
-    gulp.task('release:gh-pages', function () {
-        versionGHPage(pkg.version);
+    gulp.task('release:gh-pages', ['create:site-versioning'], function () {
         return gulp.src(paths.site['root'] + "/**/*")
             .pipe(plugins['gh-pages']({
                 cacheDir: '.tmp'
@@ -426,11 +424,13 @@ function gulpTasks(globalGulp){
         );
     });
 
-    gulp.task('transferOwnership', function() {
-      console.log("Make sure that the bower component has been deleted from the bower repo!!");
-      var user = gulp.env.oldUser;
+    gulp.task('transfer:user', function(cb) {
+      if (!gulp.env.oldUser || !gulp.env.newUser){
+          handleError('You must give `old-user` and `new-user` arguments i.e,');
+          handleError('`gulp rename-user --old-user=someone --new-user=someone-else`', true);
+      }
       return gulp.src('./*')
-        .pipe(plugins.replace(user, gulp.env.newUser))
+        .pipe(plugins.replace(gulp.env.oldUser, gulp.env.newUser))
         .pipe(gulp.dest('./'));
     });
 

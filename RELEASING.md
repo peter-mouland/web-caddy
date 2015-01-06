@@ -1,5 +1,7 @@
 # Releasing your Component
 
+ > Only do this if you are ready for this to go public i.e. Is the repository address is never going to change
+
 `gulp release`
 
    * This will push the demo site to github.io 
@@ -17,3 +19,26 @@ To release to `bower` please update your `config/index.js` and run once :
 ### Amazon Web Services (AWS)
 
 To release to AWS please update your `config/index.js`.
+
+# Moving your component to SkyGlobal
+
+> After developing your component in your own repo, you may want to transfer ownership to skyglobal to open it up.
+
+### Bower
+
+First make sure that the component is not in the bower repo by running `bower search my-component`.
+If the component exists, run
+
+```
+curl -X DELETE "https://bower.herokuapp.com/packages/PACKAGE?access_token=TOKEN"
+```
+
+### Update Documents
+
+Make sure your github username is not in the documents. Run the following to help:
+
+`gulp transfer:user --old-user=someone --new-user=someone-else`
+
+### Transfer Github Ownership
+
+...
