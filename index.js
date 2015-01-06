@@ -1,6 +1,5 @@
 'use strict';
 var gulp;
-var awsS3;
 var pkg;
 
 var findup = require('findup-sync');
@@ -36,12 +35,6 @@ function handleError(err, exitOnError) {
 function copyDir(location, fileType){
     return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
         .pipe(gulp.dest(paths.dist[fileType]));
-}
-
-function awsUpload(location, fileType){
-    var path = 'components/' + pkg.name + '/' + pkg.version + '/' + fileType + '/';
-    return gulp.src(paths[location][fileType] + '/**/*')
-        .pipe(awsS3.upload({ path: path } ));
 }
 
 function setupHasErrors(){
@@ -167,11 +160,6 @@ function gulpTasks(globalGulp){
 
 
 //    create the _ste directories ready for demo
-    gulp.task('create:site-versioning', function() {
-        return gulp.src([paths.site['root'] + '/**/*',
-            '!' + paths.site['root'] + '/v**/**'])
-            .pipe(gulp.dest(paths.site['root'] + '/v' + pkg.version));
-    });
     gulp.task('create:site-html', function createSite() {
         return gulp.src([paths.demo['root'] + '/index.html',
                 paths.demo['root'] +'/_includes/*.html'])
@@ -342,24 +330,11 @@ function gulpTasks(globalGulp){
     gulp.task('bower', function() {
         return plugins.bower()
     });
-    gulp.task('release:gh-pages', ['create:site-versioning'], function () {
+    gulp.task('release:gh-pages', function () {
         return gulp.src(paths.site['root'] + "/**/*")
             .pipe(plugins['gh-pages']({
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
-    });
-
-    gulp.task('aws-upload:css', function(cb) {
-        return awsUpload('dist', 'css');
-    });
-    gulp.task('aws-upload:js', function(cb) {
-        return awsUpload('dist', 'js');
-    });
-    gulp.task('aws-upload:fonts', function(cb) {
-        return awsUpload('dist', 'fonts');
-    });
-    gulp.task('aws-upload:icons', function(cb) {
-        return awsUpload('dist', 'icons');
     });
 
     gulp.task('release:aws', function(cb) {
@@ -367,10 +342,10 @@ function gulpTasks(globalGulp){
         var config = require(configPath);
         if (config.aws && config.aws.bucket && config.aws.release) {
             console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
-            awsS3 = plugins['aws-s3'].setup(config.aws);
-            return runSequence(
-                ['aws-upload:css','aws-upload:js', 'aws-upload:fonts', 'aws-upload:icons'],
-                cb);
+            var awsS3 = plugins['aws-s3'].setup(config.aws);
+            return gulp.src([
+                paths['site']['root'] + '/**/*.*'])
+                .pipe(awsS3.upload({ path: 'components/' + pkg.name + '/' + pkg.version + '/' } ));
         } else {
             console.log('** Amazon S3 release skipped **\n' +
                 'AWS variables are not set \n' +
@@ -379,8 +354,6 @@ function gulpTasks(globalGulp){
             return cb();
         }
     });
-
-
 
 
     /*

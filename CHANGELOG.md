@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.0
+
+ * Added upload demo pages to builds
+
 ## 0.4.2
 
  * Updated tests to include bower dependencies if required
