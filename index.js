@@ -33,8 +33,8 @@ function handleError(err, exitOnError) {
 
 
 function copyDir(location, fileType){
-    return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
-        .pipe(gulp.dest(paths.dist[fileType]));
+    return gulp.src(paths[location][fileType] + '/**/*')
+        .pipe(gulp.dest(paths.site[fileType]));
 }
 
 function setupHasErrors(){
@@ -103,15 +103,13 @@ function gulpTasks(globalGulp){
 
     gulp.task('sass', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
-        return gulp.src([
-                paths.source['sass'] + '/**/*.scss',
-                paths.demo['sass'] + '/**/*.scss',
-                paths.site['sass'] + '/**/*.scss'])
+        return gulp.src(
+                paths.source['sass'] + '/**/*.scss')
             .pipe(plugins.sass({
                 outputStyle: 'nested'
             }))
             .pipe(plugins.autoprefixer())
-            .pipe(gulp.dest(paths.site['css']))
+            .pipe(gulp.dest(paths.dist['css']))
             .pipe(browserSync.reload({stream:true}));
     });
 
@@ -122,19 +120,17 @@ function gulpTasks(globalGulp){
             return b.bundle();
         });
 
-        return gulp.src([
-                paths.source['js'] + '/*.js',
-                paths.demo['js'] + '/*.js' ])
+        return gulp.src(paths.source['js'] + '/*.js')
             .pipe(browserified)
-            .pipe(gulp.dest(paths.site['js']));
+            .pipe(gulp.dest(paths.dist['js']));
     });
 
 
     gulp.task('js', ['js:dev'], function() {
-        return gulp.src(paths.site['js'] + '/*.js')
+        return gulp.src(paths.dist['js'] + '/*.js')
             .pipe(plugins.rename({suffix:'.min'}))
             .pipe(plugins.uglify())
-            .pipe(gulp.dest(paths.site['js']))
+            .pipe(gulp.dest(paths.dist['js']))
             .pipe(browserSync.reload({stream:true}));
     });
 
@@ -181,12 +177,37 @@ function gulpTasks(globalGulp){
             .pipe(plugins.flatten())
             .pipe(gulp.dest(paths.site['fonts']));
     });
-    gulp.task('create:site', function createSite() {
-        return runSequence(['create:site-html', 'create:site-images', 'create:site-fonts']);
+
+    gulp.task('create:site-sass', function() {
+        browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
+        copyDir('dist', 'css')
+        return gulp.src(paths.demo['sass'] + '/**/*.scss')
+            .pipe(plugins.sass({
+                outputStyle: 'nested'
+            }))
+            .pipe(plugins.autoprefixer())
+            .pipe(gulp.dest(paths.site['css']))
+            .pipe(browserSync.reload({stream:true}));
+    });
+
+    gulp.task('create:site-js', function createSite() {
+        copyDir('dist', 'js');
+        var browserified = transform(function(filename) {
+            var b = browserify(filename);
+            return b.bundle();
+        });
+
+        return gulp.src(paths.demo['js'] + '/*.js')
+            .pipe(browserified)
+            .pipe(gulp.dest(paths.site['js']));
+    });
+
+    gulp.task('create:site', function createSite(cb) {
+        return runSequence(['create:site-html', 'create:site-sass', 'create:site-js', 'create:site-images', 'create:site-fonts'], cb);
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create:site', 'bower'], ['update-version-in-site', 'sass', 'js'], 'create:dist',
+        return runSequence('clean', 'pre-build', 'create:dist', 'create:site', 'update-version-in-site',
             cb
         );
     });
@@ -314,10 +335,8 @@ function gulpTasks(globalGulp){
     /*
      * RELEASING
      */
-    gulp.task('create:dist', function() {
-        copyDir('site', 'js');
-        copyDir('site', 'css');
-        return copyDir('site', 'sass');
+    gulp.task('create:dist', function(cb) {
+        return runSequence('bower', ['sass', 'js'], cb);
     });
 
     gulp.task('git:tag', function(cb) {
