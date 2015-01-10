@@ -1,13 +1,25 @@
 #!/usr/bin/env node
 
-var argv = process.argv.slice(2)
+var argv = process.argv.slice(1)
+  , componentHelperDir = findComponentHelper(argv.shift())
   , version = require("../package.json").version
   , fs = require("fs");
 
+function findComponentHelper(currentDir) {
+  dir = currentDir.split('/');
+  return dir.slice(0,3).join('/') + "/lib/node_modules/gulp-component-helper";
+}
+
 var commands = {
   new: function(argv) {
+    console.log("Creating your component...");
     var name = argv.shift();
-    return fs.mkdirSync(name);
+    fs.mkdirSync(name);
+    [ "/gulpfile.js",
+      "/package.json" ].forEach(function(file) {
+      fs.createReadStream(componentHelperDir +"/examples"+ file).pipe(fs.createWriteStream(name + file));
+    });
+    console.log("Done!");
   },
   help: function help () {
     console.log([ "Commands: new, help, version",
@@ -19,11 +31,9 @@ var commands = {
   }
 };
 
-main();
-
-function main() {
+(function main() {
   if (!argv.length) return commands.help();
   var command = argv.shift();
   commands[command](argv);
-}
+})();
 
