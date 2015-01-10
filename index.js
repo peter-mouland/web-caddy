@@ -29,6 +29,7 @@ function handleError(err, exitOnError) {
     var displayErr = plugins.util.colors.red(err);
     plugins.util.log(displayErr);
     if (exitOnError) process.exit(1);
+    //this.emit('end');
 }
 
 
@@ -38,7 +39,7 @@ function copyDir(location, fileType){
 }
 
 function setupHasErrors(){
-    var errorText = '\Component %s Error:' +
+    var errorText = '\nComponent %s Error:' +
         '\nPlease update `package.json` (without spaces): \n  i.e.' +
         '%s\n';
     var error = false;

@@ -1,8 +1,9 @@
 # Change Log
 
-## 0.5.0
+## 0.5.0 : to be released soon
 
  * Added upload demo pages to builds
+ * todo: Added screen-shotting to test suite
 
 ## 0.4.2
 
