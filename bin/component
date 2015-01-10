@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+var argv = process.argv.slice(2)
+  , version = require("../package.json").version
+  , fs = require("fs");
+
+var commands = {
+  new: function(argv) {
+    var name = argv.shift();
+    return fs.mkdirSync(name);
+  },
+  help: function help () {
+    console.log([ "Commands: new, help, version",
+                  "Usage: component new button",
+                ].join("\n"));
+  },
+  version: function() {
+    console.log(version);
+  }
+};
+
+main();
+
+function main() {
+  if (!argv.length) return commands.help();
+  var command = argv.shift();
+  commands[command](argv);
+}
+
