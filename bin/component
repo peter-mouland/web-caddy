@@ -30,7 +30,7 @@ var commands = {
         "/package.json" ].forEach(function(file) {
         fs.createReadStream(componentHelperDir +"/examples"+ file)
           .pipe(replaceStream('{{ component }}', result.name))
-          .pipe(replaceStream('{{ git.user }}', result.remote.match(/.com\:(.*)\//)[1]))
+          .pipe(replaceStream('{{ git.username }}', result.remote.match(/.com\:(.*)\//)[1]))
           .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
           .pipe(fs.createWriteStream(result.name + file));
       });

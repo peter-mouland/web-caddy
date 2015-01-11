@@ -240,7 +240,7 @@ function gulpTasks(globalGulp){
     gulp.task('copy-structure', function(cb) {
         return gulp.src(__dirname + '/component-structure/**/*')
             .pipe(plugins.replace(/{{ component }}/g, pkg.name))
-            .pipe(plugins.replace(/{{ git.user }}/g, gitUser))
+            .pipe(plugins.replace(/{{ git.username }}/g, gitUser))
             .pipe(gulp.dest('./'));
     });
     gulp.task('rename:js', function(cb) {

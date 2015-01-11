@@ -1,9 +1,9 @@
 {
     "name": "bskyb-{{ component }}",
     "version": "0.0.0",
-    "homepage": "https://github.com/{{ git.user }}/{{ component }}",
+    "homepage": "https://github.com/{{ git.username }}/{{ component }}",
     "authors": [
-        "git.user-name <{{ git.user-email }}>"
+        "{{ git.author }} <{{ git.email }}>"
     ],
     "description": "{{ component }}",
     "main": "dist",
