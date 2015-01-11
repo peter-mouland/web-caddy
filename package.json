@@ -43,7 +43,9 @@
     "semver": "^4.1.0",
     "browserify": "^7.0.0",
     "vinyl-transform": "^1.0.0",
-    "findup-sync": "^0.2.1"
+    "findup-sync": "^0.2.1",
+    "shelljs": "^0.3.0",
+    "replacestream": "^1.0.2"
   },
   "repository": {
     "type": "git",
@@ -52,5 +54,8 @@
   "author": "Pete Mouland",
   "devDependencies": {
     "gulp": "^3.8.10"
+  },
+  "bin": {
+    "component": "./bin/component"
   }
 }

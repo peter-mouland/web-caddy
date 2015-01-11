@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+require("shelljs/global");
+
+var argv = process.argv.slice(1)
+  , componentHelperDir = findComponentHelper(argv.shift())
+  , version = require("../package.json").version
+  , fs = require("fs")
+  , replaceStream = require('replacestream')
+  , prompt = require("prompt");
+
+function findComponentHelper(currentDir) {
+  dir = currentDir.split('/');
+  return dir.slice(0,3).join('/') + "/lib/node_modules/gulp-component-helper";
+}
+
+var commands = {
+  new: function(argv) {
+    console.log("Creating your component...");
+    prompt.start();
+    prompt.get([{
+        description: 'Name of component',
+        name: 'name'
+      }, {
+        description: 'Github remote',
+        name: 'remote'
+    }], function(err, result) {
+      fs.mkdirSync(result.name);
+      [ "/gulpfile.js",
+        "/package.json" ].forEach(function(file) {
+        fs.createReadStream(componentHelperDir +"/examples"+ file)
+          .pipe(replaceStream('{{ component }}', result.name))
+          .pipe(replaceStream('{{ git.user }}', result.remote.match(/.com\:(.*)\//)[1]))
+          .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
+          .pipe(fs.createWriteStream(result.name + file));
+      });
+      cd(result.name);
+      exec("git init && git remote add origin "+result.remote, function() {
+        exec("npm install", function() {
+          exec("gulp init:component");
+        });
+      });
+    });
+  },
+  help: function help () {
+    console.log([ "Commands: new, help, version",
+                  "Usage: component new",
+                ].join("\n"));
+  },
+  version: function() {
+    console.log(version);
+  }
+};
+
+(function main() {
+  if (!argv.length) return commands.help();
+  var command = argv.shift();
+  commands[command](argv);
+})();
+

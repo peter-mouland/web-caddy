@@ -1,4 +1,4 @@
-Gulp Component Helper 
+Gulp Component Helper
 ========================
 
 > A Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
@@ -9,16 +9,15 @@ This helper is used to create and deploy Components via Gulp tasks. You can :
  * Compile JS to 'browserify' / 'requireJS' files (plus .min.js files)
  * Deploy to github.io / Bower / Amazon S3
 
+## Installation
+
+`npm install -g gulp-component-helper`
+
 ## Creating a New Component
- 
-1. Intialise a repo within github and clone it locally
-2. Create a `gulpfile.js` using [examples/gulpfile.js](examples/gulpfile.js) 
-3. Create a `package.json` using [examples/package.json](examples/package.json) 
-    * Update `name` to your component name in lower case.
-    * Ensure the `repository.url` is the correct github address.
-4. Run `npm install` to install the required node modules. 
-5. Run `gulp init:component` to intialise your component. 
-6. Run `gulp serve`, stick a fork in it - you're done.
+
+1. Create a repository on github
+2. `component new`
+3. Run `gulp serve` in your component's directory, stick a fork in it - you're done.
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
 
@@ -45,7 +44,7 @@ Once the above is complete should have the conventional directory structure as w
 
 `gulp serve`
 
-This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456) 
+This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456)
 
 To enable you to build a custom step into the build process, you can use the `pre-build` within your gulp file:
 
@@ -74,4 +73,4 @@ This project depends on collaboration between developers. Contributions of any s
 
 [Read More >](CONTRIBUTING.md)
 
-  
+
