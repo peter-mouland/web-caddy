@@ -33,9 +33,9 @@ function handleError(err, exitOnError) {
 }
 
 
-function copyDir(location, fileType){
-    return gulp.src([paths[location][fileType] + '/**/*', '!' + paths[location][fileType] + '/**/demo.*'])
-        .pipe(gulp.dest(paths.dist[fileType]));
+function copyToSite(location, fileType){
+    return gulp.src(paths[location][fileType] + '/**/*')
+        .pipe(gulp.dest(paths.site[fileType]));
 }
 
 function setupHasErrors(){
@@ -43,7 +43,6 @@ function setupHasErrors(){
         '\nPlease update `package.json` (without spaces): \n  i.e.' +
         '%s\n';
     var error = false;
-
     if (pkg.name.indexOf(' ') >0){
         console.error(errorText, 'Name',' `"name" : "responsive-images"`');
         error = true;
@@ -90,12 +89,27 @@ function initGHPages(cb){
             '\n').exec('', cb);
 }
 
+function sass(location, destination) {
+    browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
+    return gulp.src(paths[location]['sass'] + '/**/*.scss')
+        .pipe(plugins.sass({
+            outputStyle: 'nested'
+        }))
+        .pipe(plugins.autoprefixer())
+        .pipe(gulp.dest(paths[destination]['css']))
+        .pipe(browserSync.reload({stream:true}));
+}
+
 function gulpTasks(globalGulp){
     gulp = globalGulp;
     var packageFilePath = findup('package.json');
     pkg = require(packageFilePath);
     var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
     var runSequence = require('run-sequence').use(gulp);
+    var browserified = transform(function(filename) {
+        var b = browserify(filename);
+        return b.bundle();
+    });
 
 
     gulp.task('pre-build', function(cb){
@@ -103,39 +117,21 @@ function gulpTasks(globalGulp){
     });
 
     gulp.task('sass', function() {
-        browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
-        return gulp.src([
-                paths.source['sass'] + '/**/*.scss',
-                paths.demo['sass'] + '/**/*.scss',
-                paths.site['sass'] + '/**/*.scss'])
-            .pipe(plugins.sass({
-                outputStyle: 'nested'
-            }))
-            .pipe(plugins.autoprefixer())
-            .pipe(gulp.dest(paths.site['css']))
-            .pipe(browserSync.reload({stream:true}));
+        return sass('source', 'dist');
     });
 
     gulp.task('js:dev', ['clean:js'], function() {
-
-        var browserified = transform(function(filename) {
-            var b = browserify(filename);
-            return b.bundle();
-        });
-
-        return gulp.src([
-                paths.source['js'] + '/*.js',
-                paths.demo['js'] + '/*.js' ])
+        return gulp.src(paths.source['js'] + '/*.js')
             .pipe(browserified)
-            .pipe(gulp.dest(paths.site['js']));
+            .pipe(gulp.dest(paths.dist['js']));
     });
 
 
     gulp.task('js', ['js:dev'], function() {
-        return gulp.src(paths.site['js'] + '/*.js')
+        return gulp.src(paths.dist['js'] + '/*.js')
             .pipe(plugins.rename({suffix:'.min'}))
             .pipe(plugins.uglify())
-            .pipe(gulp.dest(paths.site['js']))
+            .pipe(gulp.dest(paths.dist['js']))
             .pipe(browserSync.reload({stream:true}));
     });
 
@@ -159,8 +155,6 @@ function gulpTasks(globalGulp){
             paths.demo['js'] + '/**/*'], ['js']);
     });
 
-
-//    create the _ste directories ready for demo
     gulp.task('create:site-html', function createSite() {
         return gulp.src([paths.demo['root'] + '/index.html',
                 paths.demo['root'] +'/_includes/*.html'])
@@ -182,12 +176,25 @@ function gulpTasks(globalGulp){
             .pipe(plugins.flatten())
             .pipe(gulp.dest(paths.site['fonts']));
     });
-    gulp.task('create:site', function createSite() {
-        return runSequence(['create:site-html', 'create:site-images', 'create:site-fonts']);
+
+    gulp.task('create:site-sass', function() {
+        copyToSite('dist', 'css')
+        return sass('demo', 'site');
+    });
+
+    gulp.task('create:site-js', function createSite() {
+        copyToSite('dist', 'js');
+        return gulp.src(paths.demo['js'] + '/*.js')
+            .pipe(browserified)
+            .pipe(gulp.dest(paths.site['js']));
+    });
+
+    gulp.task('create:site', function createSite(cb) {
+        return runSequence(['create:site-html', 'create:site-sass', 'create:site-js', 'create:site-images', 'create:site-fonts'], cb);
     });
 
     gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', ['create:site', 'bower'], ['update-version-in-site', 'sass', 'js'], 'create:dist',
+        return runSequence('clean', 'pre-build', 'create:dist', 'create:site', 'update-version-in-site',
             cb
         );
     });
@@ -272,7 +279,6 @@ function gulpTasks(globalGulp){
     gulp.task('init:gh-pages', function(cb) {
         return initGHPages(cb);
     });
-
     gulp.task('git:commit-push', function(cb){
         return plugins.run(
                 'git commit -am "Version bump for release";' +
@@ -311,16 +317,12 @@ function gulpTasks(globalGulp){
         cb();
     });
 
-
     /*
      * RELEASING
      */
-    gulp.task('create:dist', function() {
-        copyDir('site', 'js');
-        copyDir('site', 'css');
-        return copyDir('site', 'sass');
+    gulp.task('create:dist', function(cb) {
+        return runSequence('bower', ['sass', 'js'], cb);
     });
-
     gulp.task('git:tag', function(cb) {
         console.log('** Tagging Git : v' +  pkg.version + ' **\n');
         return plugins.run(
@@ -337,7 +339,6 @@ function gulpTasks(globalGulp){
                 cacheDir: '.tmp'
             })).pipe(gulp.dest('/tmp/gh-pages'));
     });
-
     gulp.task('release:aws', function(cb) {
         var configPath = findup('config/index.js');
         var config = require(configPath);
@@ -371,6 +372,7 @@ function gulpTasks(globalGulp){
             'remove-renamed-files',
             cb);
     });
+
     gulp.task('init:bower', function(cb) {
         return initBower(cb);
     });
