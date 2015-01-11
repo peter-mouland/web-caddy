@@ -4,7 +4,8 @@ var argv = process.argv.slice(1)
   , componentHelperDir = findComponentHelper(argv.shift())
   , version = require("../package.json").version
   , fs = require("fs")
-  , exec = require("child_process").exec;
+  , exec = require("child_process").exec
+  , prompt = require("prompt");
 
 function findComponentHelper(currentDir) {
   dir = currentDir.split('/');
@@ -14,18 +15,25 @@ function findComponentHelper(currentDir) {
 var commands = {
   new: function(argv) {
     console.log("Creating your component...");
-    var name = argv.shift();
-    fs.mkdirSync(name);
-    [ "/gulpfile.js",
-      "/package.json" ].forEach(function(file) {
-      fs.createReadStream(componentHelperDir +"/examples"+ file).pipe(fs.createWriteStream(name + file));
+    prompt.start();
+    prompt.get([{
+        description: 'Name of component',
+        name: 'name'
+      }, {
+        description: 'Github remote',
+        name: 'remote'
+    }], function(err, result) {
+      fs.mkdirSync(result.name);
+      [ "/gulpfile.js",
+        "/package.json" ].forEach(function(file) {
+        fs.createReadStream(componentHelperDir +"/examples"+ file).pipe(fs.createWriteStream(result.name + file));
+      });
+      exec("cd "+result.name+" && git init && git remote add origin "+result.remote);
     });
-    exec("cd "+name+" && git init");
-    console.log("Done!");
   },
   help: function help () {
     console.log([ "Commands: new, help, version",
-                  "Usage: component new button",
+                  "Usage: component new",
                 ].join("\n"));
   },
   version: function() {

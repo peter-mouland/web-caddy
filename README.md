@@ -11,17 +11,16 @@ This helper is used to create and deploy Components via Gulp tasks. You can :
 
 ## Creating a New Component
 
-1. `component new name-of-component`
-2. Update `package.json`
+1. Create a repository on github
+2. `component new`
+3. Update `package.json`
     * Update `name` to your component name in lower case.
     * Ensure the `repository.url` is the correct github address.
-3. Run `npm install` to install the required node modules.
-4. Run `gulp init:component` to intialise your component.
-5. Run `gulp serve`, stick a fork in it - you're done.
+4. Run `npm install` to install the required node modules.
+5. Run `gulp init:component` to intialise your component.
+6. Run `gulp serve`, stick a fork in it - you're done.
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
-
-To push, create a repository on github and follow the instructions given to add an existing project.
 
 ### Generated Directory Structure
 
