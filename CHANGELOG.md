@@ -2,7 +2,8 @@
 
 ## 0.5.0 : to be released soon
 
- * Added upload demo pages to builds
+ * Added versioned demo pages to build CDN
+ * Added CLI for creating a component
  * todo: Added screen-shotting to test suite
 
 ## 0.4.2
