@@ -6,7 +6,7 @@
 
 ## Quick-Start
 
-Include the Share assets in your project either as **Static Resources**
+Include the {{ component }} assets in your project either as **Static Resources**
 
 ```
 <link rel="stylesheet" href="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/css/{{ component }}.css" />
@@ -16,7 +16,7 @@ or alternatively, **Via Bower**
 
  * Run: `bower install --save-dev bskyb-{{ component }}`
  * Include Sass: `@import 'bower_components/bskyb-{{ component }}/src/scss/{{ component }}';`
- * Include JS: `var share = require('../../bower_components/bskyb-{{ component }}/src/js/{{ component }}');`
+ * Include JS: `var {{ component }} = require('../../bower_components/bskyb-{{ component }}/src/js/{{ component }}');`
 
 
 #### Dependencies
