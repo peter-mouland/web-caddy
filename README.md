@@ -1,4 +1,4 @@
-Gulp Component Helper [![NPM version](gulp-component-helper)](https://www.npmjs.org/package/gulp-component-helper)
+Gulp Component Helper [![NPM version](http://img.shields.io/npm/v/gulp-component-helper.svg)](https://www.npmjs.org/package/gulp-component-helper)
 ========================
 
 > A Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
