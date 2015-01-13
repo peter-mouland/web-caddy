@@ -1,22 +1,23 @@
 [{{ component }}](http://{{ git.username }}.github.io/{{ component }}/)  [![Circle CI](https://circleci.com/gh/skyglobal/{{ component }}/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/{{ component }}/tree/master)
 ========================
 
-> Please take a look at the [demo page](http://skyglobal.github.io/{{ component }}/)
+> Please take a look at the [demo page](http://{{ git.username }}.github.io/{{ component }}/)
 
 
 ## Quick-Start
 
-Include the Share assets in your project either as **Static Resources**
+Include the {{ component }} assets in your project either as **Static Resources**
 
-```
+```html
 <link rel="stylesheet" href="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/css/{{ component }}.css" />
 <script type="text/javascript" src="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/js/{{ component }}.min.js"></script>
+```
 
 or alternatively, **Via Bower**
 
  * Run: `bower install --save-dev bskyb-{{ component }}`
  * Include Sass: `@import 'bower_components/bskyb-{{ component }}/src/scss/{{ component }}';`
- * Include JS: `var share = require('../../bower_components/bskyb-{{ component }}/src/js/{{ component }}');`
+ * Include JS: `var {{ component }} = require('../../bower_components/bskyb-{{ component }}/src/js/{{ component }}');`
 
 
 #### Dependencies
@@ -35,7 +36,7 @@ Choose a type of {{ component }} component and copy the relevant html.
 
 To enable --descrition here--, the JS must be initialised:
 
-```
+```html
 <script type="text/javascript">
   skyComponents.{{ component }}.init();
 </script>
