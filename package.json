@@ -5,6 +5,7 @@
   "main": "index.js",
   "files": [
     "component-structure",
+    "bin",
     "examples",
     "paths",
     "CHANGELOG.md",
