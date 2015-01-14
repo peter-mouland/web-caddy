@@ -49,5 +49,5 @@ Any changes made to the gulp-component-helper will be picked up by the component
 
  * Update [package.json](package.json) and [examples/package.json](examples/package.json) version number appropriately
  * `npm adduser` (first time only)
- * `npm pack && tar -tf gulp-component-helper-*.tgz && rm gulp-component-helper-*.tgz` : Check the files in your package (especially index.js!)
+ * `npm pack && tar -tf *.tgz && rm *.tgz` : Check the files in your package (especially index.js!)
  * `npm publish` : (needs npm v2.1.0+) https://www.npmjs.org/package/npm-release
