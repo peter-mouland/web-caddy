@@ -15,6 +15,7 @@
     ],
     "devDependencies": {
         "bskyb-colours": "~0.1.0",
-        "bskyb-typography": "~0.1.0"
+        "bskyb-typography": "~0.1.0",
+        "bskyb-grid": "~0.1.0"
     }
 }
