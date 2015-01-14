@@ -59,6 +59,7 @@ var commands = {
   if (!argv.length) return commands.help();
   var cwd =  argv.shift();
   var command = argv.shift();
-  commands[command](argv);
+  commands[command] && commands[command](argv);
+  !commands[command] && commands.help();
 })();
 
