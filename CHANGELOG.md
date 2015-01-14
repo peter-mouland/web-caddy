@@ -1,10 +1,14 @@
 # Change Log
 
-## 0.5.0 : to be released soon
+## 0.5.1
+
+ * Fixed CLI
+
+## 0.5.0
 
  * Added versioned demo pages to build CDN
  * Added CLI for creating a component
- * todo: Added screen-shotting to test suite
+ * Added link to screen-shotting to test suite
 
 ## 0.4.2
 

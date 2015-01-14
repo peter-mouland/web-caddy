@@ -245,7 +245,9 @@ function gulpTasks(globalGulp){
      * Initialising the component
      */
     gulp.task('copy-structure', function(cb) {
-        return gulp.src(__dirname + '/component-structure/**/*')
+        return gulp.src([__dirname + '/component-structure/**/*',
+        '!' + __dirname+ '/component-structure/package.json',
+        '!' + __dirname+ '/component-structure/gulpfile.js'])
             .pipe(plugins.replace(/{{ component }}/g, pkg.name))
             .pipe(plugins.replace(/{{ git.username }}/g, gitUser))
             .pipe(gulp.dest('./'));

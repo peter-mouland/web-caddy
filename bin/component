@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
-require("shelljs/global");
+var shell = require("shelljs");
+var exec = shell.exec;
 
 var argv = process.argv.slice(1)
-  , componentHelperDir = findComponentHelper(argv.shift())
+  , componentHelperDir = findComponentHelper()
   , version = require("../package.json").version
   , fs = require("fs")
   , replaceStream = require('replacestream')
   , prompt = require("prompt");
 
-function findComponentHelper(currentDir) {
-  dir = currentDir.split('/');
-  return dir.slice(0,3).join('/') + "/lib/node_modules/gulp-component-helper";
+function findComponentHelper() {
+  return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules/gulp-component-helper";
 }
 
 var commands = {
@@ -19,24 +19,27 @@ var commands = {
     console.log("Creating your component...");
     prompt.start();
     prompt.get([{
-        description: 'Name of component',
+        description: 'Component Name',
         name: 'name'
       }, {
-        description: 'Github remote',
+        description: 'Github Repository URL',
         name: 'remote'
     }], function(err, result) {
       fs.mkdirSync(result.name);
-      [ "/gulpfile.js",
-        "/package.json" ].forEach(function(file) {
-        fs.createReadStream(componentHelperDir +"/examples"+ file)
+    [ "/gulpfile.js",
+      "/package.json" ].forEach(function(file) {
+        fs.createReadStream(componentHelperDir + "/component-structure" + file)
           .pipe(replaceStream('{{ component }}', result.name))
           .pipe(replaceStream('{{ git.username }}', result.remote.match(/.com\:(.*)\//)[1]))
           .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
           .pipe(fs.createWriteStream(result.name + file));
-      });
-      cd(result.name);
+        });
+      shell.cd(result.name);
+      console.log("\nInitialising git...\n");
       exec("git init && git remote add origin "+result.remote, function() {
+        console.log("\nInstalling NPM Dependencies...\n");
         exec("npm install", function() {
+          console.log("\nInstalling Component...\n");
           exec("gulp init:component");
         });
       });
@@ -54,6 +57,7 @@ var commands = {
 
 (function main() {
   if (!argv.length) return commands.help();
+  var cwd =  argv.shift();
   var command = argv.shift();
   commands[command](argv);
 })();

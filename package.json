@@ -1,12 +1,11 @@
 {
   "name": "gulp-component-helper",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A way to help ensure the common tasks are consistent across components",
   "main": "index.js",
   "files": [
     "component-structure",
     "bin",
-    "examples",
     "paths",
     "CHANGELOG.md",
     "CONTRIBUTING.md",
@@ -43,6 +42,7 @@
     "karma-jasmine": "^0.3.3",
     "karma-phantomjs-launcher": "^0.1.4",
     "minimist": "^1.1.0",
+    "prompt": "^0.2.14",
     "replacestream": "^1.0.2",
     "run-sequence": "^1.0.1",
     "semver": "^4.1.0",
