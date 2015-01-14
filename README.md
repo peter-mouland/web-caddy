@@ -46,6 +46,16 @@ Once the above is complete should have the conventional directory structure as w
 
 This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456)
 
+`gulp test`
+
+Please add Jasmine Tests to unit and functionally test your component.
+
+### Regression/Screen-shot tests
+
+To add regression testing, please see [Sheut](https://github.com/skyglobal/Sheut)
+
+## Customise your Build
+
 To enable you to build a custom step into the build process, you can use the `pre-build` within your gulp file:
 
 ```
