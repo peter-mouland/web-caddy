@@ -4,14 +4,16 @@ var shell = require("shelljs");
 var exec = shell.exec;
 
 var argv = process.argv.slice(1)
-  , componentHelperDir = findComponentHelper()
-  , version = require("../package.json").version
+  , pkg = require("../package.json")
+  , version = pkg.version
+  , moduleName = pkg.name
+  , moduleDir = findThisModule()
   , fs = require("fs")
   , replaceStream = require('replacestream')
   , prompt = require("prompt");
 
-function findComponentHelper() {
-  return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules/gulp-component-helper";
+function findThisModule() {
+  return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules/" + moduleName;
 }
 
 var commands = {
@@ -28,7 +30,7 @@ var commands = {
       fs.mkdirSync(result.name);
     [ "/gulpfile.js",
       "/package.json" ].forEach(function(file) {
-        fs.createReadStream(componentHelperDir + "/component-structure" + file)
+        fs.createReadStream(moduleDir + "/component-structure" + file)
           .pipe(replaceStream('{{ component }}', result.name))
           .pipe(replaceStream('{{ git.username }}', result.remote.match(/.com\:(.*)\//)[1]))
           .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
