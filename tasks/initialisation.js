@@ -47,9 +47,9 @@ function initStructure(pkg, component, repo){
                         .pipe(write);
                 }
             },
-            function(){
-                shell.cd(component);
-                resolve();
+            function(err){
+                err && reject();
+                !err && resolve();
             }
         );
     });
@@ -57,6 +57,7 @@ function initStructure(pkg, component, repo){
 
 function initComponent(pkg, component, repo) {
     return initStructure(pkg, component, repo).then(function() {
+        shell.cd(component);
         return renameFiles(component);
     }, onError).then(function(){
         return initGit(repo);
