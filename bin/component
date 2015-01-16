@@ -1,21 +1,14 @@
 #!/usr/bin/env node
 
-var shell = require("shelljs");
-var exec = shell.exec;
-var ncp = require('ncp').ncp;
-var replaceStream = require('replacestream');
-
 var argv = process.argv.slice(1)
-  , pkg = require("../package.json")
-  , version = pkg.version
-  , moduleName = pkg.name
-  , moduleDir = findThisModule()
   , fs = require("fs")
   , prompt = require("prompt");
 
-function findThisModule() {
-  return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules/" + moduleName;
-}
+var pkg = require("../package.json")
+    , version = pkg.version;
+
+var init = require("../tasks/initialisation");
+
 function errorAnExit(message){
   console.log('Error: ' + message);
   process.exit(1);
@@ -30,35 +23,16 @@ var commands = {
         name: 'name'
       }, {
         description: 'Github Repository URL',
-        name: 'remote'
+        name: 'repo'
     }], function(err, result) {
-      var gitUrl = result.remote.match(/.com\:(.*)\//);
+      var gitUrl = result.repo.match(/.com\:(.*)\//);
       if (!gitUrl){
         errorAnExit('Github Repository URL must be a url');
       }
       if (fs.existsSync(result.name)){
         errorAnExit('Component `' + result.name + '` already exists');
       }
-
-      console.log("\nCopying Component Files ... \n");
-      ncp(moduleDir + '/component-structure', './' + result.name, {
-        stopOnErr: true,
-        transform:function(read, write, file){
-          read.pipe(replaceStream('{{ component }}', result.name))
-              .pipe(replaceStream('{{ git.username }}', result.remote.match(/.com\:(.*)\//)[1]))
-              .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
-              .pipe(write);
-      }}, function(){
-        shell.cd(result.name);
-        console.log("\nInitialising git...\n");
-        exec("git init && git remote add origin "+result.remote, function() {
-          console.log("\nInstalling NPM Dependencies...\n");
-          exec("npm install", function() {
-            console.log("\nInstalling Component...\n");
-            exec("gulp init:component");
-          });
-        });
-      });
+      init.component(pkg, result.name, result.repo);
     });
   },
   help: function help () {

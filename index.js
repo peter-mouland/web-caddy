@@ -11,6 +11,7 @@ var minimist = require('minimist');
 var transform = require('vinyl-transform');
 var paths = require('./paths');
 var karma = require('karma').server;
+var init = require('./tasks/initialisations');
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -38,57 +39,6 @@ function copyToSite(location, fileType){
         .pipe(gulp.dest(paths.site[fileType]));
 }
 
-function setupHasErrors(){
-    var errorText = '\nComponent %s Error:' +
-        '\nPlease update `package.json` (without spaces): \n  i.e.' +
-        '%s\n';
-    var error = false;
-    if (pkg.name.indexOf(' ') >0){
-        console.error(errorText, 'Name',' `"name" : "responsive-images"`');
-        error = true;
-    }
-    if (pkg.repository.url.indexOf(' ') >0){
-        console.error(errorText, 'URL', '`"url": "git://github.com/username/component-name.git"`');
-        error = true;
-    }
-    return error;
-}
-
-function initBower(cb){
-    var configPath = findup('config/index.js');
-    var config = require(configPath);
-    if (config.bower && config.bower.release && config.bower.name){
-        return plugins.run('bower register ' + config.bower.name + ' ' + pkg.repository.url).exec('', cb);
-    } else {
-        console.log('** Not intialising Bower ** ' +
-            'Config is set to false in config/index.js');
-        return cb();
-    }
-}
-
-function initMaster(cb){
-    return plugins.run(
-            '\n' +'git add gulpfile.js;' +
-            '\n' +'git add package.json;' +
-            '\n' +'git commit -m "first commit";' +
-            '\n' +'git push -u origin master;' +
-            '\n').exec('', cb);
-}
-
-
-function initGHPages(cb){
-    return plugins.run(
-            '\n' +'git checkout --orphan gh-pages;' +
-            '\n' +'git checkout gh-pages;' +
-            '\n' +'git rm -rf .;' +
-            '\n' +'touch gh-pages-initialised.md;' +
-            '\n' +'git add gh-pages-initialised.md;' +
-            '\n' +'git commit -m "Init gh-pages";' +
-            '\n' +'git push --set-upstream origin gh-pages;' +
-            '\n' +'git checkout master;' +
-            '\n').exec('', cb);
-}
-
 function sass(location, destination) {
     browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
     return gulp.src(paths[location]['sass'] + '/**/*.scss')
@@ -111,6 +61,26 @@ function gulpTasks(globalGulp){
         return b.bundle();
     });
 
+    gulp.task('init:bower', function() {
+        return init.bower();
+    });
+    gulp.task('init:master', function() {
+        return init.repo();
+    });
+    gulp.task('init:gh-pages', function() {
+        return init.ghPages();
+    });
+    gulp.task('init:component', function(cb) {
+        if (init.hasErrors()){
+            return cb();
+        }
+        return runSequence(
+            'copy-structure',
+            ['init:master','rename:gitignore', 'rename:js', 'rename:scss'],
+            ['init:gh-pages'],
+            'remove-renamed-files',
+            cb);
+    });
 
     gulp.task('pre-build', function(cb){
         return cb();
@@ -244,14 +214,6 @@ function gulpTasks(globalGulp){
     /*
      * Initialising the component
      */
-    gulp.task('copy-structure', function(cb) {
-        return gulp.src([__dirname + '/component-structure/**/*',
-        '!' + __dirname+ '/component-structure/package.json',
-        '!' + __dirname+ '/component-structure/gulpfile.js'])
-            .pipe(plugins.replace(/{{ component }}/g, pkg.name))
-            .pipe(plugins.replace(/{{ git.username }}/g, gitUser))
-            .pipe(gulp.dest('./'));
-    });
     gulp.task('rename:js', function(cb) {
         return gulp.src(['./src/js/*.js'], { base : './' })
             .pipe(plugins.rename(function(path){
@@ -275,12 +237,7 @@ function gulpTasks(globalGulp){
             ['./dot.gitignore', './src/js/main.*', './src/scss/main.scss' ],
             cb);
     });
-    gulp.task('init:master', function(cb) {
-        return initMaster(cb);
-    });
-    gulp.task('init:gh-pages', function(cb) {
-        return initGHPages(cb);
-    });
+
     gulp.task('git:commit-push', function(cb){
         return plugins.run(
                 'git commit -am "Version bump for release";' +
@@ -357,26 +314,6 @@ function gulpTasks(globalGulp){
                 ' aws.release in config/index.js set to false\n');
             return cb();
         }
-    });
-
-
-    /*
-     * Common/public Gulp tasks
-     */
-    gulp.task('init:component', function(cb) {
-        if (setupHasErrors()){
-            return cb();
-        }
-        return runSequence(
-            'copy-structure',
-            ['init:master','rename:gitignore', 'rename:js', 'rename:scss'],
-            ['init:gh-pages'],
-            'remove-renamed-files',
-            cb);
-    });
-
-    gulp.task('init:bower', function(cb) {
-        return initBower(cb);
     });
 
     gulp.task('serve', function(callback) {
