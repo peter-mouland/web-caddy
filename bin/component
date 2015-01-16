@@ -2,6 +2,8 @@
 
 var shell = require("shelljs");
 var exec = shell.exec;
+var ncp = require('ncp').ncp;
+var replaceStream = require('replacestream');
 
 var argv = process.argv.slice(1)
   , pkg = require("../package.json")
@@ -9,11 +11,14 @@ var argv = process.argv.slice(1)
   , moduleName = pkg.name
   , moduleDir = findThisModule()
   , fs = require("fs")
-  , replaceStream = require('replacestream')
   , prompt = require("prompt");
 
 function findThisModule() {
   return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules/" + moduleName;
+}
+function errorAnExit(message){
+  console.log('Error: ' + message);
+  process.exit(1);
 }
 
 var commands = {
@@ -27,22 +32,31 @@ var commands = {
         description: 'Github Repository URL',
         name: 'remote'
     }], function(err, result) {
-      fs.mkdirSync(result.name);
-    [ "/gulpfile.js",
-      "/package.json" ].forEach(function(file) {
-        fs.createReadStream(moduleDir + "/component-structure" + file)
-          .pipe(replaceStream('{{ component }}', result.name))
-          .pipe(replaceStream('{{ git.username }}', result.remote.match(/.com\:(.*)\//)[1]))
-          .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
-          .pipe(fs.createWriteStream(result.name + file));
-        });
-      shell.cd(result.name);
-      console.log("\nInitialising git...\n");
-      exec("git init && git remote add origin "+result.remote, function() {
-        console.log("\nInstalling NPM Dependencies...\n");
-        exec("npm install", function() {
-          console.log("\nInstalling Component...\n");
-          exec("gulp init:component");
+      var gitUrl = result.remote.match(/.com\:(.*)\//);
+      if (!gitUrl){
+        errorAnExit('Github Repository URL must be a url');
+      }
+      if (fs.existsSync(result.name)){
+        errorAnExit('Component `' + result.name + '` already exists');
+      }
+
+      console.log("\nCopying Component Files ... \n");
+      ncp(moduleDir + '/component-structure', './' + result.name, {
+        stopOnErr: true,
+        transform:function(read, write, file){
+          read.pipe(replaceStream('{{ component }}', result.name))
+              .pipe(replaceStream('{{ git.username }}', result.remote.match(/.com\:(.*)\//)[1]))
+              .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
+              .pipe(write);
+      }}, function(){
+        shell.cd(result.name);
+        console.log("\nInitialising git...\n");
+        exec("git init && git remote add origin "+result.remote, function() {
+          console.log("\nInstalling NPM Dependencies...\n");
+          exec("npm install", function() {
+            console.log("\nInstalling Component...\n");
+            exec("gulp init:component");
+          });
         });
       });
     });
