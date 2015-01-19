@@ -6,12 +6,11 @@ var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var del = require('del');
 var semver = require('semver');
-var browserify = require('browserify');
 var minimist = require('minimist');
-var transform = require('vinyl-transform');
 var paths = require('./paths');
 var karma = require('karma').server;
 var init = require('./tasks/initialisations');
+var assets = require('./tasks/assets');
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -39,26 +38,12 @@ function copyToSite(location, fileType){
         .pipe(gulp.dest(paths.site[fileType]));
 }
 
-function sass(location, destination) {
-    browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
-    return gulp.src(paths[location]['sass'] + '/**/*.scss')
-        .pipe(plugins.sass({
-            outputStyle: 'nested'
-        }))
-        .pipe(plugins.autoprefixer())
-        .pipe(gulp.dest(paths[destination]['css']))
-        .pipe(browserSync.reload({stream:true}));
-}
 
 function gulpTasks(globalGulp){
     gulp = globalGulp;
     var packageFilePath = findup('package.json');
     pkg = require(packageFilePath);
     var runSequence = require('run-sequence').use(gulp);
-    var browserified = transform(function(filename) {
-        var b = browserify(filename);
-        return b.bundle();
-    });
 
     gulp.task('init:bower', function() {
         return init.bower();
@@ -69,22 +54,31 @@ function gulpTasks(globalGulp){
     });
 
     gulp.task('sass', function() {
-        return sass('source', 'dist');
+        browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
+        return assets.sass(paths['source'].sass, paths['dist'].css)
+            .then(function(){
+                return assets.sass(paths['demo'].sass, paths['site'].css)
+            }).then(function(){
+                return assets.sass(paths['source'].sass, paths['site'].css)
+            }).then(function(){
+                browserSync.reload({stream:true});
+            });
     });
 
-    gulp.task('js:dev', ['clean:js'], function() {
-        return gulp.src(paths.source['js'] + '/*.js')
-            .pipe(browserified)
-            .pipe(gulp.dest(paths.dist['js']));
-    });
-
-
-    gulp.task('js', ['js:dev'], function() {
-        return gulp.src(paths.dist['js'] + '/*.js')
-            .pipe(plugins.rename({suffix:'.min'}))
-            .pipe(plugins.uglify())
-            .pipe(gulp.dest(paths.dist['js']))
-            .pipe(browserSync.reload({stream:true}));
+    gulp.task('js', function() {
+        browserSync.notify('<span style="color: grey">Running:</span> JS compiling');
+        return assets.js(paths['source'].js, paths['dist'].js)
+            .then(function(){
+                return assets.js(paths['demo'].js, paths['site'].js);
+            }).then(function(){
+                return assets.js(paths['source'].js, paths['site'].js);
+            }).then(function(){
+                return assets.jsMin(paths['site'].js, paths['site'].js);
+            }).then(function(){
+                return assets.jsMin(paths['demo'].js, paths['demo'].js);
+            }).then(function(){
+                browserSync.reload({stream:true});
+            });
     });
 
     gulp.task('browserSync', function() {
