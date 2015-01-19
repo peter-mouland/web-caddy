@@ -72,9 +72,18 @@ function initComponent(pkg, component, repo) {
     }, onError).then(function(output){
         onSuccess(output);
         return initGhPages();
+    }, onError).then(function(output){
+        onSuccess(output);
+        return initNPM();
     }, onError);
 }
 
+function initNPM(){
+    console.log("\nInstalling Node Modules ... \n");
+    return spawn('npm',['install']).then(function(output){
+        onSuccess(output);
+    }, onError);
+}
 function initBower(bowerCfg, repoUrl){
     return bower.register([bowerCfg.name, repoUrl]).catch(function(){
         console.log(['** Not intialising Bower ** ',
