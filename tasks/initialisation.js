@@ -6,12 +6,18 @@ var bower = require('./../utils/bower-promised');
 var fs = require("fs");
 var ncp = require('ncp').ncp;
 var replaceStream = require('replacestream');
+var gutil = require('gulp-util');
 var glob = require('glob');
 var shell = require("shelljs");
 var exec = shell.exec;
 
-function onError(err){
-    console.log(err.message);
+function onError(err) {
+    gutil.log(gutil.colors.red(err.message));
+    process.exit(1);
+}
+function onSuccess(output) {
+    if (!output) return;
+    gutil.log(gutil.colors.green(output.message));
 }
 
 function npmGlobalPath() {
@@ -56,12 +62,15 @@ function initStructure(pkg, component, repo){
 }
 
 function initComponent(pkg, component, repo) {
-    return initStructure(pkg, component, repo).then(function() {
+    return initStructure(pkg, component, repo).then(function(output) {
+        onSuccess(output);
         shell.cd(component);
         return renameFiles(component);
-    }, onError).then(function(){
+    }, onError).then(function(output){
+        onSuccess(output);
         return initGit(repo);
-    }, onError).then(function(){
+    }, onError).then(function(output){
+        onSuccess(output);
         return initGhPages();
     }, onError);
 }
@@ -74,31 +83,41 @@ function initBower(bowerCfg, repoUrl){
 }
 
 function initGit(repo){
-    return git.init().then(function(){
-        return  git.remote(['add', 'origin', repo]);
-    }, onError).then(function(){
-        return git.add(['gulpfile.js', 'package.json']);
-    }, onError).then(function(){
+    console.log("\nInitialising Git ... \n");
+    return git.init().then(function(output){
+        onSuccess(output);
+        return git.add(['.']);
+    }, onError).then(function(output){
+        onSuccess(output);
         return git.commit('first commit');
-    }, onError).then(function(){
-        return git.push(['-u', 'origin', 'master']);
-    }, onError);
+    }, onError).then(function(output){
+        onSuccess(output);
+        return  git.remote(['add', 'origin', repo]);
+    }, onError).then(function(output){
+        onSuccess(output);
+        return git.push(['-u', 'origin', 'master']).catch(onError);
+    });
 }
 
 function initGhPages(){
-    git.checkout(['--orphan', 'gh-pages']).then(function(msg){
-        return git.checkout(['gh-pages'])
-    }, onError).then(function(){
+    console.log("\nInitialising gh-pages ... \n");
+    return git.checkout(['--orphan', 'gh-pages']).then(function(output){
+        onSuccess(output);
         return git.rm(['-rf', '.']);
-    }, onError).then(function(){
+    }, onError).then(function(output){
+        onSuccess(output);
         return spawn('touch',['gh-pages-initialised.md']);
-    }, onError).then(function(){
+    }, onError).then(function(output){
+        onSuccess(output);
         return git.add(['gh-pages-initialised.md']);
-    }, onError).then(function(){
-        return git.commit(['Init gh-pages']);
-    }, onError).then(function(){
-        return git.commit(['--set-upstream','origin','gh-pages']);
-    }, onError).then(function(){
+    }, onError).then(function(output){
+        onSuccess(output);
+        return git.commit('Init gh-pages');
+    }, onError).then(function(output){
+        onSuccess(output);
+        return git.push(['--set-upstream','origin','gh-pages']);
+    }, onError).then(function(output){
+        onSuccess(output);
         return git.checkout(['master']);
     })
 }

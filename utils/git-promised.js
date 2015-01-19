@@ -18,7 +18,7 @@ module.exports = {
         arrCmds.unshift('push');
         return spawn('git', arrCmds);
     },
-    rm : function(arrCms) {
+    rm : function(arrCmds) {
         arrCmds.unshift('rm');
         return spawn('git', arrCmds);
     },

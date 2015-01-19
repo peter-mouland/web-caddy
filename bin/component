@@ -15,7 +15,7 @@ function errorAnExit(message){
 }
 
 var commands = {
-  new: function(argv) {
+  new: function() {
     console.log("Creating your component...");
     prompt.start();
     prompt.get([{
@@ -25,6 +25,7 @@ var commands = {
         description: 'Github Repository URL',
         name: 'repo'
     }], function(err, result) {
+      if (!result) return;
       var gitUrl = result.repo.match(/.com\:(.*)\//);
       if (!gitUrl){
         errorAnExit('Github Repository URL must be a url');
