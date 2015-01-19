@@ -54,7 +54,6 @@ function gulpTasks(globalGulp){
     gulp = globalGulp;
     var packageFilePath = findup('package.json');
     pkg = require(packageFilePath);
-    var gitUser = pkg.repository.url.match(/.com\/(.*)\//)[1];
     var runSequence = require('run-sequence').use(gulp);
     var browserified = transform(function(filename) {
         var b = browserify(filename);
@@ -63,23 +62,6 @@ function gulpTasks(globalGulp){
 
     gulp.task('init:bower', function() {
         return init.bower();
-    });
-    gulp.task('init:master', function() {
-        return init.repo();
-    });
-    gulp.task('init:gh-pages', function() {
-        return init.ghPages();
-    });
-    gulp.task('init:component', function(cb) {
-        if (init.hasErrors()){
-            return cb();
-        }
-        return runSequence(
-            'copy-structure',
-            ['init:master','rename:gitignore', 'rename:js', 'rename:scss'],
-            ['init:gh-pages'],
-            'remove-renamed-files',
-            cb);
     });
 
     gulp.task('pre-build', function(cb){
@@ -209,33 +191,6 @@ function gulpTasks(globalGulp){
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: args.version}))
             .pipe(gulp.dest('./'));
-    });
-
-    /*
-     * Initialising the component
-     */
-    gulp.task('rename:js', function(cb) {
-        return gulp.src(['./src/js/*.js'], { base : './' })
-            .pipe(plugins.rename(function(path){
-                path.dirname = "";
-                path.basename = path.basename.replace('main', pkg.name);
-            }))
-            .pipe(gulp.dest('./src/js/'));
-    });
-    gulp.task('rename:scss', function(cb) {
-        return gulp.src(['./src/scss/main.scss'], { base : './' })
-            .pipe(plugins.rename(pkg.name + '.scss'))
-            .pipe(gulp.dest('./src/scss/'));
-    });
-    gulp.task('rename:gitignore', function(cb) {
-        return gulp.src('./dot.gitignore', { base : './' })
-            .pipe(plugins.rename('.gitignore'))
-            .pipe(gulp.dest('./'));
-    });
-    gulp.task('remove-renamed-files', function(cb) {
-        return del(
-            ['./dot.gitignore', './src/js/main.*', './src/scss/main.scss' ],
-            cb);
     });
 
     gulp.task('git:commit-push', function(cb){
