@@ -6,18 +6,18 @@ var bower = require('./../utils/bower-promised');
 var fs = require("fs");
 var ncp = require('ncp').ncp;
 var replaceStream = require('replacestream');
-var gutil = require('gulp-util');
+var chalk = require('chalk');
 var glob = require('glob');
 var shell = require("shelljs");
 var exec = shell.exec;
 
 function onError(err) {
-    gutil.log(gutil.colors.red(err.message));
+    console.log(chalk.red(err.message));
     process.exit(1);
 }
 function onSuccess(output) {
     if (!output) return;
-    gutil.log(gutil.colors.green(output.message));
+    console.log(chalk.green(output.message));
 }
 
 function npmGlobalPath() {
