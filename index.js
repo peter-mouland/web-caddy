@@ -10,7 +10,8 @@ var minimist = require('minimist');
 var paths = require('./paths');
 var karma = require('karma').server;
 var init = require('./tasks/initialisations');
-var assets = require('./tasks/assets');
+var sass = require('./tasks/sass');
+var js = require('./tasks/js');
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -55,30 +56,16 @@ function gulpTasks(globalGulp){
 
     gulp.task('sass', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
-        return assets.sass(paths['source'].sass, paths['dist'].css)
-            .then(function(){
-                return assets.sass(paths['demo'].sass, paths['site'].css)
-            }).then(function(){
-                return assets.sass(paths['source'].sass, paths['site'].css)
-            }).then(function(){
-                browserSync.reload({stream:true});
-            });
+        return sass.all().then(function(){
+            browserSync.reload({stream:true});
+        });
     });
 
     gulp.task('js', function() {
         browserSync.notify('<span style="color: grey">Running:</span> JS compiling');
-        return assets.js(paths['source'].js, paths['dist'].js)
-            .then(function(){
-                return assets.js(paths['demo'].js, paths['site'].js);
-            }).then(function(){
-                return assets.js(paths['source'].js, paths['site'].js);
-            }).then(function(){
-                return assets.jsMin(paths['site'].js, paths['site'].js);
-            }).then(function(){
-                return assets.jsMin(paths['demo'].js, paths['demo'].js);
-            }).then(function(){
-                browserSync.reload({stream:true});
-            });
+        return js.all().then(function(){
+            browserSync.reload({stream:true});
+        });
     });
 
     gulp.task('browserSync', function() {
@@ -302,6 +289,5 @@ function gulpTasks(globalGulp){
         paths: paths
     }
 }
-
 
 module.exports = gulpTasks;

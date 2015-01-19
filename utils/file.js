@@ -1,6 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var fs = require("fs");
 var mkdirp = require('mkdirp');
+var glob = require('glob');
 
 function write(dir, name, contents){
     mkdirp(dir);
@@ -26,7 +27,17 @@ function detail(file){
     }
 }
 
+var globPromise = function(globString){
+    return new Promise(function(resolve, reject) {
+        glob(globString, function (err, files) {
+            if (err) reject(err);
+            else resolve(files);
+        });
+    });
+}
+
 module.exports = {
     detail: detail,
-    write: write
+    write: write,
+    glob: globPromise
 }
