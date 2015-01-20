@@ -10,8 +10,7 @@ var minimist = require('minimist');
 var paths = require('./paths');
 var karma = require('karma').server;
 var init = require('./tasks/initialisations');
-var sass = require('./tasks/sass');
-var js = require('./tasks/js');
+var createSite = require('./tasks/create-site');
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -30,15 +29,7 @@ function handleError(err, exitOnError) {
     var displayErr = plugins.util.colors.red(err);
     plugins.util.log(displayErr);
     if (exitOnError) process.exit(1);
-    //this.emit('end');
 }
-
-
-function copyToSite(location, fileType){
-    return gulp.src(paths[location][fileType] + '/**/*')
-        .pipe(gulp.dest(paths.site[fileType]));
-}
-
 
 function gulpTasks(globalGulp){
     gulp = globalGulp;
@@ -56,16 +47,22 @@ function gulpTasks(globalGulp){
 
     gulp.task('sass', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
-        return sass.all().then(function(){
+        return createSite.css().then(function(){
             browserSync.reload({stream:true});
         });
     });
 
     gulp.task('js', function() {
         browserSync.notify('<span style="color: grey">Running:</span> JS compiling');
-        return js.all().then(function(){
+        return createSite.js().then(function(){
             browserSync.reload({stream:true});
         });
+    });
+
+    gulp.task('create-site', function() {
+        return createSite.component().then(function(){
+            browserSync.reload({stream:true})
+        })
     });
 
     gulp.task('browserSync', function() {
@@ -88,43 +85,6 @@ function gulpTasks(globalGulp){
             paths.demo['js'] + '/**/*'], ['js']);
     });
 
-    gulp.task('create:site-html', function createSite() {
-        return gulp.src([paths.demo['root'] + '/index.html',
-                paths.demo['root'] +'/_includes/*.html'])
-            .pipe(plugins.concat('index.html'))
-            .pipe(gulp.dest(paths.site['root']))
-            .pipe(browserSync.reload({stream:true}));
-    });
-
-    gulp.task('create:site-images', function createSite() {
-        return gulp.src(paths.demo['images'] + '/**/*')
-            .pipe(gulp.dest(paths.site['images']));
-    });
-
-    gulp.task('create:site-fonts', function createSite() {
-        return gulp.src([
-                paths.source['fonts'] + '/**/*',
-                paths.bower['fonts'] + '/**/*.{eot,ttf,woff,svg}'
-        ])
-            .pipe(plugins.flatten())
-            .pipe(gulp.dest(paths.site['fonts']));
-    });
-
-    gulp.task('create:site-sass', function() {
-        copyToSite('dist', 'css')
-        return sass('demo', 'site');
-    });
-
-    gulp.task('create:site-js', function createSite() {
-        copyToSite('dist', 'js');
-        return gulp.src(paths.demo['js'] + '/*.js')
-            .pipe(browserified)
-            .pipe(gulp.dest(paths.site['js']));
-    });
-
-    gulp.task('create:site', function createSite(cb) {
-        return runSequence(['create:site-html', 'create:site-sass', 'create:site-js', 'create:site-images', 'create:site-fonts'], cb);
-    });
 
     gulp.task('build', function(cb) {
         return runSequence('clean', 'pre-build', 'create:dist', 'create:site', 'update-version-in-site',

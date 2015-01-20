@@ -1,4 +1,4 @@
-var spawn = require('./spawn-promised').spawn;
+var spawn = require('./spawn').spawn;
 
 module.exports = {
     checkout : function(arrFiles) {

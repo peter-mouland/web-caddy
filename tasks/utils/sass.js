@@ -1,8 +1,13 @@
 var autoprefixer = require('autoprefixer');
 var Promise = require('es6-promise').Promise;
 var sass = require('node-sass');
-var fileUtil = require('../utils/file');
-var paths = require('./paths');
+var fileUtil = require('./file');
+var chalk = require('chalk');
+
+function onError(err) {
+    console.log(chalk.red(err.message));
+    process.exit(1);
+}
 
 function sassRender(file){
     return new Promise(function(resolve, reject){
@@ -28,23 +33,11 @@ function writeSass(location, destination) {
                 var cssFile = fileUtil.detail(destination + '/' + sassFile.name);
                 var css = autoprefixer().process(output.css).css;
                 return fileUtil.write(cssFile.dir, cssFile.name, css)
-            });
+            },onError);
             promises.push(promise);
         });
         return Promise.all(promises);
-    });
+    }, onError);
 }
 
-function writeAllCSS(){
-    var promises = [
-        writeSass(paths['source'].sass, paths['dist'].css),
-        writeSass(paths['demo'].sass, paths['site'].css),
-        writeSass(paths['source'].sass, paths['site'].css)
-    ];
-    return Promise.all(promises);
-}
-
-module.exports = {
-    sass: writeSass,
-    all: writeAllCSS
-};
+module.exports = writeSass;

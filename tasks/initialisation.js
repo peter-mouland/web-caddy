@@ -1,8 +1,8 @@
 'use strict';
 var Promise = require('es6-promise').Promise;
-var spawn = require('./../utils/spawn-promised').spawn;
-var git = require('./../utils/git-promised');
-var bower = require('./../utils/bower-promised');
+var spawn = require('./utils/spawn').spawn;
+var git = require('./utils/git');
+var bower = require('./utils/bower');
 var fs = require("fs");
 var ncp = require('ncp').ncp;
 var replaceStream = require('replacestream');
