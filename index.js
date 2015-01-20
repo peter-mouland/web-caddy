@@ -4,7 +4,6 @@ var pkg;
 
 var findup = require('findup-sync');
 var browserSync = require('browser-sync');
-var del = require('del');
 var semver = require('semver');
 var minimist = require('minimist');
 var paths = require('./paths');
@@ -37,12 +36,13 @@ function gulpTasks(globalGulp){
     pkg = require(packageFilePath);
     var runSequence = require('run-sequence').use(gulp);
 
-    gulp.task('init:bower', function() {
-        return init.bower();
-    });
-
-    gulp.task('pre-build', function(cb){
-        return cb();
+    gulp.task('browserSync', function() {
+        browserSync({
+            port: 3456,
+            server: {
+                baseDir: paths.site['root']
+            }
+        });
     });
 
     gulp.task('sass', function() {
@@ -59,24 +59,29 @@ function gulpTasks(globalGulp){
         });
     });
 
-    gulp.task('create-site', function() {
-        return createSite.component().then(function(){
+    gulp.task('html', function() {
+        browserSync.notify('<span style="color: grey">Running:</span> HTML compiling');
+        return createSite.html().then(function(){
+            browserSync.reload({stream:true});
+        });
+    });
+
+    gulp.task('build', function() {
+        browserSync.notify('<span style="color: grey">Running:</span> Site compiling');
+        return createSite.all().then(function(){
             browserSync.reload({stream:true})
         })
     });
 
-    gulp.task('browserSync', function() {
-        browserSync({
-            port: 3456,
-            server: {
-                baseDir: paths.site['root']
-            }
-        });
+    gulp.task('update-docs', function() {
+        browserSync.notify('<span style="color: grey">Running:</span> Docs compiling');
+        return createSite.updateDocs({version: pkg.version}).then(function(){
+            browserSync.reload({stream:true})
+        })
     });
 
     gulp.task('watch', function() {
-        gulp.watch(paths.demo['root'] + '/**/*.html', ['create:site-html']);
-        gulp.watch(paths.site['root'] + '/**/*.html', ['update-version-in-site']);
+        gulp.watch(paths.demo['root'] + '/**/*.html', ['html']);
         gulp.watch([
             paths.source['sass'] + '/**/*',
             paths.demo['sass'] + '/**/*'], ['sass']);
@@ -85,48 +90,6 @@ function gulpTasks(globalGulp){
             paths.demo['js'] + '/**/*'], ['js']);
     });
 
-
-    gulp.task('build', function(cb) {
-        return runSequence('clean', 'pre-build', 'create:dist', 'create:site', 'update-version-in-site',
-            cb
-        );
-    });
-
-//remove temporary directors
-    gulp.task('clean:js', function(cb) {
-        return del([
-            paths.site['js']
-        ], cb);
-    });
-    gulp.task('clean:tmp', function(cb) {
-        return del([
-            '.tmp'
-        ], cb);
-    });
-    gulp.task('clean', ['clean:tmp'], function(cb) {
-        return del([
-            paths.site['root'] + '/*',
-            '!' + paths.site['root'] + '/v*',
-            paths.dist['root']
-        ], cb);
-    });
-
-//update the version number used within all documentation and html
-    gulp.task('update-version-in-md', function(){
-        return gulp.src(['README.md'], { base : './' })
-            .pipe(plugins.replace(/[0-9]+\.[0-9]+\.[0-9]/g, pkg.version))
-            .pipe(gulp.dest('./'));
-    });
-    gulp.task('update-version-in-html', function(){
-        var now = Date().split(' ').splice(0,5).join(' ');
-        return gulp.src([paths.site['root'] + '/**/*.html'], { base : './' })
-            .pipe(plugins.replace(/{{ site.version }}/g, pkg.version))
-            .pipe(plugins.replace(/{{ site.time }}/g, now))
-            .pipe(gulp.dest('./'));
-    });
-    gulp.task('update-version-in-site', function(cb){
-        return runSequence(['update-version-in-html', 'update-version-in-md'],cb);
-    });
     gulp.task('bump-version', function(cb){
         pkg.version = semver.inc(pkg.version, args.version);
         return gulp.src('./*.json')
@@ -175,9 +138,6 @@ function gulpTasks(globalGulp){
     /*
      * RELEASING
      */
-    gulp.task('create:dist', function(cb) {
-        return runSequence('bower', ['sass', 'js'], cb);
-    });
     gulp.task('git:tag', function(cb) {
         console.log('** Tagging Git : v' +  pkg.version + ' **\n');
         return plugins.run(
@@ -185,9 +145,7 @@ function gulpTasks(globalGulp){
                 'git push origin master v'+ pkg.version
         ).exec('', cb);
     });
-    gulp.task('bower', function() {
-        return plugins.bower()
-    });
+
     gulp.task('release:gh-pages', function () {
         return gulp.src(paths.site['root'] + "/**/*")
             .pipe(plugins['gh-pages']({
@@ -225,12 +183,11 @@ function gulpTasks(globalGulp){
             'build',
             'test',
             'bump-version',
-            'update-version-in-site',
+            'update-docs',
             'git:commit-push',
             'git:tag',
             'release:gh-pages',
             'release:aws',
-            'clean:tmp',
             cb
         );
     });

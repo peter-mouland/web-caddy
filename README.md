@@ -82,5 +82,3 @@ If you are ready for your component to go public, you can release the code to Bo
 This project depends on collaboration between developers. Contributions of any size are actively encouraged.
 
 [Read More >](CONTRIBUTING.md)
-
-

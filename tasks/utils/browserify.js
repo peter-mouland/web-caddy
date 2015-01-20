@@ -13,7 +13,7 @@ function browserifyFiles(files){
     if (!Array.isArray(files)) return browserifyFile(files);
     var promises = [];
     files.forEach(function (file, i) {
-        promises.push(browserifyRender(file));
+        promises.push(browserifyFile(file));
     });
     return Promise.all(promises);
 }

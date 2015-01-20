@@ -1,21 +1,27 @@
 var Promise = require('es6-promise').Promise;
+var chalk = require('chalk');
 var file = require('./utils/file');
+var bower = require('./utils/bower');
 var browserify = require('./utils/browserify');
 var sass = require('./utils/sass');
 var paths = require('../paths');
+var now = Date().split(' ').splice(0,5).join(' ');
+var pkg = require('../package.json');
+
+function onError(err) {
+    console.log(chalk.red(err.message));
+    process.exit(1);
+}
+function onSuccess(out) {
+    console.log(chalk.green(out));
+}
 
 function writeHTML(locationGlob, destinationPath){
     return file.glob(locationGlob).then(function(files){
         return file.concat(files)
     }).then(function(content){
         return file.write(destinationPath, 'index.html', content)
-    });
-}
-
-function copyFile(location, destination){
-    return file.glob(location).then(function(files){
-        return file.copy(files, destination)
-    });
+    }).then(componentUpdateDocs);
 }
 
 function componentFonts() {
@@ -23,16 +29,26 @@ function componentFonts() {
         paths.source['fonts'] + '/**/*',
         paths.bower['fonts'] + '/**/*.{eot,ttf,woff,svg}'
     ];
-    return copyFile(location, paths.site['fonts'])
+    var dest = paths.site['fonts'];
+    return file.del(dest + '/**/*').then(function() {
+        return file.copy(location, dest)
+    });
 }
 
 function componentImages() {
-    return copyFile(paths.demo['images'] + '/**/*', paths.site['images'])
+    var src = paths.demo['images'] + '/**/*';
+    var dest = paths.site['images'];
+    return file.del(dest + '/**/*').then(function(){
+        return file.copy(src, dest);
+    });
 }
 
 function componentHtml() {
-    var location = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
-    return writeHTML(location, paths.site.root)
+    var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
+    var dest = paths.site['root']
+    return file.del(dest + '/index.html').then(function(){
+        return writeHTML(src, dest)
+    });
 }
 
 function componentJS(){
@@ -45,23 +61,43 @@ function componentJS(){
 function componentJSMin(){
     return Promise.all([
         browserify.jsMin(paths['site'].js, paths['site'].js),
-        browserify.jsMin(paths['demo'].js, paths['demo'].js)
+        browserify.jsMin(paths['dist'].js, paths['dist'].js)
+    ]);
+}
+
+function componentUpdateDocs(options){
+    var version = options.version || pkg.version;
+    var htmlReplacements = [
+        {replace : '{{ site.version }}', with: version},
+        {replace : '{{ site.time }}', with: options.now || now}
+    ];
+    var mdReplacements = [
+        {replace : /[0-9]+\.[0-9]+\.[0-9]/g, with: version}
+    ].concat(htmlReplacements);
+
+    return Promise.all([
+        file.replace( [paths.site['root'] + '/**/*.html'], htmlReplacements)
+        , file.replace( ['./README.md'], mdReplacements)
     ]);
 }
 
 function componentJSAll(){
-    return componentJS().then(componentJSMin)
+    return file.del([paths['dist'].js + '/**/*', paths['site'].js + '/**/*']).then(function(){
+        return componentJS().then(componentJSMin)
+    });
 }
 
 function componentSass(){
-    return Promise.all([
-        sass(paths['source'].sass, paths['dist'].css),
-        sass(paths['demo'].sass, paths['site'].css),
-        sass(paths['source'].sass, paths['site'].css)
-    ]);
+    return file.del([paths['dist'].css + '/**/*', paths['site'].css + '/**/*']).then(function() {
+        return Promise.all([
+            sass(paths['source'].sass, paths['dist'].css),
+            sass(paths['demo'].sass, paths['site'].css),
+            sass(paths['source'].sass, paths['site'].css)
+        ]);
+    });
 }
 
-function component(){
+function allComponentAssets(){
     return Promise.all([
         componentJSAll(),
         componentFonts(),
@@ -71,6 +107,7 @@ function component(){
     ]);
 }
 
+component()
 
 module.exports = {
     html: componentHtml,
@@ -78,5 +115,6 @@ module.exports = {
     js: componentJSAll,
     images: componentImages,
     fonts: componentFonts,
-    component: component
+    updateDocs: componentUpdateDocs,
+    all: allComponentAssets
 };

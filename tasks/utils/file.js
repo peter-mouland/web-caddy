@@ -1,4 +1,5 @@
 var Promise = require('es6-promise').Promise;
+var del = require('del');
 var fs = require("fs-extra");
 var glob = require('glob');
 var ncp = require('ncp').ncp;
@@ -37,15 +38,47 @@ function readFiles(files){
     return Promise.all(promises)
 }
 
-function copy(src, dest){
+function replaceInFile(file, replacements){
+    return readFile(file).then(function(content){
+        var fileDetail = detail(file);
+        content = content.toString('utf-8')
+        replacements.forEach(function(replace){
+            content = content.replace(replace.replace, replace.with);
+        })
+        return write(fileDetail.dir, fileDetail.name, content);
+    })
+}
+
+function replace(src, replacement){
+    return globArray(src).then(function(files) {
+        var promises = []
+        files.forEach(function (file) {
+            promises.push(replaceInFile(file, replacement))
+        })
+        return Promise.all(promises)
+    })
+}
+
+function copyFile(src, dest){
     fs.mkdirs(dest);
+    var file = detail(src)
     return new Promise(function(resolve, reject){
-        fs.copy(src,dest, function(err, data){
+        fs.copy(src, dest + '/' + file.name, function(err, data){
             if (err){
                 reject(err);
             }
             resolve(data);
         });
+    });
+}
+
+function copy(src, dest){
+    return globArray(src).then(function(files){
+        var promises = []
+        files.forEach(function(file) {
+            return copyFile(file, dest)
+        });
+        return Promise.all(promises);
     });
 }
 
@@ -90,7 +123,7 @@ function globArray(globArray){
     })
 }
 
-function copyAndReplaceFile(src, dest, transform){
+function copyDirectory(src, dest, transform){
     return new Promise(function(resolve, reject){
         ncp(src, dest, { stopOnErr: true, transform: transform },
             function(err){
@@ -101,13 +134,13 @@ function copyAndReplaceFile(src, dest, transform){
     });
 }
 
-function copyAndReplace(srcs, dest, transform){
-    if (!Array.isArray(srcs)) return copyAndReplaceFile(srcs, dest, transform);
-    var promises = []
-    srcs.forEach(function(src){
-        promises.push(copyAndReplaceFile(src, dest, transform))
-    })
-    return Promise.all(promises);
+function clean(globby){
+    return new Promise(function(resolve, reject){
+        return del(globby, function (err, paths){
+            err && reject(err);
+            !err && setTimeout(function(){resolve(paths)},50);
+        });
+    });
 }
 
 module.exports = {
@@ -115,7 +148,9 @@ module.exports = {
     copy: copy,
     write: write,
     read: readFiles,
+    del: clean,
     concat: concat,
-    copyAndReplace: copyAndReplace,
+    copyDirectory: copyDirectory,
+    replace: replace,
     glob: globArray
 }

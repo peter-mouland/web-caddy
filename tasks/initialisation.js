@@ -37,7 +37,7 @@ function renameFiles(component){
 
 function initStructure(dir, component, repo, author){
     console.log("\nCopying Component Files ... \n");
-    return fileUtil.copyAndReplace(
+    return fileUtil.copyDirectory(
         dir,
         './' + component,
         function(read, write, file){
@@ -61,11 +61,14 @@ function initComponent(dir, component, repo, author) {
         return initGhPages();
     }, onError).then(function(output){
         onSuccess(output);
-        return initNPM();
+        return installNpms();
+    }, onError).then(function(output){
+        onSuccess(output);
+        return bower.install();
     }, onError);
 }
 
-function initNPM(){
+function installNpms(){
     console.log("\nInstalling Node Modules ... \n");
     return spawn('npm',['install']).then(function(output){
         onSuccess(output);
