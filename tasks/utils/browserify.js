@@ -9,27 +9,39 @@ function onError(err) {
     process.exit(1);
 }
 
-var browserifyRender = function(filename) {
+function browserifyFiles(files){
+    if (!Array.isArray(files)) return browserifyFile(files);
+    var promises = [];
+    files.forEach(function (file, i) {
+        promises.push(browserifyRender(file));
+    });
+    return Promise.all(promises);
+}
+
+function browserifyFile(filename) {
     return new Promise(function(resolve, reject){
         browserify(filename).bundle(function(err, src){
             if(err) reject(err)
             else resolve({ path: filename, src:src} )
         });
     });
-};
+}
+
+function saveFileObjects(fileObjs, destination){
+    var promises = [];
+    fileObjs.forEach(function (fileObj, i) {
+        var jsFile = fileUtil.detail(destination + '/' + fileUtil.detail(fileObj.path).name);
+        promises.push(fileUtil.write(jsFile.dir, jsFile.name, fileObj.src));
+    });
+    return Promise.all(promises);
+}
 
 function writeJs(location, destination){
-    return fileUtil.glob(location + '/*.js').then(function(files){
-        var promises = [];
-        files.forEach(function (file, i) {
-            var promise = browserifyRender(file).then(function(fileObj){
-                var jsFile = fileUtil.detail(destination + '/' + fileUtil.detail(fileObj.path).name);
-                return fileUtil.write(jsFile.dir, jsFile.name, fileObj.src);
-            }, onError);
-            promises.push(promise);
-        });
-        return Promise.all(promises);
-    })
+    return fileUtil.glob(location + '/*.js')
+        .then(browserifyFiles, onError)
+        .then(function(fileObjs){
+            return saveFileObjects(fileObjs, destination);
+        }, onError);
 }
 
 function writeJsMin(location, destination){
@@ -45,7 +57,6 @@ function writeJsMin(location, destination){
         return files;
     }, onError);
 }
-
 
 module.exports = {
     js: writeJs,
