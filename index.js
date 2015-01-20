@@ -9,7 +9,7 @@ var minimist = require('minimist');
 var paths = require('./paths');
 var karma = require('karma').server;
 var init = require('./tasks/initialisations');
-var createSite = require('./tasks/create-site');
+var build = require('./tasks/build');
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -47,35 +47,35 @@ function gulpTasks(globalGulp){
 
     gulp.task('sass', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
-        return createSite.css().then(function(){
+        return build.css().then(function(){
             browserSync.reload({stream:true});
         });
     });
 
     gulp.task('js', function() {
         browserSync.notify('<span style="color: grey">Running:</span> JS compiling');
-        return createSite.js().then(function(){
+        return build.js().then(function(){
             browserSync.reload({stream:true});
         });
     });
 
     gulp.task('html', function() {
         browserSync.notify('<span style="color: grey">Running:</span> HTML compiling');
-        return createSite.html().then(function(){
+        return build.html().then(function(){
             browserSync.reload({stream:true});
         });
     });
 
     gulp.task('build', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Site compiling');
-        return createSite.all().then(function(){
+        return build.all().then(function(){
             browserSync.reload({stream:true})
         })
     });
 
     gulp.task('update-docs', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Docs compiling');
-        return createSite.updateDocs({version: pkg.version}).then(function(){
+        return build.updateDocs({version: pkg.version}).then(function(){
             browserSync.reload({stream:true})
         })
     });
@@ -95,6 +95,13 @@ function gulpTasks(globalGulp){
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: args.version}))
             .pipe(gulp.dest('./'));
+    });
+
+    gulp.task('serve', ['build'], function(callback) {
+        return runSequence(
+            ['browserSync', 'watch'],
+            callback
+        );
     });
 
     gulp.task('git:commit-push', function(cb){
@@ -170,13 +177,6 @@ function gulpTasks(globalGulp){
         }
     });
 
-    gulp.task('serve', function(callback) {
-        return runSequence(
-            'build',
-            ['browserSync', 'watch'],
-            callback
-        );
-    });
 
     gulp.task('release', function(cb) {
         return runSequence(
