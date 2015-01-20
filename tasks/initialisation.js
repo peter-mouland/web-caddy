@@ -2,15 +2,15 @@
 var Promise = require('es6-promise').Promise;
 var spawn = require('./utils/spawn').spawn;
 var git = require('./utils/git');
+var fileUtil = require('./utils/file');
 var bower = require('./utils/bower');
 var fs = require("fs");
-var ncp = require('ncp').ncp;
 var replaceStream = require('replacestream');
-var chalk = require('chalk');
 var glob = require('glob');
 var shell = require("shelljs");
 var exec = shell.exec;
 
+var chalk = require('chalk');
 function onError(err) {
     console.log(chalk.red(err.message));
     process.exit(1);
@@ -18,10 +18,6 @@ function onError(err) {
 function onSuccess(output) {
     if (!output) return;
     console.log(chalk.green(output.message));
-}
-
-function npmGlobalPath() {
-    return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules/" ;
 }
 
 function renameFiles(component){
@@ -39,30 +35,21 @@ function renameFiles(component){
     });
 }
 
-function initStructure(pkg, component, repo){
-    var moduleDir = npmGlobalPath() + pkg.name;
+function initStructure(dir, component, repo, author){
     console.log("\nCopying Component Files ... \n");
-    return new Promise(function(resolve, reject){
-        ncp(moduleDir + '/component-structure',
-            './' + component,
-            { stopOnErr: true,
-                transform: function(read, write, file){
-                    read.pipe(replaceStream('{{ component }}', component))
-                        .pipe(replaceStream('{{ git.username }}', repo.match(/.com\:(.*)\//)[1]))
-                        .pipe(replaceStream('{{ git.author }}', exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '')))
-                        .pipe(write);
-                }
-            },
-            function(err){
-                err && reject();
-                !err && resolve();
-            }
-        );
+    return fileUtil.copyAndReplace(
+        dir,
+        './' + component,
+        function(read, write, file){
+            read.pipe(replaceStream('{{ component }}', component))
+                .pipe(replaceStream('{{ git.username }}', repo))
+                .pipe(replaceStream('{{ git.author }}', author))
+                .pipe(write);
     });
 }
 
-function initComponent(pkg, component, repo) {
-    return initStructure(pkg, component, repo).then(function(output) {
+function initComponent(dir, component, repo, author) {
+    return initStructure(dir, component, repo, author).then(function(output) {
         onSuccess(output);
         shell.cd(component);
         return renameFiles(component);

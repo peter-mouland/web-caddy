@@ -3,7 +3,8 @@
 var argv = process.argv.slice(1)
   , fs = require("fs")
   , prompt = require("prompt");
-
+var shell = require("shelljs");
+var exec = shell.exec;
 var pkg = require("../package.json")
     , version = pkg.version;
 
@@ -12,6 +13,10 @@ var init = require("../tasks/initialisation");
 function errorAnExit(message){
   console.log('Error: ' + message);
   process.exit(1);
+}
+
+function npmGlobalPath() {
+    return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;
 }
 
 var commands = {
@@ -26,14 +31,20 @@ var commands = {
         name: 'repo'
     }], function(err, result) {
       if (!result) return;
+      var component = result.name;
       var gitUrl = result.repo.match(/.com\:(.*)\//);
+      var author = exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
+      var moduleDir = npmGlobalPath() + '/gulp-component-helper/component-structure';
       if (!gitUrl){
         errorAnExit('Github Repository URL must be a url');
       }
-      if (fs.existsSync(result.name)){
-        errorAnExit('Component `' + result.name + '` already exists');
+      if (fs.existsSync(component)){
+        errorAnExit('Component `' + component + '` already exists');
       }
-      init.component(pkg, result.name, result.repo);
+      if (component.indexOf(' ')>-1){
+        errorAnExit('Component `' + component + '` must not contain spaces');
+      }
+      init.component(moduleDir, component, gitUrl, author);
     });
   },
   help: function help () {

@@ -1,6 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var fs = require("fs-extra");
 var glob = require('glob');
+var ncp = require('ncp').ncp;
 
 function write(dir, name, contents){
     fs.mkdirs(dir);
@@ -89,11 +90,32 @@ function globArray(globArray){
     })
 }
 
+function copyAndReplaceFile(src, dest, transform){
+    return new Promise(function(resolve, reject){
+        ncp(src, dest, { stopOnErr: true, transform: transform },
+            function(err){
+                err && reject(err);
+                !err && resolve();
+            }
+        );
+    });
+}
+
+function copyAndReplace(srcs, dest, transform){
+    if (!Array.isArray(srcs)) return copyAndReplaceFile(srcs, dest, transform);
+    var promises = []
+    srcs.forEach(function(src){
+        promises.push(copyAndReplaceFile(src, dest, transform))
+    })
+    return Promise.all(promises);
+}
+
 module.exports = {
     detail: detail,
     copy: copy,
     write: write,
     read: readFiles,
     concat: concat,
+    copyAndReplace: copyAndReplace,
     glob: globArray
 }
