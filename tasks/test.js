@@ -1,7 +1,8 @@
-
+var Promise = require('es6-promise').Promise;
 var karma = require('karma').server;
 var chalk = require('chalk');
 var paths = require('../paths');
+var findup = require('findup-sync');
 var karmaConfig = findup(paths.test.config);
 
 function onError(err, exitOnError) {
@@ -9,7 +10,7 @@ function onError(err, exitOnError) {
     if (exitOnError) process.exit(1);
 }
 
-function karma(singleRun){
+function runKarma(singleRun){
     return new Promise(function(resolve, reject) {
         karma.start({
             configFile: karmaConfig,
@@ -22,11 +23,11 @@ function karma(singleRun){
 }
 
 function singleRun(){
-    return karma(true);
+    return runKarma(true);
 }
 
 function tdd(){
-    return karma(false);
+    return runKarma(false);
 }
 
 function coverage(){

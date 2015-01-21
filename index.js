@@ -7,9 +7,9 @@ var browserSync = require('browser-sync');
 var semver = require('semver');
 var minimist = require('minimist');
 var paths = require('./paths');
-var karma = require('karma').server;
 var init = require('./tasks/initialise');
 var build = require('./tasks/build');
+var test = require('./tasks/test');
 
 var plugins = require('gulp-load-plugins')({
     rename: {
@@ -55,6 +55,9 @@ function gulpTasks(globalGulp){
     pkg = require(packageFilePath);
     var runSequence = require('run-sequence').use(gulp);
 
+    /*
+     * Building
+     */
     gulp.task('sass', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
         return build.css().then(function(){
@@ -90,14 +93,38 @@ function gulpTasks(globalGulp){
         })
     });
 
+    /*
+     * Serving
+     */
     gulp.task('serve:quick', function(callback) {
         loadBrowser(paths.site['root']);
         watch();
     });
 
-    gulp.task('serve', ['build', 'serve:quick'], function(cb) {
+    gulp.task('serve', ['build', 'serve:quick']);
+
+    /*
+     * Testing
+     */
+    gulp.task('test:single-run', function (done) {
+        return test.singleRun().catch(function(){
+            process.exit(1);
+        });
+    });
+    gulp.task('test:tdd', function (done) {
+        return test.tdd().catch(function(){
+            process.exit(1);
+        });
+    });
+    gulp.task('test', ['test:single-run'], function(cb){
+        return test.coverage().catch(function(){
+            process.exit(1);
+        })
     });
 
+    /*
+     * RELEASING
+     */
     gulp.task('bump-version', function(cb){
         pkg.version = semver.inc(pkg.version, args.version);
         return gulp.src('./*.json')
@@ -107,45 +134,9 @@ function gulpTasks(globalGulp){
 
     gulp.task('git:commit-push', function(cb){
         return plugins.run(
-                'git commit -am "Version bump for release";' +
-                'git push origin master').exec('', cb);
+            'git commit -am "Version bump for release";' +
+            'git push origin master').exec('', cb);
     });
-
-    /*
-     * TESTING
-     */
-    gulp.task('test:single-run', function (done) {
-        karma.start({
-            configFile: findup(paths.test.config),
-            singleRun: true
-        }, done);
-    });
-    gulp.task('test:tdd', function (done) {
-        karma.start({
-            configFile: findup(paths.test.config)
-        }, done);
-    });
-    gulp.task('test', ['test:single-run'], function(cb){
-        var results = require(findup(paths.test.summary));
-        var config = require(findup(paths.test.config));
-        var coverage = config({set: function(conf){return conf;}}).coverageReporter;
-        var thresholds = coverage.reporters[0].watermarks;
-        var err = false;
-        for (var file in results){
-            for (var threshold in thresholds){
-                if (results[file][threshold].pct < thresholds[threshold][0]){
-                    handleError(file + ' : ' + threshold + ' Coverage is too low (<' + thresholds[threshold][0] + '%)');
-                    err = true;
-                }
-            }
-        }
-        if (err) process.exit(1);
-        cb();
-    });
-
-    /*
-     * RELEASING
-     */
     gulp.task('git:tag', function(cb) {
         console.log('** Tagging Git : v' +  pkg.version + ' **\n');
         return plugins.run(
@@ -178,20 +169,7 @@ function gulpTasks(globalGulp){
         }
     });
 
-
-    gulp.task('release', function(cb) {
-        return runSequence(
-            'build',
-            'test',
-            'bump-version',
-            'update-docs',
-            'git:commit-push',
-            'git:tag',
-            'release:gh-pages',
-            'release:aws',
-            cb
-        );
-    });
+    gulp.task('release', ['build', 'test', 'bump-version', 'update-docs', 'git:commit-push', 'git:tag', 'release:gh-pages', 'release:aws']);
 
     gulp.task('transfer:user', function(cb) {
       if (!gulp.env.oldUser || !gulp.env.newUser){
