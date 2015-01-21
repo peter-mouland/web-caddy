@@ -101,8 +101,6 @@ function allComponentAssets(){
     ]);
 }
 
-allComponentAssets()
-
 module.exports = {
     html: componentHtml,
     css: componentSass,

@@ -8,7 +8,7 @@ var semver = require('semver');
 var minimist = require('minimist');
 var paths = require('./paths');
 var karma = require('karma').server;
-var init = require('./tasks/initialisations');
+var init = require('./tasks/initialise');
 var build = require('./tasks/build');
 
 var plugins = require('gulp-load-plugins')({
@@ -30,64 +30,72 @@ function handleError(err, exitOnError) {
     if (exitOnError) process.exit(1);
 }
 
+function watch(){
+    gulp.watch(paths.demo['root'] + '/**/*.html', ['html']);
+    gulp.watch([
+        paths.source['sass'] + '/**/*',
+        paths.demo['sass'] + '/**/*'], ['sass']);
+    gulp.watch([
+        paths.source['js'] + '/**/*',
+        paths.demo['js'] + '/**/*'], ['js']);
+}
+
+function loadBrowser(baseDir){
+    browserSync({
+        port: 3456,
+        server: {
+            baseDir: baseDir
+        }
+    });
+}
+
 function gulpTasks(globalGulp){
     gulp = globalGulp;
     var packageFilePath = findup('package.json');
     pkg = require(packageFilePath);
     var runSequence = require('run-sequence').use(gulp);
 
-    gulp.task('browserSync', function() {
-        browserSync({
-            port: 3456,
-            server: {
-                baseDir: paths.site['root']
-            }
-        });
-    });
-
     gulp.task('sass', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
         return build.css().then(function(){
-            browserSync.reload({stream:true});
+            browserSync.reload({stream:false});
         });
     });
 
     gulp.task('js', function() {
         browserSync.notify('<span style="color: grey">Running:</span> JS compiling');
         return build.js().then(function(){
-            browserSync.reload({stream:true});
+            browserSync.reload({stream:false});
         });
     });
 
     gulp.task('html', function() {
         browserSync.notify('<span style="color: grey">Running:</span> HTML compiling');
         return build.html().then(function(){
-            browserSync.reload({stream:true});
+            browserSync.reload({stream:false});
         });
     });
 
     gulp.task('build', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Site compiling');
         return build.all().then(function(){
-            browserSync.reload({stream:true})
+            browserSync.reload({stream:false})
         })
     });
 
     gulp.task('update-docs', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Docs compiling');
         return build.updateDocs({version: pkg.version}).then(function(){
-            browserSync.reload({stream:true})
+            browserSync.reload({stream:false})
         })
     });
 
-    gulp.task('watch', function() {
-        gulp.watch(paths.demo['root'] + '/**/*.html', ['html']);
-        gulp.watch([
-            paths.source['sass'] + '/**/*',
-            paths.demo['sass'] + '/**/*'], ['sass']);
-        gulp.watch([
-            paths.source['js'] + '/**/*',
-            paths.demo['js'] + '/**/*'], ['js']);
+    gulp.task('serve:quick', function(callback) {
+        loadBrowser(paths.site['root']);
+        watch();
+    });
+
+    gulp.task('serve', ['build', 'serve:quick'], function(cb) {
     });
 
     gulp.task('bump-version', function(cb){
@@ -95,13 +103,6 @@ function gulpTasks(globalGulp){
         return gulp.src('./*.json')
             .pipe(plugins.bump({type: args.version}))
             .pipe(gulp.dest('./'));
-    });
-
-    gulp.task('serve', ['build'], function(callback) {
-        return runSequence(
-            ['browserSync', 'watch'],
-            callback
-        );
     });
 
     gulp.task('git:commit-push', function(cb){
