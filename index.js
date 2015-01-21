@@ -27,9 +27,9 @@ function watch(){
     var htmlPaths = [ paths.demo['root'] + '/**/*.html'];
     var sassPaths = [ paths.source['sass'] + '/**/*', paths.demo['sass'] + '/**/*'];
     var jsPaths =   [ paths.source['js'] + '/**/*',   paths.demo['js'] + '/**/*'];
-    gulp.watch(htmlPaths, ['html']);
-    gulp.watch(sassPaths, ['sass']);
-    gulp.watch(jsPaths,   ['js']);
+    gulp.watch(htmlPaths, ['build:html']);
+    gulp.watch(sassPaths, ['build:sass']);
+    gulp.watch(jsPaths,   ['build:js']);
 }
 
 function loadBrowser(baseDir){
@@ -51,30 +51,22 @@ function gulpTasks(globalGulp){
      */
     gulp.task('build:sass', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
-        return build.css().then(function(){
-            browserSync.reload({stream:false});
-        });
+        return build.css().then(browserSync.reload);
     });
 
     gulp.task('build:js', function() {
         browserSync.notify('<span style="color: grey">Running:</span> JS compiling');
-        return build.js().then(function(){
-            browserSync.reload({stream:false});
-        });
+        return build.js().then(browserSync.reload);
     });
 
     gulp.task('build:html', function() {
         browserSync.notify('<span style="color: grey">Running:</span> HTML compiling');
-        return build.html().then(function(){
-            browserSync.reload({stream:false});
-        });
+        return build.html().then(browserSync.reload);
     });
 
     gulp.task('build', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Site compiling');
-        return build.all().then(function(){
-            browserSync.reload({stream:false})
-        })
+        return build.all().then(browserSync.reload)
     });
 
     /*
@@ -90,6 +82,9 @@ function gulpTasks(globalGulp){
     /*
      * Testing
      */
+    gulp.task('test:single-run', function () {
+        return test.singleRun().catch(onError);
+    });
     gulp.task('test:tdd', function () {
         return test.tdd().catch(onError);
     });
