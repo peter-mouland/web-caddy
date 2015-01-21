@@ -9,13 +9,14 @@ function onError(err) {
     process.exit(1);
 }
 
-function browserifyFiles(files){
-    if (!Array.isArray(files)) return browserifyFile(files);
-    var promises = [];
-    files.forEach(function (file, i) {
-        promises.push(browserifyFile(file));
-    });
-    return Promise.all(promises);
+function browserifyFiles(glob){
+    return fileUtil.glob(glob).then(function(files){
+        var promises = [];
+        files.forEach(function (file, i) {
+            promises.push(browserifyFile(file));
+        });
+        return Promise.all(promises);
+    }, onError);
 }
 
 function browserifyFile(filename) {
@@ -30,29 +31,24 @@ function browserifyFile(filename) {
 function saveFileObjects(fileObjs, destination){
     var promises = [];
     fileObjs.forEach(function (fileObj, i) {
-        var jsFile = fileUtil.detail(destination + '/' + fileUtil.detail(fileObj.path).name);
-        promises.push(fileUtil.write(jsFile.dir, jsFile.name, fileObj.src));
+        var jsFile = destination + '/' + fileUtil.detail(fileObj.path).name;
+        promises.push(fileUtil.write(jsFile, fileObj.src));
     });
     return Promise.all(promises);
 }
 
 function writeJs(location, destination){
-    return fileUtil.glob(location + '/*.js')
-        .then(browserifyFiles, onError)
-        .then(function(fileObjs){
-            return saveFileObjects(fileObjs, destination);
-        }, onError);
+    return browserifyFiles(location + '/*.js').then(function(fileObjs){
+        return saveFileObjects(fileObjs, destination);
+    }, onError);
 }
 
 function writeJsMin(location, destination){
     return fileUtil.glob(location + '/!(*.min).js').then(function(files){
-        var arrMinFiles = [];
         files.forEach(function (file, i) {
-            var min = UglifyJS.minify(file).code;
-            var jsFile = fileUtil.detail(destination + '/' + fileUtil.detail(file).name);
-            var minFile = jsFile.name.replace('.js','.min.js');
-            arrMinFiles.push(jsFile.dir + minFile)
-            return fileUtil.write(jsFile.dir, jsFile.name.replace('.js','.min.js'), min);
+            var minCode = UglifyJS.minify(file).code;
+            var minFile = destination + '/' + fileUtil.detail(file).name.replace('.js','.min.js');
+            return fileUtil.write(minFile, minCode);
         });
         return files;
     }, onError);

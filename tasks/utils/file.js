@@ -2,17 +2,24 @@ var Promise = require('es6-promise').Promise;
 var del = require('del');
 var fs = require("fs-extra");
 var glob = require('glob');
+var chalk = require('chalk');
 var ncp = require('ncp').ncp;
 
-function write(dir, name, contents){
-    fs.mkdirs(dir);
+function onError(err) {
+    console.log(chalk.red(err.message));
+    process.exit(1);
+}
+
+function write(path, contents){
+    var file = detail(path);
+    fs.mkdirs(file.dir);
     var string = (Buffer.isBuffer(contents)) ? contents.toString('utf-8') : contents;
     return new Promise(function(resolve, reject){
-        fs.writeFile(dir + '/' + name, string, function(err, written, buffer){
+        fs.writeFile(path, string, function(err, written, buffer){
             if (err){
                 reject(err);
             }
-            resolve(dir + '/' + name);
+            resolve(path);
         });
     });
 }
@@ -29,24 +36,24 @@ function readFile(path, fileName){
     });
 }
 
-function readFiles(files){
-    if (!Array.isArray(files)) return readFile(files);
-    var promises = []
-    files.forEach(function(file){
-        promises.push(readFile(file))
-    })
-    return Promise.all(promises)
+function read(src){
+    return globArray(src).then(function(files) {
+        var promises = []
+        files.forEach(function (file) {
+            promises.push(readFile(file))
+        })
+        return Promise.all(promises)
+    }, onError);
 }
 
 function replaceInFile(file, replacements){
     return readFile(file).then(function(content){
-        var fileDetail = detail(file);
         content = content.toString('utf-8')
         replacements.forEach(function(replace){
             content = content.replace(replace.replace, replace.with);
         })
-        return write(fileDetail.dir, fileDetail.name, content);
-    })
+        return write(file, content);
+    }, onError)
 }
 
 function replace(src, replacement){
@@ -56,7 +63,7 @@ function replace(src, replacement){
             promises.push(replaceInFile(file, replacement))
         })
         return Promise.all(promises)
-    })
+    }, onError)
 }
 
 function copyFile(src, dest){
@@ -79,13 +86,7 @@ function copy(src, dest){
             return copyFile(file, dest)
         });
         return Promise.all(promises);
-    });
-}
-
-function concat(files){
-    return readFiles(files).then(function(contents){
-        return contents.join('\n');
-    });
+    }, onError);
 }
 
 function detail(file){
@@ -120,7 +121,7 @@ function globArray(globArray){
             files = files.concat(arrFile)
         });
         return files;
-    })
+    }, onError)
 }
 
 function copyDirectory(src, dest, transform){
@@ -147,9 +148,8 @@ module.exports = {
     detail: detail,
     copy: copy,
     write: write,
-    read: readFiles,
+    read: read,
     del: clean,
-    concat: concat,
     copyDirectory: copyDirectory,
     replace: replace,
     glob: globArray

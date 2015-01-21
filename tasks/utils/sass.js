@@ -30,9 +30,8 @@ function writeSass(location, destination) {
         files.forEach(function (file, i) {
             var promise = sassRender(file).then(function(output){
                 var sassFile = fileUtil.detail(file);
-                var cssFile = fileUtil.detail(destination + '/' + sassFile.name);
                 var css = autoprefixer().process(output.css).css;
-                return fileUtil.write(cssFile.dir, cssFile.name, css)
+                return fileUtil.write(destination + '/' + sassFile.name, css)
             },onError);
             promises.push(promise);
         });

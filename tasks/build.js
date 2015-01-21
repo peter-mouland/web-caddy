@@ -4,6 +4,7 @@ var file = require('./utils/file');
 var bower = require('./utils/bower');
 var browserify = require('./utils/browserify');
 var sass = require('./utils/sass');
+var html = require('./utils/html');
 var paths = require('../paths');
 var now = Date().split(' ').splice(0,5).join(' ');
 var pkg = require('../package.json');
@@ -16,12 +17,28 @@ function onSuccess(out) {
     console.log(chalk.green(out));
 }
 
-function writeHTML(locationGlob, destinationPath){
-    return file.glob(locationGlob).then(function(files){
-        return file.concat(files)
-    }).then(function(content){
-        return file.write(destinationPath, 'index.html', content)
+function componentHtml() {
+    var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
+    var dest = paths.site['root']+ '/index.html'
+    return file.del(dest ).then(function(){
+        return html.create(src, dest)
     }).then(componentUpdateDocs);
+}
+
+function componentUpdateDocs(options){
+    var version = options.version || pkg.version;
+    var htmlReplacements = [
+        {replace : '{{ site.version }}', with: version},
+        {replace : '{{ site.time }}', with: options.now || now}
+    ];
+    var mdReplacements = [
+        {replace : /[0-9]+\.[0-9]+\.[0-9]/g, with: version}
+    ].concat(htmlReplacements);
+
+    return Promise.all([
+        file.replace( [paths.site['root'] + '/**/*.html'], htmlReplacements)
+        , file.replace( ['./README.md'], mdReplacements)
+    ]);
 }
 
 function componentFonts() {
@@ -43,14 +60,6 @@ function componentImages() {
     });
 }
 
-function componentHtml() {
-    var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
-    var dest = paths.site['root']
-    return file.del(dest + '/index.html').then(function(){
-        return writeHTML(src, dest)
-    });
-}
-
 function componentJS(){
     return Promise.all([
         browserify.js(paths['source'].js, paths['dist'].js),
@@ -58,26 +67,11 @@ function componentJS(){
         browserify.js(paths['source'].js, paths['site'].js)
     ]);
 }
+
 function componentJSMin(){
     return Promise.all([
         browserify.jsMin(paths['site'].js, paths['site'].js),
         browserify.jsMin(paths['dist'].js, paths['dist'].js)
-    ]);
-}
-
-function componentUpdateDocs(options){
-    var version = options.version || pkg.version;
-    var htmlReplacements = [
-        {replace : '{{ site.version }}', with: version},
-        {replace : '{{ site.time }}', with: options.now || now}
-    ];
-    var mdReplacements = [
-        {replace : /[0-9]+\.[0-9]+\.[0-9]/g, with: version}
-    ].concat(htmlReplacements);
-
-    return Promise.all([
-        file.replace( [paths.site['root'] + '/**/*.html'], htmlReplacements)
-        , file.replace( ['./README.md'], mdReplacements)
     ]);
 }
 
@@ -99,7 +93,7 @@ function componentSass(){
 
 function allComponentAssets(){
     return Promise.all([
-        componentJSAll(),
+        componentJS(),
         componentFonts(),
         componentImages(),
         componentSass(),
@@ -107,7 +101,7 @@ function allComponentAssets(){
     ]);
 }
 
-component()
+allComponentAssets()
 
 module.exports = {
     html: componentHtml,
