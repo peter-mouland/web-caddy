@@ -1,32 +1,33 @@
 var spawn = require('./spawn').spawn;
 
-module.exports = {
-    checkout : function(arrFiles) {
-        arrFiles.unshift('checkout');
-        return spawn('git', arrFiles);
-    },
-    add : function(arrFiles) {
-        arrFiles.unshift('add');
-        return spawn('git', arrFiles);
-    },
+function runGitCommand(cmd, args){
+    args.unshift(cmd);
+    return spawn('git', args);
+}
 
+module.exports = {
     commit : function(comment) {
         return spawn('git',['commit', '-m', '"' + comment + '"']);
     },
-
-    push : function(arrCmds) {
-        arrCmds.unshift('push');
-        return spawn('git', arrCmds);
-    },
-    rm : function(arrCmds) {
-        arrCmds.unshift('rm');
-        return spawn('git', arrCmds);
+    tag : function(version) {
+        return spawn('git', ['tag', '-a', version, '-m', version]);
     },
     init : function() {
-        return spawn('git', ['init']);
+        return runGitCommand('init', [])
+    },
+    checkout : function(arrFiles) {
+        return runGitCommand('checkout', arrFiles)
+    },
+    add : function(arrFiles) {
+        return runGitCommand('add', arrFiles)
+    },
+    push : function(arrCmds) {
+        return runGitCommand('push', arrCmds)
+    },
+    rm : function(arrCmds) {
+        return runGitCommand('rm', arrCmds)
     },
     remote : function(arrCmds) {
-        arrCmds.unshift('remote');
-        return spawn('git', arrCmds);
+        return runGitCommand('remote', arrCmds)
     }
 };

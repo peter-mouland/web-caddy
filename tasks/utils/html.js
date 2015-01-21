@@ -1,4 +1,3 @@
-var Promise = require('es6-promise').Promise;
 var chalk = require('chalk');
 var file = require('./file');
 
@@ -12,8 +11,10 @@ function onSuccess(out) {
 }
 
 function concat(files){
-    return file.read(files).then(function(contents){
-        return contents.join('\n');
+    return file.read(files).then(function(newFileObj){
+        return newFileObj.map(function(file){
+            return file.contents;
+        }).join('\n');
     }, onError);
 }
 

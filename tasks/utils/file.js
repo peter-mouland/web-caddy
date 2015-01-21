@@ -31,7 +31,10 @@ function readFile(path, fileName){
             if (err){
                 reject(err);
             }
-            resolve(data);
+            resolve({
+                path: path,
+                contents: data
+            });
         });
     });
 }
