@@ -50,12 +50,12 @@ function read(src){
 }
 
 function replaceInFile(file, replacements){
-    return readFile(file).then(function(content){
-        content = content.toString('utf-8')
+    return readFile(file).then(function(fileObj){
+        fileObj.contents = fileObj.contents.toString('utf-8')
         replacements.forEach(function(replace){
-            content = content.replace(replace.replace, replace.with);
+            fileObj.contents = fileObj.contents.replace(replace.replace, replace.with);
         })
-        return write(file, content);
+        return write(fileObj.path, fileObj.contents);
     }, onError)
 }
 
