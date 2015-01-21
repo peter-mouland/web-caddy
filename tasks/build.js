@@ -7,7 +7,7 @@ var sass = require('./utils/sass');
 var html = require('./utils/html');
 var paths = require('../paths');
 var now = Date().split(' ').splice(0,5).join(' ');
-var pkg = require('../package.json');
+var pkg = require('../package.json'); //todo: should be parent package
 
 function onError(err) {
     console.log(chalk.red(err.message));

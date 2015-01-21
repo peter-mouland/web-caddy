@@ -1,6 +1,8 @@
 var chalk = require('chalk');
 var file = require('./file');
 
+//maybe upgrade to https://github.com/assemble/assemble
+
 function onError(err) {
     console.log(chalk.red(err.message));
     process.exit(1);

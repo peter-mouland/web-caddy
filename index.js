@@ -53,17 +53,14 @@ function gulpTasks(globalGulp){
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
         return build.css().then(browserSync.reload);
     });
-
     gulp.task('build:js', function() {
         browserSync.notify('<span style="color: grey">Running:</span> JS compiling');
         return build.js().then(browserSync.reload);
     });
-
     gulp.task('build:html', function() {
         browserSync.notify('<span style="color: grey">Running:</span> HTML compiling');
         return build.html().then(browserSync.reload);
     });
-
     gulp.task('build', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Site compiling');
         return build.all().then(browserSync.reload)
@@ -76,7 +73,6 @@ function gulpTasks(globalGulp){
         loadBrowser(paths.site['root']);
         watch();
     });
-
     gulp.task('serve', ['build', 'serve:quick']);
 
     /*

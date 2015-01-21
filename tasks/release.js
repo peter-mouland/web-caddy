@@ -3,7 +3,7 @@ var git = require('./utils/git');
 var bump = require('./utils/bump');
 var build = require('./build');
 var semver = require('semver');
-var pkg = require('./package.json');
+var pkg = require('../package.json');
 
 function gitRelease(version){
     return git.commit('Version bump for release').then(function(){
@@ -28,7 +28,6 @@ function ghPagesRelease(){
     file.glob(paths.site['root'] + "/**/*").then(function(files){
 
     });
-    //return gulp.src()
     //    .pipe(plugins['gh-pages']({
     //        cacheDir: '.tmp'
     //    })).pipe(gulp.dest('/tmp/gh-pages'));
