@@ -54,17 +54,15 @@ function coverage(){
     })
 }
 
-function run(){
+function all(){
     return singleRun().then(function(){
-        return coverage().catch(function(err){
-            if (err) onError(err, true);
-        });
-    });
+        return coverage().catch(onError);
+    }, onError);
 }
 
 module.exports = {
     tdd: tdd,
     singleRun: singleRun,
     coverage: coverage,
-    run: run
+    all: all
 }

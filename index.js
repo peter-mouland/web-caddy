@@ -80,7 +80,7 @@ function gulpTasks(globalGulp){
     /*
      * Serving
      */
-    gulp.task('serve:quick', function(callback) {
+    gulp.task('serve:quick', function() {
         loadBrowser(paths.site['root']);
         watch();
     });
@@ -90,13 +90,14 @@ function gulpTasks(globalGulp){
     /*
      * Testing
      */
-    gulp.task('test:tdd', function (done) {
+    gulp.task('test:tdd', function () {
         return test.tdd().catch(onError);
     });
-    gulp.task('test', ['build'], function(cb){
-        return test.singleRun().then(function(){
-            return test.coverage().catch(onError);
-        }, onError);
+    gulp.task('test:coverage', function () {
+        return test.coverage().catch(onError);
+    });
+    gulp.task('test', ['build'], function(){
+        return test.all().catch(onError);
     });
 
     /*
