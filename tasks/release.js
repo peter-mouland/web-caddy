@@ -42,23 +42,24 @@ function ghPagesRelease(dir){
     });
 }
 
-function awsRelease(fileGlob, version, name, config){
+function awsRelease(version, name, config){
     var s3 = aws.setup(config)
-    return file.read(fileGlob).then(function(files){
+    return file.read('./_site/**/*.*').then(function(files){
+        if (!files.length) onError({message: 'No files found to release to AWS\n' + glob})
         var promises = []
         files.forEach(function(fileObj){
-            promises.push(s3.upload(fileObj,{ path: 'components/' + name + '/' + version +'/'}).catch(onError))
+            promises.push(s3.upload(fileObj,{ path: 'test/components/' + name + '/' + version +'/'}).catch(onError))
         })
         return Promise.all(promises);
     },onError)
 }
 
-function all(fileGlob, type, name, config){
+function all(type, name, config){
     return versionBump(type).then(function(version){
         return Promise.all([
             gitRelease(version),
             ghPagesRelease(),
-            awsRelease(fileGlob, version, name, config)
+            awsRelease(version, name, config)
         ]);
     });
 }

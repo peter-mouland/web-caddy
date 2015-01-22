@@ -99,13 +99,13 @@ function gulpTasks(globalGulp){
        return release.git(pkg.version);
     });
     gulp.task('release:aws', function(){
-       return release.aws(paths['site']['root'] + '/**/*.*', pkg.version, pkg.name, config.aws);
+       return release.aws(pkg.version, pkg.name, config.aws);
     });
     gulp.task('release:gh-pages', function(){
        return release.ghPages();
     });
     gulp.task('release', ['build', 'test'], function(){
-       return release.all(paths['site']['root'] + '/**/*.*', args.version, pkg.name, config.aws);
+       return release.all(args.version, pkg.name, config.aws);
     });
 
     /*

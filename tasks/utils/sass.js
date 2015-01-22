@@ -29,7 +29,7 @@ function writeSass(location, destination) {
         var promises = [];
         files.forEach(function (fileObj, i) {
             var promise = sassRender(fileObj.path).then(function(output){
-                fileObj.content = autoprefixer().process(output.css).css;
+                fileObj.contents = autoprefixer().process(output.css).css;
                 fileObj.path = destination + '/' + fileObj.name.replace('.scss','.css');
                 return fileUtil.write(fileObj)
             },onError);
