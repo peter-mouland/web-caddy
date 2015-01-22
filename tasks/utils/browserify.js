@@ -9,30 +9,31 @@ function onError(err) {
     process.exit(1);
 }
 
+function browserifyFile(fileObj) {
+    return new Promise(function(resolve, reject){
+        browserify(fileObj).bundle(function(err, contents){
+            err && reject(err)
+            fileObj.contents = contents;
+            !err && resolve(fileObj)
+        });
+    });
+}
+
 function browserifyFiles(glob){
-    return fileUtil.glob(glob).then(function(files){
+    return fileUtil.glob(glob).then(function(fileObjs){
         var promises = [];
-        files.forEach(function (file, i) {
-            promises.push(browserifyFile(file));
+        fileObjs.forEach(function (fileObj, i) {
+            promises.push(browserifyFile(fileObj));
         });
         return Promise.all(promises);
     }, onError);
 }
 
-function browserifyFile(filename) {
-    return new Promise(function(resolve, reject){
-        browserify(filename).bundle(function(err, src){
-            if(err) reject(err)
-            else resolve({ path: filename, src:src} )
-        });
-    });
-}
-
 function saveFileObjects(fileObjs, destination){
     var promises = [];
     fileObjs.forEach(function (fileObj, i) {
-        var jsFile = destination + '/' + fileUtil.detail(fileObj.path).name;
-        promises.push(fileUtil.write(jsFile, fileObj.src));
+        fileObj.path = destination + '/' + fileObj.name;
+        promises.push(fileUtil.write(fileObj));
     });
     return Promise.all(promises);
 }
@@ -45,10 +46,10 @@ function writeJs(location, destination){
 
 function writeJsMin(location, destination){
     return fileUtil.glob(location + '/!(*.min).js').then(function(files){
-        files.forEach(function (file, i) {
-            var minCode = UglifyJS.minify(file).code;
-            var minFile = destination + '/' + fileUtil.detail(file).name.replace('.js','.min.js');
-            return fileUtil.write(minFile, minCode);
+        files.forEach(function (fileObj, i) {
+            fileObj.contents = UglifyJS.minify(fileObj.path).code;
+            fileObj.path = destination + '/' + fileObj.name.replace('.js','.min.js');
+            return fileUtil.write(fileObj);
         });
         return files;
     }, onError);

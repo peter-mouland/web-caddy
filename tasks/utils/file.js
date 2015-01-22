@@ -11,16 +11,15 @@ function onError(err) {
     process.exit(1);
 }
 
-function write(path, contents){
-    var file = detail(path);
+function write(fileObj){
     fs.mkdirs(file.dir);
-    var string = (Buffer.isBuffer(contents)) ? contents.toString('utf-8') : contents;
+    var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
     return new Promise(function(resolve, reject){
         fs.writeFile(path, string, function(err, written, buffer){
             if (err){
                 reject(err);
             }
-            resolve(path);
+            resolve(fileObj.path);
         });
     });
 }
@@ -49,10 +48,6 @@ function readFile(fileObj){
         })
     ]
     return Promise.all(promises).then(function(outputs){
-        var fileDetail = detail(fileObj.path)
-        fileObj.dir = fileDetail.dir
-        fileObj.ext = fileDetail.ext
-        fileObj.name = fileDetail.name
         fileObj.contents =  outputs[1]
         fileObj.stat = outputs[0]
         return fileObj;
@@ -75,7 +70,7 @@ function replaceInFile(fileObj, replacements){
         replacements.forEach(function(replace){
             fileObj.contents = fileObj.contents.replace(replace.replace, replace.with);
         })
-        return write(fileObj.path, fileObj.contents);
+        return write(fileObj);
     }, onError)
 }
 
@@ -127,6 +122,10 @@ function glob(globArray){
     return new Promise(function(resolve, reject){
         var files = [];
         stream.on('data', function(fileObj){
+            var fileDetail = detail(fileObj.path)
+            fileObj.dir = fileDetail.dir
+            fileObj.ext = fileDetail.ext
+            fileObj.name = fileDetail.name
             files.push(fileObj)
         });
         stream.on('end', function(err){
