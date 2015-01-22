@@ -6,8 +6,7 @@ module.exports = {
         return spawn('bower', arrCmds);
     },
 
-    install : function(arrCmds) {
-        arrCmds.unshift('install');
-        return spawn('bower', arrCmds);
+    install : function() {
+        return spawn('bower', ['install']);
     }
 };

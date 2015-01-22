@@ -59,11 +59,11 @@ function gulpTasks(globalGulp){
     });
     gulp.task('build:html', function() {
         browserSync.notify('<span style="color: grey">Running:</span> HTML compiling');
-        return build.html().then(browserSync.reload);
+        return build.html(pkg.version).then(browserSync.reload);
     });
     gulp.task('build', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Site compiling');
-        return build.all().then(browserSync.reload)
+        return build.all(pkg.version).then(browserSync.reload)
     });
 
     /*

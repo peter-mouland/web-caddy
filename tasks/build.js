@@ -3,11 +3,10 @@ var chalk = require('chalk');
 var file = require('./utils/file');
 var bower = require('./utils/bower');
 var browserify = require('./utils/browserify');
-var sass = require('./utils/sass');
-var html = require('./utils/html');
+var sassUtil = require('./utils/sass');
+var htmlUtil = require('./utils/html');
 var paths = require('../paths');
 var now = Date().split(' ').splice(0,5).join(' ');
-var pkg = require('../package.json'); //todo: should be parent package
 
 function onError(err) {
     console.log(chalk.red(err.message));
@@ -17,16 +16,20 @@ function onSuccess(out) {
     console.log(chalk.green(out));
 }
 
-function componentHtml() {
+function html(version) {
+    if (!version) onError({message:"build.html(version) is required"})
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
     var dest = paths.site['root']+ '/index.html'
     return file.del(dest ).then(function(){
-        return html.create(src, dest)
-    }).then(componentUpdateDocs);
+        return htmlUtil.create(src, dest)
+    }).then(function(){
+        return updateDocs({version:version});
+    });
 }
 
-function componentUpdateDocs(options){
-    var version = options.version || pkg.version;
+function updateDocs(options){
+    if (!options || !options.version) onError({message:"build.updateDocs({version:'x.x.x'}) is required"})
+    var version = options.version;
     var htmlReplacements = [
         {replace : '{{ site.version }}', with: version},
         {replace : '{{ site.time }}', with: options.now || now}
@@ -41,7 +44,7 @@ function componentUpdateDocs(options){
     ]);
 }
 
-function componentFonts() {
+function fonts() {
     var location = [
         paths.source['fonts'] + '/**/*',
         paths.bower['fonts'] + '/**/*.{eot,ttf,woff,svg}'
@@ -52,7 +55,7 @@ function componentFonts() {
     });
 }
 
-function componentImages() {
+function images() {
     var src = paths.demo['images'] + '/**/*';
     var dest = paths.site['images'];
     return file.del(dest + '/**/*').then(function(){
@@ -60,7 +63,7 @@ function componentImages() {
     });
 }
 
-function componentJS(){
+function jsDev(){
     return Promise.all([
         browserify.js(paths['source'].js, paths['dist'].js),
         browserify.js(paths['demo'].js, paths['site'].js),
@@ -68,45 +71,46 @@ function componentJS(){
     ]);
 }
 
-function componentJSMin(){
+function jsMin(){
     return Promise.all([
         browserify.jsMin(paths['site'].js, paths['site'].js),
         browserify.jsMin(paths['dist'].js, paths['dist'].js)
     ]);
 }
 
-function componentJSAll(){
+function js(){
     return file.del([paths['dist'].js + '/**/*', paths['site'].js + '/**/*']).then(function(){
-        return componentJS().then(componentJSMin)
+        return jsDev().then(jsMin)
     });
 }
 
-function componentSass(){
+function sass(){
     return file.del([paths['dist'].css + '/**/*', paths['site'].css + '/**/*']).then(function() {
         return Promise.all([
-            sass(paths['source'].sass, paths['dist'].css),
-            sass(paths['demo'].sass, paths['site'].css),
-            sass(paths['source'].sass, paths['site'].css)
+            sassUtil(paths['source'].sass, paths['dist'].css),
+            sassUtil(paths['demo'].sass, paths['site'].css),
+            sassUtil(paths['source'].sass, paths['site'].css)
         ]);
     });
 }
 
-function allComponentAssets(){
+function all(version){
+    if (!version) onError({message:"build.all(version) is required"})
     return Promise.all([
-        componentJS(),
-        componentFonts(),
-        componentImages(),
-        componentSass(),
-        componentHtml()
+        jsDev(),
+        fonts(),
+        images(),
+        sass(),
+        html(version)
     ]);
 }
 
 module.exports = {
-    html: componentHtml,
-    css: componentSass,
-    js: componentJSAll,
-    images: componentImages,
-    fonts: componentFonts,
-    updateDocs: componentUpdateDocs,
-    all: allComponentAssets
+    html: html,
+    css: sass,
+    js: js,
+    images: images,
+    fonts: fonts,
+    updateDocs: updateDocs,
+    all: all
 };
