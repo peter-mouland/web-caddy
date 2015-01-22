@@ -1,15 +1,10 @@
 var chalk = require('chalk');
 var file = require('./file');
-
 //maybe upgrade to https://github.com/assemble/assemble
 
 function onError(err) {
     console.log(chalk.red(err.message));
     process.exit(1);
-}
-
-function onSuccess(out) {
-    console.log(chalk.green(out));
 }
 
 function concat(files){
@@ -21,8 +16,16 @@ function concat(files){
 }
 
 function create(locationGlob, destination){
-    return concat(locationGlob).then(function(content){
-        return file.write(destination, content)
+    return concat(locationGlob).then(function(contents){
+        var detail = file.detail(destination)
+        var File = { //todo: new File(destination)
+            ext:   detail.ext,
+            dir:   detail.dir,
+            path: destination,
+            name: detail.name,
+            contents : contents
+        };
+        return file.write(File)
     }, onError);
 }
 
