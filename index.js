@@ -100,11 +100,11 @@ function gulpTasks(globalGulp){
     gulp.task('release:aws', function(){
        return release.aws(pkg.version);
     });
-    gulp.task('release:gh-page', function(){
+    gulp.task('release:gh-pages', function(){
        return release.ghPages();
     });
     gulp.task('release', ['build', 'test'], function(){
-       return release.component(args.version);
+       return release.all(args.version);
     });
 
     /*

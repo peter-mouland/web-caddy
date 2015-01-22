@@ -1,8 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var semver = require('semver');
 var ghPages = require('gh-pages');
-var path = require('path');
-var file = require('./utils/file');
 var git = require('./utils/git');
 var bump = require('./utils/bump');
 var build = require('./build');
@@ -28,9 +26,9 @@ function versionBump(version, type){
 }
 
 function ghPagesRelease(dir){
-    dir = dir || '_site'
+    dir = dir || './_site'
     return new Promise(function(resolve, reject){
-        ghPages.publish(path.join(__dirname, dir), function(err) {
+        ghPages.publish(dir, function(err) {
             err && reject(err)
             !err && resolve()
         });
@@ -70,5 +68,5 @@ module.exports = {
     versionBump: versionBump,
     ghPages: ghPagesRelease,
     aws: awsRelease,
-    component: all
+    all: all
 };
