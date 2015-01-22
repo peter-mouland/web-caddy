@@ -23,8 +23,7 @@ function sendToS3(options){
             secretAccessKey : options.secret,
             region          : options.region
         });
-        s3.getBucketCors({Bucket: options.params.Bucket}, function(err) {
-        //s3.putObject(options.params, function(err) {
+        s3.putObject(options.params, function(err) {
             if (err) {
                 reject({message: 'S3::putObject "' + options.filePath + '" error!\n' + err});
             } else {
@@ -53,20 +52,24 @@ function setParams(file, options){
     return params;
 }
 
+function setup(config){
+    config = config || {};
+    return {
+        key: config.key || process.env.AWS_ACCESS_KEY_ID || null,
+        secret: config.secret || process.env.AWS_SECRET_ACCESS_KEY || null,
+        region: config.region || process.env.AWS_REGION || null,
+        bucket: config.bucket || process.env.AWS_BUCKET || null,
+        acl: config.acl || 'public-read',
+        path: config.path || ''
+    };
+}
+
 
 var aws = {
     config : {},
 
     setup : function(config) {
-        config = config || {};
-        this.config = {
-            key: config.key || process.env.AWS_ACCESS_KEY_ID || null,
-            secret: config.secret || process.env.AWS_SECRET_ACCESS_KEY || null,
-            region: config.region || process.env.AWS_REGION || null,
-            bucket: config.bucket || process.env.AWS_BUCKET || null,
-            acl: config.acl || 'public-read',
-            path: config.path || ''
-        };
+        this.config = setup(config);
         return this;
     },
 
@@ -104,7 +107,6 @@ module.exports = aws;
 //    secret: process.env.AWS_SECRET_ACCESS_KEY,
 //    region: process.env.AWS_REGION
 //};
-//
 //var s3 = aws.setup(config)
 //file.read(fileName).then(function(files){
 //    return s3.upload(files[0],{path:'test'}).then(onError).catch(onError)
