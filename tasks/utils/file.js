@@ -1,9 +1,10 @@
 var Promise = require('es6-promise').Promise;
 var del = require('del');
 var fs = require("fs-extra");
+var path = require('path');
 var glob = require('glob');
-var chalk = require('chalk');
 var ncp = require('ncp').ncp;
+var chalk = require('chalk');
 
 function onError(err) {
     console.log(chalk.red(err.message));
@@ -24,18 +25,46 @@ function write(path, contents){
     });
 }
 
-function readFile(path, fileName){
-    path = (fileName) ? path + '/' + fileName : path;
+function stat(filePath){
     return new Promise(function(resolve, reject){
-        fs.readFile(path, function(err, data){
+        fs.stat(filePath, function(err, data){
             if (err){
                 reject(err);
             }
-            resolve({
-                path: path,
-                contents: data
-            });
+            resolve(data);
         });
+    });
+}
+
+function readFile(filePath, fileName){
+    filePath = (fileName) ? path.resolve(filePath,fileName) : filePath;
+    var cwd = path.resolve(process.cwd());
+    var basePath = path.resolve(cwd, filePath);
+    var promises = [
+        stat(filePath),
+        new Promise(function(resolve, reject){
+            fs.readFile(filePath, function(err, data){
+                if (err){
+                    reject(err);
+                }
+                resolve({
+                    base: basePath,
+                    path: filePath,
+                    contents: data
+                });
+            });
+        })
+    ]
+    return Promise.all(promises).then(function(outputs){
+        var fileDetail = detail(outputs[1].path)
+        return {
+            ext: fileDetail.ext,
+            name: fileDetail.name,
+            base: outputs[1].base,
+            path: outputs[1].path,
+            contents: outputs[1].contents,
+            stat: outputs[0]
+        }
     });
 }
 
@@ -97,9 +126,11 @@ function detail(file){
     var outDirs = file.split('/')
     outDirs.pop()
     var outDir = outDirs.join('/')
+    var ext = outFile.split('.').pop()
     return {
         dir: outDir,
-        name: outFile
+        name: outFile,
+        ext: ext
     }
 }
 
@@ -156,4 +187,4 @@ module.exports = {
     copyDirectory: copyDirectory,
     replace: replace,
     glob: globArray
-}
+};

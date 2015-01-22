@@ -32,6 +32,12 @@ To build the component locally, you'll need to install:
 
  * `gulp serve` :  Run server on port 3456
 
+## Test Your Changes
+
+ * `gulp test` : Run the tests once and produce a code coverage report
+ * `gulp test:tdd` : Run the tests while making changes
+
+
 ## Working with dependencies
 
 If you want to make changes to the bower dependencies, you can clone them down from [here](http://github.com/skyglobal) and do the following.
