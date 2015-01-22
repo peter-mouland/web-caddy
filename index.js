@@ -1,16 +1,15 @@
 'use strict';
 var gulp;
 var pkg;
-
 var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var minimist = require('minimist');
 var chalk = require('chalk');
-var replace = require('gulp-replace');
 var paths = require('./paths');
 var build = require('./tasks/build');
 var test = require('./tasks/test');
 var release = require('./tasks/release');
+var file = require('./tasks/utils/file');
 
 var knownArgs = {
     string: 'version',
@@ -112,14 +111,12 @@ function gulpTasks(globalGulp){
     /*
      * Transfer repo
      */
-    gulp.task('transfer:user', function(cb) {
+    gulp.task('transfer:user', function() {
       if (!gulp.env.oldUser || !gulp.env.newUser){
           onError('You must give `old-user` and `new-user` arguments i.e,\n'+
                       '`gulp rename-user --old-user=someone --new-user=someone-else`');
       }
-      return gulp.src('./*')
-        .pipe(replace(gulp.env.oldUser, gulp.env.newUser))
-        .pipe(gulp.dest('./'));
+      return file.replace('./*', {replace: gulp.env.oldUser, with : gulp.env.newUser})
     });
 
     return {
