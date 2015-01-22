@@ -1,6 +1,4 @@
 'use strict';
-var gulp;
-var pkg;
 var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var minimist = require('minimist');
@@ -22,7 +20,7 @@ function onError(err) {
     process.exit(1);
 }
 
-function watch(){
+function watch(gulp){
     var htmlPaths = [ paths.demo['root'] + '/**/*.html'];
     var sassPaths = [ paths.source['sass'] + '/**/*', paths.demo['sass'] + '/**/*'];
     var jsPaths =   [ paths.source['js'] + '/**/*',   paths.demo['js'] + '/**/*'];
@@ -40,12 +38,11 @@ function loadBrowser(baseDir){
     });
 }
 
-function gulpTasks(globalGulp){
-    gulp = globalGulp;
+function gulpTasks(gulp){
     var packageFilePath = findup('package.json');
     var configPath = findup('config/index.js');
     var config = require(configPath);
-    pkg = require(packageFilePath);
+    var pkg = require(packageFilePath);
 
     /*
      * Building
