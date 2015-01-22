@@ -47,7 +47,7 @@ function awsRelease(fileGlob, version, name, config){
     return file.read(fileGlob).then(function(files){
         var promises = []
         files.forEach(function(fileObj){
-            promises.push(s3.upload(fileObj,{ path: 'test/components/' + name + '/' + version }).catch(onError))
+            promises.push(s3.upload(fileObj,{ path: 'components/' + name + '/' + version +'/'}).catch(onError))
         })
         return Promise.all(promises);
     },onError)
