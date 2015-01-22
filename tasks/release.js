@@ -1,10 +1,17 @@
 var Promise = require('es6-promise').Promise;
 var semver = require('semver');
 var ghPages = require('gh-pages');
+var file   = require('./utils/file');
 var git = require('./utils/git');
 var bump = require('./utils/bump');
+var aws = require('./utils/aws');
 var build = require('./build');
-var pkg = require('../package.json');
+var chalk = require('chalk');
+
+function onError(err) {
+    console.log(chalk.red(err.message));
+    process.exit(1);
+}
 
 function gitRelease(version){
     return git.commit('Version bump for release').then(function(){
@@ -35,25 +42,19 @@ function ghPagesRelease(dir){
     });
 }
 
-function awsRelease(){
-    //var configPath = findup('config/index.js');
-    //var config = require(configPath);
-    //if (config.aws && config.aws.bucket && config.aws.release) {
-    //    console.log('** Pushing to Amazon S3 : ' + config.aws.bucket + ' **\n');
-    //    var awsS3 = plugins['aws-s3'].setup(config.aws);
-    //    return gulp.src([
-    //        paths['site']['root'] + '/**/*.*'])
-    //        .pipe(awsS3.upload({ path: 'components/' + pkg.name + '/' + pkg.version + '/' } ));
-    //} else {
-    //    console.log('** Amazon S3 release skipped **\n' +
-    //    'AWS variables are not set \n' +
-    //    ' or \n' +
-    //    ' aws.release in config/index.js set to false\n');
-    //    return cb();
-    //}
+function awsRelease(fileGlob, version, name, config){
+    var s3 = aws.setup(config)
+    return file.read(fileGlob).then(function(files){
+        var promises = []
+        files.forEach(function(file){
+            console.log(file)
+            promises.push(s3.upload(file,{ path: 'test/components/' + name + '/' + version }).catch(onError))
+        })
+        return Promise.all(promises);
+    },onError)
 }
 
-function all(type){
+function all(fileGlob, version, name, config){
     return versionBump(type).then(function(version){
         return Promise.all([
             gitRelease(version),

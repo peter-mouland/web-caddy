@@ -2,9 +2,9 @@ var Promise = require('es6-promise').Promise;
 var del = require('del');
 var fs = require("fs-extra");
 var path = require('path');
-var glob = require('glob');
 var ncp = require('ncp').ncp;
 var chalk = require('chalk');
+var gs = require('glob-stream');
 
 function onError(err) {
     console.log(chalk.red(err.message));
@@ -36,50 +36,40 @@ function stat(filePath){
     });
 }
 
-function readFile(filePath, fileName){
-    filePath = (fileName) ? path.resolve(filePath,fileName) : filePath;
-    var cwd = path.resolve(process.cwd());
-    var basePath = path.resolve(cwd, filePath);
+function readFile(fileObj){
     var promises = [
-        stat(filePath),
+        stat(fileObj.path),
         new Promise(function(resolve, reject){
-            fs.readFile(filePath, function(err, data){
+            fs.readFile(fileObj.path, function(err, data){
                 if (err){
                     reject(err);
                 }
-                resolve({
-                    base: basePath,
-                    path: filePath,
-                    contents: data
-                });
+                resolve(data);
             });
         })
     ]
     return Promise.all(promises).then(function(outputs){
-        var fileDetail = detail(outputs[1].path)
-        return {
-            ext: fileDetail.ext,
-            name: fileDetail.name,
-            base: outputs[1].base,
-            path: outputs[1].path,
-            contents: outputs[1].contents,
-            stat: outputs[0]
-        }
+        var fileDetail = detail(fileObj.path)
+        fileObj.ext = fileDetail.ext
+        fileObj.name = fileDetail.name
+        fileObj.contents =  outputs[1]
+        fileObj.stat = outputs[0]
+        return fileObj;
     });
 }
 
 function read(src){
     return globArray(src).then(function(files) {
         var promises = []
-        files.forEach(function (file) {
-            promises.push(readFile(file))
+        files.forEach(function(fileObj) {
+            promises.push(readFile(fileObj))
         })
         return Promise.all(promises)
     }, onError);
 }
 
-function replaceInFile(file, replacements){
-    return readFile(file).then(function(fileObj){
+function replaceInFile(fileObj, replacements){
+    return readFile(fileObj).then(function(fileObj){
         fileObj.contents = fileObj.contents.toString('utf-8')
         replacements.forEach(function(replace){
             fileObj.contents = fileObj.contents.replace(replace.replace, replace.with);
@@ -91,22 +81,19 @@ function replaceInFile(file, replacements){
 function replace(src, replacement){
     return globArray(src).then(function(files) {
         var promises = []
-        files.forEach(function (file) {
-            promises.push(replaceInFile(file, replacement))
+        files.forEach(function (fileObj) {
+            promises.push(replaceInFile(fileObj, replacement))
         })
         return Promise.all(promises)
     }, onError)
 }
 
-function copyFile(src, dest){
+function copyFile(fileObj, dest){
     fs.mkdirs(dest);
-    var file = detail(src)
     return new Promise(function(resolve, reject){
-        fs.copy(src, dest + '/' + file.name, function(err, data){
-            if (err){
-                reject(err);
-            }
-            resolve(data);
+        fs.copy(fileObj.path, dest + '/' + fileObj.name, function(err, data){
+            err && reject(err);
+            !err && resolve(data);
         });
     });
 }
@@ -114,8 +101,8 @@ function copyFile(src, dest){
 function copy(src, dest){
     return globArray(src).then(function(files){
         var promises = []
-        files.forEach(function(file) {
-            return copyFile(file, dest)
+        files.forEach(function(fileObj) {
+            return copyFile(fileObj, dest)
         });
         return Promise.all(promises);
     }, onError);
@@ -134,28 +121,19 @@ function detail(file){
     }
 }
 
-function globString(globString){
-    return new Promise(function(resolve, reject) {
-        glob(globString, function (err, files) {
-            if (err) reject(err);
-            else resolve(files);
-        });
-    });
-}
-
 function globArray(globArray){
-    if (!Array.isArray(globArray)) return globString(globArray);
-    var promises = []
-    globArray.forEach(function(str){
-        promises.push(globString(str))
-    })
-    return Promise.all(promises).then(function(arrFiles){
-        var files = []
-        arrFiles.forEach(function(arrFile){
-            files = files.concat(arrFile)
+    var stream = gs.create(globArray);
+    return new Promise(function(resolve, reject){
+        var files = [];
+        stream.on('data', function(fileObj){
+            files.push(fileObj)
         });
-        return files;
-    }, onError)
+        stream.on('end', function(err){
+            err && reject(err)
+            !err && resolve(files)
+        });
+
+    });
 }
 
 function copyDirectory(src, dest, transform){

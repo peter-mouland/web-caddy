@@ -44,6 +44,8 @@ function loadBrowser(baseDir){
 function gulpTasks(globalGulp){
     gulp = globalGulp;
     var packageFilePath = findup('package.json');
+    var configPath = findup('config/index.js');
+    var config = require(configPath);
     pkg = require(packageFilePath);
 
     /*
@@ -98,13 +100,13 @@ function gulpTasks(globalGulp){
        return release.git();
     });
     gulp.task('release:aws', function(){
-       return release.aws(pkg.version);
+       return release.aws(paths['site']['root'] + '/**/*.*', pkg.version, pkg.name, config.aws);
     });
     gulp.task('release:gh-pages', function(){
        return release.ghPages();
     });
     gulp.task('release', ['build', 'test'], function(){
-       return release.all(args.version);
+       return release.all(paths['site']['root'] + '/**/*.*', args.version, pkg.name, config.aws);
     });
 
     /*

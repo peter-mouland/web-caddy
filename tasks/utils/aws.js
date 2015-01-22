@@ -1,5 +1,4 @@
 var Promise = require('es6-promise').Promise;
-var file   = require('./file');
 var AWS   = require('aws-sdk');
 var mime  = require('mime');
 var chalk = require('chalk');
@@ -17,7 +16,6 @@ function checkMandatory(key, obj){
 
 function sendToS3(options){
     return new Promise(function(resolve, reject){
-        console.log(options)
         var s3 = new AWS.S3({
             accessKeyId     : options.key,
             secretAccessKey : options.secret,
@@ -98,16 +96,3 @@ var aws = {
 };
 
 module.exports = aws;
-
-
-//var fileName = './tasks/utils/aws.js';
-//var config = {
-//    bucket: process.env.AWS_SKYGLOBAL_BUCKET,
-//    key: process.env.AWS_ACCESS_KEY_ID,
-//    secret: process.env.AWS_SECRET_ACCESS_KEY,
-//    region: process.env.AWS_REGION
-//};
-//var s3 = aws.setup(config)
-//file.read(fileName).then(function(files){
-//    return s3.upload(files[0],{path:'test'}).then(onError).catch(onError)
-//}, onError)
