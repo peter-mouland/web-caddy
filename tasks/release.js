@@ -53,12 +53,12 @@ function awsRelease(fileGlob, version, name, config){
     },onError)
 }
 
-function all(fileGlob, version, name, config){
+function all(fileGlob, type, name, config){
     return versionBump(type).then(function(version){
         return Promise.all([
             gitRelease(version),
             ghPagesRelease(),
-            awsRelease(version)
+            awsRelease(fileGlob, version, name, config)
         ]);
     });
 }

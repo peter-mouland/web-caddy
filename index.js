@@ -97,7 +97,7 @@ function gulpTasks(globalGulp){
      * RELEASING
      */
     gulp.task('release:git', function(){
-       return release.git();
+       return release.git(pkg.version);
     });
     gulp.task('release:aws', function(){
        return release.aws(paths['site']['root'] + '/**/*.*', pkg.version, pkg.name, config.aws);
