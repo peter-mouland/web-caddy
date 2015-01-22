@@ -43,17 +43,17 @@ var updateJsonFile = function(fileObj, opts) {
     });
 }
 
-var updateJson = function(newFileObjs, opts){
+var updateJson = function(fileObjs, opts){
     var promises = [];
-    newFileObjs.forEach(function(fileObj){
+    fileObjs.forEach(function(fileObj){
         promises.push(updateJsonFile(fileObj, opts))
     });
     return Promise.all(promises);
 }
 
 var bump = function(files, opts){
-    return file.read(files).then(function(newFileObjs){
-        return updateJson(newFileObjs, opts)
+    return file.read(files).then(function(fileObjs){
+        return updateJson(fileObjs, opts)
     });
 }
 

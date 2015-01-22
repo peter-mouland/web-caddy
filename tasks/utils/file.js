@@ -50,6 +50,7 @@ function readFile(fileObj){
     ]
     return Promise.all(promises).then(function(outputs){
         var fileDetail = detail(fileObj.path)
+        fileObj.dir = fileDetail.dir
         fileObj.ext = fileDetail.ext
         fileObj.name = fileDetail.name
         fileObj.contents =  outputs[1]
@@ -59,7 +60,7 @@ function readFile(fileObj){
 }
 
 function read(src){
-    return globArray(src).then(function(files) {
+    return glob(src).then(function(files) {
         var promises = []
         files.forEach(function(fileObj) {
             promises.push(readFile(fileObj))
@@ -79,7 +80,7 @@ function replaceInFile(fileObj, replacements){
 }
 
 function replace(src, replacement){
-    return globArray(src).then(function(files) {
+    return glob(src).then(function(files) {
         var promises = []
         files.forEach(function (fileObj) {
             promises.push(replaceInFile(fileObj, replacement))
@@ -99,7 +100,7 @@ function copyFile(fileObj, dest){
 }
 
 function copy(src, dest){
-    return globArray(src).then(function(files){
+    return glob(src).then(function(files){
         var promises = []
         files.forEach(function(fileObj) {
             return copyFile(fileObj, dest)
@@ -121,7 +122,7 @@ function detail(file){
     }
 }
 
-function globArray(globArray){
+function glob(globArray){
     var stream = gs.create(globArray);
     return new Promise(function(resolve, reject){
         var files = [];
@@ -164,5 +165,5 @@ module.exports = {
     del: clean,
     copyDirectory: copyDirectory,
     replace: replace,
-    glob: globArray
+    glob: glob
 };

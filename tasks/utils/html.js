@@ -13,8 +13,8 @@ function onSuccess(out) {
 }
 
 function concat(files){
-    return file.read(files).then(function(newFileObj){
-        return newFileObj.map(function(file){
+    return file.read(files).then(function(fileObjs){
+        return fileObjs.map(function(file){
             return file.contents;
         }).join('\n');
     }, onError);

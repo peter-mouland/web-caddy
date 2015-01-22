@@ -71,7 +71,7 @@ var aws = {
         return this;
     },
 
-    upload : function(file, options) {
+    upload : function(fileObj, options) {
         var self = this;
         options = options || {};
 
@@ -79,17 +79,17 @@ var aws = {
             options[key] = options[key] || self.config[key];
         })
 
-        options.filePath = file.path
-            .replace(file.base, options.path || '')
+        options.filePath = fileObj.path
+            .replace(fileObj.base, options.path || '')
             .replace(new RegExp('\\\\', 'g'), '/');
-        options.contents = file.contents;
+        options.contents = fileObj.contents;
 
         checkMandatory('key', options);
         checkMandatory('secret', options);
         checkMandatory('region', options);
         checkMandatory('bucket', options);
         checkMandatory('filePath', options);
-        options.params = setParams(file, options)
+        options.params = setParams(fileObj, options)
 
         return sendToS3(options)
     }
