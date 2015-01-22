@@ -12,7 +12,7 @@ function onError(err) {
 }
 
 function write(fileObj){
-    fs.mkdirs(file.dir);
+    fs.mkdirs(fileObj.dir);
     var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
     return new Promise(function(resolve, reject){
         fs.writeFile(path, string, function(err, written, buffer){
