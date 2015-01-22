@@ -27,11 +27,11 @@ function sassRender(file){
 function writeSass(location, destination) {
     return fileUtil.glob(location + '/**/!(_)*.scss').then(function(files) {
         var promises = [];
-        files.forEach(function (file, i) {
-            var promise = sassRender(file).then(function(output){
-                var sassFile = fileUtil.detail(file);
-                var css = autoprefixer().process(output.css).css;
-                return fileUtil.write(destination + '/' + sassFile.name.replace('.scss','.css'), css)
+        files.forEach(function (fileObj, i) {
+            var promise = sassRender(fileObj.path).then(function(output){
+                fileObj.content = autoprefixer().process(output.css).css;
+                fileObj.path = destination + '/' + fileObj.name.replace('.scss','.css');
+                return fileUtil.write(fileObj)
             },onError);
             promises.push(promise);
         });
