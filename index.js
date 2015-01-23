@@ -69,7 +69,7 @@ function gulpTasks(gulp){
      */
     gulp.task('serve:quick', function() {
         loadBrowser(paths.site['root']);
-        watch();
+        watch(gulp);
     });
     gulp.task('serve', ['build', 'serve:quick']);
 
