@@ -22,7 +22,7 @@ function runKarma(singleRun){
     });
 }
 
-function singleRun(){
+function once(){
     return runKarma(true);
 }
 
@@ -32,7 +32,9 @@ function tdd(){
 
 function coverage(){
     return new Promise(function(resolve, reject) {
-        var results = require(findup(paths.test.summary));
+        var summaryFile = findup(paths.test.summary)
+        if (!summaryFile){ onError('You must have run tests first')}
+        var results = require(summaryFile);
         var config = require(karmaConfig);
         var coverage = config({
             set: function (conf) {
@@ -49,20 +51,20 @@ function coverage(){
                 }
             }
         }
-        err && reject();
+        err && reject('Coverage Failed');
         !err && resolve();
     })
 }
 
 function all(){
-    return singleRun().then(function(){
+    return once().then(function(){
         return coverage().catch(onError);
     }, onError);
 }
 
 module.exports = {
     tdd: tdd,
-    singleRun: singleRun,
+    once: once,
     coverage: coverage,
     all: all
 }

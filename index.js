@@ -7,6 +7,7 @@ var paths = require('./paths');
 var build = require('./tasks/build');
 var test = require('./tasks/test');
 var release = require('./tasks/release');
+var serve = require('./tasks/serve');
 var file = require('./tasks/utils/file');
 
 var knownArgs = {
@@ -27,15 +28,6 @@ function watch(gulp){
     gulp.watch(htmlPaths, ['build:html']);
     gulp.watch(sassPaths, ['build:sass']);
     gulp.watch(jsPaths,   ['build:js']);
-}
-
-function loadBrowser(baseDir){
-    browserSync({
-        port: 3456,
-        server: {
-            baseDir: baseDir
-        }
-    });
 }
 
 function gulpTasks(gulp){
@@ -68,7 +60,7 @@ function gulpTasks(gulp){
      * Serving
      */
     gulp.task('serve:quick', function() {
-        loadBrowser(paths.site['root']);
+        serve(paths.site['root']);
         watch(gulp);
     });
     gulp.task('serve', ['build', 'serve:quick']);
@@ -76,8 +68,8 @@ function gulpTasks(gulp){
     /*
      * Testing
      */
-    gulp.task('test:single-run', function () {
-        return test.singleRun().catch(onError);
+    gulp.task('test:once', function () {
+        return test.once().catch(onError);
     });
     gulp.task('test:tdd', function () {
         return test.tdd().catch(onError);

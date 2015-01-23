@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.7.0
+
+ * Added many more CLI commands - can now do everything without gulp (apart from `watch`).
+    * build, serve, test, release now available i.e. `component build`
+
+## 0.6.3
+
+ * Fixed a few bugs
+
 ## 0.6.0
 
  * Major Refactor - is now much faster

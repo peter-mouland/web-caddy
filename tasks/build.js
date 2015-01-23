@@ -24,6 +24,8 @@ function html(version) {
         return htmlUtil.create(src, dest)
     }).then(function(){
         return updateDocs({version:version});
+    }).then(function(){
+        return 'Build HTML Complete'
     });
 }
 
@@ -41,7 +43,9 @@ function updateDocs(options){
     return Promise.all([
         file.replace( [paths.site['root'] + '/**/*.html'], htmlReplacements)
         , file.replace( ['./README.md'], mdReplacements)
-    ]);
+    ]).then(function(){
+        return 'Build Docs Complete'
+    });
 }
 
 function fonts() {
@@ -68,29 +72,37 @@ function jsDev(){
         browserify.js(paths['source'].js, paths['dist'].js),
         browserify.js(paths['demo'].js, paths['site'].js),
         browserify.js(paths['source'].js, paths['site'].js)
-    ]);
+    ]).then(function(){
+        return 'Build JS Dev Complete'
+    });
 }
 
 function jsMin(){
     return Promise.all([
         browserify.jsMin(paths['site'].js, paths['site'].js),
         browserify.jsMin(paths['dist'].js, paths['dist'].js)
-    ]);
+    ]).then(function(){
+        return 'Build JS Min Complete'
+    });
 }
 
 function js(){
     return file.del([paths['dist'].js + '/**/*', paths['site'].js + '/**/*']).then(function(){
         return jsDev().then(jsMin)
+    }).then(function(){
+        return 'Build JS Complete'
     });
 }
 
-function sass(){
+function css(){
     return file.del([paths['dist'].css + '/**/*', paths['site'].css + '/**/*']).then(function() {
         return Promise.all([
             sassUtil(paths['source'].sass, paths['dist'].css),
             sassUtil(paths['demo'].sass, paths['site'].css),
             sassUtil(paths['source'].sass, paths['site'].css)
         ]);
+    }).then(function(){
+        return 'Build CSS Complete'
     });
 }
 
@@ -100,14 +112,16 @@ function all(version){
         js(),
         fonts(),
         images(),
-        sass(),
+        css(),
         html(version)
-    ]);
+    ]).then(function(){
+        return 'Build All Complete'
+    });
 }
 
 module.exports = {
     html: html,
-    css: sass,
+    css: css,
     js: js,
     images: images,
     fonts: fonts,
