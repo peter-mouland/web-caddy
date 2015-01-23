@@ -41,11 +41,13 @@ function versionBump(version, type){
     });
 }
 
-function ghPagesRelease(dir){
+function ghPagesRelease(opts){
     info("\nReleasing to gh-pages ... \n");
-    dir = dir || './_site'
+    opts = opts || {};
+    var dir = opts.dir || './_site';
+    var message = opts.message || 'Update';
     return new Promise(function(resolve, reject){
-        ghPages.publish(dir, function(err) {
+        ghPages.publish(dir, {message: message }, function(err) {
             err && reject(err)
             !err && resolve()
         });
@@ -63,19 +65,21 @@ function awsRelease(version, name, config){
         if (!files.length) onError({message: 'No files found to release to AWS\n' + glob})
         var promises = []
         files.forEach(function(fileObj){
-            promises.push(s3.upload(fileObj,{ path: 'test/components/' + name + '/' + version +'/'}).catch(onError))
+            promises.push(s3.upload(fileObj,{ path: 'components/' + name + '/' + version +'/'}).catch(onError))
         })
         return Promise.all(promises);
     },onError)
 }
 
 function all(version, name, config, type){
+    var bumpedVersion
     return versionBump(version, type).then(function(version){
+        bumpedVersion = version;
         return gitRelease(version);
     }).then(function(){
-        return ghPagesRelease();
+        return ghPagesRelease({message: 'v' + bumpedVersion});
     }).then(function(){
-       return awsRelease(version, name, config)
+       return awsRelease(bumpedVersion, name, config)
     });
 }
 
