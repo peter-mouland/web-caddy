@@ -1,17 +1,18 @@
-Gulp Component Helper [![NPM version](http://img.shields.io/npm/v/gulp-component-helper.svg)](https://www.npmjs.org/package/gulp-component-helper)
+Component Helper [![NPM version](http://img.shields.io/npm/v/gulp-component-helper.svg)](https://www.npmjs.org/package/gulp-component-helper)
 ========================
 
 > A Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
 
-This helper is used to create and deploy Components via Gulp tasks. You can :
+This helper is used to create and deploy Components via Gulp or CLI tasks. You can :
  * Build and serve a demo page
  * Compile Sass to CSS
  * Compile JS to 'browserify' / 'requireJS' files (plus .min.js files)
  * Deploy to github.io / Bower / Amazon S3
+ * Customise your build process as you need simply 'require' the replacement task
 
 ## Installation
 
-`npm install -g gulp-component-helper`
+`npm install -g component-helper`
 
 ## Creating a New Component
 

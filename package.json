@@ -1,5 +1,5 @@
 {
-  "name": "gulp-component-helper",
+  "name": "component-helper",
   "version": "0.7.0",
   "description": "A way to help ensure the common tasks are consistent across components",
   "main": "index.js",
