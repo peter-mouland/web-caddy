@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.0
+
+ * Major Refactor - is now much faster
+
 ## 0.5.1
 
  * Fixed CLI
