@@ -14,7 +14,9 @@ function onError(err) {
 }
 
 function gitRelease(version){
-    return git.commit('Version bump for release').then(function(){
+    return git.add(['.']).then(function() {
+        return git.commit('v' + version);
+    }).then(function(){
        return git.push(['origin', 'master']);
     }).then(function(){
        return git.tag('v' + version);
