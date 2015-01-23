@@ -28,7 +28,7 @@ function html(version) {
 }
 
 function updateDocs(options){
-    if (!options || !options.version) onError({message:"build.updateDocs({version:'x.x.x'}) is required"})
+    if (!options || !options.version) onError({message:"build.updateDocs({version:'x.x.x'}) is required.\n got " + JSON.stringify(options)})
     var version = options.version;
     var htmlReplacements = [
         {replace : '{{ site.version }}', with: version},
@@ -95,7 +95,7 @@ function sass(){
 }
 
 function all(version){
-    if (!version) onError({message:"build.all(version) is required"})
+    if (!version) onError({message:"build.all : version is required\ngot " + version})
     return Promise.all([
         jsDev(),
         fonts(),

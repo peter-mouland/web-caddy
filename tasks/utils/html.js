@@ -18,14 +18,14 @@ function concat(files){
 function create(locationGlob, destination){
     return concat(locationGlob).then(function(contents){
         var detail = file.detail(destination)
-        var File = { //todo: new File(destination)
+        var fileObj = { //todo: new File(destination)
             ext:   detail.ext,
             dir:   detail.dir,
             path: destination,
             name: detail.name,
             contents : contents
         };
-        return file.write(File)
+        return file.write(fileObj)
     }, onError);
 }
 

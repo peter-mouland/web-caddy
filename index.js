@@ -16,7 +16,7 @@ var knownArgs = {
 var args = minimist(process.argv.slice(2), knownArgs);
 
 function onError(err) {
-    console.log(chalk.colors.red(err));
+    console.log(chalk.red(err.message || err));
     process.exit(1);
 }
 
@@ -102,7 +102,7 @@ function gulpTasks(gulp){
        return release.ghPages();
     });
     gulp.task('release', ['build', 'test'], function(){
-       return release.all(args.version, pkg.name, config.aws);
+       return release.all(pkg.version, pkg.name, config.aws, args.version).catch(onError);;
     });
 
     /*

@@ -17,7 +17,7 @@ var updateJsonFile = function(fileObj, opts) {
         opts = opts || {};
         var key = opts.key || 'version';
         var indent = opts.indent || void 0;
-        var type = semver.inc('0.0.1', opts.type) || 'patch';
+        var type = opts.type || 'patch';
         var version = semver.valid(opts.version, opts.type) || null;
         var json, content;
         json = fileObj.contents.toString('utf-8');
@@ -35,11 +35,12 @@ var updateJsonFile = function(fileObj, opts) {
         } else {
             return reject('Detected invalid semver ' + key);
         }
+        fileObj.version  = version;
         fileObj.contents = new Buffer(JSON.stringify(content, null, indent || space(json)) + possibleNewline(json));
 
         resolve(fileObj);
     }).then(function(fileObj){
-        return file.write(fileObj.path, fileObj.contents)
+        return file.write(fileObj)
     });
 }
 

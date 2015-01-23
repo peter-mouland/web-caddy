@@ -43,6 +43,10 @@ function ghPagesRelease(dir){
 }
 
 function awsRelease(version, name, config){
+    if (!config.release){
+        console.log('AWS release set to false. skipping\nIf this is an error update the config and run `gulp release:aws`')
+        return
+    }
     var s3 = aws.setup(config)
     return file.read('./_site/**/*.*').then(function(files){
         if (!files.length) onError({message: 'No files found to release to AWS\n' + glob})
@@ -54,8 +58,8 @@ function awsRelease(version, name, config){
     },onError)
 }
 
-function all(type, name, config){
-    return versionBump(type).then(function(version){
+function all(version, name, config, type){
+    return versionBump(version, type).then(function(version){
         return Promise.all([
             gitRelease(version),
             ghPagesRelease(),
