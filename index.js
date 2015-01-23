@@ -85,6 +85,9 @@ function gulpTasks(gulp){
     gulp.task('test:coverage', function () {
         return test.coverage().catch(onError);
     });
+    gulp.task('test:quick', function(){
+        return test.all().catch(onError);
+    });
     gulp.task('test', ['build'], function(){
         return test.all().catch(onError);
     });

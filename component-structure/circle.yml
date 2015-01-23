@@ -1,6 +1,7 @@
 test:
   pre:
     - npm install -g gulp
+    - bower install
     - gulp build
   override:
     - gulp test
