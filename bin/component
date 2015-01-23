@@ -46,7 +46,7 @@ var commands = {
           var component = result.name;
           var gitUrlMatch = result.repo.match(/.com\:(.*)\//);
           var author = exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
-          var moduleDir = npmGlobalPath() + '/gulp-component-helper/component-structure';
+          var moduleDir = npmGlobalPath() + '/component-helper/component-structure';
           if (!gitUrlMatch){
             errorAndExit('Github Repository URL must be a url');
           }
