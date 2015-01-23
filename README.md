@@ -68,11 +68,6 @@ gulp.task('pre-build', function(cb){
 
 ```
 
-## Gulp Tasks in Detail
-
-You can also hook into any predefined helper gulp task and over-write it with your own.  i.e. if you want to use requireJS rather than browserify you can change the 'js' task.
-
-[Read More >](GULP-TASKS.md)
 
 ## Releasing your Component
 
