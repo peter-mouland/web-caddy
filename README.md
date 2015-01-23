@@ -35,7 +35,7 @@ Once the above is complete should have the conventional directory structure as w
     │   ├- images etc.  => demo assets directories
     │   └- index.html
     └── src             => source code for the component.
-        ├- js           => component javascript [more info](GULP-TASKS.md#js)
+        ├- js           => component javascript
         ├- scss         => component Sass
         └- images etc.  => component assets directories
 
@@ -49,6 +49,8 @@ This will compile your assets (JS, Sass) and serve your demo page to [http://loc
 `gulp test`
 
 Please add Jasmine Tests to unit and functionally test your component.
+
+[More Tasks >](TASKS.md)
 
 ### Regression/Screen-shot tests
 

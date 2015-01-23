@@ -36,6 +36,8 @@ function gulpTasks(gulp){
     var config = require(configPath);
     var pkg = require(packageFilePath);
 
+    gulp.task('pre-build');
+
     /*
      * Building
      */
@@ -51,7 +53,7 @@ function gulpTasks(gulp){
         browserSync.notify('<span style="color: grey">Running:</span> HTML compiling');
         return build.html(pkg.version).then(browserSync.reload);
     });
-    gulp.task('build', function() {
+    gulp.task('build', ['pre-build'], function() {
         browserSync.notify('<span style="color: grey">Running:</span> Site compiling');
         return build.all(pkg.version).then(browserSync.reload)
     });
