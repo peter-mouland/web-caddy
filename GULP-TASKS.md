@@ -8,13 +8,13 @@ These tasks are documented for those who want to know what is going on under the
 
 Executes all the Build tasks below
 
-### CSS
+#### CSS
 
 `gulp build:css`
 
 Create a `.css` for each `.scss` file (without an underscore `_` prefix) it finds.
 
-### JS
+#### JS
 
 `gulp build:js`
 
@@ -22,7 +22,7 @@ This task can handle CommonJS and plain JS.  To handle dependency management, we
 
 For each .js file in the `/src/js` root, a `.min.js` version is created using [uglify-js](https://www.npmjs.com/package/uglify-js).
 
-### HTML
+#### HTML
 
 `gulp build:html`
 
@@ -44,19 +44,19 @@ This will [build](#build) your site then run the Test tasks below.
 To prevent the build from kicking off, there is also `gulp test:quick` command available.
 
 
-### Once
+#### Once
 
 `gulp test:single-run`
 
 Using Karma and Jasmine, it will run through the `.spec.js` files found in `/test/` directory
 
-### TDD
+#### TDD
 
 `gulp test:tdd`
 
 Using the `watermarks` option within karma.conf.js, it ensures the code coverage is above the thresholds given.
 
-### Coverage
+#### Coverage
 
 `gulp test:coverage`
 
@@ -71,19 +71,19 @@ This will [build](#build) and [test](#test) your site, patch the version number 
 
 To force a version or release type use the `--version=` option followed by either `patch`, `minor`, `major` or even `v3.2.1`
 
-### Amazon Web Services
+#### Amazon Web Services
 
 `gulp release:aws`
 
 This will push the current files within `_site` to AWS if `aws:release` is set to true within `config/index.js`
 
-### GH-Pages
+#### GH-Pages
 
 `gulp release:gh-pages`
 
 This will push the current files within `_site` to gh-pages branch.
 
-### Tagging Git
+#### Tagging Git
 
 `gulp release:tag`
 
