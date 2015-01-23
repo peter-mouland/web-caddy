@@ -32,10 +32,10 @@ var commands = {
     }], function(err, result) {
       if (!result) return;
       var component = result.name;
-      var gitUrl = result.repo.match(/.com\:(.*)\//);
+      var gitUrlMatch = result.repo.match(/.com\:(.*)\//);
       var author = exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
       var moduleDir = npmGlobalPath() + '/gulp-component-helper/component-structure';
-      if (!gitUrl){
+      if (!gitUrlMatch){
         errorAnExit('Github Repository URL must be a url');
       }
       if (fs.existsSync(component)){
@@ -44,7 +44,7 @@ var commands = {
       if (component.indexOf(' ')>-1){
         errorAnExit('Component `' + component + '` must not contain spaces');
       }
-      init.component(moduleDir, component, gitUrl, author);
+      init.component(moduleDir, component, result.repo, author);
     });
   },
   help: function help () {

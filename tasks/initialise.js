@@ -64,6 +64,7 @@ function initComponent(dir, component, repo, author) {
         return installNpms();
     }, onError).then(function(output){
         onSuccess(output);
+        console.log("\nInstalling Bower Modules ... \n");
         return bower.install();
     }, onError);
 }
