@@ -1,5 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
+var path = require('path');
 var UglifyJS = require("uglify-js");
 var fileUtil = require('./file');
 var chalk = require('chalk');
@@ -32,7 +33,8 @@ function browserifyFiles(glob){
 function saveFileObjects(fileObjs, destination){
     var promises = [];
     fileObjs.forEach(function (fileObj, i) {
-        fileObj.path = destination + '/' + fileObj.name;
+        fileObj.path = path.resolve(destination, fileObj.name);
+        fileObj.dir = destination;
         promises.push(fileUtil.write(fileObj));
     });
     return Promise.all(promises);

@@ -47,7 +47,7 @@ function gulpTasks(gulp){
     /*
      * Building
      */
-    gulp.task('build:sass', function() {
+    gulp.task('build:css', function() {
         browserSync.notify('<span style="color: grey">Running:</span> Sass compiling');
         return build.css().then(browserSync.reload);
     });

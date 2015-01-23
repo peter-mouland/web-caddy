@@ -1,16 +1,12 @@
-'use strict';
 var Promise = require('es6-promise').Promise;
 var spawn = require('./utils/spawn').spawn;
 var git = require('./utils/git');
 var fileUtil = require('./utils/file');
 var bower = require('./utils/bower');
-var fs = require("fs");
 var replaceStream = require('replacestream');
-var glob = require('glob');
 var shell = require("shelljs");
-var exec = shell.exec;
-
 var chalk = require('chalk');
+
 function onError(err) {
     console.log(chalk.red(err.message));
     process.exit(1);
@@ -21,18 +17,10 @@ function onSuccess(output) {
 }
 
 function renameFiles(component){
-    return new Promise(function(resolve, reject) {
-        fs.rename('./dot.gitignore', './.gitignore');
-        glob('./**/main.*', function (err, files) {
-            if (err) reject();
-            files.forEach(function (file, i) {
-                fs.rename(file, file.replace('main', component));
-                if (files.length - 1 === i){
-                    resolve();
-                }
-            });
-        });
-    });
+    return Promise.all([
+        fileUtil.rename('./dot.gitignore', 'dot',''),
+        fileUtil.rename('./**/main.*', 'main',component)
+    ]);
 }
 
 function initStructure(dir, component, repo, author){
@@ -95,8 +83,8 @@ function initGit(repo){
         return  git.remote(['add', 'origin', repo]);
     }, onError).then(function(output){
         onSuccess(output);
-        return git.push(['-u', 'origin', 'master']).catch(onError);
-    });
+        return git.push(['-u', 'origin', 'master']);
+    }, onError);
 }
 
 function initGhPages(){
@@ -119,7 +107,7 @@ function initGhPages(){
     }, onError).then(function(output){
         onSuccess(output);
         return git.checkout(['master']);
-    })
+    }, onError)
 }
 
 module.exports = {

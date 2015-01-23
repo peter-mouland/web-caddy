@@ -11,17 +11,25 @@ function onError(err) {
     process.exit(1);
 }
 
-function write(fileObj){
-    fs.mkdirs(fileObj.dir);
-    var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
-    return new Promise(function(resolve, reject){
-        fs.writeFile(fileObj.path, string, function(err, written, buffer){
-            if (err){
-                reject(err);
-            }
-            resolve(fileObj.path);
+function mkdir(dir){
+    return new Promise(function(resolve, reject) {
+        fs.mkdirs(dir, function (err) {
+            err && reject(err);
+            !err && resolve();
         });
     });
+}
+
+function write(fileObj){
+    var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
+    return mkdir(fileObj.dir).then(function(){
+        return new Promise(function(resolve, reject){
+            fs.writeFile(fileObj.path, string, function(err, written, buffer){
+                err && reject(err);
+                !err && resolve(fileObj.path);
+            });
+        });
+    })
 }
 
 function stat(filePath){
@@ -85,11 +93,12 @@ function replace(src, replacement){
 }
 
 function copyFile(fileObj, dest){
-    fs.mkdirs(dest);
-    return new Promise(function(resolve, reject){
-        fs.copy(fileObj.path, dest + '/' + fileObj.name, function(err, data){
-            err && reject(err);
-            !err && resolve(data);
+    return mkdir(dest).then(function(){
+        return new Promise(function(resolve, reject){
+            fs.copy(fileObj.path, dest + '/' + fileObj.name, function(err, data){
+                err && reject(err);
+                !err && resolve(data);
+            });
         });
     });
 }
@@ -147,6 +156,26 @@ function copyDirectory(src, dest, transform){
     });
 }
 
+function renameFile(fileObj, replace, withThis){
+    return new Promise(function(resolve, reject){
+        fileObj.name = fileObj.name.replace(replace, withThis)
+        fs.rename(fileObj.path, path.join(fileObj.dir, fileObj.name), function(err){
+            err && reject(err)
+            !err && resolve(fileObj)
+        });
+    })
+}
+
+function rename(src, replace, withThis){
+    return glob(src).then(function(files) {
+        var promises = []
+        files.forEach(function (fileObj, i) {
+            promises.push(renameFile(fileObj,replace, withThis))
+        });
+        return Promise.all(promises);
+    });
+}
+
 function clean(globby){
     return new Promise(function(resolve, reject){
         return del(globby, function (err, paths){
@@ -158,6 +187,7 @@ function clean(globby){
 
 module.exports = {
     detail: detail,
+    rename: rename,
     copy: copy,
     write: write,
     read: read,
