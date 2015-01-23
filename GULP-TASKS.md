@@ -2,66 +2,89 @@
 
 These tasks are documented for those who want to know what is going on under the hood.  If you need to change the way your component works, you may also want to override these tasks within your own `gulpfile.js`. i.e. using `requirejs` instead of `browserify` for your own component.
 
-### Sass
-
-`gulp sass`
-
-Using [gulp-sass](https://github.com/dlmanning/gulp-sass), this task create a `.css` for each `.scss` file (without an underscore `_` prefix) it finds.
-
-### JS
-
-`gulp js`
-
-This task can handle plain JS as well as files written using CommonJS. For each .js file in `/src/js` this will provide a `.min.js` version using [gulp-uglify](https://www.npmjs.com/package/gulp-uglify).
-
-To handle dependency management, we use [browserify](https://www.npmjs.com/package/browserify) which creates a single javascript file found in the `src/js` root.
-
-If you wish to use any other tool (i.e. requirejs) feel free to do this and recreate `gulp.tasks('js',function(){ ... })` in your own gulp file.
-
-### Clean
-
-`gulp clean`
-
-Using Gulp to remove all directories created when compiling your assets.
-
-### Create Site
-
-`gulp create-site`
-
-Using Gulp to simply concatinate all html files found in `demo/_includes` onto `demo/index.html`. Also copies none-js/css assets across to the demo site. Nothing fancy, yet.
-
-
-### Create Distributable
-
-`gulp create-dist`
-
-Using Gulp to simply copy generated files created from [create-site](#create-site) and source files from `src` to a `dist` directory.
-
-This directory is used for when making the component available to [Bower](http://bower.io/) and pushing the files to the cloud (current [AWS](http://aws.amazon.com/s3/)).
-
-### Build
+## Build
 
 `gulp build`
 
-Using Gulp to get everything ready needed to get a demo site up and running.  As well as installing bower-dependencies, this will also run:
+Executes all the Build tasks below
 
-  * clean
-  * js
-  * sass
-  * create-site
-  * create-dist
+### CSS
 
-### Serve
+`gulp build:css`
+
+Create a `.css` for each `.scss` file (without an underscore `_` prefix) it finds.
+
+### JS
+
+`gulp build:js`
+
+This task can handle CommonJS and plain JS.  To handle dependency management, we use [browserify](https://www.npmjs.com/package/browserify) which creates a single javascript file found in the `src/js` root.
+
+For each .js file in the `/src/js` root, a `.min.js` version is created using [uglify-js](https://www.npmjs.com/package/uglify-js).
+
+### HTML
+
+`gulp build:html`
+
+Concatinate all html files found in `demo/_includes` into `demo/index.html`.  Nothing fancy, yet.
+
+
+## Serve
 
 `gulp serve`
 
 This will [build](#build) your site then using [browserSync](https://www.npmjs.com/package/browser-sync) start a server on localhost:3456.
+To prevent the build from kicking off, there is also `gulp server:quick` command available.
+
+## Testing
+
+`gulp test`
+
+This will [build](#build) your site then run the Test tasks below.
+To prevent the build from kicking off, there is also `gulp test:quick` command available.
 
 
-### Release
+### Once
+
+`gulp test:single-run`
+
+Using Karma and Jasmine, it will run through the `.spec.js` files found in `/test/` directory
+
+### TDD
+
+`gulp test:tdd`
+
+Using the `watermarks` option within karma.conf.js, it ensures the code coverage is above the thresholds given.
+
+### Coverage
+
+`gulp test:coverage`
+
+Using Karma and Jasmine, it will run through the `.spec.js` files found in `/test/` directory and watch for code changes in your spec files.
+
+
+## Releasing
 
 `gulp release`
 
-This will [build](#build) your site, then using [gulp-bump](https://www.npmjs.com/package/gulp-bump) with [gulp-replace](https://www.npmjs.com/package/gulp-replace) patch the version number in all the docs (package.json, bower.js, *.md and *.html).
+This will [build](#build) and [test](#test) your site, patch the version number in all the docs (package.json, bower.js, *.md and *.html) then run the above release commands.
 
-This will then push the committed code to github and tag github with the new version. If configured (within config/index.js) it will also push to the AWS using [gulp-aws](https://www.npmjs.com/package/gulp-aws) and push to the gh-pages branch for github.io using [gulp-gh-pages](https://www.npmjs.com/package/gulp-gh-pages).
+To force a version or release type use the `--version=` option followed by either `patch`, `minor`, `major` or even `v3.2.1`
+
+### Amazon Web Services
+
+`gulp release:aws`
+
+This will push the current files within `_site` to AWS if `aws:release` is set to true within `config/index.js`
+
+### GH-Pages
+
+`gulp release:gh-pages`
+
+This will push the current files within `_site` to gh-pages branch.
+
+### Tagging Git
+
+`gulp release:tag`
+
+This will use the version within `package.json`, tag your code and push the tag to git.
