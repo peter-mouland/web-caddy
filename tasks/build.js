@@ -97,7 +97,7 @@ function sass(){
 function all(version){
     if (!version) onError({message:"build.all : version is required\ngot " + version})
     return Promise.all([
-        jsDev(),
+        js(),
         fonts(),
         images(),
         sass(),

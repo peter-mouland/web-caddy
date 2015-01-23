@@ -12,7 +12,7 @@ function onError(err) {
 
 function browserifyFile(fileObj) {
     return new Promise(function(resolve, reject){
-        browserify(fileObj).bundle(function(err, contents){
+        browserify(fileObj.path).bundle(function(err, contents){
             err && reject(err)
             fileObj.contents = contents;
             !err && resolve(fileObj)
