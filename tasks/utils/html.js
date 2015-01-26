@@ -7,12 +7,17 @@ function onError(err) {
     process.exit(1);
 }
 
-function concat(files){
-    return file.read(files).then(function(fileObjs){
-        return fileObjs.map(function(file){
-            return file.contents;
-        }).join('\n');
-    }, onError);
+function concatContent(fileObjs){
+    return fileObjs.map(function(file){
+        return file.contents;
+    }).join('\n');
+}
+
+function concatFiles(files){
+    return file.read(files)
+        .then(function(fileObjs){
+            return concatContent(fileObjs)
+        }, onError);
 }
 
 function create(locationGlob, destination){
@@ -30,5 +35,7 @@ function create(locationGlob, destination){
 }
 
 module.exports = {
+    _concatContent: concatContent,
+    _concatFiles: concatFiles,
     create: create
 };
