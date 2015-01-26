@@ -14,6 +14,9 @@
     "LICENSE.md",
     "index.js"
   ],
+  "scripts": {
+    "test": "./node_modules/jasmine/bin/jasmine.js"
+  },
   "dependencies": {
     "autoprefixer": "^5.0.0",
     "aws-sdk": "^2.1.7",
@@ -50,7 +53,8 @@
   },
   "author": "Pete Mouland",
   "devDependencies": {
-    "gulp": "^3.8.10"
+    "gulp": "^3.8.10",
+    "jasmine": "^2.1.1"
   },
   "bin": {
     "component": "./bin/component"

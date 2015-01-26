@@ -2,9 +2,8 @@ var Promise = require('es6-promise').Promise;
 var semver = require('semver');
 var file = require('./file');
 
-var possibleNewline = function (json) {
-    var lastChar = (json.slice(-1) === '\n') ? '\n' : '';
-    return lastChar;
+var possibleNewline = function (jsonSting) {
+    return (jsonSting.slice(-1) === '\n') ? '\n' : '';
 };
 
 var space = function space(json) {
@@ -12,33 +11,39 @@ var space = function space(json) {
     return match ? (match[1] ? '\t' : match[2].length) : '';
 };
 
+var updateVersion = function(fileObj, opts){
+    opts = opts || {};
+    var type = opts.type || 'patch';
+    var version = semver.valid(opts.version, opts.type) || null;
+    var content, contentJSON;
+    content = Buffer.isBuffer(fileObj.contents) ? fileObj.contents.toString('utf-8') : fileObj.contents ;
+
+    try {
+        contentJSON = JSON.parse(content);
+    } catch (e) {
+        return {err: 'Problem parsing JSON file'};
+    }
+
+    if (version) {
+        contentJSON.version = version;
+    } else if (semver.valid(contentJSON.version)) {
+        contentJSON.version = semver.inc(contentJSON.version, type);
+    } else {
+        return {err: 'Detected invalid semver ' + contentJSON.version };
+    }
+    if (!contentJSON.version){
+        return {err: 'Detected invalid semver type: must be patch, minor or major. Found ' + type };
+    }
+    fileObj.version  = version;
+    fileObj.contents = new Buffer(JSON.stringify(contentJSON, null, void 0 || space(content)) + possibleNewline(content));
+    return fileObj;
+}
+
 var updateJsonFile = function(fileObj, opts) {
     return new Promise(function(resolve, reject){
-        opts = opts || {};
-        var key = opts.key || 'version';
-        var indent = opts.indent || void 0;
-        var type = opts.type || 'patch';
-        var version = semver.valid(opts.version, opts.type) || null;
-        var json, content;
-        json = fileObj.contents.toString('utf-8');
-
-        try {
-            content = JSON.parse(json);
-        } catch (e) {
-            return reject('Problem parsing JSON file');
-        }
-
-        if (version) {
-            content[key] = version;
-        } else if (semver.valid(content[key])) {
-            content[key] = semver.inc(content[key], type);
-        } else {
-            return reject('Detected invalid semver ' + key);
-        }
-        fileObj.version  = version;
-        fileObj.contents = new Buffer(JSON.stringify(content, null, indent || space(json)) + possibleNewline(json));
-
-        resolve(fileObj);
+        fileObj = updateVersion(fileObj, opts)
+        fileObj.err && reject(fileObj.err);
+        !fileObj.err && resolve(fileObj);
     }).then(function(fileObj){
         return file.write(fileObj)
     });
@@ -59,4 +64,8 @@ var bump = function(files, opts){
 }
 
 
-module.exports = bump;
+module.exports = {
+    _possibleNewline: possibleNewline,
+    _updateVersion: updateVersion,
+    bump: bump
+};

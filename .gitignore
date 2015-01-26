@@ -9,10 +9,3 @@ bower_components/
 npm-debug.log
 *.iml
 *.tgz
-
-test/test
-test/demo
-test/src
-test/bower.json
-test/*.md
-test/*.gitignore
