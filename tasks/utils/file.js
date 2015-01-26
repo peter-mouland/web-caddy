@@ -113,9 +113,9 @@ function copy(src, dest){
     }, onError);
 }
 
-function detail(file){
-    var outFile = file.split('/').pop();
-    var outDirs = file.split('/')
+function detail(filePath){
+    var outFile = filePath.split('/').pop();
+    var outDirs = filePath.split('/')
     outDirs.pop()
     var outDir = outDirs.join('/')
     var ext = outFile.split('.').pop()
