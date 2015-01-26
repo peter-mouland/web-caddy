@@ -1,4 +1,6 @@
 var file = require('../tasks/utils/file');
+var window = {};
+window.del = require('del');
 
 function onError(e){
     console.log('** Test Error **')
@@ -19,6 +21,65 @@ describe("file", function() {
     });
 
     describe("rename", function(){
+
+        xit("", function() {
+        });
+
+    });
+
+    describe("copy", function(){
+
+        xit("", function() {
+        });
+
+    });
+
+    describe("write", function(){
+
+        xit("", function() {
+        });
+
+    });
+
+    describe("read", function(){
+
+        xit("", function() {
+        });
+
+    });
+
+    describe("del", function(){
+
+        xit("is a promise", function(done) {
+            spyOn(window, 'del').and.callFake(function(file) {
+               return file
+            });
+
+            var files = './spec/fixtures/file/del.*';
+            file.del(files).then(function(d){
+                console.log(d)
+                done();
+            })
+
+        });
+
+    });
+
+    describe("copyDirectory", function(){
+
+        xit("", function() {
+        });
+
+    });
+
+    describe("replace", function(){
+
+        xit("", function() {
+        });
+
+    });
+
+    describe("glob", function(){
 
         xit("", function() {
         });
