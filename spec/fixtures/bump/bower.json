@@ -1,0 +1,11 @@
+{
+    "name": "bskyb-test",
+    "version": "0.0.0",
+    "license": "BSD3",
+    "ignore": [
+        "**/*"
+    ],
+    "devDependencies": {
+        "bskyb-colours": "~0.1.0"
+    }
+}

@@ -21,7 +21,7 @@ function concatFiles(files){
 }
 
 function create(locationGlob, destination){
-    return concat(locationGlob).then(function(contents){
+    return concatFiles(locationGlob).then(function(contents){
         var detail = file.detail(destination)
         var fileObj = { //todo: new File(destination)
             ext:   detail.ext,

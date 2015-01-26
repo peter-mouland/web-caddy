@@ -26,7 +26,7 @@ function write(fileObj){
         return new Promise(function(resolve, reject){
             fs.writeFile(fileObj.path, string, function(err, written, buffer){
                 err && reject(err);
-                !err && resolve(fileObj.path);
+                !err && resolve(fileObj);
             });
         });
     })
