@@ -6,7 +6,6 @@
     "devDependencies": {
         "gulp": "^3.8.10",
         "component-helper": "^0.7.1",
-        "run-sequence": "^1.0.1",
         "browser-sync": "^1.5.9",
         "findup-sync": "^0.2.1"
     },

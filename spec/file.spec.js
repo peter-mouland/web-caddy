@@ -53,6 +53,7 @@ describe("file", function() {
                 done()
             }, onError);
         });
+
         it("can write a new file with updated details", function(done) {
             var filesGlob = './spec/fixtures/file/del.*';
             file.read(filesGlob).then(function (files) {
@@ -81,6 +82,7 @@ describe("file", function() {
                 done()
             }, onError)
         });
+
         it("can delete the files", function(done){
             var filesGlob = './spec/fixtures/file/del.*';
             file.del([filesGlob]).then(function(files){

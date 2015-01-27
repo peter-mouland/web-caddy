@@ -3,14 +3,13 @@
 var gulp = require('gulp');
 var componentHelper = require('component-helper')(gulp);
 var paths = componentHelper.paths;
-var runSequence = require('run-sequence');
 
-gulp.task('pre-build', function(cb){
-    //example pre-build task, which is automatically part of the build process
-    return runSequence('custom-gulp-task-1', cb);
+gulp.task('pre-build', ['custom-gulp-task-1'], function(cb){
+    //exmape  task
+    return cb();
 });
 
 gulp.task('custom-gulp-task-1', function(cb){
-    //exmape empty task
+    //exmape  task
    return cb();
 });
