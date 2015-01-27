@@ -154,10 +154,10 @@ var commands = {
 };
 
 (function main() {
-  if (!argv.length) return commands.help();
+  if (!argv.length) return commands['--help']();
   var cwd =  argv.shift();
   var command = argv.shift();
   commands[command] && commands[command](argv);
-  !commands[command] && commands.help();
+  !commands[command] && commands['--help']();
 })();
 
