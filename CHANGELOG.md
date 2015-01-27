@@ -1,7 +1,12 @@
 # Change Log
 
-## 0.7.1
+## 0.7.2
 
+ * fixed bug with rename
+
+## 0.7.0
+
+ * Renamed to `component-helper`
  * Added many more CLI commands - can now do everything without gulp (apart from `watch`).
     * build, serve, test, release now available i.e. `component build`
 
