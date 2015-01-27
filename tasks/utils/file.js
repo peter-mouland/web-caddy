@@ -24,7 +24,7 @@ function write(fileObj){
     var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
     return mkdir(fileObj.dir).then(function(){
         return new Promise(function(resolve, reject){
-            fs.writeFile(fileObj.path, string, function(err, written, buffer){
+            fs.writeFile(path.join(fileObj.dir,fileObj.name), string, function(err, written, buffer){
                 err && reject(err);
                 !err && resolve(fileObj);
             });
