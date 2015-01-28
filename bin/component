@@ -5,18 +5,18 @@ var fs = require("fs")
 var prompt = require("prompt");
 var chalk = require('chalk');
 var shell = require("shelljs");
-var findup = require("findup-sync");
 var exec = shell.exec;
-var paths = require("../paths")
+
+var minimist = require('minimist');
+var knownArgs = {
+    string: 'version',
+    default: { version: 'patch' }
+};
+var flags = minimist(process.argv.slice(2), knownArgs);
+
 var init = require("../tasks/initialise");
-var test = require("../tasks/test");
-var build = require("../tasks/build");
-var release = require("../tasks/release");
-var serve = require("../tasks/serve");
-var componentPkgPath = findup("package.json")
-var componentConfigPath = findup("config/index.js")
-var componentPkg = componentPkgPath ? require(componentPkgPath) : {}
-var componentConfig = componentConfigPath ? require(componentConfigPath) : {}
+var tasks = require("../").tasks;
+
 
 function errorAndExit(message){
     console.log(chalk.red(message.message || 'Error : ' + message));
@@ -29,6 +29,22 @@ function success(message){
 
 function npmGlobalPath() {
     return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;
+}
+
+function execTask(task, args){
+    var command = args.shift() || 'all';
+    tasks[task][command] && tasks[task][command](args, flags.version).then(success, errorAndExit);
+    !tasks[task][command] && help(tasks[task], task);
+}
+
+function help(task, taskStr){
+    var args = [];
+    for (var arg in task){
+        if (arg!=='all') args.push(arg)
+    }
+    var helpStr = (taskStr === '') ? '' : '`component ' + taskStr + '` or '
+    console.log([ taskStr + " arguments: " + args.join(', '),
+        "Usage: " + helpStr + "`component " + taskStr + " " + args[0] + "`"].join("\n"))
 }
 
 var commands = {
@@ -59,92 +75,20 @@ var commands = {
           init.component(moduleDir, component, result.repo, author);
         });
     },
-    build: function(type){
-        type = type[0];
-        switch (type) {
-            case undefined:
-                build.all(componentPkg.version).then(success, errorAndExit);
-                break;
-            case 'css':
-                build.css().then(success, errorAndExit);
-                break;
-            case 'js':
-                build.js().then(success, errorAndExit);
-                break;
-            case 'html':
-                build.html(componentPkg.version).then(success, errorAndExit);
-                break;
-            default :
-                console.log([ "Build arguments: css, js, html",
-                    "Usage: `component build` or `component build css`"].join("\n"));
-        }
+    build: function(args){
+        execTask('build', args)
     },
-    serve: function(type){
-        type = type[0];
-        switch (type) {
-            case undefined:
-                build.all(componentPkg.version).then(function () {
-                    serve(paths.site.root)
-                },errorAndExit);
-                break;
-            case 'quick':
-                serve(paths.site.root);
-                break
-            default :
-                console.log(["Serve arguments: quick",
-                    "Usage: `component test` or `component test quick`"].join("\n"));
-        }
+    serve: function(args){
+        execTask('serve', args)
     },
-    test: function(type){
-        type = type[0];
-        switch (type) {
-            case undefined:
-                build.all(componentPkg.version).then(function(){
-                    return test.all().then(success, errorAndExit);
-                }, errorAndExit);
-                break;
-            case 'once':
-                test.once().then(success, errorAndExit);
-                break;
-            case 'tdd':
-                test.tdd().then(success, errorAndExit);
-                break;
-            case 'coverage':
-                test.coverage().then(success, errorAndExit);
-                break;
-            default :
-                console.log([ "Test arguments: once, tdd, coverage",
-                    "Usage: `component test` or `component test coverage`"].join("\n"));
-        }
+    test: function(args){
+        execTask('test', args)
     },
-    release: function(type){
-        type = type[0];
-        var typeFlag = type[1];
-        switch (type) {
-            case undefined:
-                build.all(componentPkg.version).then(function(){
-                    return test.all().then(success, errorAndExit);
-                }, errorAndExit).then(function(){
-                    return release.all(componentPkg.version, componentPkg.name, componentConfig.aws, typeFlag).then(success, errorAndExit);
-                }, errorAndExit);
-                break;
-            case 'git':
-                release.git(componentPkg.version).then(success, errorAndExit);
-                break;
-            case 'aws':
-                release.aws(componentPkg.version, componentPkg.name, componentConfig.aws).then(success, errorAndExit);
-                break;
-            case 'gh-pages':
-                release.ghPages().then(success, errorAndExit);
-                break;
-            default :
-                console.log([ "Release arguments: git, aws, gh-pages",
-                    "Usage: `component release` or `component release gh-pages`"].join("\n"));
-        }
+    release: function(args){
+        execTask('release', args)
     },
-    '--help': function help () {
-        console.log([ "Commands: new, build, serve, test, release, --help, --version",
-                  "Usage: component new"].join("\n"));
+    '--help': function() {
+        help(commands, '')
     },
     '--version': function() {
         var pkg = require("../package.json")
@@ -161,3 +105,14 @@ var commands = {
   !commands[command] && commands['--help']();
 })();
 
+
+/*
+TODO: trasnfer repo
+ */
+//gulp.task('transfer:user', function() {
+//    if (!gulp.env.oldUser || !gulp.env.newUser){
+//        onError('You must give `old-user` and `new-user` arguments i.e,\n'+
+//        '`gulp rename-user --old-user=someone --new-user=someone-else`');
+//    }
+//    return file.replace('./*', {replace: gulp.env.oldUser, with : gulp.env.newUser})
+//});

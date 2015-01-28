@@ -7,6 +7,14 @@ var bump = require('./utils/bump').bump;
 var aws = require('./utils/aws');
 var build = require('./build');
 var chalk = require('chalk');
+var test   = require('./test');
+var paths   = require('../paths');
+
+var findup = require('findup-sync');
+var packageFilePath = findup('package.json');
+var configPath = findup('config/index.js');
+var compConfig = require(configPath || '../component-structure/config');
+var pkg = require(packageFilePath || '../package.json');
 
 function onError(err) {
     console.log(chalk.red(err.message));
@@ -20,6 +28,8 @@ function onSuccess(msg) {
 }
 
 function gitRelease(version){
+    version = Array.isArray(version) ? version[0] : version
+    version = version || pkg.version;
     return git.add(['.']).then(function() {
         return git.commit('v' + version);
     }).then(function(){
@@ -28,65 +38,72 @@ function gitRelease(version){
        return git.tag('v' + version);
     }).then(function(){
         return git.push(['origin', 'master', 'v' + version]);
-    });
+    }).catch(onError);
 }
 
-function versionBump(version, type){
+function versionBump(type){
+    type = Array.isArray(type) ? type[0] : type
+    type = type || 'patch';
     info("\nBumping version ... \n");
-    version = semver.inc(version, type);
+    var version = semver.inc(pkg.version, type);
     return bump('./*.json', {type: type}).then(function(){
         return build.html(version)
     }).then(function(){
         return version;
-    });
+    }).catch(onError);
 }
 
-function ghPagesRelease(opts){
+function ghPagesRelease(message){
+    message = Array.isArray(message) ? message[0] : message
+    message = message || 'Update';
     info("\nReleasing to gh-pages ... \n");
-    opts = opts || {};
-    var dir = opts.dir || './_site';
-    var message = opts.message || 'Update';
     return new Promise(function(resolve, reject){
-        ghPages.publish(dir, {message: message }, function(err) {
+        ghPages.publish(paths.site.root, {message: message }, function(err) {
             err && reject(err)
             !err && resolve()
         });
     });
 }
 
-function awsRelease(version, name, config){
-    if (!config.release){
+function awsRelease(version){
+    version = Array.isArray(version) ? version[0] : version
+    version = version || pkg.version;
+    if (!compConfig.aws){
         info('AWS release set to false. skipping\nIf this is an error update the config and run `gulp release:aws`')
         return
     }
     info("\nReleasing to AWS ... \n");
-    var s3 = aws.setup(config)
+    var s3 = aws.setup(compConfig.aws)
     return file.read('./_site/**/*.*').then(function(files){
         if (!files.length) onError({message: 'No files found to release to AWS\n' + glob})
         var promises = []
         files.forEach(function(fileObj){
-            promises.push(s3.upload(fileObj,{ path: 'components/' + name + '/' + version +'/'}).catch(onError))
+            promises.push(s3.upload(fileObj,{ path: 'components/' + pkg.name + '/' + version +'/'}).catch(onError))
         })
         return Promise.all(promises);
-    },onError)
+    }).catch(onError)
 }
 
-function all(version, name, config, type){
+function all(args, type){
     var bumpedVersion
-    return versionBump(version, type).then(function(version){
+    return build.all().then(function() {
+        return test.all();
+    }).then(function(){
+        return versionBump(type)
+    }).then(function(version){
         bumpedVersion = version;
         return gitRelease(version);
     }).then(function(){
-        return ghPagesRelease({message: 'v' + bumpedVersion});
+        return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
-       return awsRelease(bumpedVersion, name, config)
-    });
+       return awsRelease(bumpedVersion)
+    }).catch(onError);
 }
 
 module.exports = {
     git: gitRelease,
     versionBump: versionBump,
-    ghPages: ghPagesRelease,
+    'gh-pages': ghPagesRelease,
     aws: awsRelease,
     all: all
 };

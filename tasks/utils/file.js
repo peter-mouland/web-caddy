@@ -5,6 +5,7 @@ var path = require('path');
 var ncp = require('ncp').ncp;
 var chalk = require('chalk');
 var gs = require('glob-stream');
+var chokidar = require('chokidar');
 
 function onError(err) {
     console.log(chalk.red(err.message));
@@ -185,6 +186,22 @@ function clean(globby){
     });
 }
 
+function watch(src, actions){
+    chokidar
+        .watch(src, { persistent: true})
+        .on('change', function(path) {
+            console.log('Watch: File', path, 'has been changed');
+            actions.forEach(function(action){
+                action();
+            })
+        })
+        .on('add', function(path) {    console.log('Watch: File', path, 'has been added'); })
+        .on('addDir', function(path) { console.log('Watch: Directory', path, 'has been added'); })
+        .on('error', function(error) { console.log('Watch: Error happened', error); })
+        .on('ready', function() {      console.log('Watch: Initial scan complete. Ready for changes.'); })
+    ;
+}
+
 module.exports = {
     detail: detail,
     rename: rename,
@@ -194,5 +211,6 @@ module.exports = {
     del: clean,
     copyDirectory: copyDirectory,
     replace: replace,
+    watch: watch,
     glob: glob
 };

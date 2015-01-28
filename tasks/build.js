@@ -8,6 +8,10 @@ var htmlUtil = require('./utils/html');
 var paths = require('../paths');
 var now = Date().split(' ').splice(0,5).join(' ');
 
+var findup = require('findup-sync');
+var packageFilePath = findup('package.json');
+var pkg = require(packageFilePath || '../package.json');
+
 function onError(err) {
     console.log(chalk.red(err.message));
     process.exit(1);
@@ -17,7 +21,8 @@ function onSuccess(out) {
 }
 
 function html(version) {
-    if (!version) onError({message:"build.html(version) is required"})
+    version = Array.isArray(version) ? version[0] : version
+    version = version || pkg.version;
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
     var dest = paths.site['root']+ '/index.html'
     return file.del(dest ).then(function(){
@@ -30,6 +35,7 @@ function html(version) {
 }
 
 function updateDocs(options){
+    options = Array.isArray(options) ? options[0] : options
     if (!options || !options.version) onError({message:"build.updateDocs({version:'x.x.x'}) is required.\n got " + JSON.stringify(options)})
     var version = options.version;
     var htmlReplacements = [
@@ -106,14 +112,13 @@ function css(){
     });
 }
 
-function all(version){
-    if (!version) onError({message:"build.all : version is required\ngot " + version})
+function all(args){
     return Promise.all([
         js(),
         fonts(),
         images(),
         css(),
-        html(version)
+        html(args)
     ]).then(function(){
         return 'Build All Complete'
     });

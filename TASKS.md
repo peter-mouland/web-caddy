@@ -4,19 +4,19 @@ These tasks are documented for those who want to know what is going on under the
 
 ## Build
 
-`gulp build` or `component build`
+`component build`
 
 Executes all the Build tasks below
 
 #### CSS
 
-`gulp build:css` or `component build css`
+`component build css`
 
 Create a `.css` for each `.scss` file (without an underscore `_` prefix) it finds.
 
 #### JS
 
-`gulp build:js` or `component build js`
+`component build js`
 
 This task can handle CommonJS and plain JS.  To handle dependency management, we use [browserify](https://www.npmjs.com/package/browserify) which creates a single javascript file found in the `src/js` root.
 
@@ -24,21 +24,21 @@ For each .js file in the `/src/js` root, a `.min.js` version is created using [u
 
 #### HTML
 
-`gulp build:html` or `component build html`
+`component build html`
 
 Concatinate all html files found in `demo/_includes` into `demo/index.html`.  Nothing fancy, yet.
 
 
 ## Serve
 
-`gulp serve` or `component serve`
+`component serve`
 
 This will [build](#build) your site then using [browserSync](https://www.npmjs.com/package/browser-sync) start a server on localhost:3456.
 To prevent the build from kicking off, there is also `gulp server:quick` command available.
 
 ## Testing
 
-`gulp test` or `component test`
+`component test`
 
 This will [build](#build) your site then run the Test tasks below.
 To prevent the build from kicking off, there is also `gulp test:quick` command available.
@@ -46,26 +46,26 @@ To prevent the build from kicking off, there is also `gulp test:quick` command a
 
 #### Once
 
-`gulp test:once` or `component test once`
+`component test once`
 
 Using Karma and Jasmine, it will run through the `.spec.js` files found in `/test/` directory
 
 #### TDD
 
-`gulp test:tdd` or `component test tdd`
+`component test tdd`
 
 Using the `watermarks` option within karma.conf.js, it ensures the code coverage is above the thresholds given.
 
 #### Coverage
 
-`gulp test:coverage` or `component test coverage`
+`component test coverage`
 
 Using Karma and Jasmine, it will run through the `.spec.js` files found in `/test/` directory and watch for code changes in your spec files.
 
 
 ## Releasing
 
-`gulp release` or `component release`
+`component release`
 
 This will [build](#build) and [test](#test) your site, patch the version number in all the docs (package.json, bower.js, *.md and *.html) then run the above release commands.
 
@@ -73,18 +73,18 @@ To force a version or release type use the `--version=` option followed by eithe
 
 #### Amazon Web Services
 
-`gulp release:aws` or `component release aws`
+`component release aws`
 
 This will push the current files within `_site` to AWS if `aws:release` is set to true within `config/index.js`
 
 #### GH-Pages
 
-`gulp release:gh-pages` or `component release gh-pages`
+`component release gh-pages`
 
 This will push the current files within `_site` to gh-pages branch.
 
 #### Tagging Git
 
-`gulp release:git` or `component release git`
+`component release git`
 
 This will use the version within `package.json`, tag your code and push the tag to git.

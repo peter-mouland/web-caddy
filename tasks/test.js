@@ -4,6 +4,7 @@ var chalk = require('chalk');
 var paths = require('../paths');
 var findup = require('findup-sync');
 var karmaConfig = findup(paths.test.config);
+var build = require('./build');
 
 function onError(err, exitOnError) {
     console.log(chalk.red(err));
@@ -57,7 +58,9 @@ function coverage(){
 }
 
 function all(){
-    return once().then(function(){
+    return build.all().then(function() {
+        return once();
+    }, onError).then(function(){
         return coverage().catch(onError);
     }, onError);
 }
