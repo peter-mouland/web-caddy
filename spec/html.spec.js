@@ -1,4 +1,4 @@
-var html = require('../tasks/utils/html');
+var html = require('../tasks/utils/html-concat');
 var file = require('../tasks/utils/file');
 
 function onError(e){
