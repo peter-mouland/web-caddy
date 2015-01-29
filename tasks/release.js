@@ -1,20 +1,19 @@
 var Promise = require('es6-promise').Promise;
 var semver = require('semver');
+var findup = require('findup-sync');
 var ghPages = require('gh-pages');
+var chalk = require('chalk');
+
 var file   = require('./utils/file');
 var git = require('./utils/git');
 var bump = require('./utils/bump').bump;
 var aws = require('./utils/aws');
 var build = require('./build');
-var chalk = require('chalk');
 var test   = require('./test');
-var paths   = require('../paths');
 
-var findup = require('findup-sync');
-var packageFilePath = findup('package.json');
-var configPath = findup('component.config');
-var compConfig = require(configPath || '../component-structure/component.config');
-var pkg = require(packageFilePath || '../package.json');
+var component = require(findup('component.config.js') || './component-structure/component.config');
+var pkg = component.pkg;
+var paths = component.paths;
 
 function onError(err) {
     console.log(chalk.red(err.message));

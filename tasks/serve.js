@@ -1,8 +1,10 @@
 var Promise = require('es6-promise').Promise;
+var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var file = require('./utils/file');
-var paths = require('../paths');
 var build = require('./build');
+var component = require(findup('component.config.js') || './component-structure/component.config');
+var paths = component.paths;
 
 function loadBrowser(baseDir){
     var baseDir = Array.isArray(baseDir) ? baseDir[0] : baseDir;

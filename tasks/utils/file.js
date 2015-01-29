@@ -179,9 +179,9 @@ function rename(src, replace, withThis){
 
 function clean(globby){
     return new Promise(function(resolve, reject){
-        return del(globby, function (err, paths){
+        return del(globby, function (err, delPath){
             err && reject(err);
-            !err && setTimeout(function(){resolve(paths)},50);
+            !err && setTimeout(function(){resolve(delPath)},50);
         });
     });
 }

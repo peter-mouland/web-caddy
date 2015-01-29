@@ -1,10 +1,12 @@
 var Promise = require('es6-promise').Promise;
 var karma = require('karma').server;
 var chalk = require('chalk');
-var paths = require('../paths');
 var findup = require('findup-sync');
+
+var helper = require('../index.js');
+var component = require(findup('component.config.js') || './component-structure/component.config');
+var paths = component.paths;
 var karmaConfig = findup(paths.test.config);
-var build = require('./build');
 
 function onError(err, exitOnError) {
     console.log(chalk.red(err));
@@ -58,7 +60,7 @@ function coverage(){
 }
 
 function all(){
-    return build.all().then(function() {
+    return helper.tasks.build.all().then(function() {
         return once();
     }, onError).then(function(){
         return coverage().catch(onError);

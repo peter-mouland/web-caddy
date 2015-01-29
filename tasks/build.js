@@ -1,16 +1,13 @@
 var Promise = require('es6-promise').Promise;
 var chalk = require('chalk');
-var file = require('./utils/file');
-var bower = require('./utils/bower');
-var browserify = require('./utils/browserify');
-var sassUtil = require('./utils/sass');
-var htmlUtil = require('./utils/html');
-var paths = require('../paths');
-var now = Date().split(' ').splice(0,5).join(' ');
-
 var findup = require('findup-sync');
-var packageFilePath = findup('package.json');
-var pkg = require(packageFilePath || '../package.json');
+var now = Date().split(' ').splice(0,5).join(' ');
+var file = require('./utils/file');
+var browserify = require('./utils/browserify');
+var sass = require('./utils/sass');
+var htmlConcat = require('./utils/html-concat');
+var component = require(findup('component.config.js') || './component-structure/component.config');
+var paths = component.paths;
 
 function onError(err) {
     console.log(chalk.red(err.message));
@@ -22,11 +19,11 @@ function onSuccess(out) {
 
 function html(version) {
     version = Array.isArray(version) ? version[0] : version;
-    version = version || pkg.version;
+    version = version || component.pkg.version;
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
     var dest = paths.site.root + '/index.html';
     return file.del(dest ).then(function(){
-        return htmlUtil.create(src, dest)
+        return htmlConcat.create(src, dest)
     }).then(function(){
         return updateDocs({version:version});
     }).then(function(){
@@ -93,9 +90,9 @@ function scripts(){
 function styles(){
     return file.del([paths.dist.styles + '/**/*', paths.site.styles + '/**/*']).then(function() {
         return Promise.all([
-            sassUtil(paths.source.styles, paths.dist.styles),
-            sassUtil(paths.demo.styles, paths.site.styles),
-            sassUtil(paths.source.styles, paths.site.styles)
+            sass(paths.source.styles, paths.dist.styles),
+            sass(paths.demo.styles, paths.site.styles),
+            sass(paths.source.styles, paths.site.styles)
         ]);
     }).then(function(){
         return 'Build CSS Complete'
