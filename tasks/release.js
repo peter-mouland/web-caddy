@@ -12,8 +12,8 @@ var paths   = require('../paths');
 
 var findup = require('findup-sync');
 var packageFilePath = findup('package.json');
-var configPath = findup('config/index.js');
-var compConfig = require(configPath || '../component-structure/config');
+var configPath = findup('component.config');
+var compConfig = require(configPath || '../component-structure/component.config');
 var pkg = require(packageFilePath || '../package.json');
 
 function onError(err) {
@@ -70,7 +70,7 @@ function awsRelease(version){
     version = Array.isArray(version) ? version[0] : version
     version = version || pkg.version;
     if (!compConfig.aws.release){
-        info('AWS release set to false. skipping\nIf this is an error update the config')
+        info('AWS release set to false within component.config.js : skipping')
         return Promise.resolve();
     }
     info("\nReleasing to AWS ... \n");

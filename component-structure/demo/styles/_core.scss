@@ -1,7 +1,4 @@
-//@import here
-@import 'bower_components/bskyb-colours/src/scss/colours';
 @import 'bower_components/bskyb-typography/src/scss/typography';
-@import 'bower_components/bskyb-grid/src/scss/grid';
 
 /* Common demo Sass here */
 .demo-block{
@@ -34,6 +31,11 @@
   display: block;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 code{
   font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
   padding: 0;
@@ -45,5 +47,11 @@ code{
   border-radius: 3px;
 }
 
+.skycom-container {
+  width: 94.05941%;
+  max-width: 1140px;
+  margin: 0 auto;
+  clear: left;
+  overflow: visible;
+}
 
-//your demo specific scss here

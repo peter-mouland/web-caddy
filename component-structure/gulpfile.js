@@ -14,14 +14,14 @@ gulp.task('build', function() {
     return tasks.build.all().catch(onError)
 });
 
-gulp.task('serve',  ['build'], function() {
+gulp.task('serve',  function() {
     return tasks.serve.all().catch(onError);
 });
 
-gulp.task('test', ['build'], function(){
+gulp.task('test', function(){
     return tasks.test.all().catch(onError);
 });
 
-gulp.task('release', ['build', 'test'], function(){
-    return tasks.release.all().catch(onError);;
+gulp.task('release', function(){
+    return tasks.release.all().catch(onError);
 });

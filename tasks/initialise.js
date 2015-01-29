@@ -66,7 +66,7 @@ function installNpms(){
 function initBower(bowerCfg, repoUrl){
     return bower.register([bowerCfg.name, repoUrl]).catch(function(){
         console.log(['** Not intialising Bower ** ',
-                            'Config is set to false in config/index.js'].join('\n'));
+                            'bower.release is set to false in component.config.js'].join('\n'));
     });
 }
 

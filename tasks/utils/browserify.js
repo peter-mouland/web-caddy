@@ -40,13 +40,13 @@ function saveFileObjects(fileObjs, destination){
     return Promise.all(promises);
 }
 
-function writeJs(location, destination){
+function scripts(location, destination){
     return browserifyFiles(location + '/*.js').then(function(fileObjs){
         return saveFileObjects(fileObjs, destination);
     }, onError);
 }
 
-function writeJsMin(location, destination){
+function min(location, destination){
     return fileUtil.glob(location + '/!(*.min).js').then(function(files){
         files.forEach(function (fileObj, i) {
             fileObj.contents = UglifyJS.minify(fileObj.path).code;
@@ -58,6 +58,6 @@ function writeJsMin(location, destination){
 }
 
 module.exports = {
-    js: writeJs,
-    jsMin: writeJsMin
+    scripts: scripts,
+    min: min
 };

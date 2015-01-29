@@ -20,21 +20,21 @@ var buildAndReload = {
     html: function() {
         return build.html().then(browserSync.reload)
     },
-    js: function() {
-        return build.js().then(browserSync.reload)
+    scripts: function() {
+        return build.scripts().then(browserSync.reload)
     },
-    css: function() {
-        return build.css().then(browserSync.reload)
+    styles: function() {
+        return build.styles().then(browserSync.reload)
     }
 }
 
-var watch = function(){
-    var htmlPaths = [ paths.demo['root'] + '/**/*.html'];
-    var sassPaths = [ paths.source['sass'] + '/**/*', paths.demo['sass'] + '/**/*'];
-    var jsPaths =   [ paths.source['js'] + '/**/*',   paths.demo['js'] + '/**/*'];
+function watch(){
+    var htmlPaths = [ paths.demo.root + '/**/*.html'];
+    var stylesPaths = [ paths.source.styles + '/**/*', paths.demo.styles + '/**/*'];
+    var scriptsPaths =   [ paths.source.scripts + '/**/*',   paths.demo.scripts + '/**/*'];
     file.watch(htmlPaths, [buildAndReload.html]);
-    file.watch(sassPaths, [buildAndReload.css]);
-    file.watch(jsPaths,   [buildAndReload.js]);
+    file.watch(stylesPaths, [buildAndReload.styles]);
+    file.watch(scriptsPaths,   [buildAndReload.scripts]);
 }
 
 var serve = function(args){
