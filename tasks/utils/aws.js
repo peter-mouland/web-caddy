@@ -10,7 +10,7 @@ function onError(err) {
 
 function checkMandatory(key, obj){
     if (!obj[key]) {
-        onError({message:'Missing config `' + key + '`'});
+        onError({message:'AWS: Missing config `' + key + '`'});
     }
 }
 

@@ -59,6 +59,7 @@ function ghPagesRelease(message){
     info("\nReleasing to gh-pages ... \n");
     return new Promise(function(resolve, reject){
         ghPages.publish(paths.site.root, {message: message }, function(err) {
+            ghPages.clean();
             err && reject(err)
             !err && resolve()
         });
@@ -68,9 +69,9 @@ function ghPagesRelease(message){
 function awsRelease(version){
     version = Array.isArray(version) ? version[0] : version
     version = version || pkg.version;
-    if (!compConfig.aws){
-        info('AWS release set to false. skipping\nIf this is an error update the config and run `gulp release:aws`')
-        return
+    if (!compConfig.aws.release){
+        info('AWS release set to false. skipping\nIf this is an error update the config')
+        return Promise.resolve();
     }
     info("\nReleasing to AWS ... \n");
     var s3 = aws.setup(compConfig.aws)
