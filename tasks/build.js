@@ -2,11 +2,13 @@ var Promise = require('es6-promise').Promise;
 var chalk = require('chalk');
 var findup = require('findup-sync');
 var now = Date().split(' ').splice(0,5).join(' ');
+
 var file = require('./utils/file');
 var browserify = require('./utils/browserify');
 var sass = require('./utils/sass');
 var htmlConcat = require('./utils/html-concat');
-var component = require(findup('component.config.js') || './component-structure/component.config');
+
+var component = require(findup('component.config.js'));
 var paths = component.paths;
 
 function onError(err) {

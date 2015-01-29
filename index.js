@@ -6,11 +6,9 @@ var serve = require('./tasks/serve');
 var pkg = require('./package.json');
 
 module.exports = {
-    tasks: {
-        build: build,
-        test: test,
-        release: release,
-        serve: serve
-    },
-    pkg: pkg
+    build: build,
+    test: test,
+    release: release,
+    serve: serve,
+    version: pkg.version
 }

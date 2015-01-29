@@ -3,8 +3,8 @@ var karma = require('karma').server;
 var chalk = require('chalk');
 var findup = require('findup-sync');
 
-var helper = require('../index.js');
-var component = require(findup('component.config.js') || './component-structure/component.config');
+var build = require('./build');
+var component = require(findup('component.config.js'));
 var paths = component.paths;
 var karmaConfig = findup(paths.test.config);
 
@@ -60,7 +60,7 @@ function coverage(){
 }
 
 function all(){
-    return helper.tasks.build.all().then(function() {
+    return build.all().then(function() {
         return once();
     }, onError).then(function(){
         return coverage().catch(onError);

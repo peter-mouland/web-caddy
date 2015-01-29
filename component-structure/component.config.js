@@ -1,7 +1,6 @@
 var findup = require('findup-sync');
 var bowerPath = findup('bower.json');
-var packageFilePath = findup('package.json');
-var pkg = require(packageFilePath || './package.json');
+var pkg = require(findup('package.json') || './package.json');
 
 var bower = (bowerPath) ? require(bowerPath) : {};
 bower.release = false;

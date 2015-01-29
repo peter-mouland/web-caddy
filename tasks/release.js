@@ -8,10 +8,9 @@ var file   = require('./utils/file');
 var git = require('./utils/git');
 var bump = require('./utils/bump').bump;
 var aws = require('./utils/aws');
-var build = require('./build');
-var test   = require('./test');
 
-var component = require(findup('component.config.js') || './component-structure/component.config');
+var test = require('./test');
+var component = require(findup('component.config.js'));
 var pkg = component.pkg;
 var paths = component.paths;
 
@@ -86,9 +85,7 @@ function awsRelease(version){
 
 function all(args, type){
     var bumpedVersion
-    return build.all().then(function() {
-        return test.all();
-    }).then(function(){
+    return test.all().then(function() {
         return versionBump(type)
     }).then(function(version){
         bumpedVersion = version;

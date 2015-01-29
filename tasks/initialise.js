@@ -1,11 +1,12 @@
 var Promise = require('es6-promise').Promise;
+var replaceStream = require('replacestream');
+var shell = require("shelljs");
+var chalk = require('chalk');
+
 var spawn = require('./utils/spawn').spawn;
 var git = require('./utils/git');
 var fileUtil = require('./utils/file');
 var bower = require('./utils/bower');
-var replaceStream = require('replacestream');
-var shell = require("shelljs");
-var chalk = require('chalk');
 
 function onError(err) {
     console.log(chalk.red(err.message));

@@ -2,8 +2,9 @@ var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var file = require('./utils/file');
+
 var build = require('./build');
-var component = require(findup('component.config.js') || './component-structure/component.config');
+var component = require(findup('component.config.js'));
 var paths = component.paths;
 
 function loadBrowser(baseDir){

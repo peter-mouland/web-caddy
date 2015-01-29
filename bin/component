@@ -1,21 +1,16 @@
 #!/usr/bin/env node
 
-var argv = process.argv.slice(1)
 var fs = require("fs")
 var prompt = require("prompt");
 var chalk = require('chalk');
 var shell = require("shelljs");
 var exec = shell.exec;
-
 var minimist = require('minimist');
 var knownArgs = {
     string: 'version',
     default: { version: 'patch' }
 };
 var flags = minimist(process.argv.slice(2), knownArgs);
-
-var init = require("../tasks/initialise");
-var tasks = require("../").tasks;
 
 
 function errorAndExit(message){
@@ -32,9 +27,10 @@ function npmGlobalPath() {
 }
 
 function execTask(task, args){
+    var helper = require("../");
     var command = args.shift() || 'all';
-    tasks[task][command] && tasks[task][command](args, flags.version).then(success, errorAndExit);
-    !tasks[task][command] && help(tasks[task], task);
+    helper[task][command] && helper[task][command](args, flags.version).then(success, errorAndExit);
+    !helper[task][command] && help(helper[task], task);
 }
 
 function help(task, taskStr){
@@ -49,6 +45,7 @@ function help(task, taskStr){
 
 var commands = {
     new: function() {
+        var init = require("../tasks/initialise");
         console.log("Creating your component...");
         prompt.start();
         prompt.get([{
@@ -98,6 +95,7 @@ var commands = {
 };
 
 (function main() {
+  var argv = process.argv.slice(1)
   if (!argv.length) return commands['--help']();
   var cwd =  argv.shift();
   var command = argv.shift();
