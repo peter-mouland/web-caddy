@@ -5,9 +5,9 @@ var bower = (bowerPath) ? require(bowerPath) : {};
 
 module.exports = {
     test: 'karma', //or mocha
-    html: 'html-concat', // moustache or assemble or jekyll
-    scripts: 'browserify', // or requirejs
-    styles: 'sass', // or less
+    buildHTML: 'html-concat', // moustache or assemble or jekyll
+    buildScripts: 'browserify', // or requirejs
+    buildStyles: 'sass', // or less
     releases: ['bower', 'aws', 'gh-pages'],
     buildTool: 'gulp', //or grunt
     bower: bower,

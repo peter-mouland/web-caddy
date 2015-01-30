@@ -1,12 +1,11 @@
 var Promise = require('es6-promise').Promise;
 var chalk = require('chalk');
 var findup = require('findup-sync');
-var now = Date().split(' ').splice(0,5).join(' ');
 
 var file = require('./utils/file');
-var scripts = require('./utils/browserify');
-var styles = require('./utils/sass');
-var htmlConcat = require('./utils/html-concat');
+var scripts = require('./utils/browserify');    //config.buildScripts
+var styles = require('./utils/sass');           //config.buildStyles
+var html = require('./utils/html-concat');      //config.buildHTML
 
 var component = require(findup('component.config.js') || '../component-structure/component.config.js');
 var paths = component.paths;
@@ -19,37 +18,15 @@ function onSuccess(out) {
     console.log(chalk.green(out));
 }
 
-function html(version) {
+function buildHtml(version) {
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
     var dest = paths.site.root + '/index.html';
-    return file.del(dest ).then(function(){
-        return htmlConcat.create(src, dest)
-    }).then(function(){
-        return updateDocs({version:version});
+    return file.del(dest).then(function(){
+        return new html(src, dest, {version:version}).write()
     }).then(function(){
         return 'Build HTML Complete'
-    });
-}
-
-function updateDocs(options){
-    options = Array.isArray(options) ? options[0] : options
-    if (!options || !options.version) onError({message:"build.updateDocs({version:'x.x.x'}) is required.\n got " + JSON.stringify(options)})
-    var version = options.version;
-    var htmlReplacements = [
-        {replace : '{{ site.version }}', with: version},
-        {replace : '{{ site.time }}', with: options.now || now}
-    ];
-    var mdReplacements = [
-        {replace : /[0-9]+\.[0-9]+\.[0-9]/g, with: version}
-    ].concat(htmlReplacements);
-
-    return Promise.all([
-        file.replace( [paths.site.root + '/**/*.html'], htmlReplacements)
-        , file.replace( ['./README.md'], mdReplacements)
-    ]).then(function(){
-        return 'Build Docs Complete'
     });
 }
 
@@ -102,18 +79,17 @@ function all(args){
         fonts(),
         images(),
         buildStyles(),
-        html(args)
+        buildHtml(args)
     ]).then(function(){
         return 'Build All Complete'
     });
 }
 
 module.exports = {
-    html: html,
-    styles: styles,
+    html: buildHtml,
+    styles: buildStyles,
     scripts: buildScripts,
     images: images,
     fonts: fonts,
-    updateDocs: updateDocs,
     all: all
 };

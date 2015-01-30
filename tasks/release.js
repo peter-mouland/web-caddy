@@ -39,13 +39,18 @@ function gitRelease(version){
     }).catch(onError);
 }
 
+function update(version){
+    var replacements = [{replace : /[0-9]+\.[0-9]+\.[0-9]/g, with: version}]
+    return file.replace( ['./README.md'], replacements)
+}
+
 function versionBump(type){
     type = Array.isArray(type) ? type[0] : type
     type = type || 'patch';
     info("\nBumping version ... \n");
     var version = semver.inc(pkg.version, type);
     return bump('./*.json', {type: type}).then(function(){
-        return build.html(version)
+        return new Promise.all([update(version), build.html(version)]);
     }).then(function(){
         return version;
     }).catch(onError);

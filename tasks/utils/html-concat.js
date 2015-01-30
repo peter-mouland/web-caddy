@@ -1,5 +1,6 @@
 var chalk = require('chalk');
 var file = require('./file');
+var now = Date().split(' ').splice(0,5).join(' ');
 //maybe upgrade to https://github.com/assemble/assemble
 
 function onError(err) {
@@ -7,35 +8,49 @@ function onError(err) {
     process.exit(1);
 }
 
-function concatContent(fileObjs){
+function HTML(location, destination, options){
+    this.location = location;
+    this.destination = destination;
+    this.options = options;
+}
+
+HTML.prototype.concatContent = function(fileObjs){
     return fileObjs.map(function(file){
         return file.contents;
     }).join('\n');
 }
 
-function concatFiles(files){
+HTML.prototype.concatFiles = function(files){
+    var self = this;
     return file.read(files)
         .then(function(fileObjs){
-            return concatContent(fileObjs)
+            return self.concatContent(fileObjs)
         }, onError);
 }
 
-function create(locationGlob, destination){
-    return concatFiles(locationGlob).then(function(contents){
-        var detail = file.detail(destination)
+HTML.prototype.update = function(){
+    var replacements = [
+        {replace : '{{ site.version }}', with:  this.options.version},
+        {replace : '{{ site.time }}', with: this.options.now || now}
+    ];
+    return file.replace(this.destination, replacements)
+}
+
+HTML.prototype.write = function(){
+    var self = this;
+    return this.concatFiles(this.location).then(function(contents){
+        var detail = file.detail(self.destination)
         var fileObj = { //todo: new File(destination)
             ext:   detail.ext,
             dir:   detail.dir,
-            path: destination,
+            path: self.destination,
             name: detail.name,
             contents : contents
         };
         return file.write(fileObj)
-    }, onError);
+    }).then(function(){
+        self.update();
+    });
 }
 
-module.exports = {
-    _concatContent: concatContent,
-    _concatFiles: concatFiles,
-    create: create
-};
+module.exports = HTML;
