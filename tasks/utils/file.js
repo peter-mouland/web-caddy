@@ -21,7 +21,7 @@ function mkdir(dir){
     });
 }
 
-function write(fileObj){
+function writeFile(fileObj){
     var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
     return mkdir(fileObj.dir).then(function(){
         return new Promise(function(resolve, reject){
@@ -31,6 +31,15 @@ function write(fileObj){
             });
         });
     })
+}
+
+function write(src){
+    if (!Array.isArray(src)) return writeFile(src);
+    var promises = [];
+    src.forEach(function (fileObj, i) {
+        promises.push(writeFile(fileObj));
+    });
+    return Promise.all(promises);
 }
 
 function stat(filePath){

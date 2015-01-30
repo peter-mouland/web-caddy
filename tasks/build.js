@@ -4,8 +4,8 @@ var findup = require('findup-sync');
 var now = Date().split(' ').splice(0,5).join(' ');
 
 var file = require('./utils/file');
-var browserify = require('./utils/browserify');
-var stylesWrapper = require('./utils/sass');
+var scripts = require('./utils/browserify');
+var styles = require('./utils/sass');
 var htmlConcat = require('./utils/html-concat');
 
 var component = require(findup('component.config.js') || '../component-structure/component.config.js');
@@ -72,41 +72,36 @@ function images() {
     });
 }
 
-function scripts(){
+function buildScripts(){
     return file.del([paths.dist.scripts + '/**/*', paths.site.scripts + '/**/*']).then(function(){
         return Promise.all([
-            browserify.scripts(paths.source.scripts, paths.dist.scripts),
-            browserify.scripts(paths.demo.scripts, paths.site.scripts),
-            browserify.scripts(paths.source.scripts, paths.site.scripts)
+            new scripts(paths.source.scripts, paths.dist.scripts).write(),
+            new scripts(paths.demo.scripts, paths.site.scripts).write(),
+            new scripts(paths.source.scripts, paths.site.scripts).write()
         ])
-    }).then(function() {
-        return Promise.all([
-            browserify.min(paths.site.scripts, paths.site.scripts),
-            browserify.min(paths.dist.scripts, paths.dist.scripts)
-        ]);
     }).then(function(){
         return 'Build Scripts Complete'
-    });
+    }).catch(onError);
 }
 
-function styles(){
+function buildStyles(){
     return file.del([paths.dist.styles + '/**/*', paths.site.styles + '/**/*']).then(function() {
         return Promise.all([
-            new stylesWrapper(paths.source.styles, paths.dist.styles).write(),
-            new stylesWrapper(paths.source.styles, paths.site.styles).write(),
-            new stylesWrapper(paths.demo.styles, paths.site.styles).write()
+            new styles(paths.source.styles, paths.dist.styles).write(),
+            new styles(paths.source.styles, paths.site.styles).write(),
+            new styles(paths.demo.styles, paths.site.styles).write()
         ]);
     }).then(function(){
         return 'Build Styles Complete'
-    });
+    }).catch(onError);
 }
 
 function all(args){
     return Promise.all([
-        scripts(),
+        buildScripts(),
         fonts(),
         images(),
-        styles(),
+        buildStyles(),
         html(args)
     ]).then(function(){
         return 'Build All Complete'
@@ -116,7 +111,7 @@ function all(args){
 module.exports = {
     html: html,
     styles: styles,
-    scripts: scripts,
+    scripts: buildScripts,
     images: images,
     fonts: fonts,
     updateDocs: updateDocs,

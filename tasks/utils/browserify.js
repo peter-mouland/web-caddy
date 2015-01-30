@@ -2,62 +2,64 @@ var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
-var fileUtil = require('./file');
+var file = require('./file');
 var chalk = require('chalk');
 
 function onError(err) {
     console.log(chalk.red(err.message));
     process.exit(1);
 }
+function info(msg) {
+    console.log(chalk.cyan(msg));
+}
 
-function browserifyFile(fileObj) {
+function Browserify(location, destination){
+    this.location = location;
+    this.destination = destination;
+}
+
+Browserify.prototype.browserifyFile = function(fileObj) {
+    var self = this;
     return new Promise(function(resolve, reject){
         browserify(fileObj.path).bundle(function(err, contents){
             err && reject(err)
             fileObj.contents = contents;
+            fileObj.path = path.resolve(self.destination, fileObj.name);
+            fileObj.dir = self.destination;
             !err && resolve(fileObj)
         });
     });
 }
 
-function browserifyFiles(glob){
-    return fileUtil.glob(glob).then(function(fileObjs){
+Browserify.prototype.write = function(){
+    var self = this;
+    return file.glob(this.location + '/*.js').then(function(fileObjs){
+        if (fileObjs.length===0){
+            info('no js files found: ' + self.location)
+        }
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
-            promises.push(browserifyFile(fileObj));
+            promises.push(self.browserifyFile(fileObj));
         });
         return Promise.all(promises);
+    }, onError).then(function(fileObjs){
+        return file.write(fileObjs);
+    }, onError).then(function(fileObjs){
+        return self.minify(fileObjs);
     }, onError);
 }
 
-function saveFileObjects(fileObjs, destination){
+Browserify.prototype.minify = function(fileObjs){
+    var self = this;
     var promises = [];
     fileObjs.forEach(function (fileObj, i) {
-        fileObj.path = path.resolve(destination, fileObj.name);
-        fileObj.dir = destination;
-        promises.push(fileUtil.write(fileObj));
+        fileObj.contents = UglifyJS.minify(fileObj.path).code;
+        fileObj.name = fileObj.name.replace('.js','.min.js')
+        fileObj.dir = self.destination;
+        fileObj.path = self.destination + '/' + fileObj.name;
+        promises.push(file.write(fileObj));
     });
     return Promise.all(promises);
 }
 
-function scripts(location, destination){
-    return browserifyFiles(location + '/*.js').then(function(fileObjs){
-        return saveFileObjects(fileObjs, destination);
-    }, onError);
-}
-
-function min(location, destination){
-    return fileUtil.glob(location + '/!(*.min).js').then(function(files){
-        files.forEach(function (fileObj, i) {
-            fileObj.contents = UglifyJS.minify(fileObj.path).code;
-            fileObj.path = destination + '/' + fileObj.name.replace('.js','.min.js');
-            return fileUtil.write(fileObj);
-        });
-        return files;
-    }, onError);
-}
-
-module.exports = {
-    scripts: scripts,
-    min: min
-};
+module.exports = Browserify
