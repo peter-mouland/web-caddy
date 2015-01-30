@@ -20,12 +20,22 @@ HTML.prototype.concatContent = function(fileObjs){
     }).join('\n');
 }
 
-HTML.prototype.concatFiles = function(files){
+HTML.prototype.concatFiles = function(){
     var self = this;
-    return file.read(files)
+    return file.read(this.location)
         .then(function(fileObjs){
             return self.concatContent(fileObjs)
-        }, onError);
+        }, onError).then(function(contents){
+            var detail = file.detail(self.destination)
+            var fileObj = { //todo: new File(destination)
+                ext:   detail.ext,
+                dir:   detail.dir,
+                path: self.destination,
+                name: detail.name,
+                contents : contents
+            };
+            return file.write(fileObj)
+        });
 }
 
 HTML.prototype.update = function(){
@@ -38,18 +48,8 @@ HTML.prototype.update = function(){
 
 HTML.prototype.write = function(){
     var self = this;
-    return this.concatFiles(this.location).then(function(contents){
-        var detail = file.detail(self.destination)
-        var fileObj = { //todo: new File(destination)
-            ext:   detail.ext,
-            dir:   detail.dir,
-            path: self.destination,
-            name: detail.name,
-            contents : contents
-        };
-        return file.write(fileObj)
-    }).then(function(){
-        self.update();
+    return this.concatFiles().then(function(){
+        return self.update();
     });
 }
 
