@@ -4,7 +4,7 @@ var browserSync = require('browser-sync');
 var file = require('./utils/file');
 
 var build = require('./build');
-var component = require(findup('component.config.js'));
+var component = require(findup('component.config.js') || '../component-structure/component.config.js');
 var paths = component.paths;
 
 function loadBrowser(baseDir){

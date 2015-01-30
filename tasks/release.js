@@ -10,7 +10,7 @@ var bump = require('./utils/bump').bump;
 var aws = require('./utils/aws');
 
 var test = require('./test');
-var component = require(findup('component.config.js'));
+var component = require(findup('component.config.js') || '../component-structure/component.config.js');
 var pkg = component.pkg;
 var paths = component.paths;
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+var findup = require('findup-sync');
 var fs = require("fs")
 var prompt = require("prompt");
 var chalk = require('chalk');
@@ -12,11 +13,15 @@ var knownArgs = {
 };
 var flags = minimist(process.argv.slice(2), knownArgs);
 
+function warn(message){
+    console.log(chalk.cyan(message.message || 'Error : ' + message));
+}
 
 function errorAndExit(message){
     console.log(chalk.red(message.message || 'Error : ' + message));
     process.exit(1);
 }
+
 function success(message){
     if (!message || typeof message !== 'string') return
     console.log(chalk.green(message));
@@ -27,6 +32,10 @@ function npmGlobalPath() {
 }
 
 function execTask(task, args){
+    var config = findup('component.config.js');
+    if (!config){
+        warn('Config is missing, using default')
+    }
     var helper = require("../");
     var command = args.shift() || 'all';
     helper[task][command] && helper[task][command](args, flags.version).then(success, errorAndExit);

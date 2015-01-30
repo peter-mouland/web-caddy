@@ -4,7 +4,7 @@ var chalk = require('chalk');
 var findup = require('findup-sync');
 
 var build = require('./build');
-var component = require(findup('component.config.js'));
+var component = require(findup('component.config.js') || '../component-structure/component.config.js');
 var paths = component.paths;
 var karmaConfig = findup(paths.test.config);
 

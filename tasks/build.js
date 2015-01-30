@@ -8,7 +8,7 @@ var browserify = require('./utils/browserify');
 var sass = require('./utils/sass');
 var htmlConcat = require('./utils/html-concat');
 
-var component = require(findup('component.config.js'));
+var component = require(findup('component.config.js') || '../component-structure/component.config.js');
 var paths = component.paths;
 
 function onError(err) {
