@@ -5,7 +5,7 @@ var now = Date().split(' ').splice(0,5).join(' ');
 
 var file = require('./utils/file');
 var browserify = require('./utils/browserify');
-var sass = require('./utils/sass');
+var stylesWrapper = require('./utils/sass');
 var htmlConcat = require('./utils/html-concat');
 
 var component = require(findup('component.config.js') || '../component-structure/component.config.js');
@@ -85,19 +85,19 @@ function scripts(){
             browserify.min(paths.dist.scripts, paths.dist.scripts)
         ]);
     }).then(function(){
-        return 'Build JS Complete'
+        return 'Build Scripts Complete'
     });
 }
 
 function styles(){
     return file.del([paths.dist.styles + '/**/*', paths.site.styles + '/**/*']).then(function() {
         return Promise.all([
-            sass(paths.source.styles, paths.dist.styles),
-            sass(paths.demo.styles, paths.site.styles),
-            sass(paths.source.styles, paths.site.styles)
+            new stylesWrapper(paths.source.styles, paths.dist.styles).write(),
+            new stylesWrapper(paths.source.styles, paths.site.styles).write(),
+            new stylesWrapper(paths.demo.styles, paths.site.styles).write()
         ]);
     }).then(function(){
-        return 'Build CSS Complete'
+        return 'Build Styles Complete'
     });
 }
 
