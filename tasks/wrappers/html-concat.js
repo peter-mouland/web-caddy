@@ -1,5 +1,5 @@
 var chalk = require('chalk');
-var file = require('./file');
+var file = require('../utils/file');
 var now = Date().split(' ').splice(0,5).join(' ');
 //maybe upgrade to https://github.com/assemble/assemble
 

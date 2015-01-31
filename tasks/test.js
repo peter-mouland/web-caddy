@@ -5,7 +5,7 @@ var findup = require('findup-sync');
 var build = require('./build');
 var component = require(findup('component.config.js') || '../component-structure/component.config.js');
 var paths = component.paths;
-var testWrapper = require('./utils/karma');
+var testWrapper = require('./wrappers/karma');
 var test = new testWrapper(paths.test);
 
 function onError(err, exitOnError) {

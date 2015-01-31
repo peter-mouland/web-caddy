@@ -7,7 +7,7 @@ var chalk = require('chalk');
 var file   = require('./utils/file');
 var git = require('./utils/git');
 var bump = require('./utils/bump').bump;
-var aws = require('./utils/aws');
+var aws = require('./wrappers/aws');
 
 var test = require('./test');
 var component = require(findup('component.config.js') || '../component-structure/component.config.js');

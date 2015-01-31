@@ -2,7 +2,7 @@ var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
-var file = require('./file');
+var file = require('../utils/file');
 var chalk = require('chalk');
 
 function onError(err) {

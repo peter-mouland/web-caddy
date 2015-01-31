@@ -3,9 +3,9 @@ var chalk = require('chalk');
 var findup = require('findup-sync');
 
 var file = require('./utils/file');
-var scripts = require('./utils/browserify');    //config.buildScripts
-var styles = require('./utils/sass');           //config.buildStyles
-var html = require('./utils/html-concat');      //config.buildHTML
+var scripts = require('./wrappers/browserify');    //config.buildScripts
+var styles = require('./wrappers/sass');           //config.buildStyles
+var html = require('./wrappers/html-concat');      //config.buildHTML
 
 var component = require(findup('component.config.js') || '../component-structure/component.config.js');
 var paths = component.paths;

@@ -2,7 +2,7 @@ var autoprefixer = require('autoprefixer');
 var Promise = require('es6-promise').Promise;
 var sass = require('node-sass');
 var path = require('path');
-var file = require('./file');
+var file = require('../utils/file');
 var chalk = require('chalk');
 
 function onError(err) {
