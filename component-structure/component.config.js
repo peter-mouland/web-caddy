@@ -4,19 +4,19 @@ var pkg = require(findup('package.json') || './package.json');
 var bower = (bowerPath) ? require(bowerPath) : {};
 
 module.exports = {
-    test: 'karma', //or mocha
+    bower: bower,
+    buildTool: 'gulp', //or grunt
+    buildStyles: 'sass', // or less
     buildHTML: 'html-concat', // moustache or assemble or jekyll
     buildScripts: 'browserify', // or requirejs
-    buildStyles: 'sass', // or less
-    releases: ['bower', 'aws', 'gh-pages'],
-    buildTool: 'gulp', //or grunt
-    bower: bower,
-    aws:{
+    release: 'aws', // or false,
+    releaseConfig: { //add you release config here... this is for AWS
         bucket: process.env.YOUR_AWS_BUCKET,
-        key: process.env.YOUR_AWS_ACCESS_KEY_ID,
+        accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
         region: process.env.YOUR_AWS_REGION
     },
+    test: 'karma', //or mocha
     paths: {
         "bower": {
             root: './bower_components',
