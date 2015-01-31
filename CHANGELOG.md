@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.0
+
+ * Added config file to make the helper insanely useful in many projects
+
 ## 0.7.2
 
  * fixed bug with rename

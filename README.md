@@ -59,15 +59,7 @@ To add regression testing, please see [Sheut](https://github.com/skyglobal/Sheut
 
 ## Customise your Build
 
-To enable you to build a custom step into the build process, you can use the `pre-build` within your gulp file:
-
-```
-gulp.task('pre-build', function(cb){
-    ...
-});
-
-```
-
+Update the [component.config.js](component-structure/component.config.js) in the root of your project or create/customise your `gulpfile.js`
 
 ## Releasing your Component
 
