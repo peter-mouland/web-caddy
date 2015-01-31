@@ -10,7 +10,6 @@ To build the Gulp Component Helper locally, you'll need to install:
  * [node.js](http://nodejs.org),
  * [Gulp](http://gulpjs.com),
 
-
 ## Workflow
 
 1. Fork the project
@@ -30,12 +29,7 @@ To build the Gulp Component Helper locally, you'll need to install:
 
 ## Running Locally
 
-There is a test directory where your changes can be tried out.
-All Git/Upload tasks are currently mocked to prevent accidental commits.
-
- * `cd test`
- * `gulp init:component`
- * `gulp ...`
+ * `npm test`
 
 If you want to upgrade or test an existing component locally, you can link the component to `gulp-component-helper`.
 Any changes made to the gulp-component-helper will be picked up by the component. Useful for modifying the gulp tasks.

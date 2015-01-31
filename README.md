@@ -18,7 +18,7 @@ This helper is used to create and deploy Components via Gulp or CLI tasks. You c
 
 1. Create a repository on github
 2. `component new`
-3. Run `gulp serve` in your component's directory, stick a fork in it - you're done.
+3. Run `component serve` in your component's directory, stick a fork in it - you're done.
 
 Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
 
@@ -43,11 +43,11 @@ Once the above is complete should have the conventional directory structure as w
 
 ## Running Locally
 
-`gulp serve`
+`component serve`
 
 This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456)
 
-`gulp test`
+`component test`
 
 Please add Jasmine Tests to unit and functionally test your component.
 
