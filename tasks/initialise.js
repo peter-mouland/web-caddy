@@ -31,7 +31,7 @@ function initStructure(dir, component, repo, author){
         './' + component,
         function(read, write, file){
             read.pipe(replaceStream('{{ component }}', component))
-                .pipe(replaceStream('{{ git.username }}', repo.match(/.com\:(.*)\//)[0]))
+                .pipe(replaceStream('{{ git.username }}', repo.match(/.com\:(.*)\//)[1]))
                 .pipe(replaceStream('{{ git.author }}', author))
                 .pipe(write);
     });

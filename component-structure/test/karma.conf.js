@@ -28,7 +28,7 @@ module.exports = function(config) {
             ]
         },
         files: [
-            {pattern: '_site/index.html', watched: false },
+            {pattern: '_site/*.html', watched: false },
             {pattern: 'bower_components/*/src/**/*.js', included: true },
             'src/**/*.js',
             'test/**/*.spec.js'

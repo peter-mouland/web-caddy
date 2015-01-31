@@ -22,12 +22,13 @@ module.exports = {
             root: './bower_components',
             fonts: './bower_components/*/dist/fonts'
         },
-        "test": {
+        "test": { // where your tests config, specs and reports are saved
             root: './test',
+            specs: './test/specs',
             config: './test/karma.conf.js',
             summary: './test/coverage/summary.json'
         },
-        "site": {
+        "site": { //used to save the compiled demo code + pushed to chosen release destination i.e. AWS
             root: './_site',
             scripts: "./_site/scripts",
             styles: './_site/styles',
@@ -35,7 +36,7 @@ module.exports = {
             icons: './_site/icons',
             images: './_site/images'
         },
-        "demo": {
+        "demo": { // files used to demo the source code or an accompanying site
             root: "./demo",
             scripts: "./demo/scripts",
             styles: './demo/styles',
@@ -43,7 +44,7 @@ module.exports = {
             icons: './demo/icons',
             images: './demo/images'
         },
-        source: {
+        source: { //source files to build your component / site
             root: "./src",
             scripts: "./src/scripts",
             styles: './src/styles',
@@ -51,7 +52,7 @@ module.exports = {
             icons: './src/icons',
             images: './src/images'
         },
-        dist : {
+        dist : { //destination of your compiled source to be redistributed i.e. via bower
             root: "./dist",
             scripts: "./dist/scripts",
             styles: "./dist/styles",
