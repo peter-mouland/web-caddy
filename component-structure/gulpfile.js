@@ -3,6 +3,7 @@
 var gulp = require('gulp');
 var helper = require('component-helper');
 var paths = helper.paths;
+var argv = process.argv.slice(3).toString();
 
 function onError(err) {
     console.log(err.message || err);
@@ -22,5 +23,6 @@ gulp.task('test', function(){
 });
 
 gulp.task('release', function(){
-    return helper.release.all().catch(onError);
+    var version = argv.split('--version=')[1];
+    return helper.release.all(null, version).catch(onError);
 });
