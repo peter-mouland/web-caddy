@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.1
+
+ * fixed releasing when specifying `--version=`
+
 ## 0.8.0
 
  * Added config file to make the helper insanely useful in many projects
