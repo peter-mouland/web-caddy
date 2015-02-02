@@ -12,6 +12,9 @@ function onError(err, exitOnError) {
     console.log(chalk.red(err));
     if (exitOnError) process.exit(1);
 }
+function info(msg) {
+    console.log(chalk.cyan(msg));
+}
 
 function once(){
     return test.run(true);
@@ -26,12 +29,15 @@ function coverage(){
 }
 
 function all(){
-    if (!component.test){ return Promise.resolve();}
+    if (!component.test){
+        info('Test set to false within component.config.js : skipping')
+        return Promise.resolve();
+    }
     return build.all().then(function() {
         return once();
-    }, onError).then(function(){
-        return test.coverage().catch(onError);
-    }, onError);
+    }).then(function(){
+        return test.coverage();
+    }).catch(onError);
 }
 
 module.exports = {

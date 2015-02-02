@@ -14,7 +14,7 @@ var knownArgs = {
 var flags = minimist(process.argv.slice(2), knownArgs);
 
 function warn(message){
-    console.log(chalk.cyan(message.message || 'Error : ' + message));
+    console.log(chalk.cyan(message.message || 'Warning : ' + message));
 }
 
 function errorAndExit(message){
@@ -34,7 +34,7 @@ function npmGlobalPath() {
 function execTask(task, args){
     var config = findup('component.config.js');
     if (!config){
-        warn('Config is missing, using default')
+        warn('component.config.js is missing, using default')
     }
     var helper = require("../");
     var command = args.shift() || 'all';
@@ -108,7 +108,7 @@ var commands = {
   if (!argv.length) return commands['--help']();
   var cwd =  argv.shift();
   var command = argv.shift();
-    if (argv[0].indexOf('--') === 0){
+    if (argv.length && argv[0].indexOf('--') === 0){
         argv=[]
     }
   commands[command] && commands[command](argv);

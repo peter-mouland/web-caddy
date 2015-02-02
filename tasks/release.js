@@ -70,7 +70,7 @@ function ghPagesRelease(message){
     });
 }
 
-function release(version){
+function cloud(version){
     info("\nReleasing to " + component.release + " ... \n");
     version = Array.isArray(version) ? version[0] : version
     version = version || pkg.version;
@@ -100,6 +100,6 @@ module.exports = {
     git: gitRelease,
     versionBump: versionBump,
     'gh-pages': ghPagesRelease,
-    release: release,
+    cloud: cloud,
     all: all
 };
