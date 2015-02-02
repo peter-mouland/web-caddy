@@ -8,15 +8,15 @@ These tasks are documented for those who want to know what is going on under the
 
 Executes all the Build tasks below
 
-#### CSS
+#### Styles (default Sass)
 
-`component build css`
+`component build styles`
 
 Create a `.css` for each `.scss` file (without an underscore `_` prefix) it finds.
 
-#### JS
+#### Scripts (default commonJS)
 
-`component build js`
+`component build scripts`
 
 This task can handle CommonJS and plain JS.  To handle dependency management, we use [browserify](https://www.npmjs.com/package/browserify) which creates a single javascript file found in the `src/js` root.
 
@@ -36,7 +36,7 @@ Concatinate all html files found in `demo/_includes` into `demo/index.html`.  No
 This will [build](#build) your site then using [browserSync](https://www.npmjs.com/package/browser-sync) start a server on localhost:3456.
 To prevent the build from kicking off, there is also `gulp server:quick` command available.
 
-## Testing
+## Testing (default Karma)
 
 `component test`
 
@@ -73,9 +73,9 @@ To force a version or release type use the `--version=` option followed by eithe
 
 note: if you have mentioned a version number that you do not want updating (i.e. to a third-party, do not enclose it in `"` or `/`
 
-#### Amazon Web Services
+#### cloud : (Default Amazon Web Services)
 
-`component release aws`
+`component release cloud`
 
 This will push the current files within `_site` to AWS if `aws:release` is set to true within `config/index.js`
 
