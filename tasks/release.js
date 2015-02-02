@@ -92,7 +92,7 @@ function all(args, type){
     }).then(function(){
         return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
-       return release(bumpedVersion)
+       return cloud(bumpedVersion)
     }).catch(onError);
 }
 
