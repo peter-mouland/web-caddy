@@ -19,6 +19,7 @@ function onSuccess(out) {
 }
 
 function buildHtml(version) {
+    if (!component.buildHTML){ return Promise.resolve();}
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
@@ -50,11 +51,12 @@ function images() {
 }
 
 function buildScripts(){
+    if (!component.buildScripts){ return Promise.resolve();}
     return file.del([paths.dist.scripts + '/**/*', paths.site.scripts + '/**/*']).then(function(){
         return Promise.all([
             new scripts(paths.source.scripts, paths.dist.scripts).write(),
-            new scripts(paths.demo.scripts, paths.site.scripts).write(),
-            new scripts(paths.source.scripts, paths.site.scripts).write()
+            paths.demo && paths.demo.scripts && new scripts(paths.demo.scripts, paths.site.scripts).write(),
+            paths.site && paths.site.scripts && new scripts(paths.source.scripts, paths.site.scripts).write()
         ])
     }).then(function(){
         return 'Build Scripts Complete'
@@ -62,6 +64,7 @@ function buildScripts(){
 }
 
 function buildStyles(){
+    if (!component.buildStyles){ return Promise.resolve();}
     return file.del([paths.dist.styles + '/**/*', paths.site.styles + '/**/*']).then(function() {
         return Promise.all([
             new styles(paths.source.styles, paths.dist.styles).write(),

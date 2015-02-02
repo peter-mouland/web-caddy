@@ -108,6 +108,9 @@ var commands = {
   if (!argv.length) return commands['--help']();
   var cwd =  argv.shift();
   var command = argv.shift();
+    if (argv[0].indexOf('--') === 0){
+        argv=[]
+    }
   commands[command] && commands[command](argv);
   !commands[command] && commands['--help']();
 })();

@@ -1,3 +1,5 @@
+var version  = require('./utils/version.js');
+
 // By default JS dependency is handled using browserify
 // please see 'GULP-TASKS.md#js' for more info
 //
@@ -16,7 +18,8 @@ function sum(args){
 }
 
 module.exports = {
-    sum: sum
+    sum: sum,
+    version: version
 };
 
 if (typeof skyComponents === "undefined") window.skyComponents = {};

@@ -41,20 +41,19 @@ function gitRelease(version){
 }
 
 function update(version){
-    var replacements = [{replace : /[0-9]+\.[0-9]+\.[0-9]/g, with: version}]
-    return file.replace( ['./README.md'], replacements)
+    console.log(version)
+    var replacements = [{replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, with: '$1' + version + '$2'}]
+    return file.replace( ['./README.md', './**/version.js'], replacements)
 }
 
 function versionBump(type){
     type = Array.isArray(type) ? type[0] : type
     type = type || 'patch';
     info("\nBumping version ... \n");
-    var version = semver.inc(pkg.version, type);
-    return bump('./*.json', {type: type}).then(function(){
+    var version = semver.inc(pkg.version, type) || semver.valid(type);
+    return bump('./*.json', {version:version}).then(function(){
         return Promise.all([update(version), build.html(version)])
     }).then(function(){
-        console.log('version')
-        console.log(version)
         return version;
     }).catch(onError);
 }
@@ -89,11 +88,11 @@ function all(args, type){
         return versionBump(type)
     }).then(function(version){
         bumpedVersion = version;
-        return gitRelease(version);
-    }).then(function(){
-        return ghPagesRelease('v' + bumpedVersion);
-    }).then(function(){
-       return release(bumpedVersion)
+        //return gitRelease(version);
+    //}).then(function(){
+    //    return ghPagesRelease('v' + bumpedVersion);
+    //}).then(function(){
+    //   return release(bumpedVersion)
     }).catch(onError);
 }
 

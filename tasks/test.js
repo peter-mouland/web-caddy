@@ -26,6 +26,7 @@ function coverage(){
 }
 
 function all(){
+    if (!component.test){ return Promise.resolve();}
     return build.all().then(function() {
         return once();
     }, onError).then(function(){

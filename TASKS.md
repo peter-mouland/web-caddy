@@ -67,9 +67,11 @@ Using Karma and Jasmine, it will run through the `.spec.js` files found in `/tes
 
 `component release`
 
-This will [build](#build) and [test](#test) your site, patch the version number in all the docs (package.json, bower.js, *.md and *.html) then run the above release commands.
+This will [build](#build) and [test](#test) your site, patch the version number in all the docs (package.json, bower.js, version.js, *.md and *.html) then run the above release commands.
 
 To force a version or release type use the `--version=` option followed by either `patch`, `minor`, `major` or even `v3.2.1`
+
+note: if you have mentioned a version number that you do not want updating (i.e. to a third-party, do not enclose it in `"` or `/`
 
 #### Amazon Web Services
 
