@@ -56,7 +56,6 @@ AWS.prototype.setParams = function(fileObj){
 AWS.prototype.upload = function(fileObj) {
     var self = this;
     this.setParams(fileObj)
-
     return new Promise(function(resolve, reject){
         var s3 = new AWSSDK.S3({
             accessKeyId     : self.config.accessKey,
@@ -65,9 +64,9 @@ AWS.prototype.upload = function(fileObj) {
         });
         s3.putObject(self.params, function(err) {
             if (err) {
-                reject({message: 'S3::putObject "' + self.params.filePath + '" error!\n' + err});
+                reject({message: 'S3::putObject "' + self.params.Key + '" error!\n' + err});
             } else {
-                resolve('S3::putObject "' + self.params.filePath + '" send');
+                resolve('S3::putObject "' + self.params.Key + '" send');
             }
         });
     });

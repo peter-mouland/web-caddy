@@ -41,7 +41,6 @@ function gitRelease(version){
 }
 
 function update(version){
-    console.log(version)
     var replacements = [{replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, with: '$1' + version + '$2'}]
     return file.replace( ['./README.md', './**/version.js'], replacements)
 }
@@ -79,7 +78,8 @@ function release(version){
         info('Release set to false within component.config.js : skipping')
         return Promise.resolve();
     }
-    return new Release(paths.site.root + '/**/*.*', 'components/' + pkg.name + '/' + version +'/', component.releaseConfig).write()
+    var prefix = component.releaseConfig.directoryPrefix || '';
+    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.releaseConfig).write()
 }
 
 function all(args, type){
@@ -88,11 +88,11 @@ function all(args, type){
         return versionBump(type)
     }).then(function(version){
         bumpedVersion = version;
-        //return gitRelease(version);
-    //}).then(function(){
-    //    return ghPagesRelease('v' + bumpedVersion);
-    //}).then(function(){
-    //   return release(bumpedVersion)
+        return gitRelease(version);
+    }).then(function(){
+        return ghPagesRelease('v' + bumpedVersion);
+    }).then(function(){
+       return release(bumpedVersion)
     }).catch(onError);
 }
 

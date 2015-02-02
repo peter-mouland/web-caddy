@@ -14,7 +14,8 @@ module.exports = {
         bucket: process.env.YOUR_AWS_BUCKET,
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
-        region: process.env.YOUR_AWS_REGION
+        region: process.env.YOUR_AWS_REGION,
+        directoryPrefix: false
     },
     test: 'karma', //or mocha
     paths: {
