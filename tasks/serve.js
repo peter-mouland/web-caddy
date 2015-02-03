@@ -4,11 +4,15 @@ var browserSync = require('browser-sync');
 var nodemon = require('nodemon');
 var chalk = require('chalk');
 var file = require('./utils/file');
-
 var build = require('./build');
-var component = require(findup('component.config.js') || '../component-structure/component.config.js');
+var componentConfigPath = findup('component.config.js') || onError('You must have a component.config.js in the root of your project.');
+var component = require(componentConfigPath);
 var paths = component.paths;
 
+function onError(err) {
+    console.log(chalk.red(err.message || err));
+    process.exit(1);
+}
 function info(msg) {
     console.log(chalk.cyan(msg));
 }
@@ -16,7 +20,6 @@ function info(msg) {
 function loadBrowser(args){
     args = Array.isArray(args) ? args[0] : args;
     var baseDir = args || component.serve || paths.site.root;
-    console.log(args)
     startServer(args).then(function(proxy){
         var config = {
             port: 3456,

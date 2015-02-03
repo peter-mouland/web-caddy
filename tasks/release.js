@@ -9,14 +9,14 @@ var file   = require('./utils/file');
 var git = require('./utils/git');
 var bump = require('./utils/bump').bump;
 var Release = require('./wrappers/aws'); //config.release
-
 var test = require('./test');
-var component = require(findup('component.config.js') || '../component-structure/component.config.js');
+var componentConfigPath = findup('component.config.js') || onError('You must have a component.config.js in the root of your project.');
+var component = require(componentConfigPath);
 var pkg = component.pkg;
 var paths = component.paths;
 
 function onError(err) {
-    console.log(chalk.red(err.message));
+    console.log(chalk.red(err.message || err));
     process.exit(1);
 }
 function info(msg) {

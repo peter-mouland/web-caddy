@@ -1,16 +1,16 @@
 var Promise = require('es6-promise').Promise;
 var chalk = require('chalk');
 var findup = require('findup-sync');
-
 var build = require('./build');
-var component = require(findup('component.config.js') || '../component-structure/component.config.js');
+var componentConfigPath = findup('component.config.js') || onError('You must have a component.config.js in the root of your project.');
+var component = require(componentConfigPath);
 var paths = component.paths;
 var testWrapper = require('./wrappers/karma');
 var test = new testWrapper(paths.test);
 
-function onError(err, exitOnError) {
-    console.log(chalk.red(err));
-    if (exitOnError) process.exit(1);
+function onError(err) {
+    console.log(chalk.red(err.message || err));
+    process.exit(1);
 }
 function info(msg) {
     console.log(chalk.cyan(msg));

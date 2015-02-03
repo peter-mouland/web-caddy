@@ -1,7 +1,5 @@
-var findup = require('findup-sync');
-var bowerPath = findup('bower.json');
-var pkg = require(findup('package.json') || './package.json');
-var bower = (bowerPath) ? require(bowerPath) : {};
+var bower = require('./bower.json');
+var pkg = require('./package.json');
 
 module.exports = {
     bower: bower,

@@ -6,12 +6,12 @@ var file = require('./utils/file');
 var scripts = require('./wrappers/browserify');    //config.buildScripts
 var styles = require('./wrappers/sass');           //config.buildStyles
 var html = require('./wrappers/html-concat');      //config.buildHTML
-
-var component = require(findup('component.config.js') || '../component-structure/component.config.js');
+var componentConfigPath = findup('component.config.js') || onError('You must have a component.config.js in the root of your project.');
+var component = require(componentConfigPath);
 var paths = component.paths;
 
 function onError(err) {
-    console.log(chalk.red(err.message));
+    console.log(chalk.red(err.message || err));
     process.exit(1);
 }
 function onSuccess(out) {
