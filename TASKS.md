@@ -1,7 +1,5 @@
 # Tasks
 
-These tasks are documented for those who want to know what is going on under the hood.  If you need to change the way your component works, you may also want to override these tasks within your own `gulpfile.js`. i.e. using `requirejs` instead of `browserify` for your own component.
-
 ## Build
 
 `component build`
@@ -14,13 +12,16 @@ Executes all the Build tasks below
 
 Create a `.css` for each `.scss` file (without an underscore `_` prefix) it finds.
 
+These will be saved within the `dist` and `site` roots set within `component.config.js`
+
 #### Scripts (default commonJS)
 
 `component build scripts`
 
-This task can handle CommonJS and plain JS.  To handle dependency management, we use [browserify](https://www.npmjs.com/package/browserify) which creates a single javascript file found in the `src/js` root.
+Using CommonJS to handle dependency management, we [browserify](https://www.npmjs.com/package/browserify) to create a compiled file for each javascript file found in the `src/js` root.
+Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.
 
-For each .js file in the `/src/js` root, a `.min.js` version is created using [uglify-js](https://www.npmjs.com/package/uglify-js).
+These will be saved within the `dist` and `site` roots set within `component.config.js`
 
 #### HTML
 
@@ -33,15 +34,32 @@ Concatinate all html files found in `demo/_includes` into `demo/index.html`.  No
 
 `component serve`
 
-This will [build](#build) your site then using [browserSync](https://www.npmjs.com/package/browser-sync) start a server on localhost:3456.
-To prevent the build from kicking off, there is also `gulp server:quick` command available.
+This will [build](#build) your site then using [browserSync](https://www.npmjs.com/package/browser-sync) will automatically apply any html, css and js source changes.
+
+You can configure this to either serve a static site or node app.  Within the component.config.js this is the `serve` object.  Within node, just pass the relevant Object, String or Array.
+
+Static Example : ```'_site'``` or ```['_site', 'public']```
+Node Server example : 
+```
+{  script : 'src/app/server.js',
+          host: 'http://localhost:3000',
+          port: 3001,
+          env: { NODE_ENV: 'development'}
+}
+```
+
+#### Quick
+
+`component serve quick`
+
+This will do the above `serve`, but without the build step.
 
 ## Testing (default Karma)
 
 `component test`
 
 This will [build](#build) your site then run the Test tasks below.
-To prevent the build from kicking off, there is also `gulp test:quick` command available.
+To prevent the build from kicking off, there is also `component test quick` command available.
 
 
 #### Once

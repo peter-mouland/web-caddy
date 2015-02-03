@@ -17,10 +17,9 @@ This helper is used to create and deploy Components via Gulp or CLI tasks. You c
 ## Creating a New Component
 
 1. Create a repository on github
-2. `component new`
-3. Run `component serve` in your component's directory, stick a fork in it - you're done.
-
-Once the above is complete should have the conventional directory structure as well as the useful gulp tasks.
+2. Run `component new` and follow on-screen instructions
+3. Run `component serve` in your component's directory.
+4. Run `component test` to test your code!
 
 ### Generated Directory Structure
 
@@ -39,27 +38,52 @@ Once the above is complete should have the conventional directory structure as w
         ├- js           => component javascript
         ├- scss         => component Sass
         └- images etc.  => component assets directories
+## API
 
+The component helper can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks a almost exactly the same.
 
-## Running Locally
+Once required (`var component = require('component-helper');`), you can call the following:
 
-`component serve`
+CLI | Node
+--- | ----
+`component build` | `component.build.all()`
+`component build scripts` | `component.build.scripts()`
+`component build styles` | `component.build.styles()`
+`component build html` | `component.build.html()`
+`component serve` | `component.serve.all()`
+`component test` | `component.test.all()`
 
-This will compile your assets (JS, Sass) and serve your demo page to [http://localhost:3456](http://localhost:3456)
+The CLI will use the config set within root/[component.config.js](component-structure/component.config.js).
+Node will also use this file, but can be overridden by passing in the config object to the function.
 
-`component test`
+#### component.config.js
+```javascript
+module.exports = {
+    ...
+    serve: {
+        script : 'src/app/server.js',
+        host: 'http://localhost:3000',
+        port: 8080,
+        env: { NODE_ENV: 'development'}
+    },
+    ...
+}
+```
 
-Please add Jasmine Tests to unit and functionally test your component.
-
+#### Node
+```javascript
+component.serve({
+    script : 'src/test/testserver.js',
+    host: 'http://localhost:3001',
+    port: 8080,
+    env: { NODE_ENV: 'test', PORT: 3001}
+})
+```
 [More Tasks >](TASKS.md)
 
 ### Regression/Screen-shot tests
 
 To add regression testing, please see [Sheut](https://github.com/skyglobal/Sheut)
-
-## Customise your Build
-
-Update the [component.config.js](component-structure/component.config.js) in the root of your project or create/customise your `gulpfile.js`
 
 ## Releasing your Component
 

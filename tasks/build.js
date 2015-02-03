@@ -10,7 +10,10 @@ var component = require(componentConfigPath);
 var paths = component.paths;
 
 function buildHtml(version) {
-    if (!component.buildHTML){ return Promise.resolve();}
+    if (!component.buildHTML){
+        log.info('buildHTML set to false within component.config.js : skipping building html')
+        return Promise.resolve();
+    }
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
@@ -23,7 +26,10 @@ function buildHtml(version) {
 }
 
 function fonts() {
-    if (!paths.site) return Promise.resolve();
+    if (!paths.site) {
+        log.info('paths.site within component.config.js is missing : skipping copying fonts')
+        return Promise.resolve();
+    }
     var location = [
         paths.source.fonts + '/**/*',
         paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}'
@@ -35,7 +41,10 @@ function fonts() {
 }
 
 function images() {
-    if (!paths.site) return Promise.resolve();
+    if (!paths.site) {
+        log.info('paths.site within component.config.js is missing : skipping copying images')
+        return Promise.resolve();
+    }
     var src = paths.demo.images + '/**/*';
     var dest = paths.site.images;
     return file.del(dest + '/**/*').then(function(){
@@ -44,7 +53,10 @@ function images() {
 }
 
 function buildScripts(){
-    if (!component.buildScripts){ return Promise.resolve();}
+    if (!component.buildScripts){
+        log.info('buildScripts set to false within component.config.js : skipping building scripts')
+        return Promise.resolve();
+    }
     var delPaths = [];
     paths.dist && delPaths.push(paths.dist.scripts + '/**/*')
     paths.site && delPaths.push(paths.site.scripts + '/**/*')
@@ -60,7 +72,10 @@ function buildScripts(){
 }
 
 function buildStyles(){
-    if (!component.buildStyles){ return Promise.resolve();}
+    if (!component.buildStyles){
+        log.info('buildStyles set to false within component.config.js : skipping building styles')
+        return Promise.resolve();
+    }
     var delPaths = [];
     paths.dist && delPaths.push(paths.dist.styles + '/**/*')
     paths.site && delPaths.push(paths.site.styles + '/**/*')
