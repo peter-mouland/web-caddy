@@ -1,8 +1,8 @@
 var Promise = require('es6-promise').Promise;
 var AWSSDK   = require('aws-sdk');
 var mime  = require('mime');
-var log = require('./utils/log');
-var file = require('./utils/file');
+var log = require('../utils/log');
+var file = require('../utils/file');
 
 function AWS(location, destination, options){
     this.location = location;

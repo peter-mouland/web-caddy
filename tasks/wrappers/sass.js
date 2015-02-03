@@ -3,7 +3,7 @@ var Promise = require('es6-promise').Promise;
 var sass = require('node-sass');
 var path = require('path');
 var file = require('../utils/file');
-var log = require('./utils/log');
+var log = require('../utils/log');
 
 function Sass(location, destination){
     this.location = location;

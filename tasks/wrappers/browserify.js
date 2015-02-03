@@ -3,7 +3,7 @@ var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
 var file = require('../utils/file');
-var log = require('./utils/log');
+var log = require('../utils/log');
 
 function Browserify(location, destination){
     this.location = location;

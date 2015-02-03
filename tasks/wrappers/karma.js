@@ -1,7 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var karma = require('karma').server;
 var findup = require('findup-sync');
-var log = require('./utils/log');
+var log = require('../utils/log');
 
 function Karma(paths){
     this.summaryPath = paths.summary;
