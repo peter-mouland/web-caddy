@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-var findup = require('findup-sync');
 var fs = require("fs")
 var prompt = require("prompt");
-var chalk = require('chalk');
 var shell = require("shelljs");
+var log = require("../tasks/utils/log");
 var exec = shell.exec;
 var minimist = require('minimist');
 var knownArgs = {
@@ -13,32 +12,14 @@ var knownArgs = {
 };
 var flags = minimist(process.argv.slice(2), knownArgs);
 
-function warn(message){
-    console.log(chalk.cyan(message.message || 'Warning : ' + message));
-}
-
-function errorAndExit(message){
-    console.log(chalk.red(message.message || 'Error : ' + message));
-    process.exit(1);
-}
-
-function success(message){
-    if (!message || typeof message !== 'string') return
-    console.log(chalk.green(message));
-}
-
 function npmGlobalPath() {
     return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;
 }
 
 function execTask(task, args){
-    var config = findup('component.config.js');
-    if (!config){
-        warn('component.config.js is missing, using default')
-    }
     var helper = require("../");
     var command = args.shift() || 'all';
-    helper[task][command] && helper[task][command](args, flags.version).then(success, errorAndExit);
+    helper[task][command] && helper[task][command](args, flags.version).then(log.onSuccess, log.onError);
     !helper[task][command] && help(helper[task], task);
 }
 
@@ -70,13 +51,13 @@ var commands = {
           var author = exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
           var moduleDir = npmGlobalPath() + '/component-helper/component-structure';
           if (!gitUrlMatch){
-            errorAndExit('Github Repository URL must be a url');
+            log.onError('Github Repository URL must be a url');
           }
           if (fs.existsSync(component)){
-            errorAndExit('Component `' + component + '` already exists');
+            log.onError('Component `' + component + '` already exists');
           }
           if (component.indexOf(' ')>-1){
-            errorAndExit('Component `' + component + '` must not contain spaces');
+            log.onError('Component `' + component + '` must not contain spaces');
           }
           init.component(moduleDir, component, result.repo, author);
         });

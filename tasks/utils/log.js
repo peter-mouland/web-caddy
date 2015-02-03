@@ -6,11 +6,11 @@ function onError(err) {
 }
 
 function onSuccess(out) {
-    console.log(chalk.green(out));
+    console.log(chalk.green(out.message || out));
 }
 
 function info(msg) {
-    console.log(chalk.cyan(msg));
+    console.log(chalk.cyan(msg.message || msg));
 }
 
 function warn(msg) {

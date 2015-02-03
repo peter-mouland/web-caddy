@@ -1,7 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var replaceStream = require('replacestream');
 var shell = require("shelljs");
-var log = require('./utils/log').spawn;
+var log = require('./utils/log');
 var spawn = require('./utils/spawn').spawn;
 var git = require('./utils/git');
 var fileUtil = require('./utils/file');
@@ -29,11 +29,9 @@ function initStructure(dir, component, repo, author){
 
 function initComponent(dir, component, repo, author) {
     return initStructure(dir, component, repo, author).then(function(output) {
-        log.onSuccess(output);
         shell.cd(component);
         return renameFiles(component);
     }).then(function(output){
-        log.onSuccess(output);
         return initGit(repo);
     }).then(function(output){
         log.onSuccess(output);
@@ -51,8 +49,8 @@ function initComponent(dir, component, repo, author) {
 function installNpms(){
     log.info("\nInstalling Node Modules ... \n");
     return spawn('npm',['install']).then(function(output){
-        onSuccess(output);
-    }, onError);
+        log.onSuccess(output);
+    }).catch(log.onError);
 }
 function initBower(bowerCfg, repoUrl){
     return bower.register([bowerCfg.name, repoUrl]).catch(function(){
@@ -70,7 +68,7 @@ function initGit(repo){
         log.onSuccess(output);
         return git.commit('first commit');
     }).then(function(output){
-        log.(output);
+        log.onSuccess(output);
         return  git.remote(['add', 'origin', repo]);
     }).then(function(output){
         log.onSuccess(output);
