@@ -1,6 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
 var build = require('./build');
+var log = require('./utils/log');
 var file = require('./utils/file');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);

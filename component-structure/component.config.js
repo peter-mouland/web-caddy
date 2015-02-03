@@ -7,7 +7,7 @@ module.exports = {
     buildStyles: 'sass', // less not yet available
     buildHTML: 'html-concat', // moustache or assemble or jekyll not yet available
     buildScripts: 'browserify', // or requirejs not yet available
-    release: 'aws', // or false,
+    release: false, /// or 'aws',
     releaseConfig: { //add you release config here... this is for AWS
         bucket: process.env.YOUR_AWS_BUCKET,
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,

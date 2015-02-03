@@ -1,15 +1,18 @@
 var chalk = require('chalk');
 
 function onError(err) {
+    if (!err) return
     console.log(chalk.red(err.message || err));
     process.exit(1);
 }
 
-function onSuccess(out) {
-    console.log(chalk.green(out.message || out));
+function onSuccess(msg) {
+    if (!msg) return
+    console.log(chalk.green(msg.message || msg));
 }
 
 function info(msg) {
+    if (!msg) return
     console.log(chalk.cyan(msg.message || msg));
 }
 
