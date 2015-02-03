@@ -52,7 +52,10 @@ function images() {
 
 function buildScripts(){
     if (!component.buildScripts){ return Promise.resolve();}
-    return file.del([paths.dist.scripts + '/**/*', paths.site.scripts + '/**/*']).then(function(){
+    var delPaths = [];
+    paths.dist && delPaths.push(paths.dist.scripts + '/**/*')
+    paths.site && delPaths.push(paths.site.scripts + '/**/*')
+    return file.del(delPaths).then(function(){
         return Promise.all([
             new scripts(paths.source.scripts, paths.dist.scripts).write(),
             paths.demo && paths.demo.scripts && new scripts(paths.demo.scripts, paths.site.scripts).write(),
@@ -65,11 +68,14 @@ function buildScripts(){
 
 function buildStyles(){
     if (!component.buildStyles){ return Promise.resolve();}
-    return file.del([paths.dist.styles + '/**/*', paths.site.styles + '/**/*']).then(function() {
+    var delPaths = [];
+    paths.dist && delPaths.push(paths.dist.styles + '/**/*')
+    paths.site && delPaths.push(paths.site.styles + '/**/*')
+    return file.del(delPaths).then(function() {
         return Promise.all([
             new styles(paths.source.styles, paths.dist.styles).write(),
-            new styles(paths.source.styles, paths.site.styles).write(),
-            new styles(paths.demo.styles, paths.site.styles).write()
+            paths.site && paths.site.styles && new styles(paths.source.styles, paths.site.styles).write(),
+            paths.demo && paths.demo.styles && new styles(paths.demo.styles, paths.site.styles).write()
         ]);
     }).then(function(){
         return 'Build Styles Complete'

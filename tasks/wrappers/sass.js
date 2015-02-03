@@ -18,19 +18,26 @@ function Sass(location, destination){
     this.destination = destination;
 }
 
-Sass.prototype.render = function(fileObj){
+Sass.prototype.render = function(fileObj, outputStyle){
     var self = this;
     return new Promise(function(resolve, reject){
+        var name = fileObj.name.replace('.scss','.css');
+        if (outputStyle === 'compressed'){
+            name = name.replace('.css','.min.css')
+        }
+        var newFileObj = {
+            name : name,
+            path : path.resolve(self.destination, fileObj.name),
+            dir : self.destination
+        };
         sass.render({
             file: fileObj.path,
-            outputStyle: 'nested',
+            outputStyle: outputStyle || 'nested',
+            //sourceMap: true,
+            //outFile: './' + path.join(self.destination, name),
+            precision: 3,
             success: function(output){
-                var newFileObj = {
-                    contents : autoprefixer().process(output.css).css,
-                    name : fileObj.name.replace('.scss','.css'),
-                    path : path.resolve(self.destination, fileObj.name),
-                    dir : self.destination
-                };
+                newFileObj.contents = autoprefixer().process(output.css).css,
                 resolve(newFileObj);
             },
             error: function(err){
@@ -38,6 +45,10 @@ Sass.prototype.render = function(fileObj){
             }
         })
     });
+}
+
+Sass.prototype.renderMin = function(fileObj){
+    return this.render(fileObj, 'compressed');
 }
 
 Sass.prototype.write = function() {
@@ -50,7 +61,11 @@ Sass.prototype.write = function() {
         files.forEach(function (fileObj, i) {
             var promise = self.render(fileObj).then(function(fileObj){
                 return file.write(fileObj)
-            },onError);
+            }).then(function(){
+                return self.renderMin(fileObj)
+            }).then(function(fileObj){
+                return file.write(fileObj)
+            });
             promises.push(promise);
         });
         return Promise.all(promises);
