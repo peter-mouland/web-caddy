@@ -2,20 +2,12 @@ var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var nodemon = require('nodemon');
-var chalk = require('chalk');
 var file = require('./utils/file');
+var log = require('./utils/log');
 var build = require('./build');
-var componentConfigPath = findup('component.config.js') || onError('You must have a component.config.js in the root of your project.');
+var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
 var paths = component.paths;
-
-function onError(err) {
-    console.log(chalk.red(err.message || err));
-    process.exit(1);
-}
-function info(msg) {
-    console.log(chalk.cyan(msg));
-}
 
 function loadBrowser(args){
     args = Array.isArray(args) ? args[0] : args;

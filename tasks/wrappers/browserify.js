@@ -3,15 +3,7 @@ var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
 var file = require('../utils/file');
-var chalk = require('chalk');
-
-function onError(err) {
-    console.log(chalk.red(err.message));
-    process.exit(1);
-}
-function info(msg) {
-    console.log(chalk.cyan(msg));
-}
+var log = require('./utils/log');
 
 function Browserify(location, destination){
     this.location = location;
@@ -35,18 +27,18 @@ Browserify.prototype.write = function(){
     var self = this;
     return file.glob(this.location + '/*.js').then(function(fileObjs){
         if (fileObjs.length===0){
-            info('no js files found: ' + self.location)
+            log.info('no .js files found within `' + self.location + '`')
         }
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
             promises.push(self.browserifyFile(fileObj));
         });
         return Promise.all(promises);
-    }, onError).then(function(fileObjs){
+    }).then(function(fileObjs){
         return file.write(fileObjs);
-    }, onError).then(function(fileObjs){
+    }).then(function(fileObjs){
         return self.minify(fileObjs);
-    }, onError);
+    }).catch(log.onError);
 }
 
 Browserify.prototype.minify = function(fileObjs){

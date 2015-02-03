@@ -2,29 +2,17 @@ var Promise = require('es6-promise').Promise;
 var semver = require('semver');
 var findup = require('findup-sync');
 var ghPages = require('gh-pages');
-var chalk = require('chalk');
-
 var build = require('./build');
 var file   = require('./utils/file');
+var log   = require('./utils/log');
 var git = require('./utils/git');
 var bump = require('./utils/bump').bump;
 var Release = require('./wrappers/aws'); //config.release
 var test = require('./test');
-var componentConfigPath = findup('component.config.js') || onError('You must have a component.config.js in the root of your project.');
+var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
 var pkg = component.pkg;
 var paths = component.paths;
-
-function onError(err) {
-    console.log(chalk.red(err.message || err));
-    process.exit(1);
-}
-function info(msg) {
-    console.log(chalk.cyan(msg));
-}
-function onSuccess(msg) {
-    console.log(chalk.red(msg));
-}
 
 function gitRelease(version){
     version = Array.isArray(version) ? version[0] : version
@@ -37,7 +25,7 @@ function gitRelease(version){
        return git.tag('v' + version);
     }).then(function(){
         return git.push(['origin', 'master', 'v' + version]);
-    }).catch(onError);
+    }).catch(log.onError);
 }
 
 function update(version){
@@ -48,19 +36,19 @@ function update(version){
 function versionBump(type){
     type = Array.isArray(type) ? type[0] : type
     type = type || 'patch';
-    info("\nBumping version ... \n");
+    log.info("\nBumping version ... \n");
     var version = semver.inc(pkg.version, type) || semver.valid(type);
     return bump('./*.json', {version:version}).then(function(){
         return Promise.all([update(version), build.html(version)])
     }).then(function(){
         return version;
-    }).catch(onError);
+    }).catch(log.onError);
 }
 
 function ghPagesRelease(message){
     message = Array.isArray(message) ? message[0] : message
     message = message || 'Update';
-    info("\nReleasing to gh-pages ... \n");
+    log.info("\nReleasing to gh-pages ... \n");
     return new Promise(function(resolve, reject){
         ghPages.publish(paths.site.root, {message: message }, function(err) {
             ghPages.clean();
@@ -71,11 +59,11 @@ function ghPagesRelease(message){
 }
 
 function cloud(version){
-    info("\nReleasing to " + component.release + " ... \n");
+    log.info("\nReleasing to " + component.release + " ... \n");
     version = Array.isArray(version) ? version[0] : version
     version = version || pkg.version;
     if (!component.release){
-        info('Release set to false within component.config.js : skipping')
+        log.info('Release set to false within component.config.js : skipping')
         return Promise.resolve();
     }
     var prefix = component.releaseConfig.directoryPrefix || '';
@@ -93,7 +81,7 @@ function all(args, type){
         return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
        return cloud(bumpedVersion)
-    }).catch(onError);
+    }).catch(log.onError);
 }
 
 module.exports = {

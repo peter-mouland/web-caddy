@@ -1,16 +1,8 @@
 var Promise = require('es6-promise').Promise;
 var AWSSDK   = require('aws-sdk');
 var mime  = require('mime');
-var chalk = require('chalk');
-var file = require('../utils/file');
-
-function onError(err) {
-    console.log(chalk.red(err.message));
-    process.exit(1);
-}
-function info(msg) {
-    console.log(chalk.cyan(msg));
-}
+var log = require('./utils/log');
+var file = require('./utils/file');
 
 function AWS(location, destination, options){
     this.location = location;
@@ -30,7 +22,7 @@ function AWS(location, destination, options){
 
 AWS.prototype.checkMandatory = function(key){
     if (!this.config[key] && !this.params[key]) {
-        onError({message:'AWS: Missing config `' + key + '`'});
+        log.onError({message:'AWS: Missing config `' + key + '`'});
     }
 }
 
@@ -75,13 +67,13 @@ AWS.prototype.upload = function(fileObj) {
 AWS.prototype.write = function(){
     var self = this;
     return file.read(this.location).then(function(files){
-        if (!files.length) info({message: 'No files found to release to AWS\n' + self.location})
+        if (!files.length) log.info('No files found to release to AWS\n' + self.location)
         var promises = []
         files.forEach(function(fileObj){
             promises.push(self.upload(fileObj))
         })
         return Promise.all(promises);
-    }).catch(onError)
+    }).catch(log.onError)
 }
 
 module.exports = AWS;

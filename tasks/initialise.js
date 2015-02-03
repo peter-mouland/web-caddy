@@ -1,21 +1,11 @@
 var Promise = require('es6-promise').Promise;
 var replaceStream = require('replacestream');
 var shell = require("shelljs");
-var chalk = require('chalk');
-
+var log = require('./utils/log').spawn;
 var spawn = require('./utils/spawn').spawn;
 var git = require('./utils/git');
 var fileUtil = require('./utils/file');
 var bower = require('./utils/bower');
-
-function onError(err) {
-    console.log(chalk.red(err.message));
-    process.exit(1);
-}
-function onSuccess(output) {
-    if (!output) return;
-    console.log(chalk.green(output.message));
-}
 
 function renameFiles(component){
     return Promise.all([
@@ -25,7 +15,7 @@ function renameFiles(component){
 }
 
 function initStructure(dir, component, repo, author){
-    console.log("\nCopying Component Files ... \n");
+    log.info("\nCopying Component Files ... \n");
     return fileUtil.copyDirectory(
         dir,
         './' + component,
@@ -39,76 +29,76 @@ function initStructure(dir, component, repo, author){
 
 function initComponent(dir, component, repo, author) {
     return initStructure(dir, component, repo, author).then(function(output) {
-        onSuccess(output);
+        log.onSuccess(output);
         shell.cd(component);
         return renameFiles(component);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return initGit(repo);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return initGhPages();
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return installNpms();
-    }, onError).then(function(output){
-        onSuccess(output);
-        console.log("\nInstalling Bower Modules ... \n");
+    }).then(function(output){
+        log.onSuccess(output);
+        log.info("\nInstalling Bower Modules ... \n");
         return bower.install();
-    }, onError);
+    }).catch(log.onError);
 }
 
 function installNpms(){
-    console.log("\nInstalling Node Modules ... \n");
+    log.info("\nInstalling Node Modules ... \n");
     return spawn('npm',['install']).then(function(output){
         onSuccess(output);
     }, onError);
 }
 function initBower(bowerCfg, repoUrl){
     return bower.register([bowerCfg.name, repoUrl]).catch(function(){
-        console.log(['** Not intialising Bower ** ',
+        log.info(['** Not intialising Bower ** ',
                             'bower.release is set to false in component.config.js'].join('\n'));
     });
 }
 
 function initGit(repo){
-    console.log("\nInitialising Git ... \n");
+    log.info("\nInitialising Git ... \n");
     return git.init().then(function(output){
-        onSuccess(output);
+        log.onSuccess(output);
         return git.add(['.']);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return git.commit('first commit');
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.(output);
         return  git.remote(['add', 'origin', repo]);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return git.push(['-u', 'origin', 'master']);
-    }, onError);
+    }).catch(log.onError);
 }
 
 function initGhPages(){
-    console.log("\nInitialising gh-pages ... \n");
+    log.info("\nInitialising gh-pages ... \n");
     return git.checkout(['--orphan', 'gh-pages']).then(function(output){
-        onSuccess(output);
+        log.onSuccess(output);
         return git.rm(['-rf', '.']);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return spawn('touch',['gh-pages-initialised.md']);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return git.add(['gh-pages-initialised.md']);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return git.commit('Init gh-pages');
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return git.push(['--set-upstream','origin','gh-pages']);
-    }, onError).then(function(output){
-        onSuccess(output);
+    }).then(function(output){
+        log.onSuccess(output);
         return git.checkout(['master']);
-    }, onError)
+    }).catch(log.onError)
 }
 
 module.exports = {

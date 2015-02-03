@@ -3,15 +3,7 @@ var Promise = require('es6-promise').Promise;
 var sass = require('node-sass');
 var path = require('path');
 var file = require('../utils/file');
-var chalk = require('chalk');
-
-function onError(err) {
-    console.log(chalk.red(err.message));
-    process.exit(1);
-}
-function info(msg) {
-    console.log(chalk.cyan(msg));
-}
+var log = require('./utils/log');
 
 function Sass(location, destination){
     this.location = location;
@@ -55,7 +47,7 @@ Sass.prototype.write = function() {
     var self = this;
     return file.glob(this.location + '/**/!(_)*.scss').then(function(files) {
         if (files.length===0){
-            info('no scss files found: ' + self.location)
+            log.info('no scss files found: ' + self.location)
         }
         var promises = [];
         files.forEach(function (fileObj, i) {
@@ -69,7 +61,7 @@ Sass.prototype.write = function() {
             promises.push(promise);
         });
         return Promise.all(promises);
-    }, onError);
+    }).catch(log.onError);
 }
 
 module.exports = Sass;

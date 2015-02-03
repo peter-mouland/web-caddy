@@ -1,12 +1,7 @@
 var Promise = require('es6-promise').Promise;
-var chalk = require('chalk');
 var semver = require('semver');
 var file = require('./file');
-
-function onError(err) {
-    console.log(chalk.red(err.message || err));
-    process.exit(1);
-}
+var log = require('./log');
 
 var possibleNewline = function (jsonSting) {
     return (jsonSting.slice(-1) === '\n') ? '\n' : '';
@@ -53,7 +48,7 @@ var updateJsonFile = function(fileObj, opts) {
         !fileObj.err && resolve(fileObj);
     }).then(function(fileObj){
         return file.write(fileObj)
-    });
+    }).catch(log.onError);
 }
 
 var updateJson = function(fileObjs, opts){
@@ -67,7 +62,7 @@ var updateJson = function(fileObjs, opts){
 var bump = function(files, opts){
     return file.read(files).then(function(fileObjs){
         return updateJson(fileObjs, opts)
-    }).catch(onError);
+    }).catch(log.onError);
 }
 
 

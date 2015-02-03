@@ -1,22 +1,13 @@
 var Promise = require('es6-promise').Promise;
-var chalk = require('chalk');
 var findup = require('findup-sync');
-
+var log = require('./utils/log');
 var file = require('./utils/file');
 var scripts = require('./wrappers/browserify');    //config.buildScripts
 var styles = require('./wrappers/sass');           //config.buildStyles
 var html = require('./wrappers/html-concat');      //config.buildHTML
-var componentConfigPath = findup('component.config.js') || onError('You must have a component.config.js in the root of your project.');
+var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
 var paths = component.paths;
-
-function onError(err) {
-    console.log(chalk.red(err.message || err));
-    process.exit(1);
-}
-function onSuccess(out) {
-    console.log(chalk.green(out));
-}
 
 function buildHtml(version) {
     if (!component.buildHTML){ return Promise.resolve();}
@@ -28,7 +19,7 @@ function buildHtml(version) {
         return new html(src, dest, {version:version}).write()
     }).then(function(){
         return 'Build HTML Complete'
-    });
+    }).catch(log.onError);
 }
 
 function fonts() {
@@ -40,7 +31,7 @@ function fonts() {
     var dest = paths.site.fonts;
     return file.del(dest + '/**/*').then(function() {
         return file.copy(location, dest)
-    });
+    }).catch(log.onError);
 }
 
 function images() {
@@ -49,7 +40,7 @@ function images() {
     var dest = paths.site.images;
     return file.del(dest + '/**/*').then(function(){
         return file.copy(src, dest);
-    });
+    }).catch(log.onError);
 }
 
 function buildScripts(){
@@ -65,7 +56,7 @@ function buildScripts(){
         ])
     }).then(function(){
         return 'Build Scripts Complete'
-    }).catch(onError);
+    }).catch(log.onError);
 }
 
 function buildStyles(){
@@ -81,7 +72,7 @@ function buildStyles(){
         ]);
     }).then(function(){
         return 'Build Styles Complete'
-    }).catch(onError);
+    }).catch(log.onError);
 }
 
 function all(args){
@@ -93,7 +84,7 @@ function all(args){
         buildHtml(args)
     ]).then(function(){
         return 'Build All Complete'
-    });
+    }).catch(log.onError);
 }
 
 module.exports = {

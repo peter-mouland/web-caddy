@@ -3,14 +3,9 @@ var del = require('del');
 var fs = require("fs-extra");
 var path = require('path');
 var ncp = require('ncp').ncp;
-var chalk = require('chalk');
 var gs = require('glob-stream');
 var chokidar = require('chokidar');
-
-function onError(err) {
-    console.log(chalk.red(err.message));
-    process.exit(1);
-}
+var log = require('./log');
 
 function mkdir(dir){
     return new Promise(function(resolve, reject) {
@@ -79,7 +74,7 @@ function read(src){
             promises.push(readFile(fileObj))
         })
         return Promise.all(promises)
-    }, onError);
+    }, log.onError);
 }
 
 function replaceInFile(fileObj, replacements){
@@ -89,7 +84,7 @@ function replaceInFile(fileObj, replacements){
             fileObj.contents = fileObj.contents.replace(replace.replace, replace.with);
         })
         return write(fileObj);
-    }, onError)
+    }, log.onError)
 }
 
 function replace(src, replacement){
@@ -99,7 +94,7 @@ function replace(src, replacement){
             promises.push(replaceInFile(fileObj, replacement))
         })
         return Promise.all(promises)
-    }, onError)
+    }, log.onError)
 }
 
 function copyFile(fileObj, dest){
@@ -110,7 +105,7 @@ function copyFile(fileObj, dest){
                 !err && resolve(data);
             });
         });
-    });
+    }, log.onError);
 }
 
 function copy(src, dest){
@@ -120,7 +115,7 @@ function copy(src, dest){
             return copyFile(fileObj, dest)
         });
         return Promise.all(promises);
-    }, onError);
+    }, log.onError);
 }
 
 function detail(filePath){

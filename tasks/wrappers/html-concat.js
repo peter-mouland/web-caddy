@@ -1,12 +1,7 @@
-var chalk = require('chalk');
 var file = require('../utils/file');
+var log = require('./utils/log');
 var now = Date().split(' ').splice(0,5).join(' ');
 //maybe upgrade to https://github.com/assemble/assemble
-
-function onError(err) {
-    console.log(chalk.red(err.message));
-    process.exit(1);
-}
 
 function HTML(location, destination, options){
     this.location = location;
@@ -25,7 +20,7 @@ HTML.prototype.concatFiles = function(){
     return file.read(this.location)
         .then(function(fileObjs){
             return self.concatContent(fileObjs)
-        }, onError).then(function(contents){
+        }).then(function(contents){
             var detail = file.detail(self.destination)
             var fileObj = { //todo: new File(destination)
                 ext:   detail.ext,
@@ -35,7 +30,7 @@ HTML.prototype.concatFiles = function(){
                 contents : contents
             };
             return file.write(fileObj)
-        });
+        }).catch(log.onError);
 }
 
 HTML.prototype.update = function(){
@@ -50,7 +45,7 @@ HTML.prototype.write = function(){
     var self = this;
     return this.concatFiles().then(function(){
         return self.update();
-    });
+    }).catch(log.onError);
 }
 
 module.exports = HTML;
