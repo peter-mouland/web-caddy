@@ -13,10 +13,11 @@ function info(msg) {
     console.log(chalk.cyan(msg));
 }
 
-function loadBrowser(baseDir){
-    var baseDir = Array.isArray(baseDir) ? baseDir[0] : baseDir;
-    baseDir = baseDir || component.serve || paths.site.root;
-    startServer().then(function(proxy){
+function loadBrowser(args){
+    args = Array.isArray(args) ? args[0] : args;
+    var baseDir = args || component.serve || paths.site.root;
+    console.log(args)
+    startServer(args).then(function(proxy){
         var config = {
             port: 3456,
             server: {
@@ -36,15 +37,16 @@ var buildAndReload = {
     styles: function() {  return build.styles().then(browserSync.reload)   }
 };
 
-function startServer(){
-    if (Array.isArray(component.serve) || typeof component.serve==='string') return Promise.resolve();
+function startServer(args){
+    var serve = args || component.serve;
+    if (Array.isArray(serve) || typeof serve==='string') return Promise.resolve();
     return new Promise(function(resolve, reject){
         nodemon({
-            script: component.serve.script,
-            env: component.serve.env
+            script: serve.script,
+            env: serve.env
         }).on('start', function(ee){
             info('Server Started')
-            resolve(component.serve);
+            resolve(serve);
         });
     });
 }

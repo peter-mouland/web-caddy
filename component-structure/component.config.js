@@ -19,8 +19,9 @@ module.exports = {
     },
     test: 'karma', //or mocha
     serve: '_site', //{   script : 'src/app/server.js',
-                    //     host: 'http://localhost:3000',
-                    //    port: 3001
+                    //    host: 'http://localhost:3000',
+                    //    port: 3001,
+                    //    env: { NODE_ENV: 'local'}
                     //}, // or '_site' or ['_site','bower_component']
     paths: {
         "bower": {
