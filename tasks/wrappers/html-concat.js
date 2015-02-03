@@ -1,5 +1,5 @@
 var file = require('../utils/file');
-var log = require('./utils/log');
+var log = require('../utils/log');
 var now = Date().split(' ').splice(0,5).join(' ');
 //maybe upgrade to https://github.com/assemble/assemble
 
