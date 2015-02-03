@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.8.3
+
+ * Added .min for CSS
+ * Added serving of NodeJS (express) apps
+
+## 0.8.2
+
+ * fixed cloud release bug
 ## 0.8.1
 
  * fixed releasing when specifying `--version=`
