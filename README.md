@@ -3,9 +3,8 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
 > Quickly create new components or improve your existing build process
 
 Out of the box you can:
- * Build and serve sites
-    * Make a change to your source code and the browser will automatically refresh
-    * Can serve static sites or NodeJS apps
+ * Build and serve (static or NodeJS) sites
+ * Automatic browser refresh when source code is changed
  * Compile Sass and CommonJS to CSS/JS and `.min` equivalents 
  * Test your code and keep an eye on code coverage.
  * Deploy to github.io, Bower or the cloud (currently Amazon S3)
