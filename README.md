@@ -1,14 +1,15 @@
 Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.svg)](https://www.npmjs.org/package/component-helper) [![Circle CI](https://circleci.com/gh/skyglobal/component-helper/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/component-helper/tree/master)
 ========================
+> Quickly create new components or improve your existing build process
 
-> A Component is self-contained web functionality, that can be easily re-used i.e. a Carousel.
-
-This helper is used to create and deploy Components via Gulp or CLI tasks. You can :
- * Build and serve a demo page
- * Compile Sass to CSS
- * Compile JS to 'browserify' / 'requireJS' files (plus .min.js files)
- * Deploy to github.io / Bower / Amazon S3
- * Customise your build process as you need simply 'require' the replacement task
+You can :
+ * Build and serve sites
+    * Make a change to your source code and the browser will automatically refresh
+    * Can serve static sites or NodeJS apps
+ * Compile Sass and CommonJS
+ * Test your code and keep an eye on code coverage out of the box.
+ * Deploy to github.io, Bower or the cloud (currently Amazon S3)
+ * Customise the build process using [component.config.js](component-structure/component.config.js) or using gulp.
 
 ## Installation
 
@@ -38,6 +39,7 @@ This helper is used to create and deploy Components via Gulp or CLI tasks. You c
         ├- js           => component javascript
         ├- scss         => component Sass
         └- images etc.  => component assets directories
+     
 ## API
 
 The component helper can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks a almost exactly the same.
