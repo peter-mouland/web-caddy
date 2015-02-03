@@ -32,6 +32,7 @@ function buildHtml(version) {
 }
 
 function fonts() {
+    if (!paths.site) return Promise.resolve();
     var location = [
         paths.source.fonts + '/**/*',
         paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}'
@@ -43,6 +44,7 @@ function fonts() {
 }
 
 function images() {
+    if (!paths.site) return Promise.resolve();
     var src = paths.demo.images + '/**/*';
     var dest = paths.site.images;
     return file.del(dest + '/**/*').then(function(){

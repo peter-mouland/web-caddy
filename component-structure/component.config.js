@@ -5,10 +5,10 @@ var bower = (bowerPath) ? require(bowerPath) : {};
 
 module.exports = {
     bower: bower,
-    buildTool: 'gulp', //or grunt
-    buildStyles: 'sass', // or less
-    buildHTML: 'html-concat', // moustache or assemble or jekyll
-    buildScripts: 'browserify', // or requirejs
+    buildTool: 'gulp', // grunt not yet available
+    buildStyles: 'sass', // less not yet available
+    buildHTML: 'html-concat', // moustache or assemble or jekyll not yet available
+    buildScripts: 'browserify', // or requirejs not yet available
     release: 'aws', // or false,
     releaseConfig: { //add you release config here... this is for AWS
         bucket: process.env.YOUR_AWS_BUCKET,
@@ -18,6 +18,10 @@ module.exports = {
         directoryPrefix: false
     },
     test: 'karma', //or mocha
+    serve: '_site', //{   script : 'src/app/server.js',
+                    //     host: 'http://localhost:3000',
+                    //    port: 3001
+                    //}, // or '_site' or ['_site','bower_component']
     paths: {
         "bower": {
             root: './bower_components',
