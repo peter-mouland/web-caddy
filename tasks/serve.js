@@ -62,7 +62,7 @@ function watch(){
 }
 
 
-var serve = function(args){
+var quick = function(args){
     return new Promise(function(resolve, reject){
         loadBrowser(args);
         watch();
@@ -72,10 +72,10 @@ var serve = function(args){
 
 
 module.exports = {
-    quick: serve,
+    quick: quick,
     all: function(args){
         return build.all().then(function(){
-            return serve(args);
+            return quick(args);
         })
     }
 }

@@ -7,8 +7,8 @@ var componentConfigPath = findup('component.config.js') || log.onError('You must
 var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
-var testWrapper = require('./wrappers/karma');
-var test = new testWrapper(component.testConfig);
+var TestWrapper = require('./wrappers/karma');
+var test = (component.test) ? new TestWrapper(component.testConfig) : null;
 
 function once(){
     return test.run(true);
