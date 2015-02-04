@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.4
+
+ * Added buildFonts config option, so this can now be skipped
+ 
 ## 0.8.3
 
  * Added .min for CSS
