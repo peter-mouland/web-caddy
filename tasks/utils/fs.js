@@ -41,29 +41,25 @@ function write(src){
 function stat(filePath){
     return new Promise(function(resolve, reject){
         fs.stat(filePath, function(err, data){
-            if (err){
-                reject(err);
-            }
-            resolve(data);
+            err && reject(err);
+            !err && resolve(data);
         });
     });
 }
 
+function readPromise(fileObj){
+    return new Promise(function(resolve, reject){
+        fs.readFile(fileObj.path, function(err, data){
+            err && reject(err);
+            !err && resolve(data);
+        });
+    })
+}
+
 function readFile(fileObj){
-    var promises = [
-        stat(fileObj.path),
-        new Promise(function(resolve, reject){
-            fs.readFile(fileObj.path, function(err, data){
-                if (err){
-                    reject(err);
-                }
-                resolve(data);
-            });
-        })
-    ]
-    return Promise.all(promises).then(function(outputs){
-        fileObj.contents =  outputs[1]
+    return Promise.all([stat(fileObj.path), readPromise(fileObj)]).then(function(outputs){
         fileObj.stat = outputs[0]
+        fileObj.contents =  outputs[1]
         return fileObj;
     });
 }
@@ -101,19 +97,22 @@ function replace(src, replacement){
 function copyFile(fileObj, dest){
     return mkdir(dest).then(function(){
         return new Promise(function(resolve, reject){
-            fs.copy(fileObj.path, dest + '/' + fileObj.name, function(err, data){
+            fs.copy(fileObj.path, dest + '/' + fileObj.name, function(err){
                 err && reject(err);
-                !err && resolve(data);
+                // wait for copy to stop messing with the file :(
+                // if we still have problems with large files,
+                // todo: start polling stat.size
+                !err && setTimeout(function(){resolve()},50);
             });
         });
     }, log.onError);
 }
 
-function copy(src, dest){
-    return glob(src).then(function(files){
+function copy(srcGlob, destinationDirectory){
+    return glob(srcGlob).then(function(files){
         var promises = []
         files.forEach(function(fileObj) {
-            return copyFile(fileObj, dest)
+            promises.push(copyFile(fileObj, destinationDirectory))
         });
         return Promise.all(promises);
     }, log.onError);
@@ -191,11 +190,11 @@ function watch(src, actions){
 }
 
 module.exports = {
-    rename: rename,
-    copy: copy,
-    write: write,
     read: read,
+    write: write,
     del: clean,
+    copy: copy,
+    rename: rename,
     copyDirectory: copyDirectory,
     replace: replace,
     watch: watch,

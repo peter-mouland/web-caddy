@@ -4,19 +4,19 @@ var shell = require("shelljs");
 var log = require('./utils/log');
 var spawn = require('./utils/spawn').spawn;
 var git = require('./utils/git');
-var fileUtil = require('./utils/file');
+var fs = require('./utils/fs');
 var bower = require('./utils/bower');
 
 function renameFiles(component){
     return Promise.all([
-        fileUtil.rename('./dot.gitignore', 'dot',''),
-        fileUtil.rename('./**/main.*', 'main',component)
+        fs.rename('./dot.gitignore', 'dot',''),
+        fs.rename('./**/main.*', 'main',component)
     ]);
 }
 
 function initStructure(dir, component, repo, author){
     log.info("\nCopying Component Files ... \n");
-    return fileUtil.copyDirectory(
+    return fs.copyDirectory(
         dir,
         './' + component,
         function(read, write, file){

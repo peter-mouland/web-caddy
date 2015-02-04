@@ -18,7 +18,38 @@ describe("fs", function() {
 
     describe("copy", function(){
 
-        xit("", function() {
+        it("can duplicate a file and place it in another directory", function() {
+            var srcGlob = 'spec/fixtures/file/copy.txt'
+            var destDir = 'spec/fixtures/file/copy'
+
+            return fs.read(srcGlob).then(function(files){
+                expect(files[0].stat.size).toBe(72433);
+                expect(files[0].contents.toString()).toContain('@charset "UTF-8";');
+                return fs.copy(srcGlob, destDir)
+            }).then(function () {
+                return fs.read(destDir + '/**/*')
+            }).then(function (files) {
+                expect(files.length).toBe(1);
+                expect(files[0].contents.toString()).toContain('@charset "UTF-8";');
+                expect(files[0].stat.size).toBe(72433);
+            })
+        });
+
+        it("can duplicate a file and place it in another directory, where a file of the same name exists", function() {
+            var srcGlob = 'spec/fixtures/file/copy.txt'
+            var destDir = 'spec/fixtures/file/copy'
+
+            return fs.read(srcGlob).then(function(files){
+                expect(files[0].stat.size).toBe(72433);
+                expect(files[0].contents.toString()).toContain('@charset "UTF-8";');
+                return fs.copy(srcGlob, destDir)
+            }).then(function () {
+                return fs.read(destDir + '/**/*')
+            }).then(function (files) {
+                expect(files.length).toBe(1);
+                expect(files[0].contents.toString()).toContain('@charset "UTF-8";');
+                expect(files[0].stat.size).toBe(72433);
+            })
         });
 
     });

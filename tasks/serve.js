@@ -2,7 +2,7 @@ var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
 var browserSync = require('browser-sync');
 var nodemon = require('nodemon');
-var file = require('./utils/file');
+var fs = require('./utils/fs');
 var log = require('./utils/log');
 var build = require('./build');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
@@ -56,9 +56,9 @@ function watch(){
         stylesPaths.push(paths.demo.styles + '/**/*');
         scriptsPaths.push(paths.demo.styles + '/**/*');
     }
-    file.watch(htmlPaths, [buildAndReload.html]);
-    file.watch(stylesPaths, [buildAndReload.styles]);
-    file.watch(scriptsPaths,   [buildAndReload.scripts]);
+    fs.watch(htmlPaths, [buildAndReload.html]);
+    fs.watch(stylesPaths, [buildAndReload.styles]);
+    fs.watch(scriptsPaths,   [buildAndReload.scripts]);
 }
 
 

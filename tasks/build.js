@@ -1,7 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
 var log = require('./utils/log');
-var file = require('./utils/file');
+var fs = require('./utils/fs');
 var scripts = require('./wrappers/browserify');    //config.buildScripts
 var styles = require('./wrappers/sass');           //config.buildStyles
 var html = require('./wrappers/html-concat');      //config.buildHTML
@@ -19,7 +19,7 @@ function buildHtml(version) {
     version = version || component.pkg.version;
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
     var dest = paths.site.root + '/index.html';
-    return file.del(dest).then(function(){
+    return fs.del(dest).then(function(){
         return new html(src, dest, {version:version}).write()
     }).then(function(){
         return 'Build HTML Complete'
@@ -36,8 +36,8 @@ function fonts() {
         paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}'
     ];
     var dest = paths.site.fonts;
-    return file.del(dest + '/**/*').then(function() {
-        return file.copy(location, dest)
+    return fs.del(dest + '/**/*').then(function() {
+        return fs.copy(location, dest)
     }).catch(log.onError);
 }
 
@@ -48,8 +48,8 @@ function images() {
     }
     var src = paths.demo.images + '/**/*';
     var dest = paths.site.images;
-    return file.del(dest + '/**/*').then(function(){
-        return file.copy(src, dest);
+    return fs.del(dest + '/**/*').then(function(){
+        return fs.copy(src, dest);
     }).catch(log.onError);
 }
 
@@ -61,7 +61,7 @@ function buildScripts(){
     var delPaths = [];
     paths.dist && delPaths.push(paths.dist.scripts + '/**/*')
     paths.site && delPaths.push(paths.site.scripts + '/**/*')
-    return file.del(delPaths).then(function(){
+    return fs.del(delPaths).then(function(){
         return Promise.all([
             new scripts(paths.source.scripts, paths.dist.scripts).write(),
             paths.demo && paths.demo.scripts && new scripts(paths.demo.scripts, paths.site.scripts).write(),
@@ -80,7 +80,7 @@ function buildStyles(){
     var delPaths = [];
     paths.dist && delPaths.push(paths.dist.styles + '/**/*')
     paths.site && delPaths.push(paths.site.styles + '/**/*')
-    return file.del(delPaths).then(function() {
+    return fs.del(delPaths).then(function() {
         return Promise.all([
             new styles(paths.source.styles, paths.dist.styles).write(),
             paths.site && paths.site.styles && new styles(paths.source.styles, paths.site.styles).write(),

@@ -3,7 +3,7 @@ var semver = require('semver');
 var findup = require('findup-sync');
 var ghPages = require('gh-pages');
 var build = require('./build');
-var file   = require('./utils/file');
+var fs   = require('./utils/fs');
 var log   = require('./utils/log');
 var git = require('./utils/git');
 var bump = require('./utils/bump').bump;
@@ -31,7 +31,7 @@ function gitRelease(version){
 
 function update(version){
     var replacements = [{replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, with: '$1' + version + '$2'}]
-    return file.replace( ['./README.md', './**/version.js'], replacements)
+    return fs.replace( ['./README.md', './**/version.js'], replacements)
 }
 
 function versionBump(type){
