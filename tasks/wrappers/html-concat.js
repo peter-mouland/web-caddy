@@ -1,4 +1,5 @@
-var file = require('../utils/file');
+var fs = require('../utils/fs');
+var File = require('../utils/file');
 var log = require('../utils/log');
 var now = Date().split(' ').splice(0,5).join(' ');
 //maybe upgrade to https://github.com/assemble/assemble
@@ -17,19 +18,12 @@ HTML.prototype.concatContent = function(fileObjs){
 
 HTML.prototype.concatFiles = function(){
     var self = this;
-    return file.read(this.location)
+    return fs.read(this.location)
         .then(function(fileObjs){
             return self.concatContent(fileObjs)
         }).then(function(contents){
-            var detail = file.detail(self.destination)
-            var fileObj = { //todo: new File(destination)
-                ext:   detail.ext,
-                dir:   detail.dir,
-                path: self.destination,
-                name: detail.name,
-                contents : contents
-            };
-            return file.write(fileObj)
+            var fileObj = new File({path:self.destination, contents:contents})
+            return fs.write(fileObj)
         }).catch(log.onError);
 }
 
@@ -38,7 +32,7 @@ HTML.prototype.update = function(){
         {replace : '{{ site.version }}', with:  this.options.version},
         {replace : '{{ site.time }}', with: this.options.now || now}
     ];
-    return file.replace(this.destination, replacements)
+    return fs.replace(this.destination, replacements)
 }
 
 HTML.prototype.write = function(){

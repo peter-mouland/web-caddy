@@ -2,7 +2,7 @@ var autoprefixer = require('autoprefixer');
 var Promise = require('es6-promise').Promise;
 var sass = require('node-sass');
 var path = require('path');
-var file = require('../utils/file');
+var fs = require('../utils/fs');
 var log = require('../utils/log');
 
 function Sass(location, destination){
@@ -45,18 +45,18 @@ Sass.prototype.renderMin = function(fileObj){
 
 Sass.prototype.write = function() {
     var self = this;
-    return file.glob(this.location + '/**/!(_)*.scss').then(function(files) {
+    return fs.glob(this.location + '/**/!(_)*.scss').then(function(files) {
         if (files.length===0){
             log.info('no scss files found: ' + self.location)
         }
         var promises = [];
         files.forEach(function (fileObj, i) {
             var promise = self.render(fileObj).then(function(fileObj){
-                return file.write(fileObj)
+                return fs.write(fileObj)
             }).then(function(){
                 return self.renderMin(fileObj)
             }).then(function(fileObj){
-                return file.write(fileObj)
+                return fs.write(fileObj)
             });
             promises.push(promise);
         });

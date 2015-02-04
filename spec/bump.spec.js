@@ -1,5 +1,5 @@
 var bump = require('../tasks/utils/bump');
-var file = require('../tasks/utils/file');
+var fs = require('../tasks/utils/fs');
 
 describe("Bump ", function() {
 
@@ -67,7 +67,7 @@ describe("Bump ", function() {
     describe("saves the bump", function() {
 
         beforeEach(function(){
-            spyOn(file, "write").and.callFake(function(file) {
+            spyOn(fs, "write").and.callFake(function(file) {
                 return file;
             });
         });
@@ -75,7 +75,7 @@ describe("Bump ", function() {
         it("updates file with correct version", function (done) {
             var files = './spec/fixtures/bump/*.json';
             bump.bump(files, {version: '0.0.1'}).then(function(updatedFiles){
-                expect(file.write.calls.count()).toBe(2);
+                expect(fs.write.calls.count()).toBe(2);
                 expect(updatedFiles.length).toBe(2);
                 expect(updatedFiles[0].version).toBe('0.0.1');
                 expect(updatedFiles[1].version).toBe('0.0.1');

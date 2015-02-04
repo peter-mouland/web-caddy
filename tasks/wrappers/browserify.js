@@ -2,7 +2,7 @@ var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
-var file = require('../utils/file');
+var fs = require('../utils/fs');
 var log = require('../utils/log');
 
 function Browserify(location, destination){
@@ -25,7 +25,7 @@ Browserify.prototype.browserifyFile = function(fileObj) {
 
 Browserify.prototype.write = function(){
     var self = this;
-    return file.glob(this.location + '/*.js').then(function(fileObjs){
+    return fs.glob(this.location + '/*.js').then(function(fileObjs){
         if (fileObjs.length===0){
             log.info('no .js files found within `' + self.location + '`')
         }
@@ -35,7 +35,7 @@ Browserify.prototype.write = function(){
         });
         return Promise.all(promises);
     }).then(function(fileObjs){
-        return file.write(fileObjs);
+        return fs.write(fileObjs);
     }).then(function(fileObjs){
         return self.minify(fileObjs);
     }).catch(log.onError);
@@ -49,7 +49,7 @@ Browserify.prototype.minify = function(fileObjs){
         fileObj.name = fileObj.name.replace('.js','.min.js')
         fileObj.dir = self.destination;
         fileObj.path = self.destination + '/' + fileObj.name;
-        promises.push(file.write(fileObj));
+        promises.push(fs.write(fileObj));
     });
     return Promise.all(promises);
 }

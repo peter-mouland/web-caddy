@@ -2,7 +2,7 @@ var Promise = require('es6-promise').Promise;
 var AWSSDK   = require('aws-sdk');
 var mime  = require('mime');
 var log = require('../utils/log');
-var file = require('../utils/file');
+var fs = require('../utils/fs');
 
 function AWS(location, destination, options){
     this.location = location;
@@ -66,7 +66,7 @@ AWS.prototype.upload = function(fileObj) {
 
 AWS.prototype.write = function(){
     var self = this;
-    return file.read(this.location).then(function(files){
+    return fs.read(this.location).then(function(files){
         if (!files.length) log.info('No files found to release to AWS\n' + self.location)
         var promises = []
         files.forEach(function(fileObj){

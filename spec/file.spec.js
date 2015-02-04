@@ -1,4 +1,5 @@
-var file = require('../tasks/utils/file');
+var File = require('../tasks/utils/file');
+var log = require('../tasks/utils/log');
 
 function onError(e){
     console.log('** Test Error **')
@@ -6,115 +7,80 @@ function onError(e){
     expect(false).toBe(true)
 }
 
-describe("file", function() {
+describe("File ", function(){
 
-    describe("detail", function(){
-
-        it("can correctly separate file name from file path", function() {
-            expect(file.detail('path/name.ext').name).toBe('name.ext');
-            expect(file.detail('path/name.ext').dir).toBe('path');
-            expect(file.detail('path/name.ext').ext).toBe('ext');
-        });
-
+    it("can correctly separate file name from file path", function() {
+        var fileObj = new File({ path:'spec/fixtures/file/File.txt'})
+        expect(fileObj.path).toBe('spec/fixtures/file/File.txt');
+        expect(fileObj.contents).toBe(undefined);
+        expect(fileObj.name).toBe('File.txt');
+        expect(fileObj.dir).toBe('spec/fixtures/file');
+        expect(fileObj.cwd).toBe(undefined);
+        expect(fileObj.base).toBe(undefined);
+        expect(fileObj.ext).toBe('txt');
     });
-
-    describe("rename", function(){
-
-        xit("", function() {
-        });
-
+    it("can save contents if passed", function() {
+        var fileObj = new File({ path:'spec/fixtures/file/File.txt', contents:'awesome'})
+        expect(fileObj.name).toBe('File.txt');
+        expect(fileObj.dir).toBe('spec/fixtures/file');
+        expect(fileObj.path).toBe('spec/fixtures/file/File.txt');
+        expect(fileObj.contents).toBe('awesome');
+        expect(fileObj.cwd).toBe(undefined);
+        expect(fileObj.base).toBe(undefined);
+        expect(fileObj.ext).toBe('txt');
     });
-
-    describe("copy", function(){
-
-        xit("", function() {
+    it("requires path to be passed", function() {
+        spyOn(log, "onError").and.callFake(function(msg) {
+            return msg;
         });
-
+        var fileObj = new File({contents:'awesome'})
+        expect(log.onError.calls.count()).toBe(1);
+        expect(fileObj.path).toBe(undefined);
+        expect(fileObj.contents).toBe(undefined);
     });
+    it('updates name, dir, and ext when path is updated', function () {
+        var fileObj = new File({ path:'spec/fixtures/file/File.txt'});
 
-    describe("read, write and del", function(){
-        beforeEach(function(done){
-            var delFile = { path:'spec/fixtures/file/del.txt' , name:'del.txt', dir: 'spec/fixtures/file', contents:' '}
-            file.write(delFile).then(function(){
-                done();
-            });
-        });
-
-        it("can read a files details back", function(done) {
-            var filesGlob = './spec/fixtures/file/del.*';
-            file.read(filesGlob).then(function (files) {
-                expect(files.length).toBe(1);
-                expect(files[0].dir).toContain('/spec/fixtures/file');
-                expect(files[0].name).toBe('del.txt');
-                expect(files[0].ext).toBe('txt');
-                expect(files[0].stat.size).toBe(1);
-                expect(Buffer.isBuffer(files[0].contents)).toBe(true);
-                expect(files[0].contents.toString()).toBe(' ');
-                done()
-            }, onError);
-        });
-
-        it("can write a new file with updated details", function(done) {
-            var filesGlob = './spec/fixtures/file/del.*';
-            file.read(filesGlob).then(function (files) {
-                files[0].name = 'del.js';
-                files[0].contents = 'temp file';
-                return file.write(files[0])
-            }, onError).then(function(fileObj){
-                return file.read(filesGlob);
-            }, onError).then(function(files){
-                expect(files.length).toBe(2);
-                expect(files[0].dir).toContain('/spec/fixtures/file');
-                expect(files[0].path).toContain('/spec/fixtures/file/del.js');
-                expect(files[0].ext).toBe('js');
-                expect(files[0].name).toBe('del.js');
-                expect(files[0].stat.size).toBe(9);
-                expect(Buffer.isBuffer(files[0].contents)).toBe(true);
-                expect(files[0].contents.toString()).toBe('temp file');
-
-                expect(files[1].dir).toContain('/spec/fixtures/file');
-                expect(files[1].path).toContain('/spec/fixtures/file/del.txt');
-                expect(files[1].ext).toBe('txt');
-                expect(files[1].name).toBe('del.txt');
-                expect(files[1].stat.size).toBe(1);
-                expect(Buffer.isBuffer(files[1].contents)).toBe(true);
-                expect(files[1].contents.toString()).toBe(' ');
-                done()
-            }, onError)
-        });
-
-        it("can delete the files", function(done){
-            var filesGlob = './spec/fixtures/file/del.*';
-            file.del([filesGlob]).then(function(files){
-                expect(files.length).toBe(2);
-                expect(files[0]).toContain('/spec/fixtures/file/del.js');
-                return file.read(files)
-            }, onError).then(function(files){
-                expect(files.length).toBe(0);
-                done();
-            }, onError);
-        })
+        fileObj.path = 'spec/fixtures/newFile/newFile.md';
+        expect(fileObj.path).toBe('spec/fixtures/newFile/newFile.md');
+        expect(fileObj.name).toBe('newFile.md');
+        expect(fileObj.dir).toBe('spec/fixtures/newFile');
+        expect(fileObj.ext).toBe('md');
     });
+    it('updates path, dir, and ext when name is updated', function () {
+        var fileObj = new File({ path:'spec/fixtures/file/File.txt'});
 
-    describe("copyDirectory", function(){
+        fileObj.name = 'newFile.md';
+        expect(fileObj.path).toBe('spec/fixtures/file/newFile.md');
+        expect(fileObj.name).toBe('newFile.md');
+        expect(fileObj.dir).toBe('spec/fixtures/file');
+        expect(fileObj.ext).toBe('md');
+    });
+    it('updates path, name, and ext when dir is updated', function () {
+        var fileObj = new File({ path:'spec/fixtures/file/file.txt'});
 
-        xit("", function() {
+        fileObj.dir = 'spec/fixtures/newFile';
+        expect(fileObj.path).toBe('spec/fixtures/newFile/file.txt');
+        expect(fileObj.name).toBe('file.txt');
+        expect(fileObj.dir).toBe('spec/fixtures/newFile');
+        expect(fileObj.ext).toBe('txt');
+    });
+    it('updates path, name, and dir when ext is updated', function () {
+        var fileObj = new File({ path:'spec/fi.txtures/file/file.txt'});
+
+        fileObj.ext = 'md';
+        expect(fileObj.path).toBe('spec/fi.txtures/file/file.md');
+        expect(fileObj.name).toBe('file.md');
+        expect(fileObj.dir).toBe('spec/fi.txtures/file');
+        expect(fileObj.ext).toBe('md');
+    });
+    it('throws an error when path contains a slash', function () {
+        spyOn(log, "onError").and.callFake(function(msg) {
+            return msg;
         });
 
+        var fileObj = new File({ path:'spec/fi.txtures/file/file.txt'});
+        fileObj.name = '/file.txt';
+        expect(log.onError.calls.count()).toBe(1);
     });
-
-    describe("replace", function(){
-
-        xit("", function() {
-        });
-
-    });
-
-    describe("glob", function(){
-
-        xit("", function() {
-        });
-
-    });
-
 });

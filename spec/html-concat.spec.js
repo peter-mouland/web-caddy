@@ -1,5 +1,5 @@
 var HTML = require('../tasks/wrappers/html-concat');
-var file = require('../tasks/utils/file');
+var fs = require('../tasks/utils/fs');
 
 function onError(e){
     console.log('** Test Error **')
@@ -20,7 +20,7 @@ describe("html", function() {
     });
 
     it("will do a simple concat of 2 files", function(done) {
-        spyOn(file, "write").and.callFake(function(file) {
+        spyOn(fs, "write").and.callFake(function(file) {
             return file;
         });
 
@@ -28,7 +28,7 @@ describe("html", function() {
         var dest = './.tmp/tmp.html';
         var html = new HTML(files, dest);
         html.concatFiles().then(function(fileObj){
-            expect(file.write.calls.count()).toBe(1);
+            expect(fs.write.calls.count()).toBe(1);
             expect(fileObj.name).toBe('tmp.html');
             expect(fileObj.contents).toBe('a first line\nb first line');
             expect(fileObj.dir).toBe('./.tmp');
@@ -39,10 +39,10 @@ describe("html", function() {
     });
 
     it("will update a concatinated file", function(done) {
-        spyOn(file, "write").and.callFake(function(fileObjs) {
+        spyOn(fs, "write").and.callFake(function(fileObjs) {
             return fileObjs;
         });
-        spyOn(file, "replace").and.callFake(function(fileSrc, replacements) {
+        spyOn(fs, "replace").and.callFake(function(fileSrc, replacements) {
             return replacements;
         });
 
@@ -50,8 +50,8 @@ describe("html", function() {
         var dest = './spec/fixtures/html/*.txt';
         var html = new HTML(files, dest,{version:'1.0.0', now: 'now'});
         html.write().then(function(fileObj){
-            expect(file.write.calls.count()).toBe(1);
-            expect(file.replace.calls.count()).toBe(1);
+            expect(fs.write.calls.count()).toBe(1);
+            expect(fs.replace.calls.count()).toBe(1);
             done()
         }, onError);
     });

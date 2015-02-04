@@ -1,6 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var semver = require('semver');
-var file = require('./file');
+var fs = require('./fs');
 var log = require('./log');
 
 var possibleNewline = function (jsonSting) {
@@ -47,7 +47,7 @@ var updateJsonFile = function(fileObj, opts) {
         fileObj.err && reject(fileObj.err);
         !fileObj.err && resolve(fileObj);
     }).then(function(fileObj){
-        return file.write(fileObj)
+        return fs.write(fileObj)
     }).catch(log.onError);
 }
 
@@ -60,7 +60,7 @@ var updateJson = function(fileObjs, opts){
 }
 
 var bump = function(files, opts){
-    return file.read(files).then(function(fileObjs){
+    return fs.read(files).then(function(fileObjs){
         return updateJson(fileObjs, opts)
     }).catch(log.onError);
 }
