@@ -100,9 +100,8 @@ function copyFile(fileObj, dest){
             fs.copy(fileObj.path, dest + '/' + fileObj.name, function(err){
                 err && reject(err);
                 // wait for copy to stop messing with the file :(
-                // if we still have problems with large files,
                 // todo: start polling stat.size
-                !err && setTimeout(function(){resolve()},50);
+                !err && setTimeout(function(){resolve()},100);
             });
         });
     }, log.onError);
