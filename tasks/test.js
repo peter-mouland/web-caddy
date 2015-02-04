@@ -23,16 +23,16 @@ function coverage(){
 }
 
 function quick(){
+    if (!component.test){
+        log.info('Test set to false within component.config.js : skipping')
+        return Promise.resolve();
+    }
     return once().then(function(){
         return test.coverage();
     }).catch(log.onError);
 }
 
 function all(){
-    if (!component.test){
-        log.info('Test set to false within component.config.js : skipping')
-        return Promise.resolve();
-    }
     return build.all().then(function() {
         return quick();
     }).catch(log.onError);
