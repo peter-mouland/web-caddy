@@ -8,7 +8,7 @@ Out of the box you can:
  * Compile Sass and CommonJS to CSS/JS and `.min` equivalents 
  * Test your code and keep an eye on code coverage.
  * Deploy to github.io, Bower or the cloud (currently Amazon S3)
- * Customise the build process using [component.config.js](component-structure/component.config.js) or using gulp.
+ * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](component-structure/gulpfile.js).
 
 ## Installation
 

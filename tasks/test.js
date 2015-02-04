@@ -5,9 +5,10 @@ var log = require('./utils/log');
 var file = require('./utils/file');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
-var paths = component.paths;
+var helper = require('./utils/config-helper');
+var paths = helper.parsePaths(component.paths);
 var testWrapper = require('./wrappers/karma');
-var test = new testWrapper(paths.test);
+var test = new testWrapper(component.testConfig);
 
 function once(){
     return test.run(true);

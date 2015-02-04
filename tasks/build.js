@@ -7,7 +7,8 @@ var styles = require('./wrappers/sass');           //config.buildStyles
 var html = require('./wrappers/html-concat');      //config.buildHTML
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
-var paths = component.paths;
+var helper = require('./utils/config-helper');
+var paths = helper.parsePaths(component.paths);
 
 function buildHtml(version) {
     if (!component.buildHTML){
@@ -26,8 +27,8 @@ function buildHtml(version) {
 }
 
 function fonts() {
-    if (!paths.site) {
-        log.info('paths.site within component.config.js is missing : skipping copying fonts')
+    if (!component.buildFonts) {
+        log.info('buildFonts within component.config.js is set to false : skipping copying fonts')
         return Promise.resolve();
     }
     var location = [

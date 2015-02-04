@@ -12,7 +12,8 @@ var test = require('./test');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
 var pkg = component.pkg;
-var paths = component.paths;
+var helper = require('./utils/config-helper');
+var paths = helper.parsePaths(component.paths);
 
 function gitRelease(version){
     version = Array.isArray(version) ? version[0] : version
@@ -70,17 +71,21 @@ function cloud(version){
     return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.releaseConfig).write()
 }
 
-function all(args, type){
+function quick(args, type){
     var bumpedVersion
-    return test.all().then(function() {
-        return versionBump(type)
-    }).then(function(version){
+    return versionBump(type).then(function(version){
         bumpedVersion = version;
         return gitRelease(version);
     }).then(function(){
         return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
-       return cloud(bumpedVersion)
+        return cloud(bumpedVersion)
+    }).catch(log.onError);
+}
+
+function all(args, type){
+    return test.all().then(function() {
+        return quick(args, type)
     }).catch(log.onError);
 }
 
@@ -89,5 +94,6 @@ module.exports = {
     versionBump: versionBump,
     'gh-pages': ghPagesRelease,
     cloud: cloud,
-    all: all
+    all: all,
+    quick: quick
 };
