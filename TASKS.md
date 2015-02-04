@@ -59,7 +59,12 @@ This will do the above `serve`, but without the build step.
 `component test`
 
 This will [build](#build) your site then run the Test tasks below.
-To prevent the build from kicking off, there is also `component test quick` command available.
+
+### Quick
+
+`component test quick`
+
+This will run all your tests below as mentioned above, but without the build step.
 
 
 #### Once

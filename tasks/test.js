@@ -22,15 +22,19 @@ function coverage(){
     return test.coverage();
 }
 
+function quick(){
+    return once().then(function(){
+        return test.coverage();
+    }).catch(log.onError);
+}
+
 function all(){
     if (!component.test){
         log.info('Test set to false within component.config.js : skipping')
         return Promise.resolve();
     }
     return build.all().then(function() {
-        return once();
-    }).then(function(){
-        return test.coverage();
+        return quick();
     }).catch(log.onError);
 }
 
@@ -38,5 +42,6 @@ module.exports = {
     tdd: tdd,
     once: once,
     coverage: coverage,
-    all: all
+    all: all,
+    quick: quick
 }
