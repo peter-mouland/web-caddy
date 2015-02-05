@@ -1,16 +1,16 @@
-var spawn = require('./spawn').spawn;
+var exec = require('./exec').exec;
 
 function runGitCommand(cmd, args){
     args.unshift(cmd);
-    return spawn('git', args);
+    return exec('git', args);
 }
 
 module.exports = {
     commit : function(comment) {
-        return spawn('git',['commit', '-m', '"' + comment + '"']);
+        return exec('git',['commit', '-m', '"' + comment + '"']);
     },
     tag : function(version) {
-        return spawn('git', ['tag', '-a', version, '-m', version]);
+        return exec('git', ['tag', '-a', version, '-m', version]);
     },
     init : function() {
         return runGitCommand('init', [])

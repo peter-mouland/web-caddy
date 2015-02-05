@@ -1,12 +1,12 @@
-var spawn = require('./spawn').spawn;
+var exec = require('./exec').exec;
 
 module.exports = {
     register : function(arrCmds) {
         arrCmds.unshift('register');
-        return spawn('bower', arrCmds);
+        return exec('bower', arrCmds);
     },
 
     install : function() {
-        return spawn('bower', ['install']);
+        return exec('bower', ['install']);
     }
 };

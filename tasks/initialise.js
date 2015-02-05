@@ -2,7 +2,7 @@ var Promise = require('es6-promise').Promise;
 var replaceStream = require('replacestream');
 var shell = require("shelljs");
 var log = require('./utils/log');
-var spawn = require('./utils/spawn').spawn;
+var exec = require('./utils/exec').exec;
 var git = require('./utils/git');
 var fs = require('./utils/fs');
 var bower = require('./utils/bower');
@@ -48,7 +48,7 @@ function initComponent(dir, component, repo, author) {
 
 function installNpms(){
     log.info("\nInstalling Node Modules ... \n");
-    return spawn('npm',['install']).then(function(output){
+    return exec('npm',['install']).then(function(output){
         log.onSuccess(output);
     }).catch(log.onError);
 }
@@ -83,7 +83,7 @@ function initGhPages(){
         return git.rm(['-rf', '.']);
     }).then(function(output){
         log.onSuccess(output);
-        return spawn('touch',['gh-pages-initialised.md']);
+        return exec('touch',['gh-pages-initialised.md']);
     }).then(function(output){
         log.onSuccess(output);
         return git.add(['gh-pages-initialised.md']);
