@@ -10,7 +10,7 @@ function Browserify(location, destination){
     this.destination = destination;
 }
 
-Browserify.prototype.browserifyFile = function(fileObj) {
+Browserify.prototype.file = function(fileObj) {
     var self = this;
     return new Promise(function(resolve, reject){
         browserify(fileObj.path).bundle(function(err, contents){
@@ -31,27 +31,26 @@ Browserify.prototype.write = function(){
         }
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
-            promises.push(self.browserifyFile(fileObj));
+            promises.push(self.file(fileObj));
         });
         return Promise.all(promises);
     }).then(function(fileObjs){
         return fs.write(fileObjs);
     }).then(function(fileObjs){
-        return self.minify(fileObjs);
+        var promises = [];
+        fileObjs.forEach(function (fileObj, i) {
+            promises.push(self.minify(fileObj));
+        });
+        return Promise.all(promises);
     }).catch(log.onError);
 }
 
-Browserify.prototype.minify = function(fileObjs){
-    var self = this;
-    var promises = [];
-    fileObjs.forEach(function (fileObj, i) {
+Browserify.prototype.minify = function(fileObj){
         fileObj.contents = UglifyJS.minify(fileObj.path).code;
         fileObj.name = fileObj.name.replace('.js','.min.js')
-        fileObj.dir = self.destination;
-        fileObj.path = self.destination + '/' + fileObj.name;
-        promises.push(fs.write(fileObj));
-    });
-    return Promise.all(promises);
+        fileObj.dir = this.destination;
+        fileObj.path = this.destination + '/' + fileObj.name;
+    return Promise.resolve(fileObj);
 }
 
 module.exports = Browserify
