@@ -25,10 +25,12 @@ Karma.prototype.run = function(singleRun){
 }
 
 Karma.prototype.coverage = function(){
+    var self = this;
     var config = findup(this.configPath);
     var summaryPath = findup(this.summaryPath);
     return new Promise(function(resolve, reject) {
-        if (!summaryPath){ log.onError('You must have run tests first')}
+        if (!summaryPath){ log.onError('You must have run tests first. Summary file not found in : ' + self.summaryPath)}
+        if (!config){ log.onError('Karma config file could not be found in : ' + self.configPath)}
         var results = require(summaryPath);
         var coverage = require(config)({
             set: function (conf) {
