@@ -99,9 +99,9 @@ describe("fs", function() {
                 files[0].name = 'del.js';
                 files[0].contents = 'temp file';
                 return fs.write(files[0])
-            }, onError).then(function(fileObj){
+            }).then(function(fileObj){
                 return fs.read(filesGlob);
-            }, onError).then(function(files){
+            }).then(function(files){
                 expect(files.length).toBe(2);
                 expect(files[0].dir).toContain('/spec/fixtures/file');
                 expect(files[0].path).toContain('/spec/fixtures/file/del.js');
@@ -127,29 +127,107 @@ describe("fs", function() {
                 expect(files.length).toBe(2);
                 expect(files[0]).toContain('/spec/fixtures/file/del.js');
                 return fs.read(files)
-            }, onError).then(function(files){
+            }).then(function(files){
                 expect(files.length).toBe(0);
             }).then(done).catch(onError)
         })
     });
 
     describe("copyDirectory", function(){
+        var dest = './spec/fixtures/fileCopy';
 
-        xit("", function() {
+        afterEach(function (done) {
+            fs.del(dest)
+                .then(done)
+                .catch(onError);
         });
 
+        it("Can keep file structure", function(done) {
+
+            fs.copyDirectory('./spec/fixtures/file', dest).then(function(){
+                return fs.read(dest + '/**/*.*')
+            }).then(function(files){
+                expect(files.length).toBe(5);
+            }).then(function(){
+                return fs.read(dest + '/cDir/*.*')
+            }).then(function(files){
+                expect(files.length).toBe(1);
+            }).then(done).catch(onError);
+        });
+
+        it('invokes a transform callback when passed', function (done) {
+            var callback = {
+                transform: function (read, write, file) {}
+            };
+
+            spyOn(callback, "transform").and.callFake(function(read, write, file) {
+                read.pipe(write);
+            });
+
+            fs.copyDirectory('./spec/fixtures/file', dest, callback.transform)
+                .then(function () {
+                    expect(callback.transform.calls.count()).toBe(5);
+                }).then(done).catch(onError);
+        });
     });
 
     describe("replace", function(){
+        var dest = './spec/fixtures/file/replace.txt';
 
-        xit("", function() {
+        afterEach(function (done) {
+            fs.replace(dest, [
+                { replace: 'ewe', with: 'you' },
+                { replace: /you/g, with: 'me' },
+                { replace: 'not', with: 'And' }
+            ]).then(done).catch(onError);
+        });
+
+        it("changes the contents of given files", function(done) {
+            fs.replace(dest, [
+                { replace: /me/g, with: 'you' },
+                { replace: 'And', with: 'not' },
+                { replace: 'you', with: 'ewe' }
+            ]).then(function(){
+                return fs.read(dest)
+            }).then(function (files) {
+                expect(files[0].contents.toString()).toBe('Replace ewe\nnot you too');
+            }).then(done).catch(onError);
+
         });
 
     });
 
     describe("glob", function(){
 
-        xit("", function() {
+        var srcGlob = './spec/fixtures/file/';
+        it("returns an array of file objects", function(done) {
+            fs.glob(srcGlob + '*.*')
+                .then(function (files) {
+                    expect(files.length).toBe(4);
+                }).then(done).catch(onError);
+        });
+        it("does return directory names", function(done) {
+            fs.glob(srcGlob + '*')
+                .then(function (files) {
+                    expect(files.length).toBe(5);
+                    expect(files[0].name).toBe('cDir');
+                    expect(files[1].name).toBe('copy-again.txt');
+                    expect(files[2].name).toBe('copy.txt');
+                    expect(files[3].name).toBe('rename.js');
+                    expect(files[4].name).toBe('replace.txt');
+                }).then(done).catch(onError);
+        });
+        it("does return files with sub directories", function(done) {
+            fs.glob(srcGlob + '**/*')
+                .then(function (files) {
+                    expect(files.length).toBe(6);
+                    expect(files[0].name).toBe('cDir');
+                    expect(files[5].name).toBe('cDirFile.md');
+                    expect(files[1].name).toBe('copy-again.txt');
+                    expect(files[2].name).toBe('copy.txt');
+                    expect(files[3].name).toBe('rename.js');
+                    expect(files[4].name).toBe('replace.txt');
+                }).then(done).catch(onError);
         });
 
     });

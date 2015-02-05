@@ -137,7 +137,9 @@ function copyDirectory(src, dest, transform){
         ncp(src, dest, { stopOnErr: true, transform: transform },
             function(err){
                 err && reject(err);
-                !err && resolve();
+                // wait for copy to stop messing with the file :(
+                // todo: start polling stat.size
+                !err && setTimeout(function(){resolve()},100);
             }
         );
     });

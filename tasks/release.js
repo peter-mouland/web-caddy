@@ -30,7 +30,9 @@ function gitRelease(version){
 }
 
 function update(version){
-    var replacements = [{replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, with: '$1' + version + '$2'}]
+    var replacements = [{
+        replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g,
+        with: '$1' + version + '$2'}]
     return fs.replace( ['./README.md', './**/version.js'], replacements)
 }
 
