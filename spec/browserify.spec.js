@@ -28,7 +28,7 @@ describe('Browserify', function () {
             expect(response.contents.toString()).toContain('exports')
             expect(response.contents.toString()).toContain('module')
             expect(response.path).toContain('/dest/browserify.js')
-            expect(response.dir).toBe('dest')
+            expect(response.dir).toContain('dest')
         }).then(done).catch(onError);
     });
 
@@ -37,7 +37,7 @@ describe('Browserify', function () {
         new Browserify('src','dest').minify(fileObj).then(function(response){
             expect(response.contents.toString()).toBe('function sum(u){var n=0;return u.forEach(function(u){n+=u}),n}module.exports={sum:sum};');
             expect(response.name).toBe('browserify.min.js');
-            expect(response.dir).toBe('dest');
+            expect(response.dir).toContain('dest');
             expect(response.path).toContain('dest/browserify.min.js');
         }).then(done).catch(onError);
     });
@@ -51,7 +51,7 @@ describe('Browserify', function () {
         });
 
         new Browserify('./spec/fixtures/browserify/', 'dest').write().then(function () {
-            expect(fs.write.calls.count()).toBe(1);
+            expect(fs.write.calls.count()).toBe(2);
             expect(Browserify.prototype.file.calls.count()).toBe(1);
             expect(Browserify.prototype.minify.calls.count()).toBe(1);
         }).then(done).catch(onError);
