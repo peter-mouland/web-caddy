@@ -34,8 +34,13 @@ Sass.prototype.file = function(fileObj, outputStyle){
     });
 }
 
-Sass.prototype.minify = function(fileObj){
-    return this.file(fileObj, 'compressed');
+Sass.prototype.minify = function(files){
+    var self = this;
+    var promises = [];
+    files.forEach(function(fileObj){
+        promises.push(self.file(fileObj, 'compressed'));
+    })
+    return Promise.all(promises)
 }
 
 Sass.prototype.write = function() {

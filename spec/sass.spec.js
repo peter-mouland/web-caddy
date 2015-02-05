@@ -30,12 +30,12 @@ describe('Sass', function () {
     });
 
     it('should minify a file', function (done) {
-        new Sass('src','dest').minify(fileObj).then(function(response){
-            expect(response.contents.toString()).toBe('.demo-block{clear:both}.demo-block .inner{contents:\'yo\'}');
-            expect(response.name).toBe('sass.min.css');
-            expect(response.dir).toContain('dest');
-            expect(response.ext).toContain('css')
-            expect(response.path).toContain('dest/sass.min.css');
+        new Sass('src','dest').minify([fileObj]).then(function(response){
+            expect(response[0].contents.toString()).toBe('.demo-block{clear:both}.demo-block .inner{contents:\'yo\'}');
+            expect(response[0].name).toBe('sass.min.css');
+            expect(response[0].dir).toContain('dest');
+            expect(response[0].ext).toContain('css')
+            expect(response[0].path).toContain('dest/sass.min.css');
         }).then(done).catch(onError);
     });
 

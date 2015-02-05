@@ -2,9 +2,9 @@ var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
 var log = require('./utils/log');
 var fs = require('./utils/fs');
-var scripts = require('./wrappers/browserify');    //config.buildScripts
-var styles = require('./wrappers/sass');           //config.buildStyles
-var html = require('./wrappers/html-concat');      //config.buildHTML
+var Scripts = require('./wrappers/browserify');    //config.buildScripts
+var Styles = require('./wrappers/sass');           //config.buildStyles
+var Html = require('./wrappers/html-concat');      //config.buildHTML
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
@@ -20,7 +20,7 @@ function buildHtml(version) {
     var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
     var dest = paths.site.root + '/index.html';
     return fs.del(dest).then(function(){
-        return new html(src, dest, {version:version}).write()
+        return new Html(src, dest, {version:version}).write()
     }).then(function(){
         return 'Build HTML Complete'
     }).catch(log.onError);
@@ -63,9 +63,9 @@ function buildScripts(){
     paths.site && delPaths.push(paths.site.scripts + '/**/*')
     return fs.del(delPaths).then(function(){
         return Promise.all([
-            new scripts(paths.source.scripts, paths.dist.scripts).write(),
-            paths.demo && paths.demo.scripts && new scripts(paths.demo.scripts, paths.site.scripts).write(),
-            paths.site && paths.site.scripts && new scripts(paths.source.scripts, paths.site.scripts).write()
+            new Scripts(paths.source.scripts, paths.dist.scripts).write(),
+            paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts).write(),
+            paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts).write()
         ])
     }).then(function(){
         return 'Build Scripts Complete'
@@ -82,9 +82,9 @@ function buildStyles(){
     paths.site && delPaths.push(paths.site.styles + '/**/*')
     return fs.del(delPaths).then(function() {
         return Promise.all([
-            new styles(paths.source.styles, paths.dist.styles).write(),
-            paths.site && paths.site.styles && new styles(paths.source.styles, paths.site.styles).write(),
-            paths.demo && paths.demo.styles && new styles(paths.demo.styles, paths.site.styles).write()
+            new Styles(paths.source.styles, paths.dist.styles).write(),
+            paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles).write(),
+            paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles).write()
         ]);
     }).then(function(){
         return 'Build Styles Complete'
