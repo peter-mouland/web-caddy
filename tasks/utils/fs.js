@@ -145,10 +145,11 @@ function copyDirectory(src, dest, transform){
 
 function renameFile(fileObj, replace, withThis){
     return new Promise(function(resolve, reject){
-        fileObj.name = fileObj.name.replace(replace, withThis)
-        fs.rename(fileObj.path, path.join(fileObj.dir, fileObj.name), function(err){
+        var name = fileObj.name.replace(replace, withThis)
+        var file = new File({path: path.join(fileObj.dir, name)})
+        fs.rename(fileObj.path, file.path, function(err){
             err && reject(err)
-            !err && resolve(fileObj)
+            !err && resolve(file)
         });
     })
 }

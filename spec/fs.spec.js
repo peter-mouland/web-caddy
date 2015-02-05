@@ -11,18 +11,28 @@ describe("fs", function() {
 
     describe("rename", function(){
 
-        xit("", function() {
+        it("changes the file name", function(done) {
+            var srcGlob = './spec/fixtures/file/*.js'
+            fs.rename(srcGlob, '.js', '.min.js').then(function(files){
+                expect(files.length).toBe(1);
+                expect(files[0].name).toBe('rename.min.js');
+            }).then(function () {
+                return fs.rename(srcGlob, '.min.js', '.js')
+            }).then(function (files) {
+                expect(files.length).toBe(1);
+                expect(files[0].name).toBe('rename.js');
+            }).then(done).catch(onError)
         });
 
     });
 
     describe("copy", function(){
 
-        it("can duplicate a file and place it in another directory", function() {
+        it("can duplicate a file and place it in another directory", function(done) {
             var srcGlob = 'spec/fixtures/file/copy*.txt'
             var destDir = 'spec/fixtures/file/copy'
 
-            return fs.read(srcGlob).then(function(files){
+            fs.read(srcGlob).then(function(files){
                 expect(files[1].stat.size).toBe(72433);
                 expect(files[1].contents.toString()).toContain('@charset "UTF-8";');
                 expect(files[0].stat.size).toBe(12);
@@ -36,14 +46,14 @@ describe("fs", function() {
                 expect(files[1].stat.size).toBe(72433);
                 expect(files[0].stat.size).toBe(12);
                 expect(files[0].contents.toString()).toContain('another copy');
-            })
+            }).then(done).catch(onError)
         });
 
-        it("can duplicate a file and place it in another directory, where a file of the same name exists", function() {
+        it("can duplicate a file and place it in another directory, where a file of the same name exists", function(done) {
             var srcGlob = 'spec/fixtures/file/copy*.txt'
             var destDir = 'spec/fixtures/file/copy'
 
-            return fs.read(srcGlob).then(function(files){
+            fs.read(srcGlob).then(function(files){
                 expect(files[1].stat.size).toBe(72433);
                 expect(files[1].contents.toString()).toContain('@charset "UTF-8";');
                 expect(files[0].stat.size).toBe(12);
@@ -57,7 +67,9 @@ describe("fs", function() {
                 expect(files[1].stat.size).toBe(72433);
                 expect(files[0].stat.size).toBe(12);
                 expect(files[0].contents.toString()).toContain('another copy');
-            })
+            }).then(function(){
+                return fs.del(destDir)
+            }).then(done).catch(onError)
         });
 
     });
@@ -65,9 +77,7 @@ describe("fs", function() {
     describe("read, write and del", function(){
         beforeEach(function(done){
             var delFile = { path:'spec/fixtures/file/del.txt' , name:'del.txt', dir: 'spec/fixtures/file', contents:' '}
-            fs.write(delFile).then(function(){
-                done();
-            });
+            fs.write(delFile).then(done);
         });
 
         it("can read a files details back", function(done) {
@@ -80,8 +90,7 @@ describe("fs", function() {
                 expect(files[0].stat.size).toBe(1);
                 expect(Buffer.isBuffer(files[0].contents)).toBe(true);
                 expect(files[0].contents.toString()).toBe(' ');
-                done()
-            }, onError);
+            }).then(done).catch(onError)
         });
 
         it("can write a new file with updated details", function(done) {
@@ -109,20 +118,18 @@ describe("fs", function() {
                 expect(files[1].stat.size).toBe(1);
                 expect(Buffer.isBuffer(files[1].contents)).toBe(true);
                 expect(files[1].contents.toString()).toBe(' ');
-                done()
-            }, onError)
+            }).then(done).catch(onError)
         });
 
         it("can delete the files", function(done){
             var filesGlob = './spec/fixtures/file/del.*';
-            fs.del([filesGlob]).then(function(files){
+            fs.del(filesGlob).then(function(files){
                 expect(files.length).toBe(2);
                 expect(files[0]).toContain('/spec/fixtures/file/del.js');
                 return fs.read(files)
             }, onError).then(function(files){
                 expect(files.length).toBe(0);
-                done();
-            }, onError);
+            }).then(done).catch(onError)
         })
     });
 
