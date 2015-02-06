@@ -36,7 +36,7 @@ Choose a type of {{ component }} component and copy the relevant html.
 
 Components depends on collaboration between developers. Contributions of any size are actively encouraged.
 
-[Read More >](CONTRIBUTING.md)
+To see how to build this component locally, read the [contribution guidelines](CONTRIBUTING.md).
 
 ## Browser Support
 

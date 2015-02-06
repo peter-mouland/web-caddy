@@ -61,7 +61,7 @@ function installNpms(){
 }
 function initBower(){
     return bower.register().catch(function(err){
-        log.onError('Error: Bower Register ** ' + err);
+        log.onError('Error: Bower Register ' + err);
     });
 }
 

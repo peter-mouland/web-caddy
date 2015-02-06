@@ -54,3 +54,11 @@ This will automatically bump the 'patch' section of the version number.
 To bump a different area of the version number you can also use `major|minor|patch|prerelease` e.g. :
 
 `gulp release --version=prerelease`
+
+## Common Errors
+
+**`S3::putObject *** error!`** or **`UnknownEndpoint: Inaccessible host: `**
+
+This happens whn a connection to the S3 failed to establish. `bump` and `gh-pages` would have already executed.  Please try the release to cloud only by running:
+
+`component release cloud`
