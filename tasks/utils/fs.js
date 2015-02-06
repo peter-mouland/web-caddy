@@ -200,5 +200,6 @@ module.exports = {
     copyDirectory: copyDirectory,
     replace: replace,
     watch: watch,
-    glob: glob
+    glob: glob,
+    existsSync: fs.existsSync
 };

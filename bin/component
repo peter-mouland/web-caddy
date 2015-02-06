@@ -1,20 +1,11 @@
 #!/usr/bin/env node
-
-var fs = require("fs")
-var prompt = require("prompt");
-var shell = require("shelljs");
 var log = require("../tasks/utils/log");
-var exec = shell.exec;
 var minimist = require('minimist');
 var knownArgs = {
     string: 'version',
     default: { version: 'patch' }
 };
 var flags = minimist(process.argv.slice(2), knownArgs);
-
-function npmGlobalPath() {
-    return exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;
-}
 
 function execTask(task, args){
     var helper = require("../");
@@ -34,33 +25,12 @@ function help(task, taskStr){
 }
 
 var commands = {
-    new: function() {
-        var init = require("../tasks/initialise");
-        console.log("Creating your component...");
-        prompt.start();
-        prompt.get([{
-            description: 'Component Name',
-            name: 'name'
-          }, {
-            description: 'GitHub Repository SSH URL',
-            name: 'repo'
-        }], function(err, result) {
-          if (!result) return;
-          var component = result.name;
-          var gitUrlMatch = result.repo.match(/.com\:(.*)\//);
-          var author = exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
-          var moduleDir = npmGlobalPath() + '/component-helper/component-structure';
-          if (!gitUrlMatch){
-            log.onError('Github Repository URL must be a url');
-          }
-          if (fs.existsSync(component)){
-            log.onError('Component `' + component + '` already exists');
-          }
-          if (component.indexOf(' ')>-1){
-            log.onError('Component `' + component + '` must not contain spaces');
-          }
-          init.component(moduleDir, component, result.repo, author);
-        });
+    new: function(args) {
+        var helper = require("../tasks/new");
+        var command = args.shift() || 'all';
+
+        helper[command] && helper[command](args, flags.version).then(log.onSuccess, log.onError);
+        !helper[command] && help(helper, 'new');
     },
     build: function(args){
         execTask('build', args)

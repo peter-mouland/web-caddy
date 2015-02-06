@@ -1,11 +1,16 @@
 var Promise = require('es6-promise').Promise;
 var replaceStream = require('replacestream');
 var shell = require("shelljs");
+var prompt = require("prompt");
 var log = require('./utils/log');
 var exec = require('./utils/exec').exec;
 var git = require('./utils/git');
 var fs = require('./utils/fs');
 var bower = require('./utils/bower');
+
+function npmGlobalPath() {
+    return shell.exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;
+}
 
 function renameFiles(component){
     return Promise.all([
@@ -101,10 +106,42 @@ function initGhPages(){
     }).catch(log.onError)
 }
 
+function all(){
+    console.log("Creating your component...");
+    return new Promise(function(resolve, reject){
+        prompt.start();
+        prompt.get([{
+            description: 'Component Name',
+            name: 'name'
+        }, {
+            description: 'GitHub Repository SSH URL',
+            name: 'repo'
+        }], function(err, result) {
+            if (!result) return;
+            var component = result.name;
+            var gitUrlMatch = result.repo.match(/.com\:(.*)\//);
+
+            var author = shell.exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
+            var moduleDir = npmGlobalPath() + '/component-helper/component-structure';
+
+            if (!gitUrlMatch){
+                reject('Github Repository URL must be a url');
+            }
+            if (fs.existsSync(component)){
+                reject('Component `' + component + '` already exists');
+            }
+            if (component.indexOf(' ')>-1){
+                reject('Component `' + component + '` must not contain spaces');
+        }
+            initComponent(moduleDir, component, result.repo, author)
+                .then(resolve).catch(reject);
+        });
+    });
+}
+
 module.exports = {
+    all: all,
     bower: initBower,
     git: initGit,
-    ghPages: initGhPages,
-    structure: initStructure,
-    component: initComponent
+    ghPages: initGhPages
 };
