@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.8.8
+
+ * Fixed aws release paths
+ * Fixed file object base path
+ * Updated html-concat to work with subdirs
+ * Added many more tests
+
 ## 0.8.5
 
  * Added `test quick` command

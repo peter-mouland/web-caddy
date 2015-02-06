@@ -5,7 +5,7 @@
     "main": "index.js",
     "devDependencies": {
         "gulp": "^3.8.10",
-        "component-helper": "^0.8.7",
+        "component-helper": "^0.8.8",
         "findup-sync": "^0.2.1"
     },
     "repository": {
