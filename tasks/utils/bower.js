@@ -1,9 +1,11 @@
 var exec = require('./exec').exec;
+var findup = require('findup-sync');
+var pkg = require(findup('./package.json'));
+var bowerPkg = require(findup('./bower.json'));
 
 module.exports = {
-    register : function(arrCmds) {
-        arrCmds.unshift('register');
-        return exec('bower', arrCmds);
+    register : function() {
+        return exec('bower', ['register', bowerPkg.name, pkg.repository.url]);
     },
 
     install : function() {

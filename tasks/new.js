@@ -59,10 +59,9 @@ function installNpms(){
         log.onSuccess(output);
     }).catch(log.onError);
 }
-function initBower(bowerCfg, repoUrl){
-    return bower.register([bowerCfg.name, repoUrl]).catch(function(){
-        log.info(['** Not intialising Bower ** ',
-                            'bower.release is set to false in component.config.js'].join('\n'));
+function initBower(){
+    return bower.register().catch(function(err){
+        log.onError('Error: Bower Register ** ' + err);
     });
 }
 
