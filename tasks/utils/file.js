@@ -13,6 +13,18 @@ module.exports = function File(fileObj){
     var base = fileObj.base;
     var contents = fileObj.contents;
 
+    Object.defineProperty(this, 'cwd', {
+        get: function () {
+            return cwd;
+        }
+    });
+
+    Object.defineProperty(this, 'base', {
+        get: function () {
+            return base;
+        }
+    });
+
     Object.defineProperty(this, 'path', {
         get: function () {
             return path;

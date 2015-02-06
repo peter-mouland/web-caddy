@@ -43,6 +43,8 @@ function initComponent(dir, component, repo, author) {
         log.onSuccess(output);
         log.info("\nInstalling Bower Modules ... \n");
         return bower.install();
+    }).then(function(){
+        log.info('Ready! \nPlease go to your new directory: `cd ' + component + '`');
     }).catch(log.onError);
 }
 

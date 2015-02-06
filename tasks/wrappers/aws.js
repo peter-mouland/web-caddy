@@ -6,7 +6,7 @@ var fs = require('../utils/fs');
 
 function AWS(location, destination, options){
     this.location = location;
-    this.destination = destination;
+    this.destination = this.addSlash(destination);
     this.config = {
         accessKey: options.accessKey || process.env.AWS_ACCESS_KEY_ID || null,
         secret: options.secret || process.env.AWS_SECRET_ACCESS_KEY || null,
@@ -18,6 +18,11 @@ function AWS(location, destination, options){
         Key    : null,
         Body   : null
     };
+}
+
+AWS.prototype.addSlash = function(dir){
+    if (dir.slice(-1) !== '/') dir = dir +'/'
+    return dir
 }
 
 AWS.prototype.checkMandatory = function(key){
@@ -39,6 +44,8 @@ AWS.prototype.setParams = function(fileObj){
     if (fileObj.stat) {
         this.params.ContentLength = fileObj.stat.size;
     }
+    console.log(fileObj.base)
+    console.log(this.destination )
     this.params.Key = fileObj.path
         .replace(fileObj.base, this.destination || '')
         .replace(new RegExp('\\\\', 'g'), '/');
@@ -54,6 +61,7 @@ AWS.prototype.upload = function(fileObj) {
             secretAccessKey : self.config.secret,
             region          : self.config.region
         });
+
         s3.putObject(self.params, function(err) {
             if (err) {
                 reject({message: 'S3::putObject "' + self.params.Key + '" error!\n' + err});

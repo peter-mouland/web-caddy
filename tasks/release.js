@@ -62,7 +62,7 @@ function ghPagesRelease(message){
 }
 
 function cloud(version){
-    log.info("\nReleasing to " + component.release + " ... \n");
+    log.info("\nReleasing to cloud (" + component.release + ") ... \n");
     version = Array.isArray(version) ? version[0] : version
     version = version || pkg.version;
     if (!component.release){

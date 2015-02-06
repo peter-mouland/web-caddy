@@ -17,7 +17,7 @@ function buildHtml(version) {
     }
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
-    var src = [ paths.demo.root + '/index.html', paths.demo.root + '/*/*.html'];
+    var src = [ paths.demo.root + '/index.html', paths.demo.root + '/**/*.html'];
     var dest = paths.site.root + '/index.html';
     return fs.del(dest).then(function(){
         return new Html(src, dest, {version:version}).write()

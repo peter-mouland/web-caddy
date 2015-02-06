@@ -8,6 +8,7 @@ function onError(err) {
 
 function onSuccess(msg) {
     if (!msg) return
+    if (Array.isArray(msg)) msg = msg.join('\n')
     console.log(chalk.green(msg.message || msg));
 }
 

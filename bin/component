@@ -42,7 +42,7 @@ var commands = {
             description: 'Component Name',
             name: 'name'
           }, {
-            description: 'Github Repository URL',
+            description: 'GitHub Repository SSH URL',
             name: 'repo'
         }], function(err, result) {
           if (!result) return;

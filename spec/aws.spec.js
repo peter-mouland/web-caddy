@@ -18,6 +18,13 @@ describe('AWS', function () {
         }).then(done);
     })
 
+    it('always saves destination with a single trailing slash', function () {
+        var aws = new AWS('src', 'dest', {})
+        expect(aws.destination).toBe('dest/')
+        var aws = new AWS('src', 'dest/', {})
+        expect(aws.destination).toBe('dest/')
+    });
+
     it('check the given key exists in the config object', function () {
         spyOn(log, 'onError');
         var aws = new AWS('src', 'dest', {})
@@ -44,7 +51,7 @@ describe('AWS', function () {
 
         expect(aws.params.ContentType).toBe('text/x-markdown');
         expect(aws.params.ContentLength).toBe(6);
-        expect(aws.params.Key).toContain('spec/fixtures/aws/aws.md');
+        expect(aws.params.Key).toBe('dest/aws.md');
         expect(aws.params.Body.toString()).toBe('# AWS!');
         expect(aws.params.ACL.toString()).toBe('public-read');
         expect(aws.params.Bucket).toBe('Bucket');
