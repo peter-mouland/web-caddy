@@ -1,6 +1,17 @@
-@import 'bower_components/bskyb-typography/src/scss/typography';
+@import 'bower_components/bskyb-core/src/styles/core';
 
 /* Common demo Sass here */
+.demo-container {
+  width: 94.059%;
+  max-width: 1140px;
+  margin: 0 auto;
+  clear: left;
+  overflow: visible; }
+
+.demo-updated {
+  display: block;
+  font-size: 0.3em;
+}
 .demo-block{
   margin-bottom: 20px;
   display: block;
@@ -46,12 +57,3 @@ code{
   background-color: rgba(0,0,0,0.04);
   border-radius: 3px;
 }
-
-.skycom-container {
-  width: 94.05941%;
-  max-width: 1140px;
-  margin: 0 auto;
-  clear: left;
-  overflow: visible;
-}
-
