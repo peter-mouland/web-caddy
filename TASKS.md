@@ -1,5 +1,17 @@
 # Tasks
 
+## New
+
+`component new`
+
+This will create a new component with a standard fie structure and giving you the ability to build, test, serve and release it out of the box.
+
+#### Bower
+
+`component new bower`
+
+This will register you component with bower using the name from your bower.json and the repository url from package.json.
+
 ## Build
 
 `component build`
