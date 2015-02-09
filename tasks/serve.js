@@ -41,7 +41,7 @@ function startServer(args){
             script: serve.script,
             env: serve.env
         }).on('start', function(ee){
-            info('Server Started')
+            log.info('Server Started')
             resolve(serve);
         });
     });
