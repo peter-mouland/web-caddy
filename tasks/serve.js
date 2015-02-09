@@ -27,12 +27,6 @@ function loadBrowser(args){
     })
 }
 
-var buildAndReload = {
-    html: function() {    return build.html().then(browserSync.reload)  },
-    scripts: function() { return build.scripts().then(browserSync.reload)  },
-    styles: function() {  return build.styles().then(browserSync.reload)   }
-};
-
 function startServer(args){
     var serve = args || component.serve;
     if (Array.isArray(serve) || typeof serve==='string') return Promise.resolve();
@@ -46,6 +40,12 @@ function startServer(args){
         });
     });
 }
+
+var buildAndReload = {
+    html: function() {    return build.html().then(browserSync.reload)  },
+    scripts: function() { return build.scripts().then(browserSync.reload)  },
+    styles: function() {  return build.styles().then(browserSync.reload)   }
+};
 
 function watch(){
     var htmlPaths = [ ];
@@ -62,12 +62,12 @@ function watch(){
 }
 
 
-var quick = function(args){
+function quick(args){
     return new Promise(function(resolve, reject){
         loadBrowser(args);
         watch();
         resolve()
-    })
+    });
 }
 
 
