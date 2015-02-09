@@ -24,7 +24,3 @@ module.exports = {
     register : register,
     install : install
 };
-
-register().catch(function(){
-    console.log(arguments)
-})
