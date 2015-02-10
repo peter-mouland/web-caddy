@@ -9,7 +9,7 @@
 Include the {{ component }} assets in your project either as **Static Resources**
 
 ```html
-<link rel="stylesheet" href="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/styles/{{ component }}.css" />
+<link rel="stylesheet" href="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/styles/{{ component }}.min.css" />
 <script type="text/javascript" src="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/scripts/{{ component }}.min.js"></script>
 ```
 
