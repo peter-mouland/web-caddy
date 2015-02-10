@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.10
+
+ * Added `component new bower` task
+ * Fixed dynamic server config
+ * Updated to use latest `core` component
+
 ## 0.8.8
 
  * Fixed aws release paths
