@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.9.1
+
+ * re-release for npm. grr. https://github.com/npm/npm/issues/5082#issuecomment-72300195
+
 ## 0.9.0
 
  * Updated `component.config.js` objects : Breaking change.
