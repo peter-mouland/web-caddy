@@ -37,21 +37,25 @@ function startServer(args){
 var buildAndReload = {
     html: function() {    return build.html().then(browserSync.reload)  },
     scripts: function() { return build.scripts().then(browserSync.reload)  },
-    styles: function() {  return build.styles().then(browserSync.reload)   }
+    styles: function() {  return build.styles().then(browserSync.reload)   },
+    images: function() {  return build.images().then(browserSync.reload)   }
 };
 
 function watch(){
     var htmlPaths = [ ];
     var stylesPaths = [paths.source.styles + '/**/*' ];
     var scriptsPaths =   [paths.source.scripts + '/**/*' ];
+    var imagesPaths =   [paths.source.images + '/**/*' ];
     if (paths.demo){
         htmlPaths.push(paths.demo.root + '/**/*.html')
         stylesPaths.push(paths.demo.styles + '/**/*');
         scriptsPaths.push(paths.demo.styles + '/**/*');
+        imagesPaths.push(paths.demo.images + '/**/*');
     }
     fs.watch(htmlPaths, [buildAndReload.html]);
     fs.watch(stylesPaths, [buildAndReload.styles]);
     fs.watch(scriptsPaths,   [buildAndReload.scripts]);
+    fs.watch(imagesPaths,   [buildAndReload.images]);
 }
 
 

@@ -4,9 +4,10 @@ var version  = require('./utils/version.js');
 // please see 'GULP-TASKS.md#js' for more info
 //
 // You may need another component:
-// run : $ bower install bskyb-event --save
+// run : $ bower install bskyb-core --save
 // then add
-// var event = require('../../bower_components/bskyb-event/src/js/event');
+// var core = require('../../bower_components/bskyb-core/src/scripts/core');
+// var event = core.event;
 
 //example function and export
 function sum(args){
