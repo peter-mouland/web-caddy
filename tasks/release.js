@@ -62,15 +62,15 @@ function ghPagesRelease(message){
 }
 
 function cloud(version){
-    log.info("\nReleasing to cloud (" + component.release + ") ... \n");
-    version = Array.isArray(version) ? version[0] : version
-    version = version || pkg.version;
     if (!component.release){
         log.info('Release set to false within component.config.js : skipping')
         return Promise.resolve();
     }
-    var prefix = component.releaseConfig.directoryPrefix || '';
-    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.releaseConfig).write()
+    log.info("\nReleasing to cloud (" + component.release.type + ") ... \n");
+    version = Array.isArray(version) ? version[0] : version
+    version = version || pkg.version;
+    var prefix = component.release.directoryPrefix || '';
+    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.release).write()
 }
 
 function quick(args, type){

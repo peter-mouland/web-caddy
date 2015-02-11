@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.9.0
+
+ * Updated `component.config.js` objects : Breaking change.
+ * Added `requirejs` build.scripts type
+
 ## 0.8.10
 
  * Added `component new bower` task

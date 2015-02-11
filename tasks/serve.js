@@ -12,24 +12,17 @@ var paths = helper.parsePaths(component.paths);
 
 function loadBrowser(args){
     args = Array.isArray(args) ? args[0] : args;
-    var baseDir = args || component.serve || paths.site.root;
     startServer(args).then(function(proxy){
-        var config = {
-            port: 3456,
-            server: {
-                baseDir: baseDir
-            }
-        }
-        if (proxy){
-            config = { proxy: proxy.host, port:proxy.port }
-        }
+        var config = (component.serve.type === 'static') ?
+            { port: component.serve.port, server: { baseDir: component.serve.directories} } :
+            { proxy: proxy.host, port:proxy.port };
         browserSync(config);
     })
 }
 
 function startServer(args){
     var serve = args || component.serve;
-    if (Array.isArray(serve) || typeof serve==='string') return Promise.resolve();
+    if (!component.serve || component.serve.type === 'static') return Promise.resolve();
     return new Promise(function(resolve, reject){
         nodemon({
             script: serve.script,

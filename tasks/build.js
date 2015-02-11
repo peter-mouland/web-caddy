@@ -1,18 +1,19 @@
 var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
-var log = require('./utils/log');
-var fs = require('./utils/fs');
-var Scripts = require('./wrappers/browserify');    //config.buildScripts
-var Styles = require('./wrappers/sass');           //config.buildStyles
-var Html = require('./wrappers/html-concat');      //config.buildHTML
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
+
+var log = require('./utils/log');
+var fs = require('./utils/fs');
+var Scripts = require('./wrappers/' + (component.build.scripts && component.build.scripts.type || component.build.scripts) || 'browserify');
+var Styles = require('./wrappers/sass');           //config.buildStyles
+var Html = require('./wrappers/html-concat');      //config.buildHTML
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
 function buildHtml(version) {
-    if (!component.buildHTML){
-        log.info('buildHTML set to false within component.config.js : skipping building html')
+    if (!component.build.html){
+        log.info('build.html set to false within component.config.js : skipping building html')
         return Promise.resolve();
     }
     version = Array.isArray(version) ? version[0] : version;
@@ -27,8 +28,8 @@ function buildHtml(version) {
 }
 
 function fonts() {
-    if (!component.buildFonts) {
-        log.info('buildFonts within component.config.js is set to false : skipping copying fonts')
+    if (!component.build.fonts) {
+        log.info('build.fonts within component.config.js is set to false : skipping copying fonts')
         return Promise.resolve();
     }
     var location = [
@@ -54,8 +55,8 @@ function images() {
 }
 
 function buildScripts(){
-    if (!component.buildScripts){
-        log.info('buildScripts set to false within component.config.js : skipping building scripts')
+    if (!component.build.scripts){
+        log.info('build.scripts set to false within component.config.js : skipping building scripts')
         return Promise.resolve();
     }
     var delPaths = [];
@@ -63,9 +64,9 @@ function buildScripts(){
     paths.site && delPaths.push(paths.site.scripts + '/**/*')
     return fs.del(delPaths).then(function(){
         return Promise.all([
-            new Scripts(paths.source.scripts, paths.dist.scripts).write(),
-            paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts).write(),
-            paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts).write()
+            new Scripts(paths.source.scripts, paths.dist.scripts, component.build.scripts).write(),
+            paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, component.build.scripts).write(),
+            paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, component.build.scripts).write()
         ])
     }).then(function(){
         return 'Build Scripts Complete'
@@ -73,8 +74,8 @@ function buildScripts(){
 }
 
 function buildStyles(){
-    if (!component.buildStyles){
-        log.info('buildStyles set to false within component.config.js : skipping building styles')
+    if (!component.build.styles){
+        log.info('build.styles set to false within component.config.js : skipping building styles')
         return Promise.resolve();
     }
     var delPaths = [];

@@ -8,7 +8,7 @@ var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 var TestWrapper = require('./wrappers/karma');
-var test = (component.test) ? new TestWrapper(component.testConfig) : null;
+var test = (component.test) ? new TestWrapper(component.test) : null;
 
 function once(){
     return test.run(true);

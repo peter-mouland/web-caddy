@@ -32,7 +32,6 @@ AWS.prototype.checkMandatory = function(key){
 }
 
 AWS.prototype.setParams = function(fileObj){
-
     this.checkMandatory('accessKey');
     this.checkMandatory('secret');
     this.checkMandatory('region');
@@ -44,8 +43,6 @@ AWS.prototype.setParams = function(fileObj){
     if (fileObj.stat) {
         this.params.ContentLength = fileObj.stat.size;
     }
-    console.log(fileObj.base)
-    console.log(this.destination )
     this.params.Key = fileObj.path
         .replace(fileObj.base, this.destination || '')
         .replace(new RegExp('\\\\', 'g'), '/');

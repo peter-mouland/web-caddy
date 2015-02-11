@@ -1,6 +1,6 @@
 {
   "name": "component-helper",
-  "version": "0.8.10",
+  "version": "0.9.0",
   "description": "A way to help ensure the common tasks are consistent across components",
   "main": "index.js",
   "files": [
@@ -46,6 +46,7 @@
     "nodemon": "^1.3.6",
     "prompt": "^0.2.14",
     "replacestream": "^1.0.2",
+    "requirejs": "^2.1.16",
     "semver": "^4.1.0",
     "shelljs": "^0.3.0",
     "uglify-js": "^2.4.16"

@@ -4,8 +4,8 @@ var findup = require('findup-sync');
 var log = require('../utils/log');
 
 function Karma(config){
-    if (!config){
-        log.onError('Karma requires config.')
+    if (!config || !config.summary || !config.config){
+        log.onError('Karma requires config with `summary` and `config`.')
     }
     this.summaryPath = config.summary;
     this.configPath = config.config;
