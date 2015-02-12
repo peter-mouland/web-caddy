@@ -1,8 +1,8 @@
 'use strict';
 
 var gulp = require('gulp');
-var helper = require('component-helper');
-var paths = helper.paths;
+var component = require('component-helper');
+var paths = component.paths;
 var argv = process.argv.slice(3).toString();
 
 function onError(err) {
@@ -11,18 +11,18 @@ function onError(err) {
 }
 
 gulp.task('build', function() {
-    return helper.build.all().catch(onError)
+    return component.build.all().catch(onError)
 });
 
 gulp.task('serve',  function() {
-    return helper.serve.all().catch(onError);
+    return component.serve.all().catch(onError);
 });
 
 gulp.task('test', function(){
-    return helper.test.all().catch(onError);
+    return component.test.all().catch(onError);
 });
 
 gulp.task('release', function(){
     var version = argv.split('--version=')[1];
-    return helper.release.all(null, version).catch(onError);
+    return component.release.all(null, version).catch(onError);
 });

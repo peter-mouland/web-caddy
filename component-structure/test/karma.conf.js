@@ -6,7 +6,7 @@ module.exports = function(config) {
         reporters: ['progress', 'coverage'],
         preprocessors: {
             'src/**/*.js': ['commonjs', 'coverage'],
-            'bower_components/*/src/**/*.js': ['commonjs'],
+            'bower_components/bskyb-*/src/**/*.js': ['commonjs'],
             'test/**/*.js': ['commonjs'],
             '_site/*.html': ['html2js']
         },
@@ -29,7 +29,8 @@ module.exports = function(config) {
         },
         files: [
             {pattern: '_site/*.html', watched: false },
-            {pattern: 'bower_components/*/src/**/*.js', included: true },
+            {pattern: 'bower_components/bskyb-*/src/**/*.js', included: true },
+            {pattern: '_site/**/*.*', included: false, served: true},
             'src/**/*.js',
             'test/**/*.spec.js'
         ],
