@@ -30,13 +30,13 @@ Out of the box you can:
     ├── test            => Home of your test config plus test specs
     ├── demo            => source code used soley for demoing the functionality
     │   ├- _includes    => Contains any html files to be concatinated to index.html
-    │   ├- js           => any javascript needed to get the demo working
-    │   ├- scss         => any Sass needed to get the demo working
+    │   ├- scripts      => any javascript needed to get the demo working
+    │   ├- styles       => any Sass needed to get the demo working
     │   ├- images etc.  => demo assets directories
     │   └- index.html
     └── src             => source code for the component.
-        ├- js           => component javascript
-        ├- scss         => component Sass
+        ├- scripts      => component javascript
+        ├- styles       => component Sass
         └- images etc.  => component assets directories
      
 ## API
