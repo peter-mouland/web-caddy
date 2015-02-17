@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.9.2
+
+ * Added CSS to specs by default
+
 ## 0.9.1
 
  * re-release for npm. grr. https://github.com/npm/npm/issues/5082#issuecomment-72300195
@@ -38,6 +42,7 @@
 ## 0.8.2
 
  * fixed cloud release bug
+
 ## 0.8.1
 
  * fixed releasing when specifying `--version=`
@@ -54,7 +59,7 @@
 
  * Renamed to `component-helper`
  * Added many more CLI commands - can now do everything without gulp (apart from `watch`).
-    * build, serve, test, release now available i.e. `component build`
+ * build, serve, test, release now available i.e. `component build`
 
 ## 0.6.3
 

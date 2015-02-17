@@ -2,23 +2,23 @@
 
  > Only do this if you are ready for this to go public i.e. Is the repository address is never going to change
 
-`gulp release`
+`component release`
 
    * This will push the demo site to github.io 
    * Tag the version number in Git (Bower will use this if configured))
    * It will also push the compiled assets to the S3 (if configured)
    * The version number is bumped ('patch' incremented). 
-   * you can also use `gulp release --version ` along with `major`, `minor`, `patch` or `prerelease`
+   * you can also use `component release --version=` along with `major`, `minor`, `patch` or `prerelease`
 
 ### Bower
 
 To release to `bower` please update your `config/index.js` and run once :
 
- * `gulp init:bower`
+ * `component new bower`
  
 ### Amazon Web Services (AWS)
 
-To release to AWS please update your `config/index.js`.
+To release to AWS please update your `component.config.js`.
 
 # Moving your component to SkyGlobal
 
