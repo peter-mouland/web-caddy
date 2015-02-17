@@ -26,11 +26,9 @@ function help(task, taskStr){
 
 var commands = {
     new: function(args) {
-        var helper = require("../tasks/new");
-        var command = args.shift() || 'all';
-
-        helper[command] && helper[command](args, flags.version).then(log.onSuccess, log.onError);
-        !helper[command] && help(helper, 'new');
+        var createNewComponent = require("../tasks/new");
+        var componentName = args.shift() || log.onError('Please choose a project name as an argument');
+        createNewComponent(componentName).then(log.onSuccess, log.onError);
     },
     build: function(args){
         execTask('build', args)

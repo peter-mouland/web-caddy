@@ -32,7 +32,7 @@ function initStructure(dir, component, repo, author){
     });
 }
 
-function initComponent(dir, component, repo, author) {
+function newComponent(dir, component, repo, author) {
     return initStructure(dir, component, repo, author).then(function(output) {
         shell.cd(component);
         return renameFiles(component);
@@ -105,19 +105,15 @@ function initGhPages(){
     }).catch(log.onError)
 }
 
-function all(){
-    console.log("Creating your component...");
+function createAll(componentName){
+    console.log("Creating new component " + componentName);
     return new Promise(function(resolve, reject){
         prompt.start();
         prompt.get([{
-            description: 'Component Name',
-            name: 'name'
-        }, {
             description: 'GitHub Repository SSH URL',
             name: 'repo'
         }], function(err, result) {
             if (!result) return;
-            var component = result.name;
             var gitUrlMatch = result.repo.match(/.com\:(.*)\//);
 
             var author = shell.exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
@@ -126,21 +122,13 @@ function all(){
             if (!gitUrlMatch){
                 reject('Github Repository URL must be a url');
             }
-            if (fs.existsSync(component)){
-                reject('Component `' + component + '` already exists');
+            if (fs.existsSync(componentName)){
+                reject('Component `' + componentName + '` already exists');
             }
-            if (component.indexOf(' ')>-1){
-                reject('Component `' + component + '` must not contain spaces');
-        }
-            initComponent(moduleDir, component, result.repo, author)
+            newComponent(moduleDir, componentName, result.repo, author)
                 .then(resolve).catch(reject);
         });
     });
 }
 
-module.exports = {
-    all: all,
-    bower: initBower,
-    git: initGit,
-    ghPages: initGhPages
-};
+module.exports = createAll;
