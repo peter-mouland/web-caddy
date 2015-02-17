@@ -7,7 +7,7 @@ var log = require('./utils/log');
 var fs = require('./utils/fs');
 var Scripts = require('./wrappers/' + (component.build.scripts && component.build.scripts.type || component.build.scripts) || 'browserify');
 var Styles = require('./wrappers/sass');           //config.buildStyles
-var Html = require('./wrappers/html-concat');      //config.buildHTML
+var Html = require('./wrappers/' + component.build.html || 'mustache');
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
@@ -18,8 +18,8 @@ function buildHtml(version) {
     }
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
-    var src = [ paths.demo.root + '/index.html', paths.demo.root + '/**/*.html'];
-    var dest = paths.site.root + '/index.html';
+    var src = [ paths.demo.root + '/*.html'];
+    var dest = paths.site.root;
     return fs.del(dest).then(function(){
         return new Html(src, dest, {version:version}).write()
     }).then(function(){

@@ -6,7 +6,7 @@ module.exports = {
     build: {
         fonts: true, // true or false. Set to false if you are doing your own thing in the fonts directory
         styles: 'sass', // sass. less not yet available
-        html: 'html-concat',// html-concat. moustache, assemble and jekyll not yet available
+        html: 'mustache',// html-concat or mustache.
         scripts: 'browserify' // browserify or requirejs
     },
     test: { // or false.  where your tests config, specs and reports are saved
