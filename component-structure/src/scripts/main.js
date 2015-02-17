@@ -1,5 +1,3 @@
-var version  = require('./utils/version.js');
-
 // By default JS dependency is handled using browserify
 // please see 'GULP-TASKS.md#js' for more info
 //
@@ -9,7 +7,8 @@ var version  = require('./utils/version.js');
 // var core = require('../../bower_components/bskyb-core/src/scripts/core');
 // var event = core.event;
 
-//example function and export
+
+//example function
 function sum(args){
     var total = 0;
     args.forEach(function(int){
@@ -18,10 +17,14 @@ function sum(args){
     return total;
 }
 
+
+//example export
 module.exports = {
     sum: sum,
-    version: version
+    version: require('./utils/version.js')//keep this : each component exposes its version
 };
 
+
+//keep this : ensure components are also globally available
 if (typeof skyComponents === "undefined") window.skyComponents = {};
 skyComponents['{{ component }}'] = module.exports;
