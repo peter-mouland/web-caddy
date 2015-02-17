@@ -33,6 +33,9 @@ var commands = {
     build: function(args){
         execTask('build', args)
     },
+    init: function(args){
+        execTask('init', args)
+    },
     serve: function(args){
         execTask('serve', args)
     },

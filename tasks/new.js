@@ -2,9 +2,9 @@ var Promise = require('es6-promise').Promise;
 var replaceStream = require('replacestream');
 var shell = require("shelljs");
 var prompt = require("prompt");
+var init = require('./init');
 var log = require('./utils/log');
 var exec = require('./utils/exec').exec;
-var git = require('./utils/git');
 var fs = require('./utils/fs');
 var bower = require('./utils/bower');
 
@@ -19,11 +19,9 @@ function renameFiles(component){
     ]);
 }
 
-function initStructure(dir, component, repo, author){
+function createStructure(dir, component, repo, author){
     log.info("\nCopying Component Files ... \n");
-    return fs.copyDirectory(
-        dir,
-        './' + component,
+    return fs.copyDirectory(dir, './' + component,
         function(read, write, file){
             read.pipe(replaceStream('{{ component }}', component))
                 .pipe(replaceStream('{{ git.username }}', repo.match(/.com\:(.*)\//)[1]))
@@ -33,14 +31,14 @@ function initStructure(dir, component, repo, author){
 }
 
 function newComponent(dir, component, repo, author) {
-    return initStructure(dir, component, repo, author).then(function(output) {
+    return createStructure(dir, component, repo, author).then(function(output) {
         shell.cd(component);
         return renameFiles(component);
     }).then(function(output){
-        return initGit(repo);
+        return init.git(repo);
     }).then(function(output){
         log.onSuccess(output);
-        return initGhPages();
+        return init.ghPages();
     }).then(function(output){
         log.onSuccess(output);
         return installNpms();
@@ -58,51 +56,6 @@ function installNpms(){
     return exec('npm',['install']).then(function(output){
         log.onSuccess(output);
     }).catch(log.onError);
-}
-function initBower(){
-    return bower.register().catch(function(err){
-        log.onError('Error: Bower Register ' + err);
-    });
-}
-
-function initGit(repo){
-    log.info("\nInitialising Git ... \n");
-    return git.init().then(function(output){
-        log.onSuccess(output);
-        return git.add(['.']);
-    }).then(function(output){
-        log.onSuccess(output);
-        return git.commit('first commit');
-    }).then(function(output){
-        log.onSuccess(output);
-        return  git.remote(['add', 'origin', repo]);
-    }).then(function(output){
-        log.onSuccess(output);
-        return git.push(['-u', 'origin', 'master']);
-    }).catch(log.onError);
-}
-
-function initGhPages(){
-    log.info("\nInitialising gh-pages ... \n");
-    return git.checkout(['--orphan', 'gh-pages']).then(function(output){
-        log.onSuccess(output);
-        return git.rm(['-rf', '.']);
-    }).then(function(output){
-        log.onSuccess(output);
-        return exec('touch',['gh-pages-initialised.md']);
-    }).then(function(output){
-        log.onSuccess(output);
-        return git.add(['gh-pages-initialised.md']);
-    }).then(function(output){
-        log.onSuccess(output);
-        return git.commit('Init gh-pages');
-    }).then(function(output){
-        log.onSuccess(output);
-        return git.push(['--set-upstream','origin','gh-pages']);
-    }).then(function(output){
-        log.onSuccess(output);
-        return git.checkout(['master']);
-    }).catch(log.onError)
 }
 
 function createAll(componentName){
