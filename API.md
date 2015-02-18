@@ -62,25 +62,25 @@ This will [build](#build) your site then using [browserSync](https://www.npmjs.c
 You can configure this to either serve a static site or node app within the component.config.js.
 
 Static Example :
-```json
+```javascript
     ...
-    "serve': {
-        "type":'static',
-        "directories" : ['_site', 'other-directory'],
-        "port": 3456
+    serve: {
+        type:'static',
+        directories : ['_site', 'other-directory'],
+        port: 3456
     },
     ...
 ```
 
 Node Server example : 
-```json
+```javascript
     ...
-    "serve": {
-        "type": `node`
-        "port": 3456
-        "script" : 'app/server.js',
-        "host": 'http://localhost:3000',
-        "env": { NODE_ENV: 'local'}
+    serve: {
+        type: 'node'
+        port: 3456
+        script : 'app/server.js',
+        host: 'http://localhost:3000',
+        env: { NODE_ENV: 'local'}
     },
     ...
 ```
@@ -150,7 +150,7 @@ This will push the current files within `_site` to gh-pages branch (making your 
 This will push the current files from within `_site` to AWS using the options within `component.config.js`.  Setting this option to false will prevent a release.
 
 **example release config***
-```json
+```javascript
     ...
     release: {
         type: 'aws',
