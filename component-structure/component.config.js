@@ -20,7 +20,7 @@ module.exports = {
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
         region: process.env.YOUR_AWS_REGION,
-        directoryPrefix: false //prefix your target release destination
+        directoryPrefix: false //prefix your target release destination i.e. 'components/'
     },
     serve: {
         type:'static', // `static` or `node`
