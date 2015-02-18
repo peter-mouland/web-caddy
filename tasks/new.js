@@ -39,13 +39,13 @@ function newComponent(component) {
         return init.localGit();
     }).then(function(output){
         log.onSuccess(output);
-        return init.remoteGit(component);
-    }).then(function(output){
-        log.onSuccess(output);
         return installNpms();
     }).then(function(output){
         log.onSuccess(output);
         return bower.install();
+    }).then(function(output){
+        log.onSuccess(output);
+        return init.remoteGit(component);
     }).then(function(){
         log.info([
             'Ready!',

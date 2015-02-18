@@ -23,9 +23,7 @@ function writeFile(fileObj){
         return new Promise(function(resolve, reject){
             fs.writeFile(path.join(fileObj.dir,fileObj.name), string, function(err, written, buffer){
                 err && reject(err);
-                setTimeout(function(){
-                    !err && resolve(fileObj);
-                },150)
+                !err && resolve(fileObj);
             });
         });
     })

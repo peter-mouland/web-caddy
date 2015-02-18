@@ -91,6 +91,11 @@ function pushFirstPush(repo){
     return git.remote(['add', 'origin', repo])
         .then(function(output){
             log.onSuccess(output);
+            return git.add(['.']);
+        }).then(function(output){
+            log.onSuccess(output);
+            return git.commit('first commit');
+        }).then(function(output){
             return git.push(['-u', 'origin', 'master']);
     }).catch(log.onError);
 }
