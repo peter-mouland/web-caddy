@@ -56,39 +56,22 @@ CLI | Node
 `component serve` | `component.serve.all()`
 `component serve quick` | `component.serve.all()`
 `component test` | `component.test.all()`
+`component test quick` | `component.test.quick()`
 `component test tdd` | `component.test.tdd()`
+`component init bower` | `component.init.bower()`
 `component release` | `component.release.all()`
 `component release gh-pages` | `component.release.ghPages()`
 `component release cloud` | `component.release.cloud()`
 
-The CLI will use the config set within root/[component.config.js](component-structure/component.config.js).
-Node will also use this file, but can be overridden by passing in the config object to the function.
+The CLI and Node will use the config set within [component.config.js](component-structure/component.config.js) in your project root.
 
 [API in Detail >](API.md)
 
-#### component.config.js
-```javascript
-module.exports = {
-    ...
-    serve: {
-        script : 'src/app/server.js',
-        host: 'http://localhost:3000',
-        port: 8080,
-        env: { NODE_ENV: 'development'}
-    },
-    ...
-}
-```
+### Advanced Customisation
 
-#### Node
-```javascript
-component.serve({
-    script : 'src/test/testserver.js',
-    host: 'http://localhost:3001',
-    port: 8080,
-    env: { NODE_ENV: 'test', PORT: 3001}
-})
-```
+Using Node (or Gulp) you can customise the build process even more.
+
+[Customisation Examples >](Customisation-Examples.md)
 
 ### Regression/Screen-shot tests
 

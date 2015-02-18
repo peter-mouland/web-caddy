@@ -40,8 +40,6 @@ function all(){
 
 module.exports = {
     tdd: tdd,
-    once: once,
-    coverage: coverage,
     all: all,
     quick: quick
 }

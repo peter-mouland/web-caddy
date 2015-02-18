@@ -1,18 +1,17 @@
 # Tasks
 
+ * [New](#new) - Creating a new component
+ * [Build](#build) - Building the assets needed for your component
+ * [Serve](#serve) - Serving your site
+ * [Test](#test) - Testing and code-coverage
+ * [Init](#init) - Initialising Bower
+ * [Release](#release) - Release to git, gh-pages, aws
+
 ## New
 
 `component new *component-name*`
 
 This will create a new component with a standard fie structure. From the component directory you can then build, test, serve and release out of the box.
-
-## Init
-
-#### Bower
-
-`component init bower`
-
-This will register your component with bower, using the name from your bower.json and the repository url from package.json.
 
 ## Build
 
@@ -65,10 +64,10 @@ You can configure this to either serve a static site or node app within the comp
 Static Example :
 ```json
     ...
-    serve: {
-        type:'static',
-        directories : ['_site', 'other-directory'],
-        port: 3456
+    "serve': {
+        "type":'static',
+        "directories" : ['_site', 'other-directory'],
+        "port": 3456
     },
     ...
 ```
@@ -76,12 +75,12 @@ Static Example :
 Node Server example : 
 ```json
     ...
-    serve: {
-        type: `node`
-        port: 3456
-        script : 'app/server.js',
-        host: 'http://localhost:3000',
-        env: { NODE_ENV: 'local'}
+    "serve": {
+        "type": `node`
+        "port": 3456
+        "script" : 'app/server.js',
+        "host": 'http://localhost:3000',
+        "env": { NODE_ENV: 'local'}
     },
     ...
 ```
@@ -96,7 +95,10 @@ This will do the above `serve`, but without the build step.
 
 `component test`
 
-This will [build](#build) your site then run the `test once` and `test coverage` tasks below.
+This will [build](#build) your site then run then using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http://jasmine.github.io/2.2/introduction.html), it will run through the `.spec.js` files found in `/test/` directory.
+A code-coverage report will also be produced.
+
+Code-coverage is uses the `watermarks` option within [test/karma.conf.js](component-structure/test/karma.conf.js), and ensures the code coverage is above the thresholds given.
 
 ### Quick
 
@@ -104,25 +106,19 @@ This will [build](#build) your site then run the `test once` and `test coverage`
 
 This will run your tests as mentioned above, but without the build step.
 
-
-#### Once
-
-`component test once`
-
-Using Karma and Jasmine, it will run through the `.spec.js` files found in `/test/` directory
-
 #### TDD
 
 `component test tdd`
 
-Using the `watermarks` option within karma.conf.js, it ensures the code coverage is above the thresholds given.
+This will run through test and then stay open watching for code changes in your spec files.
 
-#### Coverage
+## Init
 
-`component test coverage`
+#### Bower
 
-Using Karma and Jasmine, it will run through the `.spec.js` files found in `/test/` directory and watch for code changes in your spec files.
+`component init bower`
 
+This will register your component with bower, using the name from your bower.json and the repository url from package.json.
 
 ## Releasing
 
