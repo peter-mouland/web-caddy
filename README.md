@@ -19,26 +19,25 @@ Out of the box you can:
 1. Create a repository on github.
 2. Run `component new *component-name*` (which will create your component directory) then follow on-screen instructions.
 3. Run `component serve` in your component's directory.
-4. Run `component test` to test your code!
-5. Run `component release` to release your code!
+4. Run `component test` to test your code.
+5. Run `component release` to release your code.
 
 ### Generated Directory Structure
 
     $ component
-    ├── _site           => Generated / Compiled demo site
-    ├── config          => Store the build config including the AWS variables
-    ├── dist            => Compiled code to be distrubtuted via bower
     ├── test            => Home of your test config plus test specs
     ├── demo            => source code used soley for demoing the functionality
     │   ├- _includes    => Contains any html files to be concatinated to index.html
     │   ├- scripts      => any javascript needed to get the demo working
     │   ├- styles       => any Sass needed to get the demo working
-    │   ├- images etc.  => demo assets directories
+    │   ├- images       => demo images directories
     │   └- index.html
-    └── src             => source code for the component.
-        ├- scripts      => component javascript
-        ├- styles       => component Sass
-        └- images etc.  => component assets directories
+    ├── src             => source code for the component.
+    │   ├- scripts      => component javascript
+    │   ├- styles       => component Sass
+    ├── circle.yml      => Configuration to enable automatic build using circleci.com
+    ├── gulpfile.js     => Default gulp setup to enable build, serve, test and release
+    └── component.config.js       => Store the build config including the AWS variables
      
 ## API
 
@@ -48,20 +47,20 @@ Once required (`var component = require('component-helper');`), you can call the
 
 CLI | Node
 --- | ----
-`component new *component-name*` | `component.new(*component-name*)`
-`component build` | `component.build.all()`
-`component build scripts` | `component.build.scripts()`
-`component build styles` | `component.build.styles()`
-`component build html` | `component.build.html()`
-`component serve` | `component.serve.all()`
-`component serve quick` | `component.serve.all()`
-`component test` | `component.test.all()`
-`component test quick` | `component.test.quick()`
-`component test tdd` | `component.test.tdd()`
-`component init bower` | `component.init.bower()`
-`component release` | `component.release.all()`
-`component release gh-pages` | `component.release.ghPages()`
-`component release cloud` | `component.release.cloud()`
+[component new *component-name*](API.md/#new) | `component.new(*component-name*)`
+[component build](API.md/#build) | `component.build.all()`
+[component build scripts](API.md/#scripts) | `component.build.scripts()`
+[component build styles](API.md/#styles) | `component.build.styles()`
+[component build html](API.md/#html) | `component.build.html()`
+[component serve](API.md/#serve) | `component.serve.all()`
+[component serve quick](API.md/#quick) | `component.serve.all()`
+[component test](API.md/#testing) | `component.test.all()`
+[component test quick](API.md/#quick-1) | `component.test.quick()`
+[component test tdd](API.md/#tdd) | `component.test.tdd()`
+[component init bower](API.md/#bower) | `component.init.bower()`
+[component release](API.md/#releasing) | `component.release.all()`
+[component release gh-pages](API.md/#gh-pages) | `component.release.ghPages()`
+[component release cloud](API.md/#cloud) | `component.release.cloud()`
 
 The CLI and Node will use the config set within [component.config.js](component-structure/component.config.js) in your project root.
 
