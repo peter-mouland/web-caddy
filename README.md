@@ -17,9 +17,10 @@ Out of the box you can:
 ## Creating a New Component
 
 1. Create a repository on github
-2. Run `component new` and follow on-screen instructions
+2. Run `component new *component-name*` and follow on-screen instructions
 3. Run `component serve` in your component's directory.
 4. Run `component test` to test your code!
+5. Run `component release` to release your code!
 
 ### Generated Directory Structure
 
@@ -47,15 +48,23 @@ Once required (`var component = require('component-helper');`), you can call the
 
 CLI | Node
 --- | ----
+`component new *component-name*` | `component.new(*component-name*)`
 `component build` | `component.build.all()`
 `component build scripts` | `component.build.scripts()`
 `component build styles` | `component.build.styles()`
 `component build html` | `component.build.html()`
 `component serve` | `component.serve.all()`
+`component serve quick` | `component.serve.all()`
 `component test` | `component.test.all()`
+`component test tdd` | `component.test.tdd()`
+`component release` | `component.release.all()`
+`component release gh-pages` | `component.release.ghPages()`
+`component release cloud` | `component.release.cloud()`
 
 The CLI will use the config set within root/[component.config.js](component-structure/component.config.js).
 Node will also use this file, but can be overridden by passing in the config object to the function.
+
+[API in Detail >](API.md)
 
 #### component.config.js
 ```javascript
@@ -80,7 +89,6 @@ component.serve({
     env: { NODE_ENV: 'test', PORT: 3001}
 })
 ```
-[More Tasks >](TASKS.md)
 
 ### Regression/Screen-shot tests
 

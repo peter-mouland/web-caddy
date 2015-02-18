@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.10.0
+
+ * Added Mustache templating
+ * Removed `html-concat` option
+ * Updated `component new` to `component new <<component-name>>`
+
 ## 0.9.2
 
  * Added CSS to specs by default
