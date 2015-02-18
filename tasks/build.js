@@ -5,9 +5,9 @@ var component = require(componentConfigPath);
 
 var log = require('./utils/log');
 var fs = require('./utils/fs');
-var Scripts = require('./wrappers/' + (component.build.scripts && component.build.scripts.type || component.build.scripts) || 'browserify');
+var Scripts = require('./wrappers/' + ((component.build.scripts && component.build.scripts.type || component.build.scripts) || 'browserify'));
 var Styles = require('./wrappers/sass');           //config.buildStyles
-var Html = require('./wrappers/' + component.build.html || 'mustache');
+var Html = require('./wrappers/' + (component.build.html || 'mustache'));
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
