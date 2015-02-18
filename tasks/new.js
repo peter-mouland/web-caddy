@@ -66,6 +66,7 @@ function installNpms(){
 function createAll(componentName){
     console.log("Creating new component " + componentName);
     return new Promise(function(resolve, reject){
+        prompt.colors = false;
         prompt.start();
         prompt.get([{
             description: 'GitHub Repository SSH URL',
