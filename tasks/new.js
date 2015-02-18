@@ -29,6 +29,9 @@ function createStructure(component){
 }
 
 function newComponent(component) {
+    if (fs.existsSync(component)){
+        log.onError('Component `' + component + '` already exists');
+    }
     return createStructure(component).then(function(output) {
         shell.cd(component);
         return renameFiles(component);

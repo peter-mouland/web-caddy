@@ -61,6 +61,7 @@ function replaceGitVariables(component, repo){
         { replace: /{{ git.SSH-URL }}/g, with: SSH },
         { replace: /{{ git.HTTPS-URL }}/g, with: HTTPS},
         { replace: /{{ git.io-URL }}/g, with: io},
+        { replace: /{{ git.username }}/g, with: repoMatch[1]},
         { replace: /{{ git.author }}/g, with: author},
         { replace: /{{ git.email }}/g, with: email }
     ];
