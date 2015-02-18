@@ -28,19 +28,19 @@ By default we assume the styles are written using [Sass](http://sass-lang.com/).
 This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `src/styles` **root**.
 A `.min.css` will also be created for each compiled file.
 
-These will be saved within the `dist` and `site` roots set within `component.config.js`
+These will be saved within the `dist` and `site` roots set within [component.config.js](component-structure/component.config.js)
 
 #### Scripts
 
 `component build scripts`
 
 By default we assume the javascript is written in CommonJS, so we [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/) if you wish.
-Just update `build.scripts` within [component.config.js](../component-structure/component.config.js)
+Just update `build.scripts` within [component.config.js](component-structure/component.config.js)
 
 This will create a compiled file for each `.js` file found in the `src/scripts` **root**.
 Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.
 
-These will be saved within the `dist` and `site` roots set within `component.config.js`
+These will be saved within the `dist` and `site` roots set within [component.config.js](component-structure/component.config.js)
 
 #### HTML
 
@@ -50,7 +50,7 @@ By default we assume the html has been written using [mustache](https://github.c
 
 This will create a compiled file for each `.html` file found in the `demo` **root**.
 
-These will be saved within the `site` roots set within `component.config.js`
+These will be saved within the `site` roots set within [component.config.js](component-structure/component.config.js)
 
 
 ## Serve
@@ -59,7 +59,7 @@ These will be saved within the `site` roots set within `component.config.js`
 
 This will [build](#build) your site then using [browserSync](https://www.npmjs.com/package/browser-sync) will open your browser and automatically apply any html, css and js source changes that are then made.
 
-You can configure this to either serve a static site or node app within the component.config.js.
+You can configure this to either serve a static site or node app within the [component.config.js](component-structure/component.config.js).
 
 Static Example :
 ```javascript
@@ -147,7 +147,7 @@ This will push the current files within `_site` to gh-pages branch (making your 
 
 `component release cloud`
 
-This will push the current files from within `_site` to AWS using the options within `component.config.js`.  Setting this option to false will prevent a release.
+This will push the current files from within `_site` to AWS using the options within [component.config.js](component-structure/component.config.js).  Setting this option to false will prevent a release.
 
 **example release config**
 ```javascript
