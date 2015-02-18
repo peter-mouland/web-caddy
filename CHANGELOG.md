@@ -4,6 +4,7 @@
 
  * Added Mustache templating
  * Removed `html-concat` option
+ * Removed the need to supply a git repo when running `component new`
  * Updated `component new` to `component new <<component-name>>`
 
 ## 0.9.2
