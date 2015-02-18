@@ -3,7 +3,7 @@
  * [New](#new) - Creating a new component
  * [Build](#build) - Building the assets needed for your component
  * [Serve](#serve) - Serving your site
- * [Test](#test) - Testing and code-coverage
+ * [Testing](#testing) - Testing and code-coverage
  * [Init](#init) - Initialising Bower
  * [Release](#release) - Release to git, gh-pages, aws
 
