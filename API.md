@@ -149,7 +149,7 @@ This will push the current files within `_site` to gh-pages branch (making your 
 
 This will push the current files from within `_site` to AWS using the options within `component.config.js`.  Setting this option to false will prevent a release.
 
-**example release config***
+**example release config**
 ```javascript
     ...
     release: {
