@@ -47,7 +47,12 @@ function newComponent(dir, component, repo, author) {
         log.info("\nInstalling Bower Modules ... \n");
         return bower.install();
     }).then(function(){
-        log.info('Ready! \nPlease go to your new directory: `cd ' + component + '`');
+        log.info([
+            'Ready!',
+            ' * Please go to your new directory : `cd ' + component + '`',
+            ' * view the basic site : `component serve`',
+            ' * to see more tasks please see : `https://github.com/skyglobal/component-helper/blob/master/API.md`'
+        ].join('\n'));
     }).catch(log.onError);
 }
 
