@@ -120,6 +120,10 @@ This will run through test and then stay open watching for code changes in your 
 
 This will register your component with bower, using the name from your bower.json and the repository url from package.json.
 
+#### Remote Git Repository
+
+`component init gitRemote`
+
 ## Releasing
 
 `component release`

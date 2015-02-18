@@ -1,7 +1,7 @@
 {
     "name": "bskyb-{{ component }}",
     "version": "0.0.0",
-    "homepage": "https://github.com/{{ git.username }}/{{ component }}",
+    "homepage": "{{ git.HTTPS-URL }}",
     "authors": [
         "{{ git.author }} <{{ git.email }}>"
     ],

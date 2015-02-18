@@ -1,7 +1,7 @@
 [{{ component }}](http://{{ git.username }}.github.io/{{ component }}/)  [![Circle CI](https://circleci.com/gh/skyglobal/{{ component }}/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/{{ component }}/tree/master)
 ========================
 
-> Please take a look at the [demo page](http://{{ git.username }}.github.io/{{ component }}/)
+> Please take a look at the [demo page]({{ git.io-URL }})
 
 
 ## Quick-Start

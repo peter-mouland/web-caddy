@@ -4,9 +4,9 @@ This project does not use gulp, but because gulp can handle promises, it is very
 
 Below is an example of how to serve a node project with one config, then also serve the app using different settings and and test on this server.
 
-**gulpfile.js**
+**gulpfile.js** : 2 different serve configurations
 
-```
+```javascript
 var gulp = require('gulp');
 var component = require('component-helper');
 
