@@ -73,7 +73,7 @@ function cloud(version){
     return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.release).write()
 }
 
-function quick(args, type){
+function quick(type){
     var bumpedVersion
     return versionBump(type).then(function(version){
         bumpedVersion = version;
@@ -85,9 +85,10 @@ function quick(args, type){
     }).catch(log.onError);
 }
 
-function all(args, type){
+function all(){
+    var type = arguments[1] || arguments[0];
     return test.all().then(function() {
-        return quick(args, type)
+        return quick(type)
     }).catch(log.onError);
 }
 

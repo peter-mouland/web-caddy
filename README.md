@@ -47,20 +47,21 @@ Once required (`var component = require('component-helper');`), you can call the
 
 CLI | Node
 --- | ----
-[component new *component-name*](API.md/#new) | `component.new(*component-name*)`
-[component build](API.md/#build) | `component.build.all()`
+[component new *component-name*](API.md/#new) | *unavailable*
+[component build](API.md/#build) | `component.build.all(version)` (optional: semantic *version*)
 [component build scripts](API.md/#scripts) | `component.build.scripts()`
 [component build styles](API.md/#styles) | `component.build.styles()`
-[component build html](API.md/#html) | `component.build.html()`
-[component serve](API.md/#serve) | `component.serve.all()`
-[component serve quick](API.md/#quick) | `component.serve.all()`
+[component build html](API.md/#html) | `component.build.html(version)` (optional: semantic *version*)
+[component serve](API.md/#serve) | `component.serve.all(config)` (optional: server *config*)
+[component serve quick](API.md/#quick) | `component.serve.quick(config)` (optional: server *config*)
 [component test](API.md/#testing) | `component.test.all()`
 [component test quick](API.md/#quick-1) | `component.test.quick()`
 [component test tdd](API.md/#tdd) | `component.test.tdd()`
 [component init bower](API.md/#bower) | `component.init.bower()`
-[component release](API.md/#releasing) | `component.release.all()`
-[component release gh-pages](API.md/#gh-pages) | `component.release.ghPages()`
-[component release cloud](API.md/#cloud) | `component.release.cloud()`
+[component init remoteGit](API.md/#bower) | `component.init.remoteGit(repository)` (mandatory: Git SSH URL)
+[component release](API.md/#releasing) | `component.release.all(versionType)` (optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component release gh-pages](API.md/#gh-pages) | `component.release.ghPages(message)` (optional: commit *message*)
+[component release cloud](API.md/#cloud) | `component.release.cloud(version)` (optional: semantic *version*)
 
 The CLI and Node will use the config set within [component.config.js](component-structure/component.config.js) in your project root.
 

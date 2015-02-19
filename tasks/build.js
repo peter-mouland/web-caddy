@@ -1,13 +1,13 @@
 var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
+var log = require('./utils/log');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
 
-var log = require('./utils/log');
 var fs = require('./utils/fs');
 var Scripts = require('./wrappers/' + ((component.build.scripts && component.build.scripts.type || component.build.scripts) || 'browserify'));
-var Styles = require('./wrappers/sass');           //config.buildStyles
-var Html = require('./wrappers/' + (component.build.html || 'mustache'));
+var Styles = require('./wrappers/sass');           //config.build.styles
+var Html = require('./wrappers/mustache');          //config.build.html
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 

@@ -6,6 +6,7 @@ var fs = require('./utils/fs');
 var bower = require('./utils/bower');
 var shell = require("shelljs");
 var prompt = require("prompt");
+var findup = require('findup-sync');
 
 function initBower(){
     return bower.register().catch(function(err){
@@ -24,8 +25,9 @@ function localGit(){
     }).catch(log.onError);
 }
 
-function askForGitRepo(){
+function askForGitRepo(gitRepo){
     return new Promise(function(resolve, reject){
+        if (gitRepo && gitRepo.length>0) resolve(gitRepo)
         prompt.colors = false;
         prompt.start();
         prompt.get([{
@@ -42,7 +44,7 @@ function askForGitRepo(){
     });
 }
 
-function replaceGitVariables(component, repo){
+function replaceGitVariables(repo, componentName){
     var repoMatch = repo && repo.match(/.com\:(.*)\//);
     if (!repoMatch){
         log.info(
@@ -66,19 +68,24 @@ function replaceGitVariables(component, repo){
         { replace: /{{ git.email }}/g, with: email }
     ];
     var dest = process.cwd();
-    if (dest.indexOf('/' + component)==-1){
-        dest = path.join(dest,component)
+    if (!componentName){
+        var componentConfigPath = findup('component.config.js');
+        var component = require(componentConfigPath);
+        componentName = component.pkg.name;
+    }
+
+    if (dest.indexOf('/' + componentName)==-1){
+        dest = path.join(dest, componentName)
     }
     return fs.replace(dest + '**/*.*', replacements);
 }
 
-function remoteGit(component){
+function remoteGit(gitRepo, component){
     log.info("\nInitialising Git Remotely... \n");
-    var gitRepo;
-    return askForGitRepo()
+    return askForGitRepo(gitRepo)
         .then(function(reply) {
             gitRepo = reply;
-            return replaceGitVariables(component, gitRepo)
+            return replaceGitVariables(gitRepo, component)
         }).then(function(){
             return pushFirstPush(gitRepo)
         }).then(function(){
