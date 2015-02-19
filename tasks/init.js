@@ -7,6 +7,7 @@ var bower = require('./utils/bower');
 var shell = require("shelljs");
 var prompt = require("prompt");
 var findup = require('findup-sync');
+var colors = require('colors');
 
 function initBower(){
     return bower.register().catch(function(err){
@@ -28,10 +29,9 @@ function localGit(){
 function askForGitRepo(gitRepo){
     return new Promise(function(resolve, reject){
         if (gitRepo && gitRepo.length>0) resolve(gitRepo)
-        prompt.colors = false;
         prompt.start();
         prompt.get([{
-            description: 'GitHub Repository SSH URL',
+            description: 'GitHub Repository SSH URL'.bgBlack.white + ' (leave blank if none)'.bgBlack.white.dim,
             name: 'repo'
         }], function(err, result) {
             if (!result) resolve('');
