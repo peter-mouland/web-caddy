@@ -1,6 +1,6 @@
 {
   "name": "component-helper",
-  "version": "0.10.0-rc3",
+  "version": "1.0.0-rc1",
   "description": "A way to help ensure the common tasks are consistent across components",
   "main": "index.js",
   "files": [
