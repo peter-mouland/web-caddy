@@ -52,8 +52,8 @@ CLI | Node
 [component build scripts](API.md/#scripts) | `component.build.scripts()`
 [component build styles](API.md/#styles) | `component.build.styles()`
 [component build html](API.md/#html) | `component.build.html(version)` <br>(optional: semantic *version*)
-[component serve](API.md/#serve) | `component.serve.all(config)` <br>(optional: server *config*)
-[component serve quick](API.md/#quick) | `component.serve.quick(config)` <br>(optional: server *config*)
+[component serve](API.md/#serve) | `component.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
+[component serve quick](API.md/#quick) | `component.serve.quick(config)` <br>(optional: [server *config*](API.md#serve))
 [component test](API.md/#testing) | `component.test.all()`
 [component test quick](API.md/#quick-1) | `component.test.quick()`
 [component test tdd](API.md/#tdd) | `component.test.tdd()`
