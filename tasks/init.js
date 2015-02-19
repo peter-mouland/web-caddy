@@ -54,9 +54,14 @@ function replaceGitVariables(repo, componentName){
             ].join('\n'));
         return Promise.resolve();
     }
+    if (!componentName){
+        var componentConfigPath = findup('component.config.js');
+        var component = require(componentConfigPath);
+        componentName = component.pkg.name;
+    }
     var SSH = (repoMatch) ? repo : '{{ git.SSH-URL }}';
     var HTTPS = (repoMatch) ? repo.replace('git@', 'https://').replace('.com:','.com/') : '{{ git.HTTPS-URL }}';
-    var io = (repoMatch) ? repo.replace(repoMatch[1],'').replace('git@', 'http://' + repoMatch[1] + '.').replace('.com:','.io') : '{{ git.HTTPS-URL }}';
+    var io = (repoMatch) ? repo.replace(repoMatch[1],'').replace('git@', 'http://' + repoMatch[1] + '.').replace('.com:','.io').replace(componentName + '.git', componentName) : '{{ git.io-URL }}';
     var author = shell.exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
     var email = shell.exec('git config user.email', {silent:true}).output.replace(/\s+$/g, '');
     var replacements = [
@@ -68,11 +73,6 @@ function replaceGitVariables(repo, componentName){
         { replace: /{{ git.email }}/g, with: email }
     ];
     var dest = process.cwd();
-    if (!componentName){
-        var componentConfigPath = findup('component.config.js');
-        var component = require(componentConfigPath);
-        componentName = component.pkg.name;
-    }
 
     if (dest.indexOf('/' + componentName)==-1){
         dest = path.join(dest, componentName)

@@ -20,7 +20,7 @@ function buildHtml(version) {
     version = version || component.pkg.version;
     var src = [ paths.demo.root + '/*.html'];
     var dest = paths.site.root;
-    return fs.del(dest).then(function(){
+    return fs.del(dest + '/**/*.html').then(function(){
         return new Html(src, dest, {version:version}).write()
     }).then(function(){
         return 'Build HTML Complete'
