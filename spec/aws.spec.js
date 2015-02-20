@@ -4,36 +4,36 @@ var AWSSDK   = require('aws-sdk');
 var log = require('../tasks/utils/log');
 
 function onError(e){
-    console.log('** Test Error **')
-    console.log(e)
-    expect(false).toBe(true)
+    console.log('** Test Error **');
+    console.log(e);
+    expect(false).toBe(true);
 }
 describe('AWS', function () {
 
-    var awsFileObj = {}
+    var awsFileObj = {};
 
     beforeEach(function(done){
         fs.read('./spec/fixtures/aws/aws.md').then(function(files){
             awsFileObj =  files[0];
         }).then(done);
-    })
+    });
 
     it('always saves destination with a single trailing slash', function () {
-        var aws = new AWS('src', 'dest', {})
-        expect(aws.destination).toBe('dest/')
-        var aws = new AWS('src', 'dest/', {})
-        expect(aws.destination).toBe('dest/')
+        var aws = new AWS('src', 'dest', {});
+        expect(aws.destination).toBe('dest/');
+        var aws = new AWS('src', 'dest/', {});
+        expect(aws.destination).toBe('dest/');
     });
 
     it('check the given key exists in the config object', function () {
         spyOn(log, 'onError');
-        var aws = new AWS('src', 'dest', {})
+        var aws = new AWS('src', 'dest', {});
         aws.checkMandatory('bill');
         expect(log.onError.calls.count()).toBe(1);
 
-        var aws = new AWS('src', 'dest', {bucket:'Bucket'})
-        aws.checkMandatory('ben')
-        aws.checkMandatory('Bucket')
+        var aws = new AWS('src', 'dest', {bucket:'Bucket'});
+        aws.checkMandatory('ben');
+        aws.checkMandatory('Bucket');
         expect(log.onError.calls.count()).toBe(2);
     });
 
@@ -77,10 +77,10 @@ describe('AWS', function () {
         });
         spyOn(AWS.prototype, 'setParams');
         spyOn(AWSSDK, 'S3').and.callFake(function (params){
-            expect(params.accessKeyId).toBe('access key')
-            expect(params.secretAccessKey).toBe('secret')
-            expect(params.region).toBe('region')
-            this.putObject = function(params, cb){cb()}
+            expect(params.accessKeyId).toBe('access key');
+            expect(params.secretAccessKey).toBe('secret');
+            expect(params.region).toBe('region');
+            this.putObject = function(params, cb){cb();};
         });
         aws.upload({}).then(function (msg) {
             expect(AWSSDK.S3.calls.count()).toBe(1);

@@ -8,3 +8,4 @@ bower_components/
 npm-debug.log
 *.iml
 *.tgz
+.tern-port

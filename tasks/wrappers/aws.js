@@ -1,6 +1,6 @@
 var Promise = require('es6-promise').Promise;
-var AWSSDK   = require('aws-sdk');
-var mime  = require('mime');
+var AWSSDK = require('aws-sdk');
+var mime = require('mime');
 var log = require('../utils/log');
 var fs = require('../utils/fs');
 
@@ -18,18 +18,18 @@ function AWS(location, destination, options){
         Key    : null,
         Body   : null
     };
-}
+};
 
 AWS.prototype.addSlash = function(dir){
-    if (dir.slice(-1) !== '/') dir = dir +'/'
-    return dir
-}
+    if (dir.slice(-1) !== '/') dir = dir +'/';
+    return dir;
+};
 
 AWS.prototype.checkMandatory = function(key){
     if (!this.config[key] && !this.params[key]) {
         log.onError({message:'AWS: Missing config `' + key + '`'});
     }
-}
+};
 
 AWS.prototype.setParams = function(fileObj){
     this.checkMandatory('accessKey');
@@ -47,11 +47,11 @@ AWS.prototype.setParams = function(fileObj){
         .replace(fileObj.base, this.destination || '')
         .replace(new RegExp('\\\\', 'g'), '/');
     this.params.Body = fileObj.contents;
-}
+};
 
 AWS.prototype.upload = function(fileObj) {
     var self = this;
-    this.setParams(fileObj)
+    this.setParams(fileObj);
     return new Promise(function(resolve, reject){
         var s3 = new AWSSDK.S3({
             accessKeyId     : self.config.accessKey,
@@ -72,13 +72,13 @@ AWS.prototype.upload = function(fileObj) {
 AWS.prototype.write = function(){
     var self = this;
     return fs.read(this.location).then(function(files){
-        if (!files.length) log.info('No files found to release to AWS\n' + self.location)
-        var promises = []
+        if (!files.length) log.info('No files found to release to AWS\n' + self.location);
+        var promises = [];
         files.forEach(function(fileObj){
-            promises.push(self.upload(fileObj))
-        })
+            promises.push(self.upload(fileObj));
+        });
         return Promise.all(promises);
-    }).catch(log.onError)
-}
+    }).catch(log.onError);
+};
 
 module.exports = AWS;
