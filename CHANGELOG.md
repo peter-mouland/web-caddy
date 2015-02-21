@@ -6,6 +6,8 @@
  * Removed `html-concat` option
  * Removed the need to supply a git repo when running `component new`
  * Updated `component new` to `component new <<component-name>>`
+ * Added support for `~/.aws/credentials` for S3 releases. Default
+   config uses `pkg.name` as a profile in this file to get credentials.
 
 ## 0.9.2
 

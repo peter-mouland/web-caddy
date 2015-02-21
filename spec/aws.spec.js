@@ -69,6 +69,12 @@ describe('AWS', function () {
     });
 
     it('should upload files to S3', function (done) {
+        spyOn(AWSSDK, 'S3').and.callFake(function (params){
+            expect(params.accessKeyId).toBe('access key');
+            expect(params.secretAccessKey).toBe('secret');
+            expect(AWSSDK.config.region).toBe('region');
+            this.putObject = function(params, cb){cb();};
+        });
         var aws = new AWS('./spec/fixtures/aws/aws.md', 'dest', {
             accessKey: 'access key',
             secret: 'secret',
@@ -76,16 +82,41 @@ describe('AWS', function () {
             bucket: 'Bucket'
         });
         spyOn(AWS.prototype, 'setParams');
-        spyOn(AWSSDK, 'S3').and.callFake(function (params){
-            expect(params.accessKeyId).toBe('access key');
-            expect(params.secretAccessKey).toBe('secret');
-            expect(params.region).toBe('region');
-            this.putObject = function(params, cb){cb();};
-        });
         aws.upload({}).then(function (msg) {
             expect(AWSSDK.S3.calls.count()).toBe(1);
             expect(AWS.prototype.setParams.calls.count()).toBe(1);
             expect(msg).toBe('S3::putObject "null" send');
         }).then(done).catch(onError);
+    });
+
+    it('should get credentials the standard way', function(done) {
+        process.env.AWS_ACCESS_KEY_ID = "env-id";
+        process.env.AWS_SECRET_ACCESS_KEY = "env-secret";
+
+        var aws = new AWS('./spec/fixtures/aws/aws.md', 'dest', {
+            region: 'region',
+            bucket: 'Bucket'
+        });
+
+        aws.s3.config.getCredentials(function() {done();});
+        // we can't check for "env-id" explicitly as if
+        // ~/.aws/credentials exists it takes precedence over
+        // process.env in this test. The point is the default SDK
+        // logic is enforced.
+        expect(aws.s3.config.credentials.accessKeyId).toBeDefined();
+
+    })
+    ;
+
+    it('should use the credential profile when provided one', function() {
+        // spyOn(AWSSDK.util, 'readFileSync').and.callThrough();
+        var aws = new AWS('./spec/fixtures/aws/aws.md', 'dest', {
+            region: 'region',
+            bucket: 'Bucket',
+            profile: 'profile'
+        });
+
+        expect(aws.s3.config.credentials.profile).toBe('profile');
+
     });
 });

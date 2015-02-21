@@ -17,9 +17,8 @@ module.exports = {
     release: { // or false. add you release config here.
         type: 'aws',
         bucket: process.env.YOUR_AWS_BUCKET,
-        accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
-        secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
         region: process.env.YOUR_AWS_REGION,
+        profile: pkg.name // profile to be used in ~/.aws/credentials
         directoryPrefix: false //prefix your target release destination i.e. 'components/'
     },
     serve: {
