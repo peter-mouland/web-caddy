@@ -14,18 +14,20 @@ To build the Gulp Component Helper locally, you'll need to install:
 
 1. Fork the project
 2. Clone down your fork
-`git clone git://github.com/skyglobal/component-helper.git`
+`git clone git://github.com/YOUR_USER/component-helper.git`
 3. Setup your 'upstream'
 `git remote add upstream https://github.com/skyglobal/component-helper.git`
-4. Create a topic branch to contain your change
-`git checkout -b feature-my-feature`
-5. Make sure [CHANGELOG.md](./CHANGELOG.md) includes a summary of your changes in a new version number heading
-6. Make sure you are still up to date with master
+4. Run npm install `npm install`
+5. Create a topic branch to contain your change
+`git checkout -b my-feature`
+6. Hack, hack, hack
+7. Make sure [CHANGELOG.md](./CHANGELOG.md) includes a summary of your changes in a new version number heading
+8. Make sure you are still up to date with master
 `git pull upstream master`
-7. If necessary, rebase your commits into logical chunks, without errors.
-8. Push the branch up
-`git push origin my-awesome-feature`
-9. Create a pull request and describe what your change does and the why you think it should be merged.
+9. If necessary, rebase your commits into logical chunks, without errors.
+10. Push the branch up
+`git push origin my-feature`
+11. Create a pull request and describe what your change does and the why you think it should be merged.
 
 ## Running Locally
 
