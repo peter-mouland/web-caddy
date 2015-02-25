@@ -1,5 +1,3 @@
-'use strict';
-
 var gulp = require('gulp');
 var component = require('component-helper');
 var paths = component.paths;
@@ -11,7 +9,7 @@ function onError(err) {
 }
 
 gulp.task('build', function() {
-    return component.build.all().catch(onError)
+    return component.build.all().catch(onError);
 });
 
 gulp.task('serve',  function() {

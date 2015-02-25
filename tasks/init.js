@@ -1,5 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
+var path = require('path');
 var exec = require('./utils/exec').exec;
 var git = require('./utils/git');
 var fs = require('./utils/fs');
@@ -7,7 +8,7 @@ var bower = require('./utils/bower');
 var shell = require("shelljs");
 var prompt = require("prompt");
 var findup = require('findup-sync');
-var colors = require('colors');
+require('colors');
 
 function initBower(){
     return bower.register().catch(function(err){
@@ -27,8 +28,8 @@ function localGit(){
 }
 
 function askForGitRepo(gitRepo){
-    return new Promise(function(resolve, reject){
-        if (gitRepo && gitRepo.length>0) resolve(gitRepo)
+    return new Promise(function(resolve){
+        if (gitRepo && gitRepo.length>0) resolve(gitRepo);
         prompt.start();
         prompt.get([{
             description: 'GitHub Repository SSH URL'.bgBlack.white + ' (leave blank if none)'.bgBlack.white.dim,
@@ -39,7 +40,7 @@ function askForGitRepo(gitRepo){
             if (!gitUrlMatch){
                 resolve('');
             }
-            resolve(result.repo)
+            resolve(result.repo);
         });
     });
 }
@@ -75,7 +76,7 @@ function replaceGitVariables(repo, componentName){
     var dest = process.cwd();
 
     if (dest.indexOf('/' + componentName)==-1){
-        dest = path.join(dest, componentName)
+        dest = path.join(dest, componentName);
     }
     return fs.replace(dest + '**/*.*', replacements);
 }
@@ -85,11 +86,11 @@ function remoteGit(gitRepo, component){
     return askForGitRepo(gitRepo)
         .then(function(reply) {
             gitRepo = reply;
-            return replaceGitVariables(gitRepo, component)
+            return replaceGitVariables(gitRepo, component);
         }).then(function(){
-            return pushFirstPush(gitRepo)
+            return pushFirstPush(gitRepo);
         }).then(function(){
-            return initGhPages(gitRepo)
+            return initGhPages(gitRepo);
         }).catch(log.onError);
 }
 
@@ -102,7 +103,7 @@ function pushFirstPush(repo){
         }).then(function(output){
             log.onSuccess(output);
             return git.commit('first commit');
-        }).then(function(output){
+        }).then(function(){
             return git.push(['-u', 'origin', 'master']);
     }).catch(log.onError);
 }
@@ -128,11 +129,11 @@ function initGhPages(repo){
     }).then(function(output){
         log.onSuccess(output);
         return git.checkout(['master']);
-    }).catch(log.onError)
+    }).catch(log.onError);
 }
 
 module.exports = {
     bower: initBower,
     localGit: localGit,
     remoteGit: remoteGit
-}
+};

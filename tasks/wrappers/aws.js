@@ -29,7 +29,7 @@ function AWS(location, destination, options){
         Key    : null,
         Body   : null
     };
-};
+}
 
 AWS.prototype.addSlash = function(dir){
     if (dir.slice(-1) !== '/') dir = dir +'/';

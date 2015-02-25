@@ -24,7 +24,7 @@ function coverage(){
 
 function quick(){
     if (!component.test){
-        log.info('Test set to false within component.config.js : skipping')
+        log.info('Test set to false within component.config.js : skipping');
         return Promise.resolve();
     }
     return once().then(function(){
@@ -42,4 +42,4 @@ module.exports = {
     tdd: tdd,
     all: all,
     quick: quick
-}
+};

@@ -13,21 +13,21 @@ module.exports = {
         return exec('git', ['tag', '-a', version, '-m', version]);
     },
     init : function() {
-        return runGitCommand('init', [])
+        return runGitCommand('init', []);
     },
     checkout : function(arrFiles) {
-        return runGitCommand('checkout', arrFiles)
+        return runGitCommand('checkout', arrFiles);
     },
     add : function(arrFiles) {
-        return runGitCommand('add', arrFiles)
+        return runGitCommand('add', arrFiles);
     },
     push : function(arrCmds) {
-        return runGitCommand('push', arrCmds)
+        return runGitCommand('push', arrCmds);
     },
     rm : function(arrCmds) {
-        return runGitCommand('rm', arrCmds)
+        return runGitCommand('rm', arrCmds);
     },
     remote : function(arrCmds) {
-        return runGitCommand('remote', arrCmds)
+        return runGitCommand('remote', arrCmds);
     }
 };

@@ -3,16 +3,16 @@ var semver = require('semver');
 var fs = require('./fs');
 var log = require('./log');
 
-var possibleNewline = function (jsonSting) {
+function possibleNewline(jsonSting) {
     return (jsonSting.slice(-1) === '\n') ? '\n' : '';
-};
+}
 
-var space = function space(json) {
+function space(json) {
     var match = json.match(/^(?:(\t+)|( +))"/m);
     return match ? (match[1] ? '\t' : match[2].length) : '';
-};
+}
 
-var updateVersion = function(fileObj, opts){
+function updateVersion(fileObj, opts){
     opts = opts || {};
     var type = opts.type || 'patch';
     var version = semver.valid(opts.version, opts.type) || null;
@@ -41,27 +41,27 @@ var updateVersion = function(fileObj, opts){
     return fileObj;
 }
 
-var updateJsonFile = function(fileObj, opts) {
+function updateJsonFile(fileObj, opts) {
     return new Promise(function(resolve, reject){
-        fileObj = updateVersion(fileObj, opts)
+        fileObj = updateVersion(fileObj, opts);
         fileObj.err && reject(fileObj.err);
         !fileObj.err && resolve(fileObj);
     }).then(function(fileObj){
-        return fs.write(fileObj)
+        return fs.write(fileObj);
     }).catch(log.onError);
 }
 
-var updateJson = function(fileObjs, opts){
+function updateJson(fileObjs, opts){
     var promises = [];
     fileObjs.forEach(function(fileObj){
-        promises.push(updateJsonFile(fileObj, opts))
+        promises.push(updateJsonFile(fileObj, opts));
     });
     return Promise.all(promises);
 }
 
-var bump = function(files, opts){
+function bump(files, opts){
     return fs.read(files).then(function(fileObjs){
-        return updateJson(fileObjs, opts)
+        return updateJson(fileObjs, opts);
     }).catch(log.onError);
 }
 

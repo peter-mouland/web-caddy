@@ -17,19 +17,19 @@ Mustache.prototype.getPartialFile = function(base, partial){
         var ext = partial.split('.');
         var fileName = (ext.length>1) ? partial : partial + '.*';
         fs.read(path.join(base , fileName)).then(function(fileObjs){
-            var contents = []
+            var contents = [];
             fileObjs.forEach(function(fileObj){
-                contents.push(fileObj.contents.toString('utf-8'))
-            })
-            resolve({partial: partial, contents: contents.join('\n')})
+                contents.push(fileObj.contents.toString('utf-8'));
+            });
+            resolve({partial: partial, contents: contents.join('\n')});
         }).catch(reject);
-    })
-}
+    });
+};
 
 Mustache.prototype.getPartials = function(fileObj){
     var self = this;
-    var promises = []
-    var arrParsed = mustache.parse(fileObj.contents.toString('utf-8'))
+    var promises = [];
+    var arrParsed = mustache.parse(fileObj.contents.toString('utf-8'));
     arrParsed.forEach(function (item) {
         if (item[0] == '>') {
             promises.push(self.getPartialFile(fileObj.base, item[1]));
@@ -51,28 +51,28 @@ Mustache.prototype.renderFile = function(fileObj){
         partialObjs.forEach(function(partialObj){
             partials[partialObj.partial] = partialObj.contents;
         });
-        var contents = mustache.render(fileObj.contents.toString(), replacements, partials)
-        return new File({path: path.join(self.destination,fileObj.name), contents:contents})
-    })
-}
+        var contents = mustache.render(fileObj.contents.toString(), replacements, partials);
+        return new File({path: path.join(self.destination,fileObj.name), contents:contents});
+    });
+};
 
 Mustache.prototype.render = function(fileObjs){
     var self = this;
-    var promises = []
+    var promises = [];
     fileObjs.forEach(function(fileObj){
-        promises.push(self.renderFile(fileObj))
+        promises.push(self.renderFile(fileObj));
     });
     return Promise.all(promises);
-}
+};
 
 Mustache.prototype.write = function(){
     var self = this;
     return fs.read(this.location)
         .then(function(fileObjs){
-            return self.render(fileObjs)
+            return self.render(fileObjs);
         }).then(function(fileObjs){
-            return fs.write(fileObjs)
+            return fs.write(fileObjs);
         }).catch(log.onError);
-}
+};
 
 module.exports = Mustache;

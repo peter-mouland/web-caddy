@@ -2,7 +2,7 @@ var log = require('./log');
 
 module.exports = function File(fileObj){
     if (!fileObj.path) {
-        return log.onError('File: fileObj.path is required')
+        return log.onError('File: fileObj.path is required');
     }
 
     var path;
@@ -81,7 +81,7 @@ module.exports = function File(fileObj){
         set: function (value) {
             var arrPath = path.split('.');
             arrPath.pop();
-            this.path = arrPath.join('.') + '.' + value
+            this.path = arrPath.join('.') + '.' + value;
         }
     });
 

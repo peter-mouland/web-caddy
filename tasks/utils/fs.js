@@ -26,7 +26,7 @@ function writeFile(fileObj){
                 !err && resolve(fileObj);
             });
         });
-    })
+    });
 }
 
 function write(src){
@@ -53,45 +53,45 @@ function readPromise(fileObj){
             err && reject(err);
             !err && resolve(data);
         });
-    })
+    });
 }
 
 function readFile(fileObj){
     return Promise.all([stat(fileObj.path), readPromise(fileObj)]).then(function(outputs){
-        fileObj.stat = outputs[0]
-        fileObj.contents =  outputs[1]
+        fileObj.stat = outputs[0];
+        fileObj.contents =  outputs[1];
         return fileObj;
     });
 }
 
 function read(src){
     return glob(src).then(function(files) {
-        var promises = []
+        var promises = [];
         files.forEach(function(fileObj) {
-            promises.push(readFile(fileObj))
-        })
-        return Promise.all(promises)
+            promises.push(readFile(fileObj));
+        });
+        return Promise.all(promises);
     }, log.onError);
 }
 
 function replaceInFile(fileObj, replacements){
     return readFile(fileObj).then(function(fileObj){
-        fileObj.contents = fileObj.contents.toString('utf-8')
+        fileObj.contents = fileObj.contents.toString('utf-8');
         replacements.forEach(function(replace){
             fileObj.contents = fileObj.contents.replace(replace.replace, replace.with);
-        })
+        });
         return write(fileObj);
-    }, log.onError)
+    }, log.onError);
 }
 
 function replace(src, replacement){
     return glob(src).then(function(files) {
-        var promises = []
+        var promises = [];
         files.forEach(function (fileObj) {
-            promises.push(replaceInFile(fileObj, replacement))
-        })
-        return Promise.all(promises)
-    }, log.onError)
+            promises.push(replaceInFile(fileObj, replacement));
+        });
+        return Promise.all(promises);
+    }, log.onError);
 }
 
 function copyFile(fileObj, dest){
@@ -101,7 +101,7 @@ function copyFile(fileObj, dest){
                 err && reject(err);
                 // wait for copy to stop messing with the file :(
                 // todo: start polling stat.size
-                !err && setTimeout(function(){resolve()},100);
+                !err && setTimeout(resolve,100);
             });
         });
     }, log.onError);
@@ -109,9 +109,9 @@ function copyFile(fileObj, dest){
 
 function copy(srcGlob, destinationDirectory){
     return glob(srcGlob).then(function(files){
-        var promises = []
+        var promises = [];
         files.forEach(function(fileObj) {
-            promises.push(copyFile(fileObj, destinationDirectory))
+            promises.push(copyFile(fileObj, destinationDirectory));
         });
         return Promise.all(promises);
     }, log.onError);
@@ -122,11 +122,11 @@ function glob(globArray){
     return new Promise(function(resolve, reject){
         var files = [];
         stream.on('data', function(fileObj){
-            files.push(new File(fileObj))
+            files.push(new File(fileObj));
         });
         stream.on('end', function(err){
-            err && reject(err)
-            !err && resolve(files)
+            err && reject(err);
+            !err && resolve(files);
         });
 
     });
@@ -139,7 +139,7 @@ function copyDirectory(src, dest, transform){
                 err && reject(err);
                 // wait for copy to stop messing with the file :(
                 // todo: start polling stat.size
-                !err && setTimeout(function(){resolve()},100);
+                !err && setTimeout(resolve,100);
             }
         );
     });
@@ -147,20 +147,20 @@ function copyDirectory(src, dest, transform){
 
 function renameFile(fileObj, replace, withThis){
     return new Promise(function(resolve, reject){
-        var name = fileObj.name.replace(replace, withThis)
-        var file = new File({path: path.join(fileObj.dir, name)})
+        var name = fileObj.name.replace(replace, withThis);
+        var file = new File({path: path.join(fileObj.dir, name)});
         fs.rename(fileObj.path, file.path, function(err){
-            err && reject(err)
-            !err && resolve(file)
+            err && reject(err);
+            !err && resolve(file);
         });
-    })
+    });
 }
 
 function rename(src, replace, withThis){
     return glob(src).then(function(files) {
-        var promises = []
+        var promises = [];
         files.forEach(function (fileObj, i) {
-            promises.push(renameFile(fileObj,replace, withThis))
+            promises.push(renameFile(fileObj,replace, withThis));
         });
         return Promise.all(promises);
     });
@@ -170,7 +170,7 @@ function clean(globby){
     return new Promise(function(resolve, reject){
         return del(globby, function (err, delPath){
             err && reject(err);
-            !err && setTimeout(function(){resolve(delPath)},50);
+            !err && setTimeout(function(){resolve(delPath);},50);
         });
     });
 }
@@ -182,7 +182,7 @@ function watch(src, actions){
             console.log('Watch: File', path, 'has been changed');
             actions.forEach(function(action){
                 action();
-            })
+            });
         })
         .on('add', function(path) {    console.log('Watch: File', path, 'has been added'); })
         .on('addDir', function(path) { console.log('Watch: Directory', path, 'has been added'); })
