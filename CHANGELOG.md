@@ -1,10 +1,11 @@
 # Change Log
 
-## 1.1.0
+## 1.1.0 (not yet released)
 
+ * Added `jade` option for build.html config
  * Added new AWS config option
  * Updated cleaning to be less aggressive to allow overlapping paths in config
- * Added separate `clean` 
+ * Added separate `clean` task in API/CLI
 
 ## 1.0.0
 
