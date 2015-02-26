@@ -15,7 +15,7 @@ var now = Date().split(' ').splice(0,5).join(' ');
 function buildHtml(replacements) {
     replacements = (Array.isArray(replacements)) ? {} : replacements || {};
     if (!component.build.html){
-        log.info('build.html set to false within component.config.js : skipping building html')
+        log.info('build.html set to false within component.config.js : skipping building html');
         return Promise.resolve();
     }
     if (!component.paths.demo){
@@ -28,15 +28,15 @@ function buildHtml(replacements) {
     var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
     var dest = paths.site.root;
     return fs.del(dest + '/**/*.html').then(function(){
-        return new Html(src, dest, replacements).write()
+        return new Html(src, dest, replacements).write();
     }).then(function(){
-        return 'Build HTML Complete'
+        return 'Build HTML Complete';
     }).catch(log.onError);
 }
 
 function fonts() {
     if (!component.build.fonts) {
-        log.info('build.fonts within component.config.js is set to false : skipping copying fonts')
+        log.info('build.fonts within component.config.js is set to false : skipping copying fonts');
         return Promise.resolve();
     }
     var location = [
@@ -45,13 +45,13 @@ function fonts() {
     ];
     var dest = paths.site.fonts;
     return fs.del(dest + '/**/*').then(function() {
-        return fs.copy(location, dest)
+        return fs.copy(location, dest);
     }).catch(log.onError);
 }
 
 function images() {
     if (!paths.site) {
-        log.info('paths.site within component.config.js is missing : skipping copying images')
+        log.info('paths.site within component.config.js is missing : skipping copying images');
         return Promise.resolve();
     }
     var src = paths.demo.images + '/**/*';
@@ -63,31 +63,31 @@ function images() {
 
 function buildScripts(){
     if (!component.build.scripts){
-        log.info('build.scripts set to false within component.config.js : skipping building scripts')
+        log.info('build.scripts set to false within component.config.js : skipping building scripts');
         return Promise.resolve();
     }
     var delPaths = [];
-    paths.dist && delPaths.push(paths.dist.scripts + '/**/*')
-    paths.site && delPaths.push(paths.site.scripts + '/**/*')
+    paths.dist && delPaths.push(paths.dist.scripts + '/**/*');
+    paths.site && delPaths.push(paths.site.scripts + '/**/*');
     return fs.del(delPaths).then(function(){
         return Promise.all([
             new Scripts(paths.source.scripts, paths.dist.scripts, component.build.scripts).write(),
             paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, component.build.scripts).write(),
             paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, component.build.scripts).write()
-        ])
+        ]);
     }).then(function(){
-        return 'Build Scripts Complete'
+        return 'Build Scripts Complete';
     }).catch(log.onError);
 }
 
 function buildStyles(){
     if (!component.build.styles){
-        log.info('build.styles set to false within component.config.js : skipping building styles')
+        log.info('build.styles set to false within component.config.js : skipping building styles');
         return Promise.resolve();
     }
     var delPaths = [];
-    paths.dist && delPaths.push(paths.dist.styles + '/**/*')
-    paths.site && delPaths.push(paths.site.styles + '/**/*')
+    paths.dist && delPaths.push(paths.dist.styles + '/**/*');
+    paths.site && delPaths.push(paths.site.styles + '/**/*');
     return fs.del(delPaths).then(function() {
         return Promise.all([
             new Styles(paths.source.styles, paths.dist.styles).write(),
@@ -95,7 +95,7 @@ function buildStyles(){
             paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles).write()
         ]);
     }).then(function(){
-        return 'Build Styles Complete'
+        return 'Build Styles Complete';
     }).catch(log.onError);
 }
 
@@ -108,7 +108,7 @@ function all(replacements){
         buildStyles(),
         buildHtml(replacements)
     ]).then(function(){
-        return 'Build All Complete'
+        return 'Build All Complete';
     }).catch(log.onError);
 }
 

@@ -148,19 +148,37 @@ This will push the current files within `_site` to gh-pages branch (making your 
 
 #### Cloud
 
+#### Cloud
+
 `component release cloud`
 
-This will push the current files from within `_site` to AWS using the options within [component.config.js](component-structure/component.config.js).  Setting this option to false will prevent a release.
+This will push the current files from within `_site` to AWS using the options within [component.config.js](component-structure/component.config.js).
+Setting this option to false will prevent a release.
 
-**example release config**
+For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
+
+**Example 1: Using Environment Variables**
 ```javascript
     ...
     release: {
         type: 'aws',
         bucket: process.env.YOUR_AWS_BUCKET,
+        region: process.env.YOUR_AWS_REGION,
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
+        directoryPrefix: 'components/'
+    },
+```
+
+**Example 2: Using AWS Credentials**
+```javascript
+    ...
+
+    release: {
+        type: 'aws',
+        bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
-        directoryPrefix: 'components/' //prefix your target release destination
+        profile: pkg.name,
+        directoryPrefix: false
     },
 ```

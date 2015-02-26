@@ -16,7 +16,7 @@ Sass.prototype.file = function(fileObj, outputStyle){
     return new Promise(function(resolve, reject){
         var name = fileObj.name.replace('.scss','.css');
         if (outputStyle === 'compressed'){
-            name = name.replace('.css','.min.css')
+            name = name.replace('.css','.min.css');
         }
         var newFileObj = new File({path: path.resolve(self.destination, name)});
         sass.render({
@@ -32,22 +32,22 @@ Sass.prototype.file = function(fileObj, outputStyle){
             }
         });
     });
-}
+};
 
 Sass.prototype.minify = function(files){
     var self = this;
     var promises = [];
     files.forEach(function(fileObj){
         promises.push(self.file(fileObj, 'compressed'));
-    })
-    return Promise.all(promises)
-}
+    });
+    return Promise.all(promises);
+};
 
 Sass.prototype.write = function() {
     var self = this;
     return fs.glob(this.location + '/**/!(_)*.scss').then(function(files) {
         if (files.length===0){
-            log.info('no scss files found: ' + self.location)
+            log.info('no scss files found: ' + self.location);
         }
         var promises = [];
         files.forEach(function (fileObj, i) {
@@ -55,12 +55,12 @@ Sass.prototype.write = function() {
         });
         return Promise.all(promises);
     }).then(function(fileObj){
-        return fs.write(fileObj)
+        return fs.write(fileObj);
     }).then(function(fileObj){
-        return self.minify(fileObj)
+        return self.minify(fileObj);
     }).then(function(fileObj){
-        return fs.write(fileObj)
+        return fs.write(fileObj);
     }).catch(log.onError);
-}
+};
 
 module.exports = Sass;

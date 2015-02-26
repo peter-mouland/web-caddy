@@ -12,9 +12,9 @@
 
 ### Bower
 
-To release to `bower` please update your `config/index.js` and run once :
+To release to Bower please update your `component.config.js`.
 
- * `component new bower`
+ * `component init bower`
  
 ### Amazon Web Services (AWS)
 

@@ -16,7 +16,7 @@ var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
 function gitRelease(version){
-    version = Array.isArray(version) ? version[0] : version
+    version = Array.isArray(version) ? version[0] : version;
     version = version || pkg.version;
     return git.add(['.']).then(function() {
         return git.commit('v' + version);
@@ -32,63 +32,64 @@ function gitRelease(version){
 function update(version){
     var replacements = [{
         replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g,
-        with: '$1' + version + '$2'}]
-    return fs.replace( ['./README.md', './**/version.js'], replacements)
+        with: '$1' + version + '$2'}
+    ];
+    return fs.replace( ['./README.md', './**/version.js'], replacements);
 }
 
 function versionBump(type){
-    type = Array.isArray(type) ? type[0] : type
+    type = Array.isArray(type) ? type[0] : type;
     type = type || 'patch';
     log.info("\nBumping version ... \n");
     var version = semver.inc(pkg.version, type) || semver.valid(type);
     return bump('./*.json', {version:version}).then(function(){
-        return Promise.all([update(version), build.html({version:version})])
+        return Promise.all([update(version), build.html({version:version})]);
     }).then(function(){
         return version;
     }).catch(log.onError);
 }
 
 function ghPagesRelease(message){
-    message = Array.isArray(message) ? message[0] : message
+    message = Array.isArray(message) ? message[0] : message;
     message = message || 'Update';
     log.info("\nReleasing to gh-pages ... \n");
     return new Promise(function(resolve, reject){
         ghPages.publish(paths.site.root, {message: message }, function(err) {
             ghPages.clean();
-            err && reject(err)
-            !err && resolve()
+            err && reject(err);
+            !err && resolve();
         });
     });
 }
 
 function cloud(version){
     if (!component.release){
-        log.info('Release set to false within component.config.js : skipping')
+        log.info('Release set to false within component.config.js : skipping');
         return Promise.resolve();
     }
     log.info("\nReleasing to cloud (" + component.release.type + ") ... \n");
-    version = Array.isArray(version) ? version[0] : version
+    version = Array.isArray(version) ? version[0] : version;
     version = version || pkg.version;
     var prefix = component.release.directoryPrefix || '';
-    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.release).write()
+    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.release).write();
 }
 
 function quick(type){
-    var bumpedVersion
+    var bumpedVersion;
     return versionBump(type).then(function(version){
         bumpedVersion = version;
         return gitRelease(version);
     }).then(function(){
         return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
-        return cloud(bumpedVersion)
+        return cloud(bumpedVersion);
     }).catch(log.onError);
 }
 
 function all(){
     var type = arguments[1] || arguments[0];
     return test.all().then(function() {
-        return quick(type)
+        return quick(type);
     }).catch(log.onError);
 }
 

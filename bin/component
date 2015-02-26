@@ -20,7 +20,7 @@ function help(task, taskStr){
         if (arg!=='all') args.push(arg)
     }
     var helpStr = (taskStr === '') ? '' : '`component ' + taskStr + '` or '
-    console.log([ taskStr + " arguments: " + args.join(', '),
+    log.info([ taskStr + " arguments: " + args.join(', '),
         "Usage: " + helpStr + "`component " + taskStr + " " + args[0] + "`"].join("\n"))
 }
 
@@ -49,9 +49,8 @@ var commands = {
         help(commands, '')
     },
     '--version': function() {
-        var pkg = require("../package.json")
-        var version = pkg.version;
-        console.log(version);
+        var pkg = require("../package.json");
+        log.info(pkg.version);
     }
 };
 
