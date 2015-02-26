@@ -22,5 +22,5 @@ gulp.task('test', function(){
 
 gulp.task('release', function(){
     var version = argv.split('--version=')[1];
-    return component.release.all(null, version).catch(onError);
+    return component.release.all(version).catch(onError);
 });

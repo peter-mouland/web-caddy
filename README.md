@@ -48,10 +48,10 @@ Once required (`var component = require('component-helper');`), you can call the
 CLI | Node
 --- | ----
 [component new *component-name*](API.md/#new) | *unavailable*
-[component build](API.md/#build) | `component.build.all(version)`<br> (optional: semantic *version*)
+[component build](API.md/#build) | `component.build.all(replacements)`<br> (optional: replacements object)
 [component build scripts](API.md/#scripts) | `component.build.scripts()`
 [component build styles](API.md/#styles) | `component.build.styles()`
-[component build html](API.md/#html) | `component.build.html(version)` <br>(optional: semantic *version*)
+[component build html](API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
 [component serve](API.md/#serve) | `component.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
 [component serve quick](API.md/#quick) | `component.serve.quick(config)` <br>(optional: [server *config*](API.md#serve))
 [component test](API.md/#testing) | `component.test.all()`

@@ -4,7 +4,6 @@ var mustache = require('mustache');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
-var now = Date().split(' ').splice(0,5).join(' ');
 
 function Mustache(location, destination, options){
     this.location = location;
@@ -40,21 +39,18 @@ Mustache.prototype.getPartials = function(fileObj){
 
 Mustache.prototype.renderFile = function(fileObj){
     var self = this;
-    var replacements = {
-        site: {
-            version: this.options.version,
-            time: this.options.now || now
-        }
-    };
+    var replacements = this.options;
     return this.getPartials(fileObj).then(function(partialObjs){
         var partials = {};
         partialObjs.forEach(function(partialObj){
             partials[partialObj.partial] = partialObj.contents;
         });
         var contents = mustache.render(fileObj.contents.toString(), replacements, partials);
-        return new File({path: path.join(self.destination,fileObj.name), contents:contents});
-    });
-};
+        var file = new File({path: path.join(self.destination,fileObj.name), contents:contents});
+        file.ext = 'html';
+        return file;
+    })
+}
 
 Mustache.prototype.render = function(fileObjs){
     var self = this;
