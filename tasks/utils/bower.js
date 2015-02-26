@@ -9,7 +9,7 @@ function install(args){
         var exec = bower.commands.install(args);
         exec.on('end', resolve);
         exec.on('error', reject);
-    })
+    });
 }
 
 function register(){
@@ -20,7 +20,7 @@ function register(){
         var exec = bower.commands.register(bowerPkg.name, pkg.repository.url);
         exec.on('end', resolve);
         exec.on('error', reject);
-    })
+    });
 }
 
 module.exports = {

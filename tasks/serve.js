@@ -17,7 +17,7 @@ function loadBrowser(args){
             { port: component.serve.port, server: { baseDir: component.serve.directories} } :
             { proxy: proxy.host, port:proxy.port };
         browserSync(config);
-    })
+    });
 }
 
 function startServer(args){
@@ -28,17 +28,17 @@ function startServer(args){
             script: serve.script,
             env: serve.env
         }).on('start', function(ee){
-            log.info('Server Started')
+            log.info('Server Started');
             resolve(serve);
         });
     });
 }
 
 var buildAndReload = {
-    html: function() {    return build.html().then(browserSync.reload)  },
-    scripts: function() { return build.scripts().then(browserSync.reload)  },
-    styles: function() {  return build.styles().then(browserSync.reload)   },
-    images: function() {  return build.images().then(browserSync.reload)   }
+    html: function() {    return build.html().then(browserSync.reload);     },
+    scripts: function() { return build.scripts().then(browserSync.reload);  },
+    styles: function() {  return build.styles().then(browserSync.reload);   },
+    images: function() {  return build.images().then(browserSync.reload);   }
 };
 
 function watch(){
@@ -47,7 +47,7 @@ function watch(){
     var scriptsPaths =   [paths.source.scripts + '/**/*' ];
     var imagesPaths =   [paths.source.images + '/**/*' ];
     if (paths.demo){
-        htmlPaths.push(paths.demo.root + '/**/*.html')
+        htmlPaths.push(paths.demo.root + '/**/*.html');
         stylesPaths.push(paths.demo.styles + '/**/*');
         scriptsPaths.push(paths.demo.styles + '/**/*');
         imagesPaths.push(paths.demo.images + '/**/*');
@@ -63,7 +63,7 @@ function quick(args){
     return new Promise(function(resolve, reject){
         loadBrowser(args);
         watch();
-        resolve()
+        resolve();
     });
 }
 
@@ -73,6 +73,6 @@ module.exports = {
     all: function(args){
         return build.all().then(function(){
             return quick(args);
-        })
+        });
     }
-}
+};

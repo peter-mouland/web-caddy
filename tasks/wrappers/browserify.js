@@ -15,19 +15,19 @@ Browserify.prototype.file = function(fileObj) {
     var self = this;
     return new Promise(function(resolve, reject){
         browserify(fileObj.path).bundle(function(err, contents){
-            err && reject(err)
-            var newFile = new File({ path: path.resolve(self.destination, fileObj.name) })
+            err && reject(err);
+            var newFile = new File({ path: path.resolve(self.destination, fileObj.name) });
             newFile.contents = contents;
-            !err && resolve(newFile)
+            !err && resolve(newFile);
         });
     });
-}
+};
 
 Browserify.prototype.write = function(){
     var self = this;
     return fs.glob(this.location + '/*.js').then(function(fileObjs){
         if (fileObjs.length===0){
-            log.info('no .js files found within `' + self.location + '`')
+            log.info('no .js files found within `' + self.location + '`');
         }
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
@@ -45,14 +45,14 @@ Browserify.prototype.write = function(){
     }).then(function(fileObjs){
         return fs.write(fileObjs);
     }).catch(log.onError);
-}
+};
 
 Browserify.prototype.minify = function(fileObj){
-    var newFile = new File({ path: fileObj.path })
-    newFile.name = fileObj.name.replace('.js','.min.js')
+    var newFile = new File({ path: fileObj.path });
+    newFile.name = fileObj.name.replace('.js','.min.js');
     newFile.dir = this.destination;
-    newFile.contents = UglifyJS.minify(fileObj.path).code
+    newFile.contents = UglifyJS.minify(fileObj.path).code;
     return Promise.resolve(newFile);
-}
+};
 
-module.exports = Browserify
+module.exports = Browserify;

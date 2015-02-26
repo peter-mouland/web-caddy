@@ -16,7 +16,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "./node_modules/jasmine/bin/jasmine.js"
+    "test": "jshint tasks && jshint component-structure/component.config.js && ./node_modules/jasmine/bin/jasmine.js"
   },
   "dependencies": {
     "autoprefixer": "^5.0.0",
@@ -61,7 +61,8 @@
   "author": "Pete Mouland",
   "devDependencies": {
     "gulp": "^3.8.10",
-    "jasmine": "^2.1.1"
+    "jasmine": "^2.1.1",
+    "jshint": "^2.6.0"
   },
   "bin": {
     "component": "./bin/component"
