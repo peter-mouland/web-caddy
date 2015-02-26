@@ -4,6 +4,7 @@ var log = require('./utils/log');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
 
+var clean = require('./clean');
 var fs = require('./utils/fs');
 var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
 var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
@@ -28,9 +29,9 @@ function buildHtml(replacements) {
     var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
     var dest = paths.site.root;
     return fs.del(dest + '/**/*.html').then(function(){
-        return new Html(src, dest, replacements).write();
+        return new Html(src, dest, {version:version}).write();
     }).then(function(){
-        return 'Build HTML Complete';
+            return 'Build HTML Complete';
     }).catch(log.onError);
 }
 
@@ -55,10 +56,7 @@ function images() {
         return Promise.resolve();
     }
     var src = paths.demo.images + '/**/*';
-    var dest = paths.site.images;
-    return fs.del(dest + '/**/*').then(function(){
-        return fs.copy(src, dest);
-    }).catch(log.onError);
+    fs.copy(src, paths.site.images).catch(log.onError);
 }
 
 function buildScripts(){
