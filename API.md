@@ -46,12 +46,11 @@ These will be saved within the `dist` and `site` roots set within [component.con
 
 `component build html`
 
-By default we assume the html has been written using [mustache](https://github.com/janl/mustache.js). *If you would like Handlebars, please submit a pull request.*
-
-This will create a compiled file for each `.html` file found in the `demo` **root**.
+This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [component.config.js](component-structure/component.config.js)).
 
 These will be saved within the `site` roots set within [component.config.js](component-structure/component.config.js)
 
+By default, during the build it will also replace *site.now*, *site.name* and *site.version* variables.
 
 ## Serve
 

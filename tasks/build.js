@@ -10,8 +10,10 @@ var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
 var Html = require('./wrappers/' + (component.build.html || 'mustache'));
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
+var now = Date().split(' ').splice(0,5).join(' ');
 
-function buildHtml(version) {
+function buildHtml(replacements) {
+    replacements = (Array.isArray(replacements)) ? {} : replacements || {};
     if (!component.build.html){
         log.info('build.html set to false within component.config.js : skipping building html')
         return Promise.resolve();
@@ -20,12 +22,13 @@ function buildHtml(version) {
         log.info('paths.demo set to false within component.config.js : skipping building html')
         return Promise.resolve();
     }
-    version = Array.isArray(version) ? version[0] : version;
-    version = version || component.pkg.version;
+    var version = replacements.version || component.pkg.version;
+    var name = replacements.name || component.pkg.name;
+    replacements.site = {now: now, version:version, name: name};
     var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
     var dest = paths.site.root;
     return fs.del(dest + '/**/*.html').then(function(){
-        return new Html(src, dest, {version:version}).write()
+        return new Html(src, dest, replacements).write()
     }).then(function(){
         return 'Build HTML Complete'
     }).catch(log.onError);
@@ -96,13 +99,14 @@ function buildStyles(){
     }).catch(log.onError);
 }
 
-function all(args){
+function all(replacements){
+    replacements = (Array.isArray(replacements)) ? {} : replacements;
     return Promise.all([
         buildScripts(),
         fonts(),
         images(),
         buildStyles(),
-        buildHtml(args)
+        buildHtml(replacements)
     ]).then(function(){
         return 'Build All Complete'
     }).catch(log.onError);

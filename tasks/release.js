@@ -42,7 +42,7 @@ function versionBump(type){
     log.info("\nBumping version ... \n");
     var version = semver.inc(pkg.version, type) || semver.valid(type);
     return bump('./*.json', {version:version}).then(function(){
-        return Promise.all([update(version), build.html(version)])
+        return Promise.all([update(version), build.html({version:version})])
     }).then(function(){
         return version;
     }).catch(log.onError);
