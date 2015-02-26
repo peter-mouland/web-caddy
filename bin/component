@@ -45,6 +45,9 @@ var commands = {
     release: function(args){
         execTask('release', args)
     },
+    clean: function(args){
+        execTask('clean', args)
+    },
     '--help': function() {
         help(commands, '')
     },

@@ -17,7 +17,7 @@ This will create a new component with a standard fie structure. From the compone
 
 `component build`
 
-Executes all the Build tasks below.
+This will clean all target directories (site & dist) and execute. all the Build tasks below.
 
 #### Styles
 
