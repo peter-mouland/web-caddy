@@ -19,7 +19,7 @@ function buildHtml(replacements) {
         return Promise.resolve();
     }
     if (!component.paths.demo){
-        log.info('paths.demo set to false within component.config.js : skipping building html')
+        log.info('paths.demo set to false within component.config.js : skipping building html');
         return Promise.resolve();
     }
     var version = replacements.version || component.pkg.version;

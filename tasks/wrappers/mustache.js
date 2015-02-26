@@ -49,8 +49,8 @@ Mustache.prototype.renderFile = function(fileObj){
         var file = new File({path: path.join(self.destination,fileObj.name), contents:contents});
         file.ext = 'html';
         return file;
-    })
-}
+    });
+};
 
 Mustache.prototype.render = function(fileObjs){
     var self = this;
