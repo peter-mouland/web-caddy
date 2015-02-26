@@ -5,9 +5,9 @@ var componentConfigPath = findup('component.config.js') || log.onError('You must
 var component = require(componentConfigPath);
 
 var fs = require('./utils/fs');
-var Scripts = require('./wrappers/' + ((component.build.scripts && component.build.scripts.type || component.build.scripts) || 'browserify'));
-var Styles = require('./wrappers/sass');           //config.build.styles
-var Html = require('./wrappers/mustache');          //config.build.html
+var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
+var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
+var Html = require('./wrappers/' + (component.build.html || 'mustache'));
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
@@ -16,9 +16,13 @@ function buildHtml(version) {
         log.info('build.html set to false within component.config.js : skipping building html')
         return Promise.resolve();
     }
+    if (!component.paths.demo){
+        log.info('paths.demo set to false within component.config.js : skipping building html')
+        return Promise.resolve();
+    }
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
-    var src = [ paths.demo.root + '/*.html'];
+    var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
     var dest = paths.site.root;
     return fs.del(dest + '/**/*.html').then(function(){
         return new Html(src, dest, {version:version}).write()
