@@ -80,7 +80,7 @@ AWS.prototype.write = function(){
             promises.push(self.upload(fileObj));
         });
         return Promise.all(promises);
-    })
+    });
 };
 
 module.exports = AWS;

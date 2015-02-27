@@ -68,7 +68,7 @@ Mustache.prototype.write = function(){
             return self.render(fileObjs);
         }).then(function(fileObjs){
             return fs.write(fileObjs);
-        })
+        });
 };
 
 module.exports = Mustache;

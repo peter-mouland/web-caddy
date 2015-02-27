@@ -44,7 +44,7 @@ Browserify.prototype.write = function(){
         return Promise.all(promises);
     }).then(function(fileObjs){
         return fs.write(fileObjs);
-    })
+    });
 };
 
 Browserify.prototype.minify = function(fileObj){
