@@ -21,15 +21,16 @@ Sass.prototype.file = function(fileObj, outputStyle){
             name = name.replace('.css','.min.css');
         }
         var newFileObj = new File({path: path.resolve(self.destination, name)});
-        options.file = fileObj.path;
-        options.outputStyle = outputStyle || options.outputStyle || "nested";
-        options.precision  = options.precision || 3;
-        options.success = function(output){
-                newFileObj.contents = autoprefixer().process(output.css).css,
+        sass.render({
+            file : fileObj.path,
+            outputStyle : outputStyle || options.outputStyle || "nested",
+            precision  : options.precision || 3,
+            success : function(output){
+                newFileObj.contents = autoprefixer().process(output.css).css;
                 resolve(newFileObj);
-        };
-        options.error = reject;
-        sass.render(options);
+            },
+            error : reject
+        });
     });
 };
 
