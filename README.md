@@ -68,7 +68,7 @@ The CLI and Node will use the config set within [component.config.js](component-
 
 [API in Detail >](API.md)
 
-### Advanced Customisation
+### Advanced Customisation + Gulp
 
 Using Node (or Gulp) you can customise the build process even more.
 
