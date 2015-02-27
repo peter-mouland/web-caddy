@@ -35,7 +35,7 @@ Jade.prototype.write = function(){
             return self.render(fileObjs);
         }).then(function(fileObjs){
             return fs.write(fileObjs);
-        }).catch(log.onError);
+        });
 };
 
 module.exports = Jade;

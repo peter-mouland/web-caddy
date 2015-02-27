@@ -30,7 +30,7 @@ function buildHtml(replacements) {
     var htmlPromise = new Html(src, paths.site.root, replacements).write();
     return htmlPromise.then(function(){
             return 'Build HTML Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 function fonts() {
@@ -42,7 +42,7 @@ function fonts() {
         paths.source.fonts + '/**/*',
         paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}'
     ];
-    return fs.copy(location, paths.site.fonts).catch(log.onError);
+    return fs.copy(location, paths.site.fonts).catch(log.warn);
 }
 
 function images() {
@@ -51,7 +51,7 @@ function images() {
         return Promise.resolve();
     }
     var src = paths.demo.images + '/**/*';
-    fs.copy(src, paths.site.images).catch(log.onError);
+    fs.copy(src, paths.site.images).catch(log.warn);
 }
 
 function buildScripts(){
@@ -65,7 +65,7 @@ function buildScripts(){
         paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, component.build.scripts).write()
     ]).then(function(){
         return 'Build Scripts Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 function buildStyles(){
@@ -79,7 +79,7 @@ function buildStyles(){
         paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles).write()
     ]).then(function(){
         return 'Build Styles Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 function all(replacements){
@@ -95,7 +95,7 @@ function all(replacements){
             ]);
     }).then(function(){
         return 'Build All Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 module.exports = {

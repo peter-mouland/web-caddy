@@ -60,7 +60,7 @@ Sass.prototype.write = function() {
         return self.minify(fileObj);
     }).then(function(fileObj){
         return fs.write(fileObj);
-    }).catch(log.onError);
+    });
 };
 
 module.exports = Sass;
