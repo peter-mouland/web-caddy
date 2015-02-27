@@ -47,7 +47,7 @@ function watch(){
     var scriptsPaths =   [paths.source.scripts + '/**/*' ];
     var imagesPaths =   [paths.source.images + '/**/*' ];
     if (paths.demo){
-        htmlPaths.push(paths.demo.root + '/**/*.html');
+        htmlPaths.push(paths.demo.root + '/**/*.{html,ms,mustache,jade}');
         stylesPaths.push(paths.demo.styles + '/**/*');
         scriptsPaths.push(paths.demo.styles + '/**/*');
         imagesPaths.push(paths.demo.images + '/**/*');
