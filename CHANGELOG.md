@@ -1,7 +1,8 @@
 # Change Log
 
 ## 1.1.0 (not yet released)
-
+ 
+ * Updated `build`/`serve` to only warn of compilation problems rather than quiting. This means that the `watch` task will keep on trucking.
  * Added `jade` option for build.html config
  * Added new AWS config option
  * Updated cleaning to be less aggressive to allow overlapping paths in config
