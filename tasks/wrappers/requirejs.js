@@ -48,7 +48,7 @@ RequireJS.prototype.write = function(){
         return Promise.all(promises);
     }).then(function(fileObjs){
         return fs.write(fileObjs);
-    }).catch(log.onError);
+    })
 };
 
 RequireJS.prototype.minify = function(fileObj){

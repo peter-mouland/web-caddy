@@ -32,7 +32,7 @@ function buildHtml(replacements) {
         return new Html(src, dest, {version:version}).write();
     }).then(function(){
             return 'Build HTML Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 function fonts() {
@@ -47,7 +47,7 @@ function fonts() {
     var dest = paths.site.fonts;
     return fs.del(dest + '/**/*').then(function() {
         return fs.copy(location, dest);
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 function images() {
@@ -75,7 +75,7 @@ function buildScripts(){
         ]);
     }).then(function(){
         return 'Build Scripts Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 function buildStyles(){
@@ -94,7 +94,7 @@ function buildStyles(){
         ]);
     }).then(function(){
         return 'Build Styles Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 function all(replacements){
@@ -107,7 +107,7 @@ function all(replacements){
         buildHtml(replacements)
     ]).then(function(){
         return 'Build All Complete';
-    }).catch(log.onError);
+    }).catch(log.warn);
 }
 
 module.exports = {
