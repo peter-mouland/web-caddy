@@ -1,6 +1,7 @@
 # Tasks
 
  * [New](#new) - Creating a new component
+ * [Clean](#clean) - clean (remove) the contents of your set asset directories
  * [Build](#build) - Building the assets needed for your component
  * [Serve](#serve) - Serving your site
  * [Testing](#testing) - Testing and code-coverage
@@ -13,11 +14,19 @@
 
 This will create a new component with a standard fie structure. From the component directory you can then build, test, serve and release out of the box.
 
+## Clean
+
+`component clean`
+
+This will remove any files from within all target directories (site & dist).  
+
+You can also `component clean (scripts|styles|html|images|fonts)` etc. to specifiy exect directories to clean.
+
 ## Build
 
 `component build`
 
-This will clean all target directories (site & dist) and execute. all the Build tasks below.
+This will clean all target directories (site & dist) and execute all the Build tasks below.
 
 #### Styles
 
