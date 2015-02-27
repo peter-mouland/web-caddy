@@ -14,7 +14,7 @@ function Sass(location, destination, options){
 
 Sass.prototype.file = function(fileObj, outputStyle){
     var self = this;
-    var options = this.options;
+    var options = this.options || {};
     return new Promise(function(resolve, reject){
         var name = fileObj.name.replace('.scss','.css');
         if (outputStyle === 'compressed'){
