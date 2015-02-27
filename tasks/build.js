@@ -54,15 +54,16 @@ function images() {
     fs.copy(src, paths.site.images).catch(log.onError);
 }
 
-function buildScripts(){
+function buildScripts(options){
     if (!component.build.scripts){
         log.info('build.scripts set to false within component.config.js : skipping building scripts');
         return Promise.resolve();
     }
+    options = options || (component[component.build.scripts]) || {};
     return Promise.all([
-        new Scripts(paths.source.scripts, paths.dist.scripts, component.build.scripts).write(),
-        paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, component.build.scripts).write(),
-        paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, component.build.scripts).write()
+        new Scripts(paths.source.scripts, paths.dist.scripts, options).write(),
+        paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),
+        paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, options).write()
     ]).then(function(){
         return 'Build Scripts Complete';
     }).catch(log.onError);

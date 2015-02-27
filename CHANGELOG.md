@@ -1,7 +1,8 @@
 # Change Log
 
 ## 1.1.0 (not yet released)
- 
+
+ * Added: build options can be passed to `requirejs` or `browserify` via `component.config.js`
  * Updated `build`/`serve` to only warn of compilation problems rather than quiting. This means that the `watch` task will keep on trucking.
  * Added `jade` templating (for build.html config)
  * Added support for `~/.aws/credentials` for S3 releases. 
@@ -25,7 +26,7 @@
 
 ## 0.9.0
 
- * Updated `component.config.js` objects : Breaking change.
+ * Updated `component.config.js` objects : Breaking change
  * Added `requirejs` build.scripts type
 
 ## 0.8.10
