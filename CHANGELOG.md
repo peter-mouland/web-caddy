@@ -4,7 +4,7 @@
  
  * Updated `build`/`serve` to only warn of compilation problems rather than quiting. This means that the `watch` task will keep on trucking.
  * Added `jade` option for build.html config
- * Added new AWS config option
+ * Added support for `~/.aws/credentials` for S3 releases. 
  * Updated cleaning to be less aggressive to allow overlapping paths in config
  * Added separate `clean` task in API/CLI
 
@@ -14,8 +14,6 @@
  * Removed `html-concat` option
  * Removed the need to supply a git repo when running `component new`
  * Updated `component new` to `component new <<component-name>>`
- * Added support for `~/.aws/credentials` for S3 releases. Default
-   config uses `pkg.name` as a profile in this file to get credentials.
 
 ## 0.9.2
 
