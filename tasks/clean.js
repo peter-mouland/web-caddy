@@ -7,6 +7,15 @@ var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
+
+function html(){
+    log.info('deleting HTML :');
+    var htmlPaths = [];
+    paths.dist && htmlPaths.push(paths.dist.styles + '/*.{html,jade,ms,mustache}');
+    paths.site && htmlPaths.push(paths.site.styles + '/*.{html,jade,ms,mustache}');
+    return fs.del(htmlPaths);
+}
+
 function styles(){
     log.info('deleting styles :');
     var stylesPaths = [];
@@ -18,8 +27,8 @@ function styles(){
 function scripts(){
     log.info('deleting scripts :');
     var delPaths = [];
-    paths.dist && delPaths.push(paths.dist + '/**/*');
-    paths.site && delPaths.push(paths.site + '/**/*');
+    paths.dist && delPaths.push(paths.dist.scripts + '/**/*');
+    paths.site && delPaths.push(paths.site.scripts + '/**/*');
     return fs.del(delPaths);
 }
 
@@ -45,10 +54,7 @@ function images(){
 
 function all(){
     log.info('deleting all :');
-    var delPaths = [];
-    paths.dist && delPaths.push(paths.dist.root + '/**/*');
-    paths.site && delPaths.push(paths.site.root + '/**/*');
-    return fs.del(delPaths).catch(log.onError);
+    return Promise.all([html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
 }
 
 module.exports = {
