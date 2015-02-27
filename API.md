@@ -42,6 +42,28 @@ Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also creat
 
 These will be saved within the `dist` and `site` roots set within [component.config.js](component-structure/component.config.js)
 
+The build can be configured more by adding an appropriately named object to the [component.config.js](component-structure/component.config.js).
+
+**Example 1 : browserify**
+
+```javascript
+    browserify: {
+        insertGloabals : false,
+        detectGlobals : false,
+        external: [
+            './bower_components/jquery/dist/jquery.js',
+        ]
+    },
+```
+
+**Example 2 : requirejs**
+
+```javascript
+    requirejs: {
+        mainConfigFile: 'src/scripts/require.config.js'
+    }
+```
+
 #### HTML
 
 `component build html`

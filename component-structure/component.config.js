@@ -29,6 +29,13 @@ module.exports = {
         //host: 'http://localhost:3000', // host only for `node`
         //env: { NODE_ENV: 'local'} // env vars only for `node`
     },
+    browserify: { //optional config to speed up build. remove is converting node modules to browser
+        insertGloabals : false,
+        detectGlobals : false
+    },
+    //requirejs: { //config for requireJS
+    //    mainConfigFile: 'src/scripts/require.config.js'
+    //},
     paths: {
         /*
         All paths also have `script`, `styles`, `fonts`, `icons` and `images` properties
