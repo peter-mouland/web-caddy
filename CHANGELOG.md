@@ -3,14 +3,14 @@
 ## 1.1.0 (not yet released)
  
  * Updated `build`/`serve` to only warn of compilation problems rather than quiting. This means that the `watch` task will keep on trucking.
- * Added `jade` option for build.html config
+ * Added `jade` templating (for build.html config)
  * Added support for `~/.aws/credentials` for S3 releases. 
  * Updated cleaning to be less aggressive to allow overlapping paths in config
  * Added separate `clean` task in API/CLI
 
 ## 1.0.0
 
- * Added Mustache templating
+ * Added Mustache templating (for build.html config)
  * Removed `html-concat` option
  * Removed the need to supply a git repo when running `component new`
  * Updated `component new` to `component new <<component-name>>`
