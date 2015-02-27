@@ -9,7 +9,7 @@ var paths = helper.parsePaths(component.paths);
 
 
 function html(){
-    log.info('deleting HTML :');
+    log.info('deleting HTML');
     var htmlPaths = [];
     paths.dist && htmlPaths.push(paths.dist.styles + '/*.{html,jade,ms,mustache}');
     paths.site && htmlPaths.push(paths.site.styles + '/*.{html,jade,ms,mustache}');
@@ -17,7 +17,7 @@ function html(){
 }
 
 function styles(){
-    log.info('deleting styles :');
+    log.info('deleting styles');
     var stylesPaths = [];
     paths.dist && stylesPaths.push(paths.dist.styles + '/**/*');
     paths.site && stylesPaths.push(paths.site.styles + '/**/*');
@@ -25,7 +25,7 @@ function styles(){
 }
 
 function scripts(){
-    log.info('deleting scripts :');
+    log.info('deleting scripts');
     var delPaths = [];
     paths.dist && delPaths.push(paths.dist.scripts + '/**/*');
     paths.site && delPaths.push(paths.site.scripts + '/**/*');
@@ -34,7 +34,7 @@ function scripts(){
 
 function fonts(){
     if (paths.site && paths.site.fonts) {
-        log.info('deleting fonts :');
+        log.info('deleting fonts');
         return fs.del(paths.site.fonts + '/**/*');
     } else {
         log.info('Skipping `fonts` clean.');
@@ -44,7 +44,7 @@ function fonts(){
 
 function images(){
     if (paths.site && paths.site.images) {
-        log.info('deleting images :');
+        log.info('deleting images');
         return fs.del(paths.site.images + '/**/*');
     } else {
         log.info('Skipping `images` clean.');
@@ -53,7 +53,6 @@ function images(){
 }
 
 function all(){
-    log.info('deleting all :');
     return Promise.all([html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
 }
 

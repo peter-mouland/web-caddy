@@ -6,31 +6,30 @@ var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
 
-function Sass(location, destination){
+function Sass(location, destination, options){
     this.location = location;
     this.destination = destination;
+    this.options = options;
 }
 
 Sass.prototype.file = function(fileObj, outputStyle){
     var self = this;
+    var options = this.options;
     return new Promise(function(resolve, reject){
         var name = fileObj.name.replace('.scss','.css');
         if (outputStyle === 'compressed'){
             name = name.replace('.css','.min.css');
         }
         var newFileObj = new File({path: path.resolve(self.destination, name)});
-        sass.render({
-            file: fileObj.path,
-            outputStyle: outputStyle || 'nested',
-            precision: 3,
-            success: function(output){
+        options.file = fileObj.path;
+        options.outputStyle = outputStyle || options.outputStyle || "nested";
+        options.precision  = options.precision || 3;
+        options.success = function(output){
                 newFileObj.contents = autoprefixer().process(output.css).css,
                 resolve(newFileObj);
-            },
-            error: function(err){
-                reject(err);
-            }
-        });
+        };
+        options.error = reject;
+        sass.render(options);
     });
 };
 

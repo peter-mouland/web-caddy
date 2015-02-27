@@ -69,15 +69,16 @@ function buildScripts(options){
     }).catch(log.onError);
 }
 
-function buildStyles(){
+function buildStyles(options){
     if (!component.build.styles){
         log.info('build.styles set to false within component.config.js : skipping building styles');
         return Promise.resolve();
     }
+    options = options || (component[component.build.scripts]) || {};
     return Promise.all([
-        new Styles(paths.source.styles, paths.dist.styles).write(),
-        paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles).write(),
-        paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles).write()
+        new Styles(paths.source.styles, paths.dist.styles, options).write(),
+        paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
+        paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles, options).write()
     ]).then(function(){
         return 'Build Styles Complete';
     }).catch(log.onError);

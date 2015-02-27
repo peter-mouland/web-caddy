@@ -2,6 +2,7 @@
 
 ## 1.1.0 (not yet released)
 
+ * Updated `component.config.js` **breaking change**.
  * Added: build options can be passed to `requirejs` or `browserify` via `component.config.js`
  * Updated `build`/`serve` to only warn of compilation problems rather than quiting. This means that the `watch` task will keep on trucking.
  * Added `jade` templating (for build.html config)

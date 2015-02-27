@@ -7,34 +7,29 @@ var componentConfigPath = findup('component.config.js') || log.onError('You must
 var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
-var TestWrapper = require('./wrappers/karma');
-var test = (component.test) ? new TestWrapper(component.test) : null;
+var TestWrapper = require('./wrappers/' + (component.test || 'karma'));
 
-function once(){
-    return test.run(true);
-}
-
-function tdd(){
+function tdd(options){
+    options = options || (component[component.test]) || {};
+    var test = new TestWrapper(options);
     return test.run(false);
 }
 
-function coverage(){
-    return test.coverage();
-}
-
-function quick(){
+function quick(options){
     if (!component.test){
         log.info('Test set to false within component.config.js : skipping');
         return Promise.resolve();
     }
-    return once().then(function(){
+    options = options || (component[component.test]) || {};
+    var test = new TestWrapper(options);
+    return test.run(true).then(function(){
         return test.coverage();
     }).catch(log.onError);
 }
 
-function all(){
+function all(options){
     return build.all().then(function() {
-        return quick();
+        return quick(options);
     }).catch(log.onError);
 }
 
