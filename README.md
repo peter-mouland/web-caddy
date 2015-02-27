@@ -16,11 +16,12 @@ Out of the box you can:
 
 ## Creating a New Component
 
-1. Create a repository on github.
-2. Run `component new *component-name*` (which will create your component directory) then follow on-screen instructions.
-3. Run `component serve` in your component's directory.
-4. Run `component test` to test your code.
-5. Run `component release` to release your code.
+1. Create a repository on github (optional)
+2. Run `component new *component-name*` (which will create your component directory)
+3. *follow on-screen instructions.*
+4. Run `component serve` in your component's directory.
+5. Run `component test` to test your code.
+6. Run `component release` to release your code.
 
 ### Generated Directory Structure
 
