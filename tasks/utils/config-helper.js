@@ -31,7 +31,7 @@ module.exports = {
 
         //check release config
         if (config.release && !config[config.release]){
-            message.push(' * There is no server config object:  `' + config.release + ':{...}`');
+            message.push(' * There is no release config object:  `' + config.release + ':{...}`');
         }
 
         if (message.length>1){
