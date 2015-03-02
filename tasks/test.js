@@ -10,6 +10,7 @@ var paths = helper.parsePaths(component.paths);
 var TestWrapper = require('./wrappers/' + (component.test || 'karma'));
 
 function tdd(options){
+    options = Array.isArray(options) ? options[0] : options;
     options = options || (component[component.test]) || {};
     var test = new TestWrapper(options);
     return test.run(false);
@@ -20,6 +21,7 @@ function quick(options){
         log.info('Test set to false within component.config.js : skipping');
         return Promise.resolve();
     }
+    options = Array.isArray(options) ? options[0] : options;
     options = options || (component[component.test]) || {};
     var test = new TestWrapper(options);
     return test.run(true).then(function(){
