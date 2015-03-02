@@ -13,6 +13,8 @@ var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 var now = Date().split(' ').splice(0,5).join(' ');
 
+helper.configCheck(component);
+
 function buildHtml(replacements) {
     replacements = (Array.isArray(replacements)) ? {} : replacements || {};
     if (!component.build.html){

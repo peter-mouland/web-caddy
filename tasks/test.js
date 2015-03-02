@@ -10,6 +10,8 @@ var paths = helper.parsePaths(component.paths);
 var TestWrapper = require('./wrappers/karma');
 var test = (component.test) ? new TestWrapper(component.test) : null;
 
+helper.configCheck(component);
+
 function once(){
     return test.run(true);
 }

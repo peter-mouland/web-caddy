@@ -10,6 +10,8 @@ var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
+helper.configCheck(component);
+
 function loadBrowser(args){
     args = Array.isArray(args) ? args[0] : args;
     startServer(args).then(function(proxy){

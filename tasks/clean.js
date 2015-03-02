@@ -7,6 +7,8 @@ var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
+helper.configCheck(component);
+
 function styles(){
     log.info('deleting styles :');
     var stylesPaths = [];
