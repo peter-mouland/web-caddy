@@ -11,9 +11,9 @@ module.exports = {
         scripts: 'browserify' // 'browserify' or 'requirejs'
     },
     test: 'karma', // or false. mocha not yet available.
-    release: 'aws', // or false.
+    release: 's3', // or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
-    browserify: { //optional config to speed up build. remove is converting node modules to browser
+    browserify: { //optional config
         insertGloabals : false,
         detectGlobals : false
     },
@@ -24,7 +24,7 @@ module.exports = {
         config: './test/karma.conf.js',
         summary: './test/coverage/summary.json'
     },
-    aws: { // add your aws release config here.
+    s3: { // add your aws release config here.
         bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
         profile: pkg.name, // profile to be used in ~/.aws/credentials

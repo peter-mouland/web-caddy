@@ -1,14 +1,14 @@
 # Change Log
 
-## 1.1.0 (not yet released)
+## 1.1.0 (not yet released)  **breaking change**
 
- * Updated `component.config.js` **breaking change**.
- * Added: build options can be passed to `requirejs` or `browserify` via `component.config.js`
- * Updated `build`/`serve` to only warn of compilation problems rather than quiting. This means that the `watch` task will keep on trucking.
+ * Updated `component.config.js` to expect explicit `requirejs`, `browserify`, `staticApp`, `nodeApp`, `s3` or `karma` config objects **breaking change**.
+ * Updated `component release cloud` to `component release s3` **breaking change**.
+ * Updated `build`/`serve` to only warn of compilation problems rather than quiting.
+ * Updated cleaning to be less aggressive. This allows overlapping paths within `component.config.js`
  * Added `jade` templating (for build.html config)
- * Added support for `~/.aws/credentials` for S3 releases. 
- * Updated cleaning to be less aggressive to allow overlapping paths in config
- * Added separate `clean` task in API/CLI
+ * Added support for `~/.aws/credentials` for S3 releases
+ * Added separate `clean` task in API/CLI.
 
 ## 1.0.0
 

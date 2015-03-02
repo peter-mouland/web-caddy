@@ -168,13 +168,11 @@ This will add, commit and push any remaining files to `origin master`. Using the
 
 This will push the current files within `_site` to gh-pages branch (making your demo available on github.io).
 
-#### Cloud
+#### S3
 
-#### Cloud
+`component release s3`
 
-`component release cloud`
-
-This will push the current files from within `_site` to AWS using the options within [component.config.js](component-structure/component.config.js).
+This will push the current files from within `_site` to S3 using the options within [component.config.js](component-structure/component.config.js).
 Setting this option to false will prevent a release.
 
 For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
@@ -182,8 +180,8 @@ For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
 **Example 1: Using Environment Variables**
 ```javascript
     ...
-    release: {
-        type: 'aws',
+    release: 's3',
+    s3: {
         bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
@@ -195,9 +193,8 @@ For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
 **Example 2: Using AWS Credentials**
 ```javascript
     ...
-
-    release: {
-        type: 'aws',
+    release: 's3',
+    s3: {
         bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
         profile: pkg.name,
