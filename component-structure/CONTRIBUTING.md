@@ -6,9 +6,9 @@ We encourage small change pull requests, the smaller the change the quicker and 
 
 ## Dependencies
 
-To build the component locally, you'll need to install:
+To build the component locally, you'll need to install these globally :
  * [node.js](http://nodejs.org),
- * [Gulp](http://gulpjs.com),
+ * [component-helper](https://github.com/skyglobal/component-helper),
  * [Bower](http://bower.io)
 
 ## Workflow
@@ -30,11 +30,8 @@ To build the component locally, you'll need to install:
 
 ## Running Locally
 
- * `gulp serve` :  Run server on port 3456
-
-## Test Your Changes
-
- * `gulp test` : Run the tests once and produce a code coverage report
+ * `component serve` :  Run server on port 3456
+ * `component test` : Run the tests once and produce a code coverage report
 
 ## Working with dependencies
 
@@ -47,13 +44,13 @@ If you want to make changes to the bower dependencies, you can clone them down f
 
 ## Releasing (admin only)
 
-`gulp release`
+`component release`
 
 This will automatically bump the 'patch' section of the version number.
 
 To bump a different area of the version number you can also use `major|minor|patch|prerelease` e.g. :
 
-`gulp release --version=prerelease`
+`component release --version=prerelease`
 
 ## Common Errors
 

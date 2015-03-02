@@ -1,10 +1,12 @@
 # Customisation Examples
 
-This project does not use gulp, but because gulp can handle promises, it is very clean and easy to integrate.
+This project does not use gulp, but because gulp can handle promises, it is very clean and easy to integrate with your new component.
+
+[Simple gulp example](/examples/gulpfile.js)
 
 Below is an example of how to serve a node project with one config, then also serve the app using different settings and and test on this server.
 
-**gulpfile.js** : 2 different serve configurations
+**gulpfile.js** : With 2 different serve configurations
 
 ```javascript
 var gulp = require('gulp');

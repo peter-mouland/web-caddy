@@ -2,7 +2,8 @@
 
 ## 1.1.0 (not yet released)
  
- * Updated `build`/`serve` to only warn of compilation problems rather than quiting. This means that the `watch` task will keep on trucking.
+ * Removed dependency on Gulp for new components. Now recommended to use `component` commands.
+ * Updated `build`/`serve` to only warn of compilation problems rather than quiting.
  * Added `jade` templating (for build.html config)
  * Added support for `~/.aws/credentials` for S3 releases. 
  * Updated cleaning to be less aggressive to allow overlapping paths in config

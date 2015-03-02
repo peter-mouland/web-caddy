@@ -3,7 +3,6 @@
 
 > Please take a look at the [demo page]({{ git.io-URL }})
 
-
 ## Quick-Start
 
 Include the {{ component }} assets in your project either as **Static Resources**
@@ -40,8 +39,10 @@ To see how to build this component locally, read the [contribution guidelines](C
 
 ## Browser Support
 
- * IE8 +
- * Safari 5 +
+(To support IE8 please add [ployfill](https://github.com/skyglobal/polyfill) to your site)
+
+ * IE9 +
+ * Safari 7 +
  * Latest Firefox
  * Latest Chrome
  * Latest Mobile Safari

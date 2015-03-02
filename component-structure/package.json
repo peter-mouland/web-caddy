@@ -3,11 +3,6 @@
     "version": "0.0.0",
     "description": "Example package.json. Feel free to copy!",
     "main": "index.js",
-    "devDependencies": {
-        "gulp": "^3.8.10",
-        "component-helper": "^1.0.0",
-        "findup-sync": "^0.2.1"
-    },
     "repository": {
         "type": "git",
         "url": "{{ git.SSH-URL }}"
