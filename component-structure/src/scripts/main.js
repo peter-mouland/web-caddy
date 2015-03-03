@@ -9,20 +9,21 @@
 
 
 //example function
-function sum(args){
+function Test(){
+    this.version = require('./utils/version.js');//keep this : each component exposes its version
+}
+
+Test.prototype.sum = function(args){
     var total = 0;
     args.forEach(function(int){
         total += int;
     });
     return total;
-}
+};
 
 
 //example export
-module.exports = {
-    sum: sum,
-    version: require('./utils/version.js')//keep this : each component exposes its version
-};
+module.exports = Test;
 
 
 //keep this : ensure components are also globally available
