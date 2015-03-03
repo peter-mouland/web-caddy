@@ -5,9 +5,10 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
 Out of the box you can:
  * Build and serve (static or NodeJS) sites
  * Automatic browser refresh when source code is changed
- * Compile Sass and CommonJS to CSS/JS and `.min` equivalents 
- * Test your code and keep an eye on code coverage.
- * Deploy to github.io, Bower or the cloud (currently Amazon S3)
+ * Use Jade or Mustache HTML templating
+ * Compile Sass and CommonJS or AMD to CSS/JS and `.min` equivalents 
+ * Test your code and keep an eye on code coverage
+ * Deploy to github.io, Bower and Amazon S3
  * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](component-structure/gulpfile.js).
 
 ## Installation
