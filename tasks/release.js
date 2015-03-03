@@ -15,6 +15,8 @@ var pkg = component.pkg;
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
 
+helper.configCheck(component);
+
 function gitRelease(version){
     version = Array.isArray(version) ? version[0] : version;
     version = version || pkg.version;

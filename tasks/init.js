@@ -5,6 +5,7 @@ var exec = require('./utils/exec').exec;
 var git = require('./utils/git');
 var fs = require('./utils/fs');
 var bower = require('./utils/bower');
+var helper = require('./utils/config-helper');
 var shell = require("shelljs");
 var prompt = require("prompt");
 var findup = require('findup-sync');
@@ -59,6 +60,7 @@ function replaceGitVariables(repo, componentName){
         var componentConfigPath = findup('component.config.js');
         var component = require(componentConfigPath);
         componentName = component.pkg.name;
+        helper.configCheck(component);
     }
     var SSH = (repoMatch) ? repo : '{{ git.SSH-URL }}';
     var HTTPS = (repoMatch) ? repo.replace('git@', 'https://').replace('.com:','.com/') : '{{ git.HTTPS-URL }}';
