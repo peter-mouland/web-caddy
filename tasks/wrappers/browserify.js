@@ -6,15 +6,22 @@ var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
 
-function Browserify(location, destination){
+function Browserify(location, destination, options){
     this.location = location;
     this.destination = destination;
+    this.options = options;
 }
 
 Browserify.prototype.file = function(fileObj) {
     var self = this;
+    var options = this.options || {};
     return new Promise(function(resolve, reject){
-        browserify(fileObj.path).bundle(function(err, contents){
+        options.entries = fileObj.path;
+        var b = browserify(options);
+        if (options.external){
+            b.external(options.external);
+        }
+        b.bundle(function(err, contents){
             err && reject(err);
             var newFile = new File({ path: path.resolve(self.destination, fileObj.name) });
             newFile.contents = contents;

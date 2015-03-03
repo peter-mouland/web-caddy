@@ -6,10 +6,10 @@ var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
 
-function RequireJS(location, destination, config){
+function RequireJS(location, destination, options){
     this.location = location;
     this.destination = destination;
-    this.config = config;
+    this.options = options;
 }
 
 RequireJS.prototype.file = function(fileObj) {
@@ -20,7 +20,7 @@ RequireJS.prototype.file = function(fileObj) {
         generateSourceMaps: true,
         preserveLicenseComments: false,
         optimize: "none",
-        mainConfigFile: this.config.mainConfigFile
+        mainConfigFile: this.options.mainConfigFile
     };
     return new Promise(function(resolve, reject){
         requirejs.optimize(config, resolve, reject);

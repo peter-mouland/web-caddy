@@ -12,26 +12,22 @@ var paths = helper.parsePaths(component.paths);
 
 helper.configCheck(component);
 
-function loadBrowser(args){
-    args = Array.isArray(args) ? args[0] : args;
-    startServer(args).then(function(proxy){
-        var config = (component.serve.type === 'static') ?
-            { port: component.serve.port, server: { baseDir: component.serve.directories} } :
-            { proxy: proxy.host, port:proxy.port };
-        browserSync(config);
+function loadBrowser(options){
+    options = Array.isArray(options) && options.length>0 ? options[0] : (component[component.serve]) || {};
+    return startServer(options).then(function(){
+        if (!options.server && !options.proxy){
+            log.warn('component.config.js may be incorrect. please check');
+        }
+        browserSync(options);
     });
 }
 
-function startServer(args){
-    var serve = args || component.serve;
-    if (!component.serve || component.serve.type === 'static') return Promise.resolve();
+function startServer(options){
+    if (!component.serve || component.serve === 'staticApp') return Promise.resolve();
     return new Promise(function(resolve, reject){
-        nodemon({
-            script: serve.script,
-            env: serve.env
-        }).on('start', function(ee){
+        nodemon(options).on('start', function(e){
             log.info('Server Started');
-            resolve(serve);
+            resolve();
         });
     });
 }
@@ -62,13 +58,10 @@ function watch(){
 
 
 function quick(args){
-    return new Promise(function(resolve, reject){
-        loadBrowser(args);
+    return loadBrowser(args).then(function(){
         watch();
-        resolve();
     });
 }
-
 
 module.exports = {
     quick: quick,

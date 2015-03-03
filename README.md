@@ -62,7 +62,7 @@ CLI | Node
 [component init remoteGit](API.md/#bower) | `component.init.remoteGit(repository)` <br>(mandatory: Git SSH URL)
 [component release](API.md/#releasing) | `component.release.all(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
 [component release gh-pages](API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
-[component release cloud](API.md/#cloud) | `component.release.cloud(version)` <br>(optional: semantic *version*)
+[component release s3](API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
 
 The CLI and Node will use the config set within [component.config.js](component-structure/component.config.js) in your project root.
 

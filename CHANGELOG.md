@@ -1,13 +1,15 @@
 # Change Log
 
-## 1.1.0 (not yet released)
- 
- * Removed dependency on Gulp for new components. Now recommended to use `component` commands.
+## 1.1.0 (not yet released)  **breaking change**
+
+ * Updated `component.config.js` to expect explicit `requirejs`, `browserify`, `staticApp`, `nodeApp`, `s3` or `karma` config objects **breaking change**.
+ * Updated `component release cloud` to `component release s3` **breaking change**.
  * Updated `build`/`serve` to only warn of compilation problems rather than quiting.
+ * Updated cleaning to be less aggressive. This allows overlapping paths within `component.config.js`
+ * Removed dependency on Gulp for new components. Now recommended to use `component` commands.
  * Added `jade` templating (for build.html config)
- * Added support for `~/.aws/credentials` for S3 releases. 
- * Updated cleaning to be less aggressive to allow overlapping paths in config
- * Added separate `clean` task in API/CLI
+ * Added support for `~/.aws/credentials` for S3 releases
+ * Added `clean` task in API/CLI.
 
 ## 1.0.0
 
@@ -26,7 +28,7 @@
 
 ## 0.9.0
 
- * Updated `component.config.js` objects : Breaking change.
+ * Updated `component.config.js` objects **breaking change**.
  * Added `requirejs` build.scripts type
 
 ## 0.8.10

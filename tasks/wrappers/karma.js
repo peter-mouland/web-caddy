@@ -3,12 +3,12 @@ var karma = require('karma').server;
 var findup = require('findup-sync');
 var log = require('../utils/log');
 
-function Karma(config){
-    if (!config || !config.summary || !config.config){
+function Karma(options){
+    if (!options || !options.summary || !options.config){
         log.onError('Karma requires config with `summary` and `config`.');
     }
-    this.summaryPath = config.summary;
-    this.configPath = config.config;
+    this.summaryPath = options.summary;
+    this.configPath = options.config;
 }
 
 Karma.prototype.run = function(singleRun){

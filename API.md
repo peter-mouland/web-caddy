@@ -51,6 +51,28 @@ Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also creat
 
 These will be saved within the `dist` and `site` roots set within [component.config.js](component-structure/component.config.js)
 
+The build can be configured more by adding an appropriately named object to the [component.config.js](component-structure/component.config.js).
+
+**Example 1 : browserify**
+
+```javascript
+    browserify: {
+        insertGloabals : false,
+        detectGlobals : false,
+        external: [
+            './bower_components/jquery/dist/jquery.js',
+        ]
+    },
+```
+
+**Example 2 : requirejs**
+
+```javascript
+    requirejs: {
+        mainConfigFile: 'src/scripts/require.config.js'
+    }
+```
+
 #### HTML
 
 `component build html`
@@ -155,13 +177,11 @@ This will add, commit and push any remaining files to `origin master`. Using the
 
 This will push the current files within `_site` to gh-pages branch (making your demo available on github.io).
 
-#### Cloud
+#### S3
 
-#### Cloud
+`component release s3`
 
-`component release cloud`
-
-This will push the current files from within `_site` to AWS using the options within [component.config.js](component-structure/component.config.js).
+This will push the current files from within `_site` to S3 using the options within [component.config.js](component-structure/component.config.js).
 Setting this option to false will prevent a release.
 
 For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
@@ -169,8 +189,8 @@ For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
 **Example 1: Using Environment Variables**
 ```javascript
     ...
-    release: {
-        type: 'aws',
+    release: 's3',
+    s3: {
         bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
@@ -182,9 +202,8 @@ For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
 **Example 2: Using AWS Credentials**
 ```javascript
     ...
-
-    release: {
-        type: 'aws',
+    release: 's3',
+    s3: {
         bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
         profile: pkg.name,

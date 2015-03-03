@@ -7,10 +7,10 @@ var fs   = require('./utils/fs');
 var log   = require('./utils/log');
 var git = require('./utils/git');
 var bump = require('./utils/bump').bump;
-var Release = require('./wrappers/aws'); //config.release
 var test = require('./test');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
 var component = require(componentConfigPath);
+var Release = require('./wrappers/s3');
 var pkg = component.pkg;
 var helper = require('./utils/config-helper');
 var paths = helper.parsePaths(component.paths);
@@ -64,16 +64,17 @@ function ghPagesRelease(message){
     });
 }
 
-function cloud(version){
+function s3(version){
     if (!component.release){
         log.info('Release set to false within component.config.js : skipping');
         return Promise.resolve();
     }
-    log.info("\nReleasing to cloud (" + component.release.type + ") ... \n");
+    log.info("\nReleasing to S3 ... \n");
     version = Array.isArray(version) ? version[0] : version;
     version = version || pkg.version;
-    var prefix = component.release.directoryPrefix || '';
-    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', component.release).write();
+    var options = (component[component.release]) || {};
+    var prefix = options.directoryPrefix || '';
+    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', options).write();
 }
 
 function quick(type){
@@ -84,7 +85,7 @@ function quick(type){
     }).then(function(){
         return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
-        return cloud(bumpedVersion);
+        return s3(bumpedVersion);
     }).catch(log.onError);
 }
 
@@ -99,7 +100,7 @@ module.exports = {
     git: gitRelease,
     versionBump: versionBump,
     'gh-pages': ghPagesRelease,
-    cloud: cloud,
+    s3: s3,
     all: all,
     quick: quick
 };

@@ -9,8 +9,16 @@ var paths = helper.parsePaths(component.paths);
 
 helper.configCheck(component);
 
+function html(){
+    log.info('deleting HTML');
+    var htmlPaths = [];
+    paths.dist && htmlPaths.push(paths.dist.styles + '/*.{html,jade,ms,mustache}');
+    paths.site && htmlPaths.push(paths.site.styles + '/*.{html,jade,ms,mustache}');
+    return fs.del(htmlPaths);
+}
+
 function styles(){
-    log.info('deleting styles :');
+    log.info('deleting styles');
     var stylesPaths = [];
     paths.dist && stylesPaths.push(paths.dist.styles + '/**/*');
     paths.site && stylesPaths.push(paths.site.styles + '/**/*');
@@ -18,16 +26,16 @@ function styles(){
 }
 
 function scripts(){
-    log.info('deleting scripts :');
+    log.info('deleting scripts');
     var delPaths = [];
-    paths.dist && delPaths.push(paths.dist + '/**/*');
-    paths.site && delPaths.push(paths.site + '/**/*');
+    paths.dist && delPaths.push(paths.dist.scripts + '/**/*');
+    paths.site && delPaths.push(paths.site.scripts + '/**/*');
     return fs.del(delPaths);
 }
 
 function fonts(){
     if (paths.site && paths.site.fonts) {
-        log.info('deleting fonts :');
+        log.info('deleting fonts');
         return fs.del(paths.site.fonts + '/**/*');
     } else {
         log.info('Skipping `fonts` clean.');
@@ -37,7 +45,7 @@ function fonts(){
 
 function images(){
     if (paths.site && paths.site.images) {
-        log.info('deleting images :');
+        log.info('deleting images');
         return fs.del(paths.site.images + '/**/*');
     } else {
         log.info('Skipping `images` clean.');
@@ -46,11 +54,7 @@ function images(){
 }
 
 function all(){
-    log.info('deleting all :');
-    var delPaths = [];
-    paths.dist && delPaths.push(paths.dist.root + '/**/*');
-    paths.site && delPaths.push(paths.site.root + '/**/*');
-    return fs.del(delPaths).catch(log.onError);
+    return Promise.all([html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
 }
 
 module.exports = {

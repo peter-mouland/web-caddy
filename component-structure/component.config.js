@@ -5,30 +5,41 @@ module.exports = {
     bower: bower,
     build: {
         fonts: true, // true or false. Set to false if you are doing your own thing in the fonts directory
+        images: true, // true or false.
         styles: 'sass', // 'sass'. less not yet available
         html: 'mustache',// 'mustache' or 'jade'. handlebars not yet available
         scripts: 'browserify' // 'browserify' or 'requirejs'
     },
-    test: { // or false.  where your tests config, specs and reports are saved
-        type: 'karma',//or mocha not yet available
+    test: 'karma', // or false. mocha not yet available.
+    release: 's3', // or false.
+    serve: 'staticApp', // `staticApp` or `nodeApp`
+    browserify: { //optional config
+        insertGloabals : false,
+        detectGlobals : false
+    },
+    //requirejs: { //exampe config for requireJS
+    //    mainConfigFile: 'src/scripts/require.config.js'
+    //},
+    karma:{  //  where your tests config and coverage summary locations
         config: './test/karma.conf.js',
         summary: './test/coverage/summary.json'
     },
-    release: { // or false. add you release config here.
-        type: 'aws',
+    s3: { // add your aws release config here.
         bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
         profile: pkg.name, // profile to be used in ~/.aws/credentials
         directoryPrefix: false //prefix your target release destination i.e. 'components/'
     },
-    serve: {
-        type:'static', // `static` or `node`
-        directories : '_site', //only for `static` : '_site' or ['_site','bower_component'] etc
-        port: 3456 // for `static` and `node`
-        //script : 'src/app/server.js', //server script only for `node`
-        //host: 'http://localhost:3000', // host only for `node`
-        //env: { NODE_ENV: 'local'} // env vars only for `node`
+    staticApp:{
+        server: { baseDir : '_site' }, // '_site' or ['_site','bower_component'] etc using 'browserSync' api
+        port: 3456
     },
+    //nodeApp:{ //example config for nodeApp
+    //  port: 3456
+    //  script : 'src/app/server.js', //server script
+    //  proxy: 'http://localhost:3000',
+    //  env: { NODE_ENV: 'local'} // env vars
+    //},
     paths: {
         /*
         All paths also have `script`, `styles`, `fonts`, `icons` and `images` properties
