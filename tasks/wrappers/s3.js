@@ -59,13 +59,15 @@ AWS.prototype.setParams = function(fileObj){
 
 AWS.prototype.upload = function(fileObj) {
     var self = this;
-    this.setParams(fileObj);
     return new Promise(function(resolve, reject){
+        self.setParams(fileObj);
         self.s3.putObject(self.params, function(err) {
             if (err) {
                 reject({message: 'S3::putObject "' + self.params.Key + '" error!\n' + err});
             } else {
-                resolve('S3::putObject "' + self.params.Key + '" send');
+                var msg ='S3::putObject "' + fileObj.path + '" send';
+                log.info(msg);
+                resolve(msg);
             }
         });
     });
