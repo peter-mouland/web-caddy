@@ -3,8 +3,8 @@
 ## 1.1.0 (not yet released)  **breaking change**
 
  * Updated **breaking change** `component.config.js` to expect explicit config objects 
-   * `requirejs`, `browserify`, `staticApp`, `nodeApp`, `s3` or `karma`
- * Updated **breaking change** `component release cloud` to `component release s3`.
+   * `requirejs`, `browserify`, `staticApp`, `nodeApp`, `s3` or `karma` objects
+ * Updated **breaking change** `component release cloud` changed to `component release s3`.
  * Updated `build`/`serve` to only warn of compilation problems rather than quiting.
  * Updated cleaning to be less aggressive. This allows overlapping paths within `component.config.js`
  * Updated `karma.conf.js` to use browserify by default and to automatically apply shims
