@@ -9,7 +9,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
  * Deploy to github.io, Bower and Amazon S3
- * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](component-structure/gulpfile.js).
+ * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
 
