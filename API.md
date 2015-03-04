@@ -146,7 +146,7 @@ This will run your tests as mentioned above, but without the build step.
 
 `component test tdd`
 
-This will run through test and then stay open watching for code changes in your spec files.
+This will run through test and then stay open watching for code changes in your source code and your spec files.
 
 ## Init
 
