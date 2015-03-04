@@ -20,7 +20,7 @@ module.exports = function(config) {
                         statements: [75, 85],
                         lines: [75, 85],
                         functions: [75, 85],
-                        branches:[50, 85]
+                        branches:[75, 85]
                     }},
                 { type: 'json-summary', subdir: '.', file: 'summary.json' },
             ]
