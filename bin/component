@@ -10,18 +10,19 @@ var flags = minimist(process.argv.slice(2), knownArgs);
 function execTask(task, args){
     var helper = require("../");
     var command = args.shift() || 'all';
-    helper[task][command] && helper[task][command](args, flags.version).then(log.onSuccess, log.onError);
-    !helper[task][command] && help(helper[task], task);
+    helper[task][command] && helper[task][command](args, flags.version);
+    !helper[task][command] && helper[task]['adhoc'] && helper[task]['adhoc'](command);
+    !helper[task][command] && !helper[task]['adhoc'] && help(helper[task], task);
 }
 
 function help(task, taskStr){
     var args = [];
     for (var arg in task){
-        if (arg!=='all') args.push(arg)
+        if (arg!=='all' && arg!=='adhoc') args.push(arg);
     }
-    var helpStr = (taskStr === '') ? '' : '`component ' + taskStr + '` or '
+    var helpStr = (taskStr === '') ? '' : '`component ' + taskStr + '` or ';
     log.info([ taskStr + " arguments: " + args.join(', '),
-        "Usage: " + helpStr + "`component " + taskStr + " " + args[0] + "`"].join("\n"))
+        "Usage: " + helpStr + "`component " + taskStr + " " + args[0] + "`"].join("\n"));
 }
 
 var commands = {

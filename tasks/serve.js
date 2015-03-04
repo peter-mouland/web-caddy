@@ -12,9 +12,9 @@ var paths = helper.parsePaths(component.paths);
 
 helper.configCheck(component);
 
-function loadBrowser(options){
+function start(options){
     options = Array.isArray(options) && options.length>0 ? options[0] : (component[component.serve]) || {};
-    return startServer(options).then(function(){
+    return nodeApp(options).then(function(){
         if (!options.server && !options.proxy){
             log.warn('component.config.js may be incorrect. please check');
         }
@@ -22,9 +22,9 @@ function loadBrowser(options){
     });
 }
 
-function startServer(options){
-    if (!component.serve || component.serve === 'staticApp') return Promise.resolve();
+function nodeApp(options){
     return new Promise(function(resolve, reject){
+        if (!component.serve || component.serve === 'staticApp') resolve();
         nodemon(options).on('start', function(e){
             log.info('Server Started');
             resolve();
@@ -56,15 +56,26 @@ function watch(){
     fs.watch(imagesPaths,   [buildAndReload.images]);
 }
 
+function adhoc(path){
+    //todo: test if path ext is js or html
+    //    : if html serve staticApp
+    //    : if js serve nodeApp
+    component.serve = 'staticApp';
+    return start([{
+        server: { baseDir : path },
+        port: 3456
+    }]);
+}
 
 function quick(args){
-    return loadBrowser(args).then(function(){
+    return start(args).then(function(){
         watch();
     });
 }
 
 module.exports = {
     quick: quick,
+    adhoc: adhoc,
     all: function(args){
         return build.all().then(function(){
             return quick(args);

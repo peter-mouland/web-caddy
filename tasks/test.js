@@ -28,7 +28,11 @@ function quick(options){
     var test = new TestWrapper(options);
     return test.run(true).then(function(){
         return test.coverage();
-    }).catch(log.onError);
+    }).catch(function(message){
+        log.warn(['To view results please run',
+            ' * $ component serve test/coverage/phantomjs/'].join('\n'));
+        log.onError(message);
+    });
 }
 
 function all(options){

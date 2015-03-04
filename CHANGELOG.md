@@ -8,6 +8,7 @@
  * Updated cleaning to be less aggressive. This allows overlapping paths within `component.config.js`
  * Updated `karma.conf.js` to use browserify by default and to automatically apply shims
  * Removed dependency on Gulp for new components. Now recommended to use `component` commands.
+ * Added `component serve path/to/serve` option to allow a static path to be served instantly.
  * Added `jade` templating (for build.html config)
  * Added support for `~/.aws/credentials` for S3 releases
  * Added `clean` task in API/CLI.

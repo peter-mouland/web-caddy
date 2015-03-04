@@ -121,6 +121,12 @@ Node Server example :
 
 This will do the above `serve`, but without the build step.
 
+#### Custom Path
+
+`component serve your/path/to/serve`
+
+This serve the path given as a static site
+
 ## Testing
 
 `component test`
