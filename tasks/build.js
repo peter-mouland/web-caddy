@@ -15,7 +15,7 @@ var now = Date().split(' ').splice(0,5).join(' ');
 
 helper.configCheck(component);
 
-function buildHtml(replacements) {
+function html(replacements) {
     replacements = (Array.isArray(replacements)) ? {} : replacements || {};
     if (!component.build.html){
         log.info('build.html set to false within component.config.js : skipping building html');
@@ -56,14 +56,14 @@ function images() {
     fs.copy(src, paths.site.images).catch(log.warn);
 }
 
-function buildScripts(options){
+function scripts(options){
     if (!component.build.scripts){
         log.info('build.scripts set to false within component.config.js : skipping building scripts');
         return Promise.resolve();
     }
     options = options || (component[component.build.scripts]) || {};
     return Promise.all([
-        new Scripts(paths.source.scripts, paths.dist.scripts, options).write(),
+        paths.dist && paths.dist.scripts && new Scripts(paths.source.scripts, paths.dist.scripts, options).write(),
         paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),
         paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, options).write()
     ]).then(function(){
@@ -78,7 +78,7 @@ function buildStyles(options){
     }
     options = options || (component[component.build.scripts]) || {};
     return Promise.all([
-        new Styles(paths.source.styles, paths.dist.styles, options).write(),
+        paths.dist && paths.dist.styles && new Styles(paths.source.styles, paths.dist.styles, options).write(),
         paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
         paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles, options).write()
     ]).then(function(){
@@ -91,11 +91,11 @@ function all(replacements){
     return clean.all().then(function(){
         log.info('Build All :');
         return Promise.all([
-                buildScripts(),
+                scripts(),
                 fonts(),
                 images(),
                 buildStyles(),
-                buildHtml(replacements)
+                html(replacements)
             ]);
     }).then(function(){
         return 'Build All Complete';
@@ -103,9 +103,9 @@ function all(replacements){
 }
 
 module.exports = {
-    html: buildHtml,
+    html: html,
     styles: buildStyles,
-    scripts: buildScripts,
+    scripts: scripts,
     images: images,
     fonts: fonts,
     all: all

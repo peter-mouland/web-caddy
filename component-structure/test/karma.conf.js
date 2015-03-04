@@ -1,16 +1,14 @@
 module.exports = function(config) {
-    return config.set({
+    var pkg = require('../package.json');
+    var karmaConfig = {
         basePath: '..',
         browsers: ['PhantomJS'],
-        frameworks: ['commonjs', 'jasmine'],
+        frameworks: ['browserify', 'jasmine'],
         reporters: ['progress', 'coverage'],
         preprocessors: {
-            'src/**/*.js': ['commonjs', 'coverage'],
-            'bower_components/bskyb-*/src/**/*.js': ['commonjs'],
-            'test/**/*.js': ['commonjs'],
+            'test/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
         },
-        plugins:['karma-html2js-preprocessor', 'karma-coverage', 'karma-commonjs', 'karma-jasmine', 'karma-phantomjs-launcher', 'karma-chrome-launcher'],
         coverageReporter: {
             dir : 'test/coverage/',
             reporters: [
@@ -22,21 +20,28 @@ module.exports = function(config) {
                         statements: [75, 85],
                         lines: [75, 85],
                         functions: [75, 85],
-                        branches:[50, 85]
+                        branches:[75, 85]
                     }},
                 { type: 'json-summary', subdir: '.', file: 'summary.json' },
             ]
         },
         files: [
-            {pattern: '_site/*.html', watched: false },
-            {pattern: '_site/styles/*.*', included: true, served: true},
-            {pattern: 'bower_components/bskyb-*/src/**/*.js', included: true },
-            {pattern: '_site/**/*.*', included: false, served: true},
-            'src/**/*.js',
+            {pattern: '_site/**/*.*', included: true, served: true, watched: true},
             'test/**/*.spec.js'
         ],
         exclude: [
-            'src/**/*.requirejs.js'
+            '**/*.png',
+            '**/*.min.js',
+            '**/*.requirejs.js',
+            'bower_components/**/*',
+            'node_modules/**/*'
         ]
-    });
+    };
+    karmaConfig.browser = pkg.browser || {};
+    karmaConfig["browserify-shim"] = pkg["browserify-shim"] || {};
+    karmaConfig.browserify = pkg.browserify || {};
+    karmaConfig.browserify.transform = (karmaConfig.browserify.transform)
+        ? karmaConfig.browserify.transform.push('istanbulify')
+        : [ 'istanbulify' ];
+    return config.set(karmaConfig);
 };

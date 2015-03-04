@@ -1,15 +1,15 @@
 Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.svg)](https://www.npmjs.org/package/component-helper) [![Circle CI](https://circleci.com/gh/skyglobal/component-helper/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/component-helper/tree/master)
 ========================
-> Quickly create new components or improve your existing build process
+> Quickly create new components or Improve your existing build process
 
-Out of the box you can:
  * Build and serve (static or NodeJS) sites
  * Automatic browser refresh when source code is changed
  * Use Jade or Mustache HTML templating
  * Compile Sass and CommonJS or AMD to CSS/JS and `.min` equivalents 
- * Test your code and keep an eye on code coverage
+ * Test your code and automatically retest on the fly with each code change. True TDD!
+ * Code coverage reporting by default with adjustable thresholds
  * Deploy to github.io, Bower and Amazon S3
- * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](component-structure/gulpfile.js).
+ * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
 
@@ -20,9 +20,9 @@ Out of the box you can:
 1. Create a repository on github (optional)
 2. Run `component new *component-name*` (which will create your component directory)
 3. *follow on-screen instructions.*
-4. Run `component serve` in your component's directory.
-5. Run `component test` to test your code.
-6. Run `component release` to release your code.
+4. in your component's directory, Run `component serve` .
+5. Run `component test tdd` : test your code even while making code changes.
+6. Run `component release`  : release your code.
 
 ### Generated Directory Structure
 
@@ -56,6 +56,7 @@ CLI | Node
 [component build html](API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
 [component serve](API.md/#serve) | `component.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
 [component serve quick](API.md/#quick) | `component.serve.quick(config)` <br>(optional: [server *config*](API.md#serve))
+[component serve path/to/serve](API.md/#adhoc) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
 [component test](API.md/#testing) | `component.test.all()`
 [component test quick](API.md/#quick-1) | `component.test.quick()`
 [component test tdd](API.md/#tdd) | `component.test.tdd()`
