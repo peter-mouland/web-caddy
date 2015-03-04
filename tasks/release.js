@@ -46,17 +46,17 @@ function getPreid(){
 }
 
 
-function getVersionType(type){
+function getVersion(type){
     type = Array.isArray(type) ? type[0] : type;
-    if (type) type = type.split('--version=')[1]
+    if (type) type = type.split('--version=')[1];
     type = type || 'patch';
+    type = semver.inc(pkg.version, type, getPreid()) || semver.valid(type);
     return type;
 }
 
 function versionBump(type){
-    type = getVersionType(type);
     log.info("\nBumping version ...  " + type );
-    var version = semver.inc(pkg.version, type, getPreid()) || semver.valid(type);
+    var version = getVersion(type);
     return bump('./*.json', {version:version}).then(function(){
         return Promise.all([update(version), build.html({version:version})]);
     }).then(function(){
