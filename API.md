@@ -121,9 +121,9 @@ Node Server example :
 
 This will do the above `serve`, but without the build step.
 
-#### Custom Path
+#### Adhoc
 
-`component serve your/path/to/serve`
+`component serve path/to/serve`
 
 This serve the path given as a static site
 

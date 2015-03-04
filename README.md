@@ -56,6 +56,7 @@ CLI | Node
 [component build html](API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
 [component serve](API.md/#serve) | `component.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
 [component serve quick](API.md/#quick) | `component.serve.quick(config)` <br>(optional: [server *config*](API.md#serve))
+[component serve path/to/serve](API.md/#adhoc) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
 [component test](API.md/#testing) | `component.test.all()`
 [component test quick](API.md/#quick-1) | `component.test.quick()`
 [component test tdd](API.md/#tdd) | `component.test.tdd()`
