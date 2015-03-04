@@ -40,8 +40,10 @@ module.exports = function(config) {
     karmaConfig.browser = pkg.browser || {};
     karmaConfig["browserify-shim"] = pkg["browserify-shim"] || {};
     karmaConfig.browserify = pkg.browserify || {};
-    karmaConfig.browserify.transform = (karmaConfig.browserify.transform)
-        ? karmaConfig.browserify.transform.push('istanbulify')
-        : [ 'istanbulify' ];
+    if (karmaConfig.browserify.transform) {
+        karmaConfig.browserify.transform.push('istanbulify'); //browserify-istanbul
+    } else {
+        karmaConfig.browserify.transform = [ 'istanbulify' ]; //browserify-istanbul
+    }
     return config.set(karmaConfig);
 };
