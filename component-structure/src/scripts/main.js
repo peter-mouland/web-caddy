@@ -1,19 +1,17 @@
-// By default JS dependency is handled using browserify
-// please see 'GULP-TASKS.md#js' for more info
+// By default JS dependency is handled using CommonJS and browserify
+// please see 'API.md#scripts' for more info
 //
-// You may need another component:
-// run : $ bower install bskyb-core --save
-// then add
-// var core = require('../../bower_components/bskyb-core/src/scripts/core');
-// var event = core.event;
+// You may need other components. i.e. Run and uncomment the following :
+// $ bower install dependency-name --save
+// var dependency = require('../../bower_components/dependency-name/src/scripts/index');
 
 
 //example function
-function Test(){
+function Main(){
     this.version = require('./utils/version.js');//keep this : each component exposes its version
 }
 
-Test.prototype.sum = function(args){
+Main.prototype.sum = function(args){
     var total = 0;
     args.forEach(function(int){
         total += int;
@@ -23,9 +21,8 @@ Test.prototype.sum = function(args){
 
 
 //example export
-module.exports = Test;
+module.exports = Main;
 
 
-//keep this : ensure components are also globally available
-if (typeof skyComponents === "undefined") window.skyComponents = {};
-skyComponents['{{ component }}'] = module.exports;
+//Globals : if required
+//window['{{ component }}'] = module.exports;
