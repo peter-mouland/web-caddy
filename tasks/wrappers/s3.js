@@ -65,8 +65,9 @@ AWS.prototype.upload = function(fileObj) {
             if (err) {
                 reject({message: 'S3::putObject "' + self.params.Key + '" error!\n' + err});
             } else {
-                log.info('S3::putObject "' + fileObj.path + '" send');
-                resolve();
+                var msg ='S3::putObject "' + fileObj.path + '" send';
+                log.info(msg);
+                resolve(msg);
             }
         });
     });
