@@ -94,9 +94,9 @@ function quick(type){
     var bumpedVersion;
     return versionBump(type).then(function(version){
         bumpedVersion = version;
-        //return gitRelease(version);
-    //}).then(function(){
-    //    return ghPagesRelease('v' + bumpedVersion);
+        return gitRelease(version);
+    }).then(function(){
+        return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
         return s3(bumpedVersion);
     }).catch(log.onError);
