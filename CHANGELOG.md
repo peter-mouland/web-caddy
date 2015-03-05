@@ -3,6 +3,7 @@
 ## Next Release
 
  * Speed improvements to the CLI
+ * Updated `build html` step to produce minified html
 
 ## 1.1.0  **breaking change**
 
