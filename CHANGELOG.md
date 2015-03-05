@@ -1,5 +1,9 @@
 # Change Log
 
+## Next Release
+
+ * Speed improvements to the CLI
+
 ## 1.1.0  **breaking change**
 
  * Updated **breaking change** `component.config.js` to expect explicit config objects 
