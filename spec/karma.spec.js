@@ -1,5 +1,4 @@
 var Karma = require('../tasks/wrappers/karma');
-var karmaServer = require('karma').server;
 var log = require('../tasks/utils/log');
 
 function onError(e){
