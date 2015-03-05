@@ -1,11 +1,13 @@
 # Change Log
 
-## next release
+## Next Release
 
+ * Speed improvements to the CLI
  * Added global Alias for browserified JS files.
     * i.e. You can now call `require('component-name');` within your html.
  * Added `vendorBundle` option to browseify config.
     * This allows you to specifiy which external files should be built separately from your main js files.
+
 
 ## 1.1.0  **breaking change**
 
