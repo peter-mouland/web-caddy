@@ -1,6 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var findup = require('findup-sync');
 var build = require('./build');
+var clean = require('./clean');
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
@@ -26,7 +27,10 @@ function quick(options){
     options = Array.isArray(options) ? options[0] : options;
     options = options || (component[component.test]) || {};
     var test = new TestWrapper(options);
-    return test.run(true).then(function(){
+
+    return clean.test().then(function(){
+        return test.run(true);
+    }).then(function(){
         return test.coverage();
     }).catch(function(message){
         log.warn(['To view results please run',

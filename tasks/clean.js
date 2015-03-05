@@ -53,12 +53,18 @@ function images(){
     }
 }
 
+function test(){
+    log.info('deleting test results');
+    return fs.del('./test/coverage/**/*');
+}
+
 function all(){
-    return Promise.all([html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
+    return Promise.all([html(), styles(), scripts(), fonts(), images(), test()]).catch(log.onError);
 }
 
 module.exports = {
     all: all,
+    test: test,
     styles: styles,
     scripts: scripts,
     images: images,
