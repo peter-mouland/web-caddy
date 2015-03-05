@@ -32,11 +32,7 @@ function quick(options){
         return test.run(true);
     }).then(function(){
         return test.coverage();
-    }).catch(function(message){
-        log.warn(['To view results please run',
-            ' * $ component serve test/coverage/phantomjs/'].join('\n'));
-        log.onError(message);
-    });
+    }).then(log.onSuccess).catch(log.onError);
 }
 
 function all(options){

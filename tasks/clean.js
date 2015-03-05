@@ -59,7 +59,7 @@ function test(){
 }
 
 function all(){
-    return Promise.all([html(), styles(), scripts(), fonts(), images(), test()]).catch(log.onError);
+    return Promise.all([html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
 }
 
 module.exports = {

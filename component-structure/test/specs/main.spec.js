@@ -2,7 +2,7 @@
 require('../helper').loadAssets();
 
 /* Require file to test */
-var local = {}; local['{{ component }}'] = require('src/scripts/{{ component }}');
+var local = {}; local['{{ component }}'] = require('../../src/scripts/{{ component }}');
 
 /* Start Test */
 describe('{{ component }} module can ', function () {

@@ -43,7 +43,7 @@ module.exports = function(config) {
     if (karmaConfig.browserify.transform) {
         karmaConfig.browserify.transform.push(transform);
     } else {
-        karmaConfig.browserify.transform = transform;
+        karmaConfig.browserify.transform = [ transform ];
     }
     return config.set(karmaConfig);
 };

@@ -42,13 +42,16 @@ Karma.prototype.coverage = function(){
         for (var file in results) {
             for (var threshold in thresholds) {
                 if (results[file][threshold].pct < thresholds[threshold][0]) {
-                    log.warn(file + ' : ' + threshold + ' Coverage is too low (<' + thresholds[threshold][0] + '%)');
+                    var fileDir = file.replace(process.cwd(),'')
+                    log.warn(fileDir + ' : ' + threshold + ' Coverage is too low (<' + thresholds[threshold][0] + '%)');
                     err = true;
                 }
             }
         }
-        err && reject('Coverage Failed');
-        !err && resolve();
+        log.info(['To view coverage results please run',
+            ' * $ component serve test/coverage/phantomjs/'].join('\n'));
+        err && reject('Test Coverage FAILED');
+        !err && resolve('Test Coverage SUCCESS.');
     });
 };
 
