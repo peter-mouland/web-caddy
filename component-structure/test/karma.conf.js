@@ -1,5 +1,4 @@
 module.exports = function(config) {
-    var pkg = require('../package.json');
     var karmaConfig = {
         basePath: '..',
         browsers: ['PhantomJS'],
@@ -32,18 +31,19 @@ module.exports = function(config) {
         exclude: [
             '**/*.png',
             '**/*.min.js',
-            '**/*.requirejs.js',
-            'bower_components/**/*',
-            'node_modules/**/*'
+            '**/*.requirejs.js'
         ]
     };
+    var pkg = require('../package.json');
+    var istanbul = require('browserify-istanbul');
+    var transform =  istanbul({ ignore: ['**/bower_components/**']  });
     karmaConfig.browser = pkg.browser || {};
     karmaConfig["browserify-shim"] = pkg["browserify-shim"] || {};
     karmaConfig.browserify = pkg.browserify || {};
     if (karmaConfig.browserify.transform) {
-        karmaConfig.browserify.transform.push('istanbulify'); //browserify-istanbul
+        karmaConfig.browserify.transform.push(transform);
     } else {
-        karmaConfig.browserify.transform = [ 'istanbulify' ]; //browserify-istanbul
+        karmaConfig.browserify.transform = transform;
     }
     return config.set(karmaConfig);
 };
