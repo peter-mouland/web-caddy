@@ -24,7 +24,6 @@ function start(options){
 
 function nodeApp(options){
     return new Promise(function(resolve, reject){
-        if (!component.serve || component.serve === 'staticApp') resolve();
         nodemon(options).on('start', function(e){
             log.info('Server Started');
             resolve();

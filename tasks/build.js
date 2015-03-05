@@ -1,4 +1,5 @@
 var Promise = require('es6-promise').Promise;
+var minify = require('html-minifier').minify;
 var findup = require('findup-sync');
 var log = require('./utils/log');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
@@ -30,7 +31,22 @@ function html(replacements) {
     replacements.site = {now: now, version:version, name: name};
     var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
     var htmlPromise = new Html(src, paths.site.root, replacements).write();
-    return htmlPromise.then(function(){
+    return htmlPromise.then(function(fileObjs){
+        var promises = [];
+        fileObjs.forEach(function(fileObj){
+            fileObj.contents = minify(fileObj.contents, {
+                removeAttributeQuotes: true,
+                collapseBooleanAttributes : true,
+                collapseWhitespace: true,
+                useShortDoctype: true,
+                removeComments:true,
+                removeCommentsFromCdata:true,
+                removeEmptyAttributes: true
+            });
+            promises.push(fs.write(fileObj));
+        });
+        return Promise.all(promises);
+    }).then(function(){
             return 'Build HTML Complete';
     }).catch(log.warn);
 }
