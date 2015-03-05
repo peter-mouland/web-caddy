@@ -42,7 +42,7 @@ Karma.prototype.coverage = function(){
         for (var file in results) {
             for (var threshold in thresholds) {
                 if (results[file][threshold].pct < thresholds[threshold][0]) {
-                    var fileDir = file.replace(process.cwd(),'')
+                    var fileDir = file.replace(process.cwd(),'');
                     log.warn(fileDir + ' : ' + threshold + ' Coverage is too low (<' + thresholds[threshold][0] + '%)');
                     err = true;
                 }
