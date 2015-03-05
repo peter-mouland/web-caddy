@@ -30,8 +30,23 @@ function html(replacements) {
     replacements.site = {now: now, version:version, name: name};
     var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
     var htmlPromise = new Html(src, paths.site.root, replacements).write();
-    return htmlPromise.then(function(){
-            return 'Build HTML Complete';
+    return htmlPromise.then(function(fileObjs){
+        var promises = [];
+        fileObjs.forEach(function(fileObj){
+            fileObj.contents = minify(fileObj.contents, {
+                removeAttributeQuotes: true,
+                collapseBooleanAttributes : true,
+                collapseWhitespace: true,
+                useShortDoctype: true,
+                removeComments:true,
+                removeCommentsFromCdata:true,
+                removeEmptyAttributes: true
+            });
+            promises.push(fs.write(fileObj));
+        });
+        return Promise.all(promises);
+    }).then(function(){
+        return 'Build HTML Complete';
     }).catch(log.warn);
 }
 
