@@ -62,7 +62,6 @@
   },
   "author": "Pete Mouland",
   "devDependencies": {
-    "istanbulify": "peter-mouland/istanbulify",
     "jasmine": "^2.1.1",
     "jshint": "^2.6.0"
   },
