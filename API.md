@@ -60,12 +60,21 @@ The build can be configured more by adding a `browserify` or `requirejs` object 
         insertGloabals : false,
         detectGlobals : false,
         vendorBundle: [
-            {file: './bower_components/jquery/dist/jquery.js', expose: '$'}
+            { file: './bower_components/d3/d3.js', expose: 'd3'}
         ]
     },
 ```
 
-The `vendorBundle` option allows you to create a `vendor.js` file from external files.
+The `vendorBundle` option will create `vendor.js` from external files. *(`debowerify` will sometime cause problems).*
+Ensure you have the corresponding `browser` object in your `package.json`. i.e.
+
+```javascript
+...
+  "browser": {
+    "d3": "./bower_components/d3/d3.js"
+  },
+...
+```
 
 **Example 2 : requirejs**
 

@@ -37,9 +37,9 @@ Browserify.prototype.file = function(fileObj) {
         if (options.vendorBundle){
             var external = options.vendorBundle.map(function (v) {
                 if (typeof v === 'string') return v;
-                return v.expose;
+                return v.file;
             });
-            b.external([external]);// ['./bower_components/d3/d3.js']   // ['d3']   // external
+            b.external(external);
         }
         b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
         b.bundle(function(err, contents){
