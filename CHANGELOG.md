@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.1.0 (not yet released)  **breaking change**
+## 1.1.0  **breaking change**
 
  * Updated **breaking change** `component.config.js` to expect explicit config objects 
    * `requirejs`, `browserify`, `staticApp`, `nodeApp`, `s3` or `karma` objects
@@ -8,7 +8,7 @@
  * Updated `build`/`serve` to only warn of compilation problems rather than quiting.
  * Updated cleaning to be less aggressive. This allows overlapping paths within `component.config.js`
  * Updated `karma.conf.js` to use browserify by default and to automatically apply shims
- * Removed dependency on Gulp for new components. Now recommended to use `component` commands.
+ * Removed dependency on Gulp for new components. Now recommended to use `npm` or `component` commands.
  * Added `component serve path/to/serve` option to allow a static path to be served instantly.
  * Added `jade` templating (for build.html config)
  * Added support for `~/.aws/credentials` for S3 releases
