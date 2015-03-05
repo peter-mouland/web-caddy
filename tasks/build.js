@@ -1,4 +1,5 @@
 var Promise = require('es6-promise').Promise;
+var htmlMinify = require('html-minifier').minify;
 var findup = require('findup-sync');
 var log = require('./utils/log');
 var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
@@ -33,7 +34,7 @@ function html(replacements) {
     return htmlPromise.then(function(fileObjs){
         var promises = [];
         fileObjs.forEach(function(fileObj){
-            fileObj.contents = minify(fileObj.contents, {
+            fileObj.contents = htmlMinify(fileObj.contents, {
                 removeAttributeQuotes: true,
                 collapseBooleanAttributes : true,
                 collapseWhitespace: true,
