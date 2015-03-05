@@ -22,7 +22,3 @@ Main.prototype.sum = function(args){
 
 //example export
 module.exports = Main;
-
-
-//Globals : if required
-//window['{{ component }}'] = module.exports;
