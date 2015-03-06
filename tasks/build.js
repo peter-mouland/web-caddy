@@ -34,7 +34,7 @@ function html(replacements) {
     return htmlPromise.then(function(fileObjs){
         var promises = [];
         fileObjs.forEach(function(fileObj){
-            fileObj.contents = minify(fileObj.contents, {
+            fileObj.contents = htmlMinify(fileObj.contents, {
                 removeAttributeQuotes: true,
                 collapseBooleanAttributes : true,
                 collapseWhitespace: true,
@@ -47,7 +47,7 @@ function html(replacements) {
         });
         return Promise.all(promises);
     }).then(function(){
-            return 'Build HTML Complete';
+        return 'Build HTML Complete';
     }).catch(log.warn);
 }
 

@@ -3,6 +3,7 @@
 ## Next Release
 
  * Speed improvements to the CLI
+ * Updated `build html` step to produce minified html
  * Added global Alias for browserified JS files.
     * i.e. You can now call `require('component-name');` within your html.
  * Added `vendorBundle` option to browseify config.
