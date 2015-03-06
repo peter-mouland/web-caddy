@@ -4,6 +4,8 @@
 
  * Speed improvements to the CLI
  * Updated `build html` step to produce minified html
+ * Removed implicit steps. ie. component test now only runs tests, not the build too.
+    * if implicit tasks are wanted, please customise this in `npm scripts` object.
 
 ## 1.1.0  **breaking change**
 

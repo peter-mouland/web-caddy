@@ -50,19 +50,17 @@ Once required (`var component = require('component-helper');`), you can call the
 CLI | Node
 --- | ----
 [component new *component-name*](API.md/#new) | *unavailable*
-[component build](API.md/#build) | `component.build.all(replacements)`<br> (optional: replacements object)
+[component build](API.md/#build) | `component.build.run(replacements)`<br> (optional: replacements object)
 [component build scripts](API.md/#scripts) | `component.build.scripts()`
 [component build styles](API.md/#styles) | `component.build.styles()`
 [component build html](API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
-[component serve](API.md/#serve) | `component.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
-[component serve quick](API.md/#quick) | `component.serve.quick(config)` <br>(optional: [server *config*](API.md#serve))
+[component serve](API.md/#serve) | `component.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
 [component serve path/to/serve](API.md/#adhoc) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
-[component test](API.md/#testing) | `component.test.all()`
-[component test quick](API.md/#quick-1) | `component.test.quick()`
+[component test](API.md/#testing) | `component.test.run()`
 [component test tdd](API.md/#tdd) | `component.test.tdd()`
 [component init bower](API.md/#bower) | `component.init.bower()`
 [component init remoteGit](API.md/#bower) | `component.init.remoteGit(repository)` <br>(mandatory: Git SSH URL)
-[component release](API.md/#releasing) | `component.release.all(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component release](API.md/#releasing) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
 [component release gh-pages](API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
 [component release s3](API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
 

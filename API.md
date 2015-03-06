@@ -87,7 +87,7 @@ By default, during the build it will also replace *site.now*, *site.name* and *s
 
 `component serve`
 
-This will [build](#build) your site then using [browserSync](https://www.npmjs.com/package/browser-sync) will open your browser and automatically apply any html, css and js source changes that are then made.
+Using [browserSync](https://www.npmjs.com/package/browser-sync) will open your browser and automatically apply any html, css and js source changes that are then made.
 
 You can configure this to either serve a static site or node app within the [component.config.js](component-structure/component.config.js).
 
@@ -115,12 +115,6 @@ Node Server example :
     ...
 ```
 
-#### Quick
-
-`component serve quick`
-
-This will do the above `serve`, but without the build step.
-
 #### Adhoc
 
 `component serve path/to/serve`
@@ -131,16 +125,10 @@ This serve the path given as a static site
 
 `component test`
 
-This will [build](#build) your site then run then using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http://jasmine.github.io/2.2/introduction.html), it will run through the `.spec.js` files found in `/test/` directory.
+Using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http://jasmine.github.io/2.2/introduction.html), it will run through the `.spec.js` files found in `/test/` directory.
 A code-coverage report will also be produced.
 
 Code-coverage is uses the `watermarks` option within [test/karma.conf.js](component-structure/test/karma.conf.js), and ensures the code coverage is above the thresholds given.
-
-### Quick
-
-`component test quick`
-
-This will run your tests as mentioned above, but without the build step.
 
 #### TDD
 
@@ -164,7 +152,7 @@ This will register your component with bower, using the name from your bower.jso
 
 `component release`
 
-This will [build](#build) and [test](#test) your site and `patch` the version number in all the docs (package.json, bower.js, version.js, *.md and *.html).
+This will `patch` the version number in all the docs (package.json, bower.js, version.js, *.md and *.html).
 Once this has complete, it will do all the steps below.
 
 To force a version or release type use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`
