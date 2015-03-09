@@ -13,8 +13,8 @@ module.exports = {
     test: 'karma', // or false. mocha not yet available.
     release: 's3', // or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
-    browserify: { //optional config
-        insertGloabals : false,
+    browserify: {
+        insertGloabals : true,
         detectGlobals : false
     },
     //requirejs: { //exampe config for requireJS
