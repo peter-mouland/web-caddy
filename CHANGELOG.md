@@ -4,8 +4,12 @@
 
  * Speed improvements
  * Updated `build html` step to produce minified html
- * Removed implicit steps. ie. component test now only runs tests, not the build too.
+ * Removed implicit steps. ie. `component test` now only runs tests, not the build too.
     * if implicit tasks are wanted, please customise this in `npm scripts` object.
+ * Added global Alias's for browserified JS files.
+    * i.e. You can now call `require('component-name');` within your html.
+ * Added `vendorBundle` option to browseify config.
+    * This allows you to specifiy which external files should be built separately from your main js files.
 
 ## 1.1.0  **breaking change**
 

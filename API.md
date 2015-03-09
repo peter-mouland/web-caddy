@@ -51,7 +51,7 @@ Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also creat
 
 These will be saved within the `dist` and `site` roots set within [component.config.js](component-structure/component.config.js)
 
-The build can be configured more by adding an appropriately named object to the [component.config.js](component-structure/component.config.js).
+The build can be configured more by adding a `browserify` or `requirejs` object to the [component.config.js](component-structure/component.config.js).
 
 **Example 1 : browserify**
 
@@ -59,10 +59,21 @@ The build can be configured more by adding an appropriately named object to the 
     browserify: {
         insertGloabals : false,
         detectGlobals : false,
-        external: [
-            './bower_components/jquery/dist/jquery.js',
+        vendorBundle: [
+            { file: './bower_components/d3/d3.js', expose: 'd3'}
         ]
     },
+```
+
+The `vendorBundle` option will create `vendor.js` from external files. *(`debowerify` will sometime cause problems).*
+Ensure you have the corresponding `browser` object in your `package.json`. i.e.
+
+```javascript
+...
+  "browser": {
+    "d3": "./bower_components/d3/d3.js"
+  },
+...
 ```
 
 **Example 2 : requirejs**
