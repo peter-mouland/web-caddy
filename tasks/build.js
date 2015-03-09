@@ -1,19 +1,16 @@
-var Promise = require('es6-promise').Promise;
-var findup = require('findup-sync');
-var log = require('./utils/log');
-var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
-var component = require(componentConfigPath);
+var utils = require('./utils/common');
+var paths = utils.paths;
+var Promise = utils.Promise;
+var pkg = utils.pkg;
+var log = utils.log;
+var component = utils.component;
 
+var htmlMinify = require('html-minifier').minify;
 var clean = require('./clean');
 var fs = require('./utils/fs');
 var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
 var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
 var Html = require('./wrappers/' + (component.build.html || 'mustache'));
-var helper = require('./utils/config-helper');
-var paths = helper.parsePaths(component.paths);
-var now = Date().split(' ').splice(0,5).join(' ');
-
-helper.configCheck(component);
 
 function html(replacements) {
     replacements = (Array.isArray(replacements)) ? {} : replacements || {};
@@ -25,13 +22,29 @@ function html(replacements) {
         log.info('paths.demo set to false within component.config.js : skipping building html');
         return Promise.resolve();
     }
+    var now = Date().split(' ').splice(0,5).join(' ');
     var version = replacements.version || component.pkg.version;
     var name = replacements.name || component.pkg.name;
     replacements.site = {now: now, version:version, name: name};
     var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
     var htmlPromise = new Html(src, paths.site.root, replacements).write();
-    return htmlPromise.then(function(){
-            return 'Build HTML Complete';
+    return htmlPromise.then(function(fileObjs){
+        var promises = [];
+        fileObjs.forEach(function(fileObj){
+            fileObj.contents = htmlMinify(fileObj.contents, {
+                removeAttributeQuotes: true,
+                collapseBooleanAttributes : true,
+                collapseWhitespace: true,
+                useShortDoctype: true,
+                removeComments:true,
+                removeCommentsFromCdata:true,
+                removeEmptyAttributes: true
+            });
+            promises.push(fs.write(fileObj));
+        });
+        return Promise.all(promises);
+    }).then(function(){
+        return 'Build HTML Complete';
     }).catch(log.warn);
 }
 
@@ -86,10 +99,10 @@ function buildStyles(options){
     }).catch(log.warn);
 }
 
-function all(replacements){
+function run(replacements){
     replacements = (Array.isArray(replacements)) ? {} : replacements;
     return clean.all().then(function(){
-        log.info('Build All :');
+        log.info('Build :');
         return Promise.all([
                 scripts(),
                 fonts(),
@@ -108,5 +121,5 @@ module.exports = {
     scripts: scripts,
     images: images,
     fonts: fonts,
-    all: all
+    run: run
 };

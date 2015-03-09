@@ -1,5 +1,12 @@
 # Change Log
 
+## Next Release
+
+ * Speed improvements
+ * Updated `build html` step to produce minified html
+ * Removed implicit steps. ie. component test now only runs tests, not the build too.
+    * if implicit tasks are wanted, please customise this in `npm scripts` object.
+
 ## 1.1.1
 
  * Update default `browserify` options
