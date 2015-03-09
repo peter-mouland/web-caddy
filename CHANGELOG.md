@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.1
+
+ * Update default `browserify` options
+
 ## 1.1.0  **breaking change**
 
  * Updated **breaking change** `component.config.js` to expect explicit config objects 
