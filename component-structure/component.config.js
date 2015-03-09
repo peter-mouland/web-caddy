@@ -14,7 +14,7 @@ module.exports = {
     release: 's3', // or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
     browserify: {
-        insertGloabals : true,
+        insertGlobals : true,
         detectGlobals : false
     },
     //requirejs: { //exampe config for requireJS
