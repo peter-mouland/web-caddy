@@ -8,11 +8,11 @@
         "url": "{{ git.SSH-URL }}"
     },
     "scripts": {
-      "test": "component test quick",
-      "test:tdd": "component test tdd",
       "build": "component build",
-      "start": "component serve",
-      "start:quick": "component serve quick"
+      "start": "component build && component serve",
+      "test": "component build && component test",
+      "tdd": "component test tdd",
+      "release": "npm test && component release"
     },
     "devDependencies": {
       "browserify-istanbul": "^0.2.1",

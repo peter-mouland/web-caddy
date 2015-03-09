@@ -1,10 +1,6 @@
 test:
   pre:
-    - npm install -g gulp
-    - bower install
-    - gulp build
-  override:
-    - gulp test
+    - npm i && bower i
 machine:
   node:
     version: v0.10.33
