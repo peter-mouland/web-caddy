@@ -15,7 +15,7 @@
       "start:quick": "component serve quick"
     },
     "devDependencies": {
-      "browserify-istanbul": "^0.2.0",
+      "browserify-istanbul": "^0.2.1",
       "component-helper" : "^1.1.0"
     },
     "author": "{{ git.author }}"

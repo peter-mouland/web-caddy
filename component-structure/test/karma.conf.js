@@ -35,15 +35,13 @@ module.exports = function(config) {
         ]
     };
     var pkg = require('../package.json');
-    var istanbul = require('browserify-istanbul');
-    var transform =  istanbul({ ignore: ['**/bower_components/**']  });
     karmaConfig.browser = pkg.browser || {};
     karmaConfig["browserify-shim"] = pkg["browserify-shim"] || {};
     karmaConfig.browserify = pkg.browserify || {};
     if (karmaConfig.browserify.transform) {
-        karmaConfig.browserify.transform.push(transform);
+        karmaConfig.browserify.transform.push('browserify-istanbul');
     } else {
-        karmaConfig.browserify.transform = [ transform ];
+        karmaConfig.browserify.transform = [ 'browserify-istanbul' ];
     }
     return config.set(karmaConfig);
 };
