@@ -30,8 +30,8 @@ To build the component locally, you'll need to install these globally :
 
 ## Running Locally
 
- * `component serve` :  Run server on port 3456
- * `component test` : Run the tests once and produce a code coverage report
+ * `npm start` :  Run server on port 3456
+ * `npm test` : Run the tests once and produce a code coverage report
 
 ## Working with dependencies
 
@@ -44,13 +44,13 @@ If you want to make changes to the bower dependencies, you can clone them down f
 
 ## Releasing (admin only)
 
-`component release`
+`npm release`
 
 This will automatically bump the 'patch' section of the version number.
 
 To bump a different area of the version number you can also use `major|minor|patch|prerelease` e.g. :
 
-`component release --version=prerelease`
+`npm test && component release --version=prerelease`
 
 ## Common Errors
 
@@ -58,4 +58,4 @@ To bump a different area of the version number you can also use `major|minor|pat
 
 This happens whn a connection to the S3 failed to establish. `bump` and `gh-pages` would have already executed.  Please try the release to cloud only by running:
 
-`component release cloud`
+`component release s3`

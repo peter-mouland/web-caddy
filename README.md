@@ -20,9 +20,8 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
 1. Create a repository on github (optional)
 2. Run `component new *component-name*` (which will create your component directory)
 3. *follow on-screen instructions.*
-4. in your component's directory, Run `component serve` .
-5. Run `component test tdd` : test your code even while making code changes.
-6. Run `component release`  : release your code.
+4. in your component's directory, Run `npm start` .
+5. Run `npm run tdd` : test your code even while making code changes.
 
 ### Generated Directory Structure
 
