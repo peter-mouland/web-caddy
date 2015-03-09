@@ -25,7 +25,7 @@ Karma.prototype.run = function(singleRun){
 };
 
 Karma.prototype.coverage = function(){
-    if ((process.cwd() + '/').indexOf('/test')){
+    if ((process.cwd() + '/').indexOf('/test/')>-1){
         log.warn('You are in project called test.  You will not get any coverage results.\n > Please rename your project.');
     }
     var self = this;
