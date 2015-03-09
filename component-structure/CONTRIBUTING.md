@@ -44,7 +44,7 @@ If you want to make changes to the bower dependencies, you can clone them down f
 
 ## Releasing (admin only)
 
-`npm release`
+`npm run release`
 
 This will automatically bump the 'patch' section of the version number.
 
