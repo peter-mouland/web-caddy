@@ -1,33 +1,29 @@
-var Promise = require('es6-promise').Promise;
-var findup = require('findup-sync');
-var build = require('./build');
-var clean = require('./clean');
-var log = require('./utils/log');
-var fs = require('./utils/fs');
-var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
-var component = require(componentConfigPath);
-var helper = require('./utils/config-helper');
-var paths = helper.parsePaths(component.paths);
-var TestWrapper = require('./wrappers/' + (component.test || 'karma'));
+var utils = require('./utils/common');
+var paths = utils.paths;
+var Promise = utils.Promise;
+var pkg = utils.pkg;
+var log = utils.log;
+var component = utils.component;
 
-helper.configCheck(component);
+var Test = require('./wrappers/' + (component.test || 'karma'));
 
 function tdd(options){
     options = Array.isArray(options) ? options[0] : options;
     options = options || (component[component.test]) || {};
-    var test = new TestWrapper(options);
+    var test = new Test(options);
     return test.run(false);
 }
 
-function quick(options){
+function run(options){
     if (!component.test){
         log.info('Test set to false within component.config.js : skipping');
         return Promise.resolve();
     }
     options = Array.isArray(options) ? options[0] : options;
     options = options || (component[component.test]) || {};
-    var test = new TestWrapper(options);
+    var test = new Test(options);
 
+    var clean = require('./clean');
     return clean.test().then(function(){
         return test.run(true);
     }).then(function(){
@@ -35,14 +31,7 @@ function quick(options){
     }).then(log.onSuccess).catch(log.onError);
 }
 
-function all(options){
-    return build.all().then(function() {
-        return quick(options);
-    }).catch(log.onError);
-}
-
 module.exports = {
     tdd: tdd,
-    all: all,
-    quick: quick
+    run: run
 };

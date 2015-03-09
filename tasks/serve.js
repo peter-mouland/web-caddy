@@ -1,16 +1,12 @@
-var Promise = require('es6-promise').Promise;
-var findup = require('findup-sync');
-var browserSync = require('browser-sync');
-var nodemon = require('nodemon');
-var fs = require('./utils/fs');
-var log = require('./utils/log');
-var build = require('./build');
-var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
-var component = require(componentConfigPath);
-var helper = require('./utils/config-helper');
-var paths = helper.parsePaths(component.paths);
+var utils = require('./utils/common');
+var paths = utils.paths;
+var Promise = utils.Promise;
+var pkg = utils.pkg;
+var log = utils.log;
+var component = utils.component;
 
-helper.configCheck(component);
+var browserSync = require('browser-sync');
+var build = require('./build');
 
 function start(options){
     options = Array.isArray(options) && options.length>0 ? options[0] : (component[component.serve]) || {};
@@ -23,6 +19,7 @@ function start(options){
 }
 
 function nodeApp(options){
+    var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
         nodemon(options).on('start', function(e){
             log.info('Server Started');
@@ -31,14 +28,12 @@ function nodeApp(options){
     });
 }
 
-var buildAndReload = {
-    html: function() {    return build.html().then(browserSync.reload);     },
-    scripts: function() { return build.scripts().then(browserSync.reload);  },
-    styles: function() {  return build.styles().then(browserSync.reload);   },
-    images: function() {  return build.images().then(browserSync.reload);   }
-};
+function buildAndReload(task){
+    return function(){ build[task]().then(browserSync.reload); };
+}
 
 function watch(){
+    var fs = require('./utils/fs');
     var htmlPaths = [ ];
     var stylesPaths = [paths.source.styles + '/**/*' ];
     var scriptsPaths =   [paths.source.scripts + '/**/*' ];
@@ -49,10 +44,10 @@ function watch(){
         scriptsPaths.push(paths.demo.styles + '/**/*');
         imagesPaths.push(paths.demo.images + '/**/*');
     }
-    fs.watch(htmlPaths, [buildAndReload.html]);
-    fs.watch(stylesPaths, [buildAndReload.styles]);
-    fs.watch(scriptsPaths,   [buildAndReload.scripts]);
-    fs.watch(imagesPaths,   [buildAndReload.images]);
+    fs.watch(htmlPaths, [buildAndReload('html')]);
+    fs.watch(stylesPaths, [buildAndReload('styles')]);
+    fs.watch(scriptsPaths,   [buildAndReload('scripts')]);
+    fs.watch(imagesPaths,   [buildAndReload('images')]);
 }
 
 function adhoc(path){
@@ -66,18 +61,13 @@ function adhoc(path){
     }]);
 }
 
-function quick(args){
+function run(args){
     return start(args).then(function(){
         watch();
     });
 }
 
 module.exports = {
-    quick: quick,
-    adhoc: adhoc,
-    all: function(args){
-        return build.all().then(function(){
-            return quick(args);
-        });
-    }
+    run: run,
+    adhoc: adhoc
 };
