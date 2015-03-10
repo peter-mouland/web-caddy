@@ -45,7 +45,7 @@ function newComponent(component) {
         return bower.install();
     }).then(function(output){
         log.onSuccess(output);
-        return init.remoteGit(undefined, component);
+        return init.git(undefined, component);
     }).then(function(){
         log.info(['',
             'Ready!',

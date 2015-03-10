@@ -4,6 +4,8 @@
 
  * Speed improvements
  * Updated `build html` step to produce minified html
+ * Updated `init gitRemote` step to be `init git`
+   * Git URLs can now be SSH or HTTP
  * Added global Alias for browserified JS files.
     * i.e. You can now call `require('component-name');` within your html.
  * Added `vendorBundle` option to browseify config.

@@ -1,24 +1,9 @@
 var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
+var git = require('./utils/git');
 var helper = require('./utils/config-helper');
 var component, paths, pkg;
-
-function gitRelease(version){
-    var git = require('./utils/git');
-    component = helper.getConfig();
-    version = Array.isArray(version) ? version[0] : version;
-    version = version || component.pkg.version;
-    return git.add(['.']).then(function() {
-        return git.commit('v' + version);
-    }).then(function(){
-       return git.push(['origin', 'master']);
-    }).then(function(){
-       return git.tag('v' + version);
-    }).then(function(){
-        return git.push(['origin', 'master', 'v' + version]);
-    }).catch(log.onError);
-}
 
 function update(version){
     var replacements = [{
@@ -97,11 +82,21 @@ function s3(version){
     return new Release(component.paths.site.root + '/**/*.*', prefix + component.pkg.name + '/' + version +'/', options).write();
 }
 
+function releaseGit(version){
+    component = helper.getConfig();
+    version = Array.isArray(version) ? version[0] : version;
+    version = version || component.pkg.version;
+    return git.release(version);
+}
+
 function run(type){
     var bumpedVersion;
+    if (!git.checkRemote()){
+        log.onError('No valid Remote Git URL.\nPlease update your `.git/config` file or run:\n $ component init git')
+    }
     return bump(type).then(function(version){
         bumpedVersion = version;
-        return gitRelease(version);
+        return releaseGit(version);
     }).then(function(){
         return ghPagesRelease('v' + bumpedVersion);
     }).then(function(){
@@ -110,7 +105,7 @@ function run(type){
 }
 
 module.exports = {
-    git: gitRelease,
+    git: releaseGit,
     bump: bump,
     'gh-pages': ghPagesRelease,
     s3: s3,

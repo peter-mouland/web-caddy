@@ -155,7 +155,7 @@ This will run through test and then stay open watching for code changes in your 
 
 This will register your component with bower, using the name from your bower.json and the repository url from package.json.
 
-#### github.io (gh-pages)
+#### gh-pages (github.io)
 
 `component init gh-pages`
 
@@ -163,7 +163,7 @@ Use this if you want to demo the `site` on github.io within a project that was s
 
 #### Remote Git Repository
 
-`component init gitRemote`
+`component init git`
 
 ## Releasing
 

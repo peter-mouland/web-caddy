@@ -58,7 +58,7 @@ CLI | Node
 [component test](API.md/#testing) | `component.test.run()`
 [component test tdd](API.md/#tdd) | `component.test.tdd()`
 [component init bower](API.md/#bower) | `component.init.bower()`
-[component init remoteGit](API.md/#bower) | `component.init.remoteGit(repository)` <br>(mandatory: Git SSH URL)
+[component init git](API.md/#git) | `component.init.git(repository)` <br>(mandatory: Git URL)
 [component release](API.md/#releasing) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
 [component release gh-pages](API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
 [component release s3](API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
