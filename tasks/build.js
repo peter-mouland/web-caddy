@@ -1,27 +1,27 @@
-var utils = require('./utils/common');
-var paths = utils.paths;
-var Promise = utils.Promise;
-var pkg = utils.pkg;
-var log = utils.log;
-var component = utils.component;
-
-var htmlMinify = require('html-minifier').minify;
-var clean = require('./clean');
+var Promise = require('es6-promise').Promise;
+var log = require('./utils/log');
 var fs = require('./utils/fs');
-var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
-var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
-var Html = require('./wrappers/' + (component.build.html || 'mustache'));
+var helper = require('./utils/config-helper');
+var component, paths, pkg;
+
+function initConfig(){
+    component = helper.getConfig();
+    paths = component.paths;
+    pkg = component.pkg;
+}
+
+var clean = require('./clean');
 
 function html(replacements) {
+    initConfig();
     replacements = (Array.isArray(replacements)) ? {} : replacements || {};
-    if (!component.build.html){
-        log.info('build.html set to false within component.config.js : skipping building html');
+    if (!component.build.html || !component.paths.demo){
+        log.info('build.html or paths.demo set to false within component.config.js : skipping building html');
         return Promise.resolve();
     }
-    if (!component.paths.demo){
-        log.info('paths.demo set to false within component.config.js : skipping building html');
-        return Promise.resolve();
-    }
+    var Html = require('./wrappers/' + (component.build.html || 'mustache'));
+    var htmlMinify = require('html-minifier').minify;
+
     var now = Date().split(' ').splice(0,5).join(' ');
     var version = replacements.version || component.pkg.version;
     var name = replacements.name || component.pkg.name;
@@ -49,6 +49,7 @@ function html(replacements) {
 }
 
 function fonts() {
+    initConfig();
     if (!component.build.fonts) {
         log.info('build.fonts within component.config.js is set to false : skipping copying fonts');
         return Promise.resolve();
@@ -61,6 +62,7 @@ function fonts() {
 }
 
 function images() {
+    initConfig();
     if (!paths.site) {
         log.info('paths.site within component.config.js is missing : skipping copying images');
         return Promise.resolve();
@@ -70,10 +72,12 @@ function images() {
 }
 
 function scripts(options){
+    initConfig();
     if (!component.build.scripts){
         log.info('build.scripts set to false within component.config.js : skipping building scripts');
         return Promise.resolve();
     }
+    var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
     options = options || (component[component.build.scripts]) || {};
     return Promise.all([
         paths.dist && paths.dist.scripts && new Scripts(paths.source.scripts, paths.dist.scripts, options).write(),
@@ -85,10 +89,12 @@ function scripts(options){
 }
 
 function buildStyles(options){
+    initConfig();
     if (!component.build.styles){
         log.info('build.styles set to false within component.config.js : skipping building styles');
         return Promise.resolve();
     }
+    var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
     options = options || (component[component.build.scripts]) || {};
     return Promise.all([
         paths.dist && paths.dist.styles && new Styles(paths.source.styles, paths.dist.styles, options).write(),

@@ -6,7 +6,7 @@
  * [Serve](#serve) - Serving your site
  * [Testing](#testing) - Testing and code-coverage
  * [Init](#init) - Initialising Bower
- * [Release](#release) - Release to git, gh-pages, aws
+ * [Releasing](#releasing) - Release to git, gh-pages, aws
 
 ## New
 
@@ -155,6 +155,12 @@ This will run through test and then stay open watching for code changes in your 
 
 This will register your component with bower, using the name from your bower.json and the repository url from package.json.
 
+#### github.io (gh-pages)
+
+`component init gh-pages`
+
+Use this if you want to demo the `site` on github.io within a project that was setup using the component-helper.
+
 #### Remote Git Repository
 
 `component init gitRemote`
@@ -169,6 +175,12 @@ Once this has complete, it will do all the steps below.
 To force a version or release type use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`
 
 *note: Version numbers in your code enclosed in `"` or `/` will be updated*
+
+#### Bump the Version
+
+`component release bump`
+
+By default, this will `patch` your version number.  You could also use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`.
 
 #### Tag Git
 
@@ -215,3 +227,4 @@ For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
         directoryPrefix: false
     },
 ```
+Ensure you have created the file : `~/.aws/credentials`. For more information see [Credentials in the AWS](http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs#).

@@ -75,14 +75,16 @@ describe("Config-helper ", function() {
         });
 
         it("knows when config is fine", function () {
-            var isCompatible = helper.configCheck(completeConfig);
+            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
+            var isCompatible = helper.configCheck();
             expect(log.onError).not.toHaveBeenCalled();
             expect(isCompatible).toBe(true);
         });
 
         it("knows if the config is incorrect: missing browserify config", function () {
             delete completeConfig.browserify;
-            var isCompatible = helper.configCheck(completeConfig);
+            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
+            var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be out of date');
             expect(isCompatible).toContain(completeConfig.build.scripts);
@@ -91,7 +93,8 @@ describe("Config-helper ", function() {
 
         it("knows if the config is incorrect: missing karma config", function () {
             delete completeConfig.karma;
-            var isCompatible = helper.configCheck(completeConfig);
+            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
+            var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be out of date');
             expect(isCompatible).toContain(completeConfig.test);
@@ -99,7 +102,8 @@ describe("Config-helper ", function() {
 
         it("knows if the config is incorrect: missing s3 config", function () {
             delete completeConfig.s3;
-            var isCompatible = helper.configCheck(completeConfig);
+            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
+            var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be out of date');
             expect(isCompatible).toContain(completeConfig.release);
@@ -107,7 +111,8 @@ describe("Config-helper ", function() {
 
         it("knows if the config is incorrect: missing staticApp config", function () {
             delete completeConfig.staticApp;
-            var isCompatible = helper.configCheck(completeConfig);
+            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
+            var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be out of date');
             expect(isCompatible).toContain(completeConfig.serve);

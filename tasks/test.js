@@ -1,10 +1,8 @@
-var utils = require('./utils/common');
-var paths = utils.paths;
-var Promise = utils.Promise;
-var pkg = utils.pkg;
-var log = utils.log;
-var component = utils.component;
-
+var Promise = require('es6-promise').Promise;
+var log = require('./utils/log');
+var fs = require('./utils/fs');
+var helper = require('./utils/config-helper');
+var component = helper.getConfig();
 var Test = require('./wrappers/' + (component.test || 'karma'));
 
 function tdd(options){

@@ -7,14 +7,14 @@ We encourage small change pull requests, the smaller the change the quicker and 
 ## Dependencies
 
 To build the component locally, you'll need to install these globally :
- * [node.js](http://nodejs.org),
- * [component-helper](https://github.com/skyglobal/component-helper),
+ * [node.js](http://nodejs.org)
  * [Bower](http://bower.io)
+ * [component-helper](https://github.com/skyglobal/component-helper)
 
 ## Workflow
 
 1. Fork the project
-2. Clone down your fork
+2. Clone your fork
 `git clone {{ git.SSH-URL }}`
 3. Setup your 'upstream'
 `git remote add upstream {{ git.HTTPS-URL }}`
@@ -42,20 +42,7 @@ If you want to make changes to the bower dependencies, you can clone them down f
  * `cd {{ component }}/`
  * `bower link some-bower-dependency`
 
-## Releasing (admin only)
 
-`npm run release`
+## Releasing
 
-This will automatically bump the 'patch' section of the version number.
-
-To bump a different area of the version number you can also use `major|minor|patch|prerelease` e.g. :
-
-`npm test && component release --version=prerelease`
-
-## Common Errors
-
-**`S3::putObject *** error!`** or **`UnknownEndpoint: Inaccessible host: `**
-
-This happens whn a connection to the S3 failed to establish. `bump` and `gh-pages` would have already executed.  Please try the release to cloud only by running:
-
-`component release s3`
+For recommendations on how to release, please see the [Component helper API](https://github.com/skyglobal/component-helper/blob/master/RELEASING.md)

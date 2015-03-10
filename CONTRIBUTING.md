@@ -6,15 +6,14 @@ We encourage small change pull requests, the smaller the change the quicker and 
 
 ## Dependencies
 
-To build the Gulp Component Helper locally, you'll need to install:
+To build the Component Helper locally, you'll need to install:
  * [node.js](http://nodejs.org),
  * [Gulp](http://gulpjs.com),
 
 ## Workflow
 
 1. Fork the project
-2. Clone down your fork
-`git clone git://github.com/YOUR_USER/component-helper.git`
+2. `git clone your-repo` the fork
 3. Setup your 'upstream'
 `git remote add upstream https://github.com/skyglobal/component-helper.git`
 4. Run npm install `npm install`
@@ -29,19 +28,19 @@ To build the Gulp Component Helper locally, you'll need to install:
 `git push origin my-feature`
 11. Create a pull request and describe what your change does and the why you think it should be merged.
 
-## Running Locally
+## Running component-helper Locally
 
  * `npm test`
 
 If you want to upgrade or test an existing component locally, you can link the component to `component-helper`.
-Any changes made to the component-helper will be picked up by the component. Useful for modifying the gulp tasks.
+Any changes made to the component-helper will be picked up by the component. Useful for modifying the tasks.
 
  * `cd component-helper`
  * `npm link`
  * `cd some-component`
  * `npm link component-helper`
 
-## Releasing (admin only)
+## Releasing component-helper (admin only)
 
  * Update [package.json](package.json) and [examples/package.json](examples/package.json) version number appropriately
  * `npm adduser` (first time only)

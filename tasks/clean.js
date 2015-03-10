@@ -1,16 +1,18 @@
 var Promise = require('es6-promise').Promise;
-var findup = require('findup-sync');
 var log = require('./utils/log');
 var fs = require('./utils/fs');
-var componentConfigPath = findup('component.config.js') || log.onError('You must have a component.config.js in the root of your project.');
-var component = require(componentConfigPath);
 var helper = require('./utils/config-helper');
-var paths = helper.parsePaths(component.paths);
+var component, paths, pkg;
 
-helper.configCheck(component);
+function initConfig(){
+    component = helper.getConfig();
+    paths = component.paths;
+    pkg = component.pkg;
+}
 
 function html(){
     log.info('deleting HTML');
+    initConfig();
     var htmlPaths = [];
     paths.dist && htmlPaths.push(paths.dist.styles + '/*.{html,jade,ms,mustache}');
     paths.site && htmlPaths.push(paths.site.styles + '/*.{html,jade,ms,mustache}');
@@ -19,6 +21,7 @@ function html(){
 
 function styles(){
     log.info('deleting styles');
+    initConfig();
     var stylesPaths = [];
     paths.dist && stylesPaths.push(paths.dist.styles + '/**/*');
     paths.site && stylesPaths.push(paths.site.styles + '/**/*');
@@ -27,6 +30,7 @@ function styles(){
 
 function scripts(){
     log.info('deleting scripts');
+    initConfig();
     var delPaths = [];
     paths.dist && delPaths.push(paths.dist.scripts + '/**/*');
     paths.site && delPaths.push(paths.site.scripts + '/**/*');
@@ -34,6 +38,7 @@ function scripts(){
 }
 
 function fonts(){
+    initConfig();
     if (paths.site && paths.site.fonts) {
         log.info('deleting fonts');
         return fs.del(paths.site.fonts + '/**/*');
@@ -44,6 +49,7 @@ function fonts(){
 }
 
 function images(){
+    initConfig();
     if (paths.site && paths.site.images) {
         log.info('deleting images');
         return fs.del(paths.site.images + '/**/*');
@@ -54,6 +60,7 @@ function images(){
 }
 
 function test(){
+    initConfig();
     log.info('deleting test results');
     return fs.del('./test/coverage/**/*');
 }

@@ -8,7 +8,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
  * Compile Sass and CommonJS or AMD to CSS/JS and `.min` equivalents 
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
- * Deploy to github.io, Bower and Amazon S3
+ * Continuous (or manual) Deployment (to github.io, Bower and Amazon S3)
  * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
@@ -77,11 +77,11 @@ Using Node (or Gulp) you can customise the build process even more.
 
 To add regression testing, please see [Sheut](https://github.com/skyglobal/Sheut)
 
-## Releasing your Component
+## Releasing
 
-If you are ready for your component to go public, you can release the code to Bower, github.io (gh-pages branch) and to the cloud (AWS).
-
-[Read More >](RELEASING.md)
+ * [Continuous Deployment](RELEASING.md#continuous-deployment)
+ * [Manual Deployment](RELEASING.md#manual-deployment)
+ * [Amazon S3](API.md#s3)
 
 ## Contributing to the Helper
 

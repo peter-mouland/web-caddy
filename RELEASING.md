@@ -1,61 +1,61 @@
-# Releasing your Component
+# Release Process
 
- > Only do this if you are ready for this to go public i.e. the repository address is never going to change
+## Continuous Deployment
 
-`component release`
+> This method relies on the version number being incremented manually before code is pushed to Git.
 
-   * This will push the demo site to github.io 
-   * Tag the version number in Git (Bower will use this if configured))
-   * It will also push the compiled assets to the S3 (if configured)
-   * The version number is bumped ('patch' incremented). 
-   * you can also use `component release --version=` along with `major`, `minor`, `patch` or `prerelease`
+ * Ensure all changes are made and pushed to feature branches
+ * Once the feature/bug-fix is complete, rebase from master.
+ * merge your changes into master
+ * bump the version number manually
+   * `npm run bump` or see [api](https://github.com/skyglobal/component-helper/blob/master/API.md#bump-the-version)
 
-### Bower
+Your `circle.yml` should look something like:
 
-To release to Bower please update your `component.config.js`.
-
- * `component init bower`
- 
-### Amazon Web Services (AWS)
-
-To release to AWS please update your `component.config.js`.
-
-The recommended (and default) way to deal with AWS credentials is to
-use the standard file `~/.aws/credentials` with a dedicated section
-named after your component. This is achieved by the option `profile:
-pkg.name` in the release section of your `component.config.js`.
-
-If you don't have a `profile` setting in your `component.config.js`,
-then the default behaviour of the AWS SDK applies. This lets you use
-your default profile in `~/aws/credentials` or the standards
-environment variables **AWS_ACCESS_KEY_ID** and
-**AWS_SECRET_ACCESS_KEY** which take precedence over the file. For
-more information see
-[here](http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs#).
-
-To specifically release to AWS, use `component release cloud`. That
-proves useful when you do a release but the AWS step fails due for
-instance to bad credentials.
-
-# Moving your component to SkyGlobal
-
-> After developing your component in your own repo, you may want to transfer ownership to skyglobal to open it up.
-
-### Bower
-
-First make sure that the component is not in the bower repo by running `bower search my-component`.
-If the component exists, run
+```yml
+test:
+  pre:
+    - npm i && bower i
+deployment:
+  production:
+    branch: master
+    commands: ./node_modules/component-helper/bin/component release --version=current
+machine:
+  node:
+    version: v0.10.33
 
 ```
-curl -X DELETE "https://bower.herokuapp.com/packages/PACKAGE?access_token=TOKEN"
+
+## Manual Deployment
+
+> This method relies on the tests being run locally.
+
+`npm test && component release`
+
+   * This will run your tests, if they fail the release will stop.
+   * Bump the version number (`patch` by default)
+     * You could specify how to bump by appending ` --version=` along with `major`, `minor`, `patch` or `prerelease`.
+   * Tag the version number and push to Git
+   * Push the demo `site` to github.io
+   * Push the compiled assets to the S3 (if configured)
+
+Your `circle.yml` should look something like:
+
+```yml
+test:
+  pre:
+    - npm i && bower i
+machine:
+  node:
+    version: v0.10.33
 ```
 
-### Update Documents
+## Bower
 
-Make sure your github username is not in the documents. Run the following to help:
+`component init bower`
 
-`gulp transfer:user --old-user=someone --new-user=someone-else`
+To release to Bower please ensure your `component.config.js` includes the `bower.json` object.
 
-### Transfer Github Ownership
+## Releasing API
 
-...
+For many more command options please see the [Component helper API](https://github.com/skyglobal/component-helper/blob/master/API.md#releasing)

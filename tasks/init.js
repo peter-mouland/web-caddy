@@ -8,7 +8,6 @@ var bower = require('./utils/bower');
 var helper = require('./utils/config-helper');
 var shell = require("shelljs");
 var prompt = require("prompt");
-var findup = require('findup-sync');
 require('colors');
 
 function initBower(){
@@ -57,10 +56,8 @@ function replaceGitVariables(repo, componentName){
         return Promise.resolve();
     }
     if (!componentName){
-        var componentConfigPath = findup('component.config.js');
-        var component = require(componentConfigPath);
+        var component = helper.getConfig();
         componentName = component.pkg.name;
-        helper.configCheck(component);
     }
     var SSH = (repoMatch) ? repo : '{{ git.SSH-URL }}';
     var HTTPS = (repoMatch) ? repo.replace('git@', 'https://').replace('.com:','.com/') : '{{ git.HTTPS-URL }}';
@@ -136,6 +133,7 @@ function initGhPages(repo){
 
 module.exports = {
     bower: initBower,
+    'gh-pages': initGhPages,
     localGit: localGit,
     remoteGit: remoteGit
 };

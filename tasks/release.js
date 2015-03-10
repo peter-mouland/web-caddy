@@ -1,16 +1,14 @@
-var utils = require('./utils/common');
-var paths = utils.paths;
-var Promise = utils.Promise;
-var pkg = utils.pkg;
-var log = utils.log;
-var component = utils.component;
-
-var Release = require('./wrappers/' + (component.release || 's3'));
+var Promise = require('es6-promise').Promise;
+var log = require('./utils/log');
+var fs = require('./utils/fs');
+var helper = require('./utils/config-helper');
+var component, paths, pkg;
 
 function gitRelease(version){
     var git = require('./utils/git');
+    component = helper.getConfig();
     version = Array.isArray(version) ? version[0] : version;
-    version = version || pkg.version;
+    version = version || component.pkg.version;
     return git.add(['.']).then(function() {
         return git.commit('v' + version);
     }).then(function(){
@@ -23,7 +21,6 @@ function gitRelease(version){
 }
 
 function update(version){
-    var fs   = require('./utils/fs');
     var replacements = [{
         replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g,
         with: '$1' + version + '$2'}
@@ -32,7 +29,8 @@ function update(version){
 }
 
 function getPreid(){
-    var preid = pkg.version.split('-')[1];
+    component = helper.getConfig();
+    var preid = component.pkg.version.split('-')[1];
     preid = (preid) ? preid.split('.')[0] : 'beta';
     return preid;
 }
@@ -40,19 +38,29 @@ function getPreid(){
 
 function getVersion(type){
     var semver = require('semver');
+    var version;
+    component = helper.getConfig();
     type = Array.isArray(type) ? type[0] : type;
-    if (type) type = type.split('--version=')[1];
     type = type || 'patch';
-    type = semver.inc(pkg.version, type, getPreid()) || semver.valid(type);
-    return type;
+    if (type.indexOf('--version=')>-1) {
+        type = type.split('--version=')[1];
+    }
+
+    if (type == 'current'){
+        version = component.pkg.version;
+    } else {
+        version = semver.inc(component.pkg.version, type, getPreid()) || semver.valid(type);
+    }
+    return version;
 }
 
-function versionBump(type){
+function bump(type){
+    component = helper.getConfig();
     log.info("\nBumping version ...  " + type );
-    var bump = require('./utils/bump').bump;
     var build = require('./build');
+    var bumper = require('./utils/bump').bump;
     var version = getVersion(type);
-    return bump('./*.json', {version:version}).then(function(){
+    return bumper('./*.json', {version:version}).then(function(){
         return Promise.all([update(version), build.html({version:version})]);
     }).then(function(){
         return version;
@@ -61,11 +69,12 @@ function versionBump(type){
 
 function ghPagesRelease(message){
     var ghPages = require('gh-pages');
+    component = helper.getConfig();
     message = Array.isArray(message) ? message[0] : message;
     message = message || 'Update';
     log.info("\nReleasing to gh-pages ... \n");
     return new Promise(function(resolve, reject){
-        ghPages.publish(paths.site.root, {message: message }, function(err) {
+        ghPages.publish(component.paths.site.root, {message: message }, function(err) {
             ghPages.clean();
             err && reject(err);
             !err && resolve();
@@ -74,21 +83,23 @@ function ghPagesRelease(message){
 }
 
 function s3(version){
+    component = helper.getConfig();
     if (!component.release){
-        log.info('Release set to false within component.config.js : skipping');
+        log.info('Skipping S3 : `Release` set to false within component.config.js');
         return Promise.resolve();
     }
     log.info("\nReleasing to S3 ... \n");
     version = Array.isArray(version) ? version[0] : version;
-    version = version || pkg.version;
+    version = version || component.pkg.version;
     var options = (component[component.release]) || {};
     var prefix = options.directoryPrefix || '';
-    return new Release(paths.site.root + '/**/*.*', prefix + pkg.name + '/' + version +'/', options).write();
+    var Release = require('./wrappers/' + (component.release || 's3'));
+    return new Release(component.paths.site.root + '/**/*.*', prefix + component.pkg.name + '/' + version +'/', options).write();
 }
 
 function run(type){
     var bumpedVersion;
-    return versionBump(type).then(function(version){
+    return bump(type).then(function(version){
         bumpedVersion = version;
         return gitRelease(version);
     }).then(function(){
@@ -100,7 +111,7 @@ function run(type){
 
 module.exports = {
     git: gitRelease,
-    versionBump: versionBump,
+    bump: bump,
     'gh-pages': ghPagesRelease,
     s3: s3,
     run: run

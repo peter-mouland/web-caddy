@@ -1,7 +1,16 @@
 var log = require('../utils/log');
+var findup = require('findup-sync');
+var config;
 
-module.exports = {
-    parsePaths : function parsePaths(paths) {
+var helper = {
+    getConfig : function(){
+        if (config) return config;
+        var configPath = findup('component.config.js');
+        config = (configPath) ? require(configPath) : false;
+        config.paths = this.parsePaths(config.paths);
+        return config;
+    },
+    parsePaths : function(paths) {
         ['scripts', 'styles', 'fonts', 'icons', 'images'].forEach(function (asset, i) {
             for (var pathName in paths) {
                 if (!paths[pathName][asset]) {
@@ -11,12 +20,16 @@ module.exports = {
         });
         return paths;
     },
-    configCheck : function configCheck(config){
+    configCheck : function(){
+        var config = this.getConfig();
         var message = [
             'Your `component.config.js` seems to be out of date.'
         ];
         //check build config
-        if (config.build.scripts && !config[config.build.scripts]){
+        if (!config){
+            log.onError('You must have a component.config.js in the root of your project.');
+        }
+        if (config.build && config.build.scripts && !config[config.build.scripts]){
             message.push(' * There is no build scripts config object: `' + config.build.scripts + ':{...}`');
         }
         //check test config
@@ -41,3 +54,5 @@ module.exports = {
         return true;
     }
 };
+
+module.exports = helper;
