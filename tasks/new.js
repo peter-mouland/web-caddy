@@ -47,12 +47,13 @@ function newComponent(component) {
         log.onSuccess(output);
         return init.remoteGit(undefined, component);
     }).then(function(){
-        log.info([
+        log.info(['',
             'Ready!',
-            ' * Please go to your new directory   $ `cd ' + component + '`',
-            ' * View the basic site,              $ `npm start`',
+            ' * Please go to your new directory:        $ cd ' + component,
+            ' * View the basic site, run:               $ npm start',
+            ' * Test on the fly, run in a new tab:      $ npm run tdd',
             ' * To see more tasks please go to : ',
-            'https://github.com/skyglobal/component-helper/blob/master/API.md'
+            '   https://github.com/skyglobal/component-helper/blob/master/API.md'
         ].join('\n'));
     }).catch(log.onError);
 }
