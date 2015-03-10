@@ -50,7 +50,7 @@ function newComponent(component) {
         log.info([
             'Ready!',
             ' * Please go to your new directory   $ `cd ' + component + '`',
-            ' * View the basic site,              $ `component serve`',
+            ' * View the basic site,              $ `npm start`',
             ' * To see more tasks please go to : ',
             'https://github.com/skyglobal/component-helper/blob/master/API.md'
         ].join('\n'));
