@@ -2,7 +2,7 @@
     "name": "{{ component }}",
     "version": "0.0.0",
     "description": "Example package.json. Feel free to copy!",
-    "main": "index.js",
+    "main": "src/scripts/{{ component }}.js",
     "repository": {
         "type": "git",
         "url": "{{ git.SSH-URL }}"
