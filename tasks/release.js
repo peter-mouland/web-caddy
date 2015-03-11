@@ -5,51 +5,19 @@ var git = require('./utils/git');
 var helper = require('./utils/config-helper');
 var component, paths, pkg;
 
-function update(version){
-    var replacements = [{
-        replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g,
-        with: '$1' + version + '$2'}
-    ];
-    return fs.replace( ['./README.md', './**/version.js'], replacements);
-}
-
-function getPreid(){
-    component = helper.getConfig();
-    var preid = component.pkg.version.split('-')[1];
-    preid = (preid) ? preid.split('.')[0] : 'beta';
-    return preid;
-}
-
-
-function getVersion(type){
-    var semver = require('semver');
-    var version;
-    component = helper.getConfig();
-    type = Array.isArray(type) ? type[0] : type;
-    type = type || 'patch';
-    if (type.indexOf('--version=')>-1) {
-        type = type.split('--version=')[1];
-    }
-
-    if (type == 'current'){
-        version = component.pkg.version;
-    } else {
-        version = semver.inc(component.pkg.version, type, getPreid()) || semver.valid(type);
-    }
-    return version;
-}
-
 function bump(type){
     component = helper.getConfig();
     log.info("\nBumping version ...  " + type );
     var build = require('./build');
-    var bumper = require('./utils/bump').bump;
-    var version = getVersion(type);
-    return bumper('./*.json', {version:version}).then(function(){
-        return Promise.all([update(version), build.html({version:version})]);
-    }).then(function(){
-        return version;
-    }).catch(log.onError);
+    var Bump = require('./utils/bump');
+    var newVersion;
+    return new Bump(['./package.json','./README.md', './**/version.js'], {type: type }).run()
+        .then(function(version){
+            newVersion = version;
+            return build.html({version:version});
+        }).then(function(){
+            return newVersion;
+        }).catch(log.onError);
 }
 
 function ghPagesRelease(message){
@@ -92,9 +60,9 @@ function releaseGit(version){
 function run(type){
     var bumpedVersion;
     if (!git.checkRemote()){
-        log.onError('No valid Remote Git URL.\nPlease update your `.git/config` file or run:\n $ component init git')
+        log.onError('No valid Remote Git URL.\nPlease update your `.git/config` file or run:\n $ component init git');
     }
-    return bump(type).then(function(version){
+    return releaseGit(type).then(function(version){
         bumpedVersion = version;
         return releaseGit(version);
     }).then(function(){

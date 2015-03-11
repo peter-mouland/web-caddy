@@ -1,4 +1,4 @@
-var exec = require('../tasks/utils/exec').exec;
+var exec = require('../../tasks/utils/exec').exec;
 var child_process = require('child_process');
 
 function onError(e){

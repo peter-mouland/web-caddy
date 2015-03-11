@@ -1,5 +1,5 @@
-var helper = require('../tasks/utils/config-helper');
-var log = require('../tasks/utils/log');
+var helper = require('../../tasks/utils/config-helper');
+var log = require('../../tasks/utils/log');
 
 function onError(e){
     console.log('** Test Error **')

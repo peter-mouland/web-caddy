@@ -40,7 +40,7 @@ module.exports = {
         return {
             name: shell.exec('git config user.name', {silent:true}).output.replace(/\s+$/g, ''),
             email : shell.exec('git config user.email', {silent:true}).output.replace(/\s+$/g, '')
-        }
+        };
     }()),
     release: function release(version){
         var git = this;
@@ -62,7 +62,7 @@ module.exports = {
     },
     checkRemote: function checkGit(){
         var repo = shell.exec('git config --get remote.origin.url', {silent:true}).output.replace(/\s+$/g, '');
-        return this.validRepo(repo)
+        return this.validRepo(repo);
     },
     repoUsername: function(repo){
         return (repo.match(/.com\:(.*)\//) && repo.match(/.com\:(.*)\//)[1]) || repo.split('/')[3];

@@ -1,7 +1,7 @@
-var S3 = require('../tasks/wrappers/s3');
-var fs = require('../tasks/utils/fs');
+var S3 = require('../../tasks/wrappers/s3');
+var fs = require('../../tasks/utils/fs');
 var AWSSDK   = require('aws-sdk');
-var log = require('../tasks/utils/log');
+var log = require('../../tasks/utils/log');
 
 function onError(e){
     console.log('** Test Error **');

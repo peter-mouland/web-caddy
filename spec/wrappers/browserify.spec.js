@@ -1,5 +1,5 @@
-var Browserify = require('../tasks/wrappers/browserify');
-var fs = require('../tasks/utils/fs');
+var Browserify = require('../../tasks/wrappers/browserify');
+var fs = require('../../tasks/utils/fs');
 
 function onError(e){
     console.log('** Test Error **')

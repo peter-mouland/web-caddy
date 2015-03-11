@@ -1,5 +1,5 @@
-var fs = require('../tasks/utils/fs');
-var log = require('../tasks/utils/log');
+var fs = require('../../tasks/utils/fs');
+var log = require('../../tasks/utils/log');
 
 function onError(e){
     console.log('** Test Error **')
