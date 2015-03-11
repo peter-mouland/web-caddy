@@ -44,7 +44,7 @@ function html(replacements) {
         });
         return Promise.all(promises);
     }).then(function(){
-        return 'Build HTML Complete';
+        log.info('Build HTML Complete');
     }).catch(log.warn);
 }
 
@@ -84,7 +84,7 @@ function scripts(options){
         paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),
         paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, options).write()
     ]).then(function(){
-        return 'Build Scripts Complete';
+        log.info('Build Scripts Complete');
     }).catch(log.warn);
 }
 
@@ -101,7 +101,7 @@ function buildStyles(options){
         paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
         paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles, options).write()
     ]).then(function(){
-        return 'Build Styles Complete';
+        log.info('Build Styles Complete');
     }).catch(log.warn);
 }
 
@@ -117,7 +117,7 @@ function run(replacements){
                 html(replacements)
             ]);
     }).then(function(){
-        return 'Build All Complete';
+        log.info('Build All Complete');
     }).catch(log.warn);
 }
 
