@@ -70,7 +70,8 @@ describe("Config-helper ", function() {
                 karma: {  },
                 s3: { },
                 staticApp: { },
-                nodeApp: { }
+                nodeApp: { },
+                pkg:{version:'0.0.0'}
             };
         });
 
@@ -79,6 +80,15 @@ describe("Config-helper ", function() {
             var isCompatible = helper.configCheck();
             expect(log.onError).not.toHaveBeenCalled();
             expect(isCompatible).toBe(true);
+        });
+
+        it("errors if pkg.version is omitted", function () {
+            delete completeConfig.pkg.version;
+            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
+            var isCompatible = helper.configCheck();
+            expect(log.onError).toHaveBeenCalled();
+            expect(isCompatible).toContain('be out of date');
+            expect(isCompatible).toContain('version');
         });
 
         it("knows if the config is incorrect: missing browserify config", function () {
