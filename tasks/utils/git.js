@@ -1,5 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var exec = require('./exec').exec;
+var log = require('./log');
 var shell = require("shelljs");
 
 function runGitCommand(cmd, args){
@@ -49,7 +50,9 @@ module.exports = {
         }).then(function(){
             return git.push(['origin', 'master']);
         }).then(function(){
-            return git.tag('v' + version);
+            return git.tag('v' + version).catch(function(msg){
+                log.warn(msg);
+            });
         }).then(function(){
             return git.push(['origin', 'master', 'v' + version]);
         });

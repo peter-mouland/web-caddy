@@ -25,13 +25,13 @@ var helper = {
         var message = [
             'Your `component.config.js` seems to be out of date.'
         ];
-        //check build config
         if (!config){
             log.onError('You must have a component.config.js in the root of your project.');
         }
         if (!config.pkg.version){
-            message.push('Please ensure your package.json as a `version` string, even if it is "version": "0.0.0"');
+            message.push(' * The package.json requires as a `version` string (even "version": "0.0.0" is fine)');
         }
+        //check build config
         if (config.build && config.build.scripts && !config[config.build.scripts]){
             message.push(' * There is no build scripts config object: `' + config.build.scripts + ':{...}`');
         }
