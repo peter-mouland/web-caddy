@@ -35,6 +35,12 @@ describe("Release ", function() {
             }).then(done);
         });
 
+        it("doesn't bump with current", function (done) {
+            return release.bump('current').then(function(version){
+                expect(version).toBe('11.11.11');
+            }).then(done);
+        });
+
         it("errors with invalid arg", function (done) {
             return release.bump('sdsdsdsd').then(function(version){
                 expect(version).toBe(null);

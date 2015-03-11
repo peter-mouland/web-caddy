@@ -28,6 +28,8 @@ Bump.prototype.bumpVersion = function bumpVersion(version){
     //type = Array.isArray(type) ? type[0] : type;
     if (type.indexOf('--version=')>-1) {
         type = type.split('--version=')[1];
+    } else if (type == 'current'){
+        return  semver.valid(version);
     }
     version = semver.inc(version, type, this.getPreid(version)) || semver.valid(type);
     if (!version){

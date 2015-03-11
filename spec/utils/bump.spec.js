@@ -49,6 +49,12 @@ describe("Bump ", function() {
             expect(version).toBe('0.0.1-beta.0')
         });
 
+        it("wont change the version for current", function () {
+            var bump = new Bump([], {type: 'current'})
+            var version = bump.bumpVersion("0.0.0-rc.1")
+            expect(version).toBe('0.0.0-rc.1')
+        });
+
         it("will keep any existing post-fix for prerelease", function () {
             var bump = new Bump([], {type: 'prerelease'})
             var version = bump.bumpVersion("0.0.0-rc.1")

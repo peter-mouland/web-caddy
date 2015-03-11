@@ -169,18 +169,13 @@ Use this if you want to demo the `site` on github.io within a project that was s
 
 `component release`
 
-This will `patch` the version number in all the docs (package.json, bower.js, version.js, *.md and *.html).
-Once this has complete, it will do all the steps below.
-
-To force a version or release type use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`
-
-*note: Version numbers in your code enclosed in `"` or `/` will be updated*
+This will bump your version (as below) and tag your git, release to gh-pages, and if set then the S3.
 
 #### Bump the Version
 
 `component release bump`
 
-By default, this will `patch` your version number.  You could also use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`.
+This will update the version number in all the docs (package.json, version.js, *.md and *.html). By default, with a  `patch`.  You could also use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`.
 
 #### Tag Git
 

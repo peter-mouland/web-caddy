@@ -51,6 +51,9 @@ function s3(version){
 }
 
 function releaseGit(version){
+    if (!git.checkRemote()){
+        log.onError('No valid Remote Git URL.\nPlease update your `.git/config` file or run:\n $ component init git');
+    }
     component = helper.getConfig();
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
@@ -59,10 +62,7 @@ function releaseGit(version){
 
 function run(type){
     var bumpedVersion;
-    if (!git.checkRemote()){
-        log.onError('No valid Remote Git URL.\nPlease update your `.git/config` file or run:\n $ component init git');
-    }
-    return releaseGit(type).then(function(version){
+    return bump(type).then(function(version) {
         bumpedVersion = version;
         return releaseGit(version);
     }).then(function(){

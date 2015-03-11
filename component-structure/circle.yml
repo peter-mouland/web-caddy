@@ -1,6 +1,10 @@
 test:
   pre:
     - npm i && bower i
+deployment:
+  production:
+    branch: master
+    commands: ./node_modules/component-helper/bin/component release --version=current
 machine:
   node:
     version: v0.10.33

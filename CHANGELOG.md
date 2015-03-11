@@ -3,9 +3,10 @@
 ## Next Release
 
  * Speed improvements
+ * Updated `circle.yml` to allow for continuous deployment by default
  * Updated `build html` step to produce minified html
  * Updated `init gitRemote` step to be `init git`
-   * Git URLs can now be SSH or HTTP
+ * Updated `init git` to accept SSH or HTTP URLS
  * Added global Alias for browserified JS files.
     * i.e. You can now call `require('component-name');` within your html.
  * Added `vendorBundle` option to browseify config.
@@ -13,7 +14,7 @@
  * Removed implicit steps. ie. component test now only runs tests, not the build too.
     * if implicit tasks are wanted, please customise this in `npm scripts` object.
 
-## 1.1.2 Breaking change
+## 1.1.x Breaking change
 
  * Update default `browserify` options
  * **1.1.0**
@@ -36,7 +37,7 @@
  * Removed the need to supply a git repo when running `component new`
  * Updated `component new` to `component new <<component-name>>`
 
-## 0.9.2
+## 0.9.x
 
  * Added CSS to specs by default
  * **0.9.1**
@@ -45,7 +46,7 @@
     * Updated `component.config.js` objects **breaking change**.
     * Added `requirejs` build.scripts type
 
-## 0.8.10
+## 0.8.x
 
  * Added `component new bower` task
  * Fixed dynamic server config
@@ -69,7 +70,7 @@
  * **0.8.0**
     * Added config file to make the helper insanely useful in many projects
 
-## 0.7.2
+## 0.7.x
 
  * fixed bug with rename
  * **0.7.0**
@@ -77,13 +78,13 @@
     * Added many more CLI commands - can now do everything without gulp (apart from `watch`).
     * build, serve, test, release now available i.e. `component build`
 
-## 0.6.3
+## 0.6.x
 
  * Fixed a few bugs
  * **0.6.0**
     * Major Refactor - is now much faster
 
-## 0.5.1
+## 0.5.x
 
  * Fixed CLI
  * **0.5.0**
@@ -91,7 +92,7 @@
     * Added CLI for creating a component
     * Added link to screen-shotting to test suite
 
-## 0.4.2
+## 0.4.x
 
  * Updated tests to include bower dependencies if required
  * **0.4.1**
@@ -99,7 +100,7 @@
  * **0.4.0**
     * Added Jasmine test framework with coverage
 
-## 0.3.5
+## 0.3.x
 
  * Fixed 'version update' to only update placeholders within html files i.e. not versioned dependencies
  * **0.3.3**
@@ -112,7 +113,7 @@
  * **0.3.0**
     * Updated default bower directories to include `src`
 
-## 0.2.2
+## 0.2.x
 
  * Fixed some bugs in the examples code
  * **0.2.1
