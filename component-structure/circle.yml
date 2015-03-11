@@ -4,6 +4,9 @@ test:
   post:
     - git config --global user.name "circleci"
     - git config --global user.email "{{ git.email }}"
+general:
+  artifacts:
+    - test/coverage
 deployment:
   production:
     branch: master

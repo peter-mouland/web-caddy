@@ -12,6 +12,7 @@ function execTask(taskName, args){
     helper.configCheck();
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'run';
+    if (!args.length) args = flags.version;
     task[command] && task[command](args, flags.version);
     !task[command] && task['adhoc'] && task['adhoc'](command);
     !task[command] && !task['adhoc'] && help(task, taskName);

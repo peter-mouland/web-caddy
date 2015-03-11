@@ -19,6 +19,9 @@ test:
   post:
     - git config --global user.name "circleci"
     - git config --global user.email "{{ git.email }}"
+general:
+  artifacts:
+    - test/coverage
 deployment:
   production:
     branch: master
@@ -47,7 +50,10 @@ Your `circle.yml` should look something like:
 ```yml
 test:
   pre:
-    - npm i && bower i
+    - bower i
+general:
+  artifacts:
+    - test/coverage
 machine:
   node:
     version: v0.10.33
