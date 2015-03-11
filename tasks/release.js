@@ -8,7 +8,7 @@ var component, paths, pkg;
 function bump(type){
     component = helper.getConfig();
     if (type == 'current') return Promise.resolve(component.pkg.version);
-    log.info("\nBumping version ...  " + type );
+    log.info("\nBumping version : " + type );
     var build = require('./build');
     var Bump = require('./utils/bump');
     var newVersion;
@@ -26,7 +26,7 @@ function ghPagesRelease(message){
     component = helper.getConfig();
     message = Array.isArray(message) ? message[0] : message;
     message = message || 'Update';
-    log.info("\nReleasing to gh-pages ... \n");
+    log.info("\nReleasing to gh-pages : `" + message + "`\n");
     return new Promise(function(resolve, reject){
         ghPages.publish(component.paths.site.root, {message: message }, function(err) {
             ghPages.clean();
@@ -38,13 +38,13 @@ function ghPagesRelease(message){
 
 function s3(version){
     component = helper.getConfig();
+    version = Array.isArray(version) ? version[0] : version;
+    version = version || component.pkg.version;
     if (!component.release){
         log.info('Skipping S3 : `Release` set to false within component.config.js');
         return Promise.resolve();
     }
-    log.info("\nReleasing to S3 ... \n");
-    version = Array.isArray(version) ? version[0] : version;
-    version = version || component.pkg.version;
+    log.info("\nReleasing to S3 : " + version + "\n");
     var options = (component[component.release]) || {};
     var prefix = options.directoryPrefix || '';
     var Release = require('./wrappers/' + (component.release || 's3'));
@@ -58,6 +58,7 @@ function releaseGit(version){
     component = helper.getConfig();
     version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
+    log.info('Start release to Git : ' + version);
     return git.release(version);
 }
 
