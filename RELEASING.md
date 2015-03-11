@@ -15,15 +15,18 @@ Your `circle.yml` should look something like:
 ```yml
 test:
   pre:
-    - npm i && bower i
+    - bower i
+  post:
+    - git config --global user.name "circleci"
+    - git config --global user.email "{{ git.email }}"
 deployment:
   production:
     branch: master
-    commands: ./node_modules/component-helper/bin/component release --version=current
+    commands:
+      - ./node_modules/component-helper/bin/component release --version=current
 machine:
   node:
     version: v0.10.33
-
 ```
 
 ## Manual Deployment

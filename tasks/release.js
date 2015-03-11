@@ -7,6 +7,7 @@ var component, paths, pkg;
 
 function bump(type){
     component = helper.getConfig();
+    if (type == 'current') return Promise.resolve(component.pkg.version);
     log.info("\nBumping version ...  " + type );
     var build = require('./build');
     var Bump = require('./utils/bump');
