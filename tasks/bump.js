@@ -3,7 +3,7 @@ var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var component, paths, pkg;
 
-function bump(type){
+function run(type){
     component = helper.getConfig();
     if (type == 'current') return Promise.resolve(component.pkg.version);
     log.info("\nBumping version : " + type );
@@ -17,10 +17,6 @@ function bump(type){
         }).then(function(){
             return newVersion;
         }).catch(log.onError);
-}
-
-function run(type){
-    return bump(type).catch(log.onError);
 }
 
 module.exports = {
