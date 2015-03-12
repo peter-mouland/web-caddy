@@ -20,6 +20,7 @@ function start(options){
 
 function nodeApp(options){
     component = helper.getConfig();
+    if (options.server) return Promise.resolve();
     var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
         nodemon(options).on('start', function(e){
