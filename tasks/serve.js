@@ -60,10 +60,10 @@ function adhoc(path){
     //    : if html serve staticApp
     //    : if js serve nodeApp
     component.serve = 'staticApp';
-    return start([{
+    return start({
         server: { baseDir : path },
         port: 3456
-    }]);
+    });
 }
 
 function run(args){
