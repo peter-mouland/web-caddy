@@ -79,6 +79,7 @@ function scripts(options){
     }
     var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
     options = options || (component[component.build.scripts]) || {};
+    options.browserify = pkg.browserify;
     return Promise.all([
         paths.dist && paths.dist.scripts && new Scripts(paths.source.scripts, paths.dist.scripts, options).write(),
         paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),

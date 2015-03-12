@@ -12,9 +12,28 @@ function Browserify(location, destination, options){
     this.options = options;
 }
 
+Browserify.prototype.checkForDeboweify = function(){
+    var options = this.options;
+    if (options.browserify && options.browserify.transform){
+        var transforms = options.browserify.transform;
+        transforms.forEach(function(item, i){
+            if (item === 'debowerify'){
+                log.onError([
+                    'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
+                    'Please remove `debowerify` from browserify.transform within your package.json.',
+                    'You could add the a `browser` object into your package.json to work around this.',
+                    ' * If this is bothersome, please raise an issue or PR',
+                ].join('\n'));
+            }
+        });
+    }
+};
+
+
 Browserify.prototype.buildVendor = function(options){
     var self = this;
     if (!options.vendorBundle) return Promise.resolve();
+    this.checkForDeboweify();
     return new Promise(function(resolve, reject) {
         delete options.entries;
         var b = browserify(options);
