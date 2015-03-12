@@ -40,6 +40,9 @@ var commands = {
     test: function(args){
         execTask('test', args)
     },
+    bump: function(args){
+        execTask('bump', args)
+    },
     release: function(args){
         execTask('release', args)
     },
