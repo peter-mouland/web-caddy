@@ -20,9 +20,7 @@ function bump(type){
 }
 
 function run(type){
-    return bump(type).then(function(version) {
-
-    }).catch(log.onError);
+    return bump(type).catch(log.onError);
 }
 
 module.exports = {
