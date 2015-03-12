@@ -14,7 +14,7 @@ var clean = require('./clean');
 
 function html(replacements) {
     initConfig();
-    replacements = (Array.isArray(replacements)) ? {} : replacements || {};
+    replacements = replacements || {};
     if (!component.build.html || !component.paths.demo){
         log.info('build.html or paths.demo set to false within component.config.js : skipping building html');
         return Promise.resolve();
@@ -106,7 +106,6 @@ function buildStyles(options){
 }
 
 function run(replacements){
-    replacements = (Array.isArray(replacements)) ? {} : replacements;
     return clean.all().then(function(){
         log.info('Build :');
         return Promise.all([

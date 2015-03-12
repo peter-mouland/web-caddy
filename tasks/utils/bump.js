@@ -25,7 +25,6 @@ Bump.prototype.getPreid = function getPreid(version){
 
 Bump.prototype.bumpVersion = function bumpVersion(version){
     var type = this.options.type || 'patch';
-    //type = Array.isArray(type) ? type[0] : type;
     if (type.indexOf('--version=')>-1) {
         type = type.split('--version=')[1];
     } else if (type == 'current'){
@@ -56,12 +55,17 @@ Bump.prototype.updateJson = function updateJson(fileObj){
 };
 
 Bump.prototype.updateFile = function updateFile(fileObj){
-    var version = this.bumpVersion(this.currentVersion);
+    if (!this.updatedVersion) {
+        log.onError([
+            'Please ensure the glob passed to Bump includes a JSON file first.',
+            ' * i.e. `package.json`.',
+            'This is used to determine the new version.'].join('\n'));
+    }
     var replacements = [{
         replace : /("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g,
-        with: '$1' + version + '$2'}
+        with: '$1' + this.updatedVersion + '$2'}
     ];
-    return fs.replace(fileObj, replacements);
+    return fs.replace(fileObj.path, replacements);
 };
 
 Bump.prototype.updateJsonFile = function updateJsonFile(fileObj) {
@@ -78,13 +82,9 @@ Bump.prototype.updateJsonFile = function updateJsonFile(fileObj) {
 Bump.prototype.update = function update(fileObjs){
     var self = this;
     var promises = [];
-    var jsonCount = 0;
     fileObjs.forEach(function(fileObj){
         if (fileObj.ext == 'json'){
-            jsonCount ++;
             promises.push(self.updateJsonFile(fileObj));
-        } else if (!jsonCount) {
-            log.onError('Please ensure the glob passed to Bump includes a JSON file first.\nThis is used to determine the new version.');
         } else  {
             promises.push(self.updateFile(fileObj));
         }

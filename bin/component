@@ -1,19 +1,13 @@
 #!/usr/bin/env node
 var log = require("../tasks/utils/log");
 var helper = require("../tasks/utils/config-helper");
-var minimist = require('minimist');
-var knownArgs = {
-    string: 'version',
-    default: { version: 'patch' }
-};
-var flags = minimist(process.argv.slice(2), knownArgs);
 
 function execTask(taskName, args){
     helper.configCheck();
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'run';
-    if (!args.length && taskName == 'release') args = flags.version;
-    task[command] && task[command](args, flags.version);
+    args = (args.length<2) ? args[0] : args;
+    task[command] && task[command](args);
     !task[command] && task['adhoc'] && task['adhoc'](command);
     !task[command] && !task['adhoc'] && help(task, taskName);
 }

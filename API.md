@@ -169,13 +169,19 @@ Use this if you want to demo the `site` on github.io within a project that was s
 
 `component release`
 
-This will bump your version (as below) and tag your git, release to gh-pages, and if set then the S3.
+This will bump your version and tag your git, release to gh-pages, and if set then the S3.
+
+By default, this applies a  `patch`.  Add either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.
+
+i.e. `component release minor`
 
 #### Bump the Version
 
 `component release bump`
 
-This will update the version number in all the docs (package.json, version.js, *.md and *.html). By default, with a  `patch`.  You could also use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`.
+This will update the version number in all the docs (package.json, version.js, *.md and *.html).
+
+By default, this applies a  `patch`.  You can add the same arguments as above.
 
 #### Tag Git
 

@@ -9,7 +9,7 @@ var build = require('./build');
 
 function start(options){
     component = helper.getConfig();
-    options = Array.isArray(options) && options.length>0 ? options[0] : (component[component.serve]) || {};
+    options = options || (component[component.serve]) || {};
     return nodeApp(options).then(function(){
         if (!options.server && !options.proxy){
             log.warn('component.config.js may be incorrect. please check');

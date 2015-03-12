@@ -12,7 +12,7 @@ function bump(type){
     var build = require('./build');
     var Bump = require('./utils/bump');
     var newVersion;
-    return new Bump(['./package.json','./README.md', './**/version.js'], {type: type }).run()
+    return new Bump(['./package.json','./README.md', component.paths.source.root + '/**/version.js'], {type: type }).run()
         .then(function(version){
             newVersion = version;
             return build.html({version:version});
@@ -24,7 +24,6 @@ function bump(type){
 function ghPagesRelease(message){
     var ghPages = require('gh-pages');
     component = helper.getConfig();
-    message = Array.isArray(message) ? message[0] : message;
     message = message || 'Update';
     log.info("\nReleasing to gh-pages : `" + message + "`\n");
     return new Promise(function(resolve, reject){
@@ -38,7 +37,6 @@ function ghPagesRelease(message){
 
 function s3(version){
     component = helper.getConfig();
-    version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
     if (!component.release){
         log.info('Skipping S3 : `Release` set to false within component.config.js');
@@ -56,7 +54,6 @@ function releaseGit(version){
         log.onError('No valid Remote Git URL.\nPlease update your `.git/config` file or run:\n $ component init git');
     }
     component = helper.getConfig();
-    version = Array.isArray(version) ? version[0] : version;
     version = version || component.pkg.version;
     log.info('Start release to Git : ' + version);
     return git.release(version);
@@ -79,5 +76,6 @@ module.exports = {
     bump: bump,
     'gh-pages': ghPagesRelease,
     s3: s3,
-    run: run
+    run: run,
+    adhoc: run
 };
