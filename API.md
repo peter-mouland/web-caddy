@@ -37,21 +37,21 @@ By default we assume the styles are written using [Sass](http://sass-lang.com/).
 This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `src/styles` **root**.
 A `.min.css` will also be created for each compiled file.
 
-These will be saved within the `dist` and `site` roots set within [component.config.js](component-structure/component.config.js)
+These will be saved within the `dist` and `site` roots set within [component.config.js](boilerplate/component.config.js)
 
 #### Scripts
 
 `component build scripts`
 
 By default we assume the javascript is written in CommonJS, so we [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/) if you wish.
-Just update `build.scripts` within [component.config.js](component-structure/component.config.js)
+Just update `build.scripts` within [component.config.js](boilerplate/component.config.js)
 
 This will create a compiled file for each `.js` file found in the `src/scripts` **root**.
 Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.
 
-These will be saved within the `dist` and `site` roots set within [component.config.js](component-structure/component.config.js)
+These will be saved within the `dist` and `site` roots set within [component.config.js](boilerplate/component.config.js)
 
-The build can be configured more by adding a `browserify` or `requirejs` object to the [component.config.js](component-structure/component.config.js).
+The build can be configured more by adding a `browserify` or `requirejs` object to the [component.config.js](boilerplate/component.config.js).
 
 **Example 1 : browserify**
 
@@ -88,9 +88,9 @@ Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 
 `component build html`
 
-This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [component.config.js](component-structure/component.config.js)).
+This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [component.config.js](boilerplate/component.config.js)).
 
-These will be saved within the `site` roots set within [component.config.js](component-structure/component.config.js)
+These will be saved within the `site` roots set within [component.config.js](boilerplate/component.config.js)
 
 By default, during the build it will also replace *site.now*, *site.name* and *site.version* variables.
 
@@ -100,7 +100,7 @@ By default, during the build it will also replace *site.now*, *site.name* and *s
 
 Using [browserSync](https://www.npmjs.com/package/browser-sync) will open your browser and automatically apply any html, css and js source changes that are then made.
 
-You can configure this to either serve a static site or node app within the [component.config.js](component-structure/component.config.js).
+You can configure this to either serve a static site or node app within the [component.config.js](boilerplate/component.config.js).
 
 Static Example :
 ```javascript
@@ -139,7 +139,7 @@ This serve the path given as a static site
 Using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http://jasmine.github.io/2.2/introduction.html), it will run through the `.spec.js` files found in `/test/` directory.
 A code-coverage report will also be produced.
 
-Code-coverage is uses the `watermarks` option within [test/karma.conf.js](component-structure/test/karma.conf.js), and ensures the code coverage is above the thresholds given.
+Code-coverage is uses the `watermarks` option within [test/karma.conf.js](boilerplate/test/karma.conf.js), and ensures the code coverage is above the thresholds given.
 
 #### TDD
 
@@ -201,7 +201,7 @@ This will push the current files within `_site` to gh-pages branch (making your 
 
 `component release s3`
 
-This will push the current files from within `_site` to S3 using the options within [component.config.js](component-structure/component.config.js).
+This will push the current files from within `_site` to S3 using the options within [component.config.js](boilerplate/component.config.js).
 Setting this option to false will prevent a release.
 
 **Example 1: Using Environment Variables**

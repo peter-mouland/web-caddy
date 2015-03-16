@@ -18,9 +18,9 @@ function renameFiles(component){
     ]);
 }
 
-function createStructure(component){
+function copyBoilerplate(component){
     log.info("\nCopying Component Files ... \n");
-    var moduleDir = npmGlobalPath() + '/component-helper/component-structure';
+    var moduleDir = npmGlobalPath() + '/component-helper/boilerplate';
     return fs.copyDirectory(moduleDir, './' + component,
         function(read, write, file){
             read.pipe(replaceStream('{{ component }}', component))
@@ -32,7 +32,7 @@ function newComponent(component) {
     if (fs.existsSync(component)){
         log.onError('Component `' + component + '` already exists');
     }
-    return createStructure(component).then(function(output) {
+    return copyBoilerplate(component).then(function(output) {
         shell.cd(component);
         return renameFiles(component);
     }).then(function(output){

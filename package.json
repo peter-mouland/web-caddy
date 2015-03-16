@@ -1,10 +1,10 @@
 {
   "name": "component-helper",
   "version": "1.1.2",
-  "description": "A way to help ensure the common tasks are consistent across components",
+  "description": "Create, build, test, serve and release small and large projects quickly",
   "main": "index.js",
   "files": [
-    "component-structure",
+    "boilerplate",
     "bin",
     "paths",
     "tasks",
@@ -15,8 +15,22 @@
     "LICENSE.md",
     "index.js"
   ],
+  "keywords": [
+    "build",
+    "tools",
+    "build tool",
+    "gulp",
+    "components",
+    "serve",
+    "test",
+    "coverage",
+    "tdd",
+    "release",
+    "s3",
+    "gh-pages"
+  ],
   "scripts": {
-    "test": "jshint tasks && jshint bin && jshint component-structure/component.config.js && ./node_modules/jasmine/bin/jasmine.js"
+    "test": "jshint tasks && jshint bin && jshint boilerplate/component.config.js && ./node_modules/jasmine/bin/jasmine.js"
   },
   "dependencies": {
     "autoprefixer": "^5.0.0",
@@ -60,7 +74,10 @@
     "type": "git",
     "url": "git://github.com/skyglobal/component-helper.git"
   },
-  "author": "Pete Mouland",
+  "author": {
+    "name": "Pete Mouland",
+    "email": "peter.mouland@gmail.com"
+  },
   "devDependencies": {
     "jasmine": "^2.1.1",
     "jshint": "^2.6.0"

@@ -9,7 +9,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
  * [Continuous (or manual) Deployment](RELEASING.md) to [github.io](https://pages.github.com), [Bower](http://bower.io) and/or [Amazon S3](http://en.wikipedia.org/wiki/Amazon_S3)
- * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](examples/gulpfile.js).
+ * Customise the build process using [component.config.js](boilerplate/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
 
@@ -64,7 +64,7 @@ CLI | Node
 [component release gh-pages](API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
 [component release s3](API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
 
-The CLI and Node will use the config set within [component.config.js](component-structure/component.config.js) in your project root.
+The CLI and Node will use the config set within [component.config.js](boilerplate/component.config.js) in your project root.
 
 [API in Detail >](API.md)
 
