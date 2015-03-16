@@ -2,13 +2,13 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
 ========================
 > Quickly create new components or Improve your existing build process
 
- * Build and serve (static or NodeJS) sites
+ * Build and serve static or [NodeJS](http://en.wikipedia.org/wiki/Node.js) sites
  * Automatic browser refresh when source code is changed
- * Use Jade or Mustache HTML templating
- * Compile Sass and CommonJS or AMD to CSS/JS and `.min` equivalents 
+ * Use [Jade](http://jade-lang.com) or [Mustache](https://mustache.github.io) HTML templating
+ * Compile [Sass](http://en.wikipedia.org/wiki/Sass_(stylesheet_language)) and [CommonJS](http://en.wikipedia.org/wiki/CommonJS) or [AMD](http://en.wikipedia.org/wiki/Asynchronous_module_definition) to CSS/JS and `.min` minified equivalents 
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
- * [Continuous (or manual) Deployment](RELEASING.md) to github.io, Bower and/or Amazon S3
+ * [Continuous (or manual) Deployment](RELEASING.md) to [github.io](https://pages.github.com), [Bower](http://bower.io) and/or [Amazon S3](http://en.wikipedia.org/wiki/Amazon_S3)
  * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
@@ -28,7 +28,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
     $ component
     ├── test            => Home of your test config plus test specs
     ├── demo            => source code used soley for demoing the functionality
-    │   ├- _includes    => Contains any html files to be concatinated to index.html
+    │   ├- _includes    => Contains any html files to be concatenated to index.html
     │   ├- scripts      => any javascript needed to get the demo working
     │   ├- styles       => any Sass needed to get the demo working
     │   ├- images       => demo images directories
@@ -42,7 +42,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
      
 ## API
 
-The component helper can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks a almost exactly the same.
+The component helper can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks are almost exactly the same.
 
 Once required (`var component = require('component-helper');`), you can call the following:
 
