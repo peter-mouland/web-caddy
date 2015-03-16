@@ -1,6 +1,6 @@
 Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.svg)](https://www.npmjs.org/package/component-helper) [![Circle CI](https://circleci.com/gh/skyglobal/component-helper/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/component-helper/tree/master)
 ========================
-> Quickly create new components or Improve your existing build process
+> Create, Build, Test, Serve and Release quickly
 
  * Build and serve static or [NodeJS](http://en.wikipedia.org/wiki/Node.js) sites
  * Automatic browser refresh when source code is changed
