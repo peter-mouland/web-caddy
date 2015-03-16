@@ -2,7 +2,7 @@
     "name": "{{ component }}",
     "version": "0.0.0",
     "description": "Example package.json. Feel free to copy!",
-    "main": "index.js",
+    "main": "src/scripts/{{ component }}.js",
     "repository": {
         "type": "git",
         "url": "{{ git.SSH-URL }}"
@@ -15,8 +15,8 @@
       "release": "npm test && component release"
     },
     "devDependencies": {
-      "browserify-istanbul": "^0.2.0",
-      "component-helper" : "^1.1.0"
+      "browserify-istanbul": "^0.2.1",
+      "component-helper" : "^1.1.2"
     },
     "author": "{{ git.author }}"
 }

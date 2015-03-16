@@ -1,0 +1,12 @@
+{
+  "undef": true,
+  "expr": true,
+  "globals": {
+    "console": true,
+    "require": true,
+    "module": true,
+    "process": true,
+    "setTimeout": true,
+    "Buffer": true
+  }
+}
