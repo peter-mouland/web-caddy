@@ -21,16 +21,18 @@ function ghPagesRelease(message){
 
 function s3(version){
     component = helper.getConfig();
-    version = version || component.pkg.version;
     if (!component.release){
-        log.info('Skipping S3 : `Release` set to false within component.config.js');
+        log.info('Skipping Release : `Release` set to false within component.config.js');
         return Promise.resolve();
     }
-    log.info("\nReleasing to S3 : " + version + "\n");
-    var options = (component[component.release]) || {};
-    var prefix = options.directoryPrefix || '';
+    log.info("\nReleasing : \n");
     var Release = require('./wrappers/' + (component.release || 's3'));
-    return new Release(component.paths.site.root + '/**/*.*', prefix + component.pkg.name + '/' + version +'/', options).write();
+    var options = (component[component.release]) || {};
+    var target = options.target || options.directoryPrefix || '';//deprecate directoryPrefix
+    if (version){
+        target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + version + '$2');
+    }
+    return new Release(component.paths.site.root + '/**/*.*', target, options).write();
 }
 
 function releaseGit(version){

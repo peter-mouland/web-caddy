@@ -19,6 +19,10 @@ Main.prototype.sum = function(args){
     return total;
 };
 
+Main.prototype.write = function(args){
+  document.getElementById('demo-functional').innerHTML = this.sum(args);
+};
+
 
 //example export
 module.exports = Main;

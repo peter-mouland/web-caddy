@@ -1,22 +1,26 @@
 # Change Log
 
-## Next Release
+## 1.2.x Next Release
 
- * Speed improvements
- * Updated `circle.yml` to allow for continuous deployment by default
- * Updated `build html` step to produce minified html
- * Updated `init gitRemote` step to be `init git`
- * Updated `init git` to accept SSH or HTTP URLS
- * Added global Alias for browserified JS files.
-    * i.e. You can now call `require('component-name');` within your html.
- * Added `vendorBundle` option to browseify config.
-    * This allows you to specifiy which external files should be built separately from your main js files.
- * Removed implicit steps. ie. component test now only runs tests, not the build too.
-    * if implicit tasks are wanted, please customise this in `npm scripts` object.
+ * **1.2.0** Breaking change
+     * Speed improvements
+     * Updated  **Breaking change** `Release` is more flexible by specifying `target` directory within
+     * Updated  **Breaking change** `init gitRemote` step to be `init git` config.
+     * Updated  **Breaking change** All steps are implicit. ie. `component test` now only runs tests, not the build too.
+        * if implicit tasks are wanted, please customise this in `npm scripts` object.
+     * Updated `circle.yml` to allow for continuous deployment by default
+     * Updated `build html` step to produce minified html
+     * Updated `init git` to accept SSH or HTTP URLS
+     * Updated testing into `unit` and `functional` with examples.
+     * Added global Alias for browserified JS files.
+        * i.e. You can now call `require('component-name');` within your html.
+     * Added `vendorBundle` option to browseify config.
+        * This allows you to specifiy which external files should be built separately from your main js files.
 
 ## 1.1.x Breaking change
 
- * Update default `browserify` options
+ * **1.1.2**
+    * Update default `browserify` options
  * **1.1.0**
     * Updated **breaking change** `component.config.js` to expect explicit config objects
       * `requirejs`, `browserify`, `staticApp`, `nodeApp`, `s3` or `karma` objects

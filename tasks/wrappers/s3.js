@@ -33,6 +33,7 @@ function AWS(location, destination, options){
 
 AWS.prototype.addSlash = function(dir){
     if (dir.slice(-1) !== '/') dir = dir +'/';
+    if (dir === '/') dir = dir.substring(1);
     return dir;
 };
 

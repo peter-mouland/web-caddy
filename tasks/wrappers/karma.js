@@ -4,18 +4,25 @@ var findup = require('findup-sync');
 var log = require('../utils/log');
 
 function Karma(options){
-    if (!options || !options.summary || !options.config){
-        log.onError('Karma requires config with `summary` and `config`.');
-    }
-    this.summaryPath = options.summary;
-    this.configPath = options.config;
+    this.summaryPath = options.unitCoverage || options.summary;//options.summary deprecated
+    this.unitConfigPath = options.unit || options.config;//options.configPath deprecated
+    this.functionalConfigPath = options.functional;
 }
 
 Karma.prototype.run = function(singleRun){
-    var config = findup(this.configPath);
+    return Promise.all([
+        this.test(singleRun, this.unitConfigPath),
+        this.test(singleRun, this.functionalConfigPath)
+    ]);
+};
+
+Karma.prototype.test = function(singleRun, configPath){
     return new Promise(function(resolve, reject) {
+        if (!configPath) {
+            resolve();
+        }
         karma.start({
-            configFile: config,
+            configFile: findup(configPath),
             singleRun: singleRun
         }, function(err){
             err && reject(err);
@@ -29,11 +36,10 @@ Karma.prototype.coverage = function(){
         log.warn('You are in project called test.  You will not get any coverage results.\n > Please rename your project.');
     }
     var self = this;
-    var config = findup(this.configPath);
-    var summaryPath = findup(this.summaryPath);
     return new Promise(function(resolve, reject) {
-        if (!summaryPath){ log.onError('You must have run tests first. Summary file not found in : ' + self.summaryPath);}
-        if (!config){ log.onError('Karma config file could not be found in : ' + self.configPath);}
+        if (!self.unitConfigPath) resolve();
+        var config = findup(self.unitConfigPath);
+        var summaryPath = findup(self.summaryPath);
         var results = require(summaryPath);
         var coverage = require(config)({
             set: function (conf) {

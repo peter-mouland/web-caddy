@@ -5,7 +5,7 @@ module.exports = function(config) {
         frameworks: ['browserify', 'jasmine'],
         reporters: ['progress', 'coverage'],
         preprocessors: {
-            'test/**/*.js': ['browserify'],
+            'test/unit/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
         },
         coverageReporter: {
@@ -27,7 +27,7 @@ module.exports = function(config) {
         files: [
             {pattern: '_site/**/vendor.*', included: true, served: true, watched: true},
             {pattern: '_site/**/*.*', included: true, served: true, watched: true},
-            'test/**/*.spec.js'
+            'test/unit/**/*.spec.js'
         ],
         exclude: [
             '**/*.png',
