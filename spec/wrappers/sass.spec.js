@@ -1,5 +1,5 @@
-var Sass = require('../tasks/wrappers/sass');
-var fs = require('../tasks/utils/fs');
+var Sass = require('../../tasks/wrappers/sass');
+var fs = require('../../tasks/utils/fs');
 
 function onError(e){
     console.log('** Test Error **')

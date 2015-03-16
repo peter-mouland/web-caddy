@@ -6,15 +6,26 @@ var git = require('./utils/git');
 var fs = require('./utils/fs');
 var bower = require('./utils/bower');
 var helper = require('./utils/config-helper');
-var shell = require("shelljs");
 var prompt = require("prompt");
-var findup = require('findup-sync');
 require('colors');
 
 function initBower(){
     return bower.register().catch(function(err){
         log.onError('Error: Bower Register ' + err);
     });
+}
+
+function remoteGit(gitRepo, component){
+    log.info("\nInitialising Git Remotely... \n");
+    return askForGitRepo(gitRepo)
+        .then(function(reply) {
+            gitRepo = reply;
+            return replaceGitVariables(gitRepo, component);
+        }).then(function(){
+            return pushFirstPush(gitRepo);
+        }).then(function(){
+            return initGhPages(gitRepo);
+        }).catch(log.onError);
 }
 
 function localGit(){
@@ -33,67 +44,47 @@ function askForGitRepo(gitRepo){
         if (gitRepo && gitRepo.length>0) resolve(gitRepo);
         prompt.start();
         prompt.get([{
-            description: 'GitHub Repository SSH URL'.bgBlack.white + ' (leave blank if none)'.bgBlack.white.dim,
-            name: 'repo'
+            description: 'GitHub Repository URL'.bgBlack.white + ' (leave blank if none)'.bgBlack.white.dim,
+            name: 'repo',
+            default: git.checkRemote() || ''
         }], function(err, result) {
-            if (!result) resolve('');
-            var gitUrlMatch = result.repo.match(/.com\:(.*)\//);
-            if (!gitUrlMatch){
-                resolve('');
-            }
-            resolve(result.repo);
+            if (!result) return resolve('');
+            resolve(git.validRepo(result.repo));
         });
     });
 }
 
 function replaceGitVariables(repo, componentName){
-    var repoMatch = repo && repo.match(/.com\:(.*)\//);
-    if (!repoMatch){
-        log.info(
-            ['Github Repository URL invalid:',
+    if (!git.validRepo(repo)){
+        log.info(['',
+            'Github Repository SSH URL invalid:',
                 'When you are ready to push to git, Please run:',
-                '`component init remoteGit` '
+                '`component init git` '
             ].join('\n'));
         return Promise.resolve();
     }
-    if (!componentName){
-        var componentConfigPath = findup('component.config.js');
-        var component = require(componentConfigPath);
-        componentName = component.pkg.name;
-        helper.configCheck(component);
-    }
-    var SSH = (repoMatch) ? repo : '{{ git.SSH-URL }}';
-    var HTTPS = (repoMatch) ? repo.replace('git@', 'https://').replace('.com:','.com/') : '{{ git.HTTPS-URL }}';
-    var io = (repoMatch) ? repo.replace(repoMatch[1],'').replace('git@', 'http://' + repoMatch[1] + '.').replace('.com:','.io').replace(componentName + '.git', componentName) : '{{ git.io-URL }}';
-    var author = shell.exec('git config user.name', {silent:true}).output.replace(/\s+$/g, '');
-    var email = shell.exec('git config user.email', {silent:true}).output.replace(/\s+$/g, '');
+    var username = git.repoUsername(repo);
+    var isSSH = repo.indexOf('git@')>-1;
+    var sshUrl = (isSSH) ? repo : repo.replace('https://', 'git@').replace('.com/', '.com:');
+    var httpUrl = (!isSSH) ? repo : repo.replace('git@', 'https://').replace('.com:','.com/');
+    var ioUrl = sshUrl.replace(username,'').replace('git@', 'http://' + username + '.').replace('.com:','.io').replace(componentName + '.git', componentName);
     var replacements = [
-        { replace: /{{ git.SSH-URL }}/g, with: SSH },
-        { replace: /{{ git.HTTPS-URL }}/g, with: HTTPS},
-        { replace: /{{ git.io-URL }}/g, with: io},
-        { replace: /{{ git.username }}/g, with: repoMatch[1]},
-        { replace: /{{ git.author }}/g, with: author},
-        { replace: /{{ git.email }}/g, with: email }
+        { replace: /{{ git.SSH-URL }}/g, with: sshUrl },
+        { replace: /{{ git.HTTPS-URL }}/g, with: httpUrl},
+        { replace: /{{ git.io-URL }}/g, with: ioUrl},
+        { replace: /{{ git.username }}/g, with: username},
+        { replace: /{{ git.author }}/g, with: git.user.name},
+        { replace: /{{ git.email }}/g, with: git.user.email }
     ];
+    if (!componentName){
+        var component = helper.getConfig();
+        componentName = component.pkg.name;
+    }
     var dest = process.cwd();
-
     if (dest.indexOf('/' + componentName)==-1){
         dest = path.join(dest, componentName);
     }
     return fs.replace(dest + '**/*.*', replacements);
-}
-
-function remoteGit(gitRepo, component){
-    log.info("\nInitialising Git Remotely... \n");
-    return askForGitRepo(gitRepo)
-        .then(function(reply) {
-            gitRepo = reply;
-            return replaceGitVariables(gitRepo, component);
-        }).then(function(){
-            return pushFirstPush(gitRepo);
-        }).then(function(){
-            return initGhPages(gitRepo);
-        }).catch(log.onError);
 }
 
 function pushFirstPush(repo){
@@ -136,6 +127,7 @@ function initGhPages(repo){
 
 module.exports = {
     bower: initBower,
+    'gh-pages': initGhPages,
     localGit: localGit,
-    remoteGit: remoteGit
+    git: remoteGit
 };

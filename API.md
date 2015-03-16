@@ -6,7 +6,7 @@
  * [Serve](#serve) - Serving your site
  * [Testing](#testing) - Testing and code-coverage
  * [Init](#init) - Initialising Bower
- * [Release](#release) - Release to git, gh-pages, aws
+ * [Releasing](#releasing) - Release to git, gh-pages, aws
 
 ## New
 
@@ -155,20 +155,35 @@ This will run through test and then stay open watching for code changes in your 
 
 This will register your component with bower, using the name from your bower.json and the repository url from package.json.
 
+#### gh-pages (github.io)
+
+`component init gh-pages`
+
+Use this if you want to demo the `site` on github.io within a project that was setup using the component-helper.
+
 #### Remote Git Repository
 
-`component init gitRemote`
+`component init git`
+
+This will add files from within the current directory, commit and push them to the provided git repo.
+
+## Bump the Version
+
+`component bump`
+
+This will update the version number in all the docs (package.json, version.js, *.md and *.html).
+
+By default, this applies a  `patch`.  Add either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.
+
+i.e. `component bump major`
 
 ## Releasing
 
 `component release`
 
-This will `patch` the version number in all the docs (package.json, bower.js, version.js, *.md and *.html).
-Once this has complete, it will do all the steps below.
+This will bump your version (as above) and tag your git, release to gh-pages, and if set then the S3.
 
-To force a version or release type use the `--version=` option followed by either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1`
-
-*note: Version numbers in your code enclosed in `"` or `/` will be updated*
+i.e. `component release minor`
 
 #### Tag Git
 
@@ -188,8 +203,6 @@ This will push the current files within `_site` to gh-pages branch (making your 
 
 This will push the current files from within `_site` to S3 using the options within [component.config.js](component-structure/component.config.js).
 Setting this option to false will prevent a release.
-
-For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
 
 **Example 1: Using Environment Variables**
 ```javascript
@@ -214,4 +227,12 @@ For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
         profile: pkg.name,
         directoryPrefix: false
     },
+```
+Ensure you have created the file : `~/.aws/credentials`. For more information see [Credentials in the AWS](http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs#).
+
+```yml
+    [s3-profile-name]
+    aws_access_key_id = ACCESS_KEY
+    aws_secret_access_key = SECRET_KEY
+    aws_session_token = TOKEN
 ```

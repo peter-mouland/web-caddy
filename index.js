@@ -5,6 +5,7 @@ var release = require('./tasks/release');
 var serve = require('./tasks/serve');
 var init = require('./tasks/init');
 var clean = require('./tasks/clean');
+var bump = require('./tasks/bump');
 var pkg = require('./package.json');
 
 module.exports = {
@@ -12,6 +13,7 @@ module.exports = {
     clean: clean,
     build: build,
     test: test,
+    bump: bump,
     release: release,
     serve: serve,
     version: pkg.version

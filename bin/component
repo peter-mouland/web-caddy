@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 var log = require("../tasks/utils/log");
-var minimist = require('minimist');
-var knownArgs = {
-    string: 'version',
-    default: { version: 'patch' }
-};
-var flags = minimist(process.argv.slice(2), knownArgs);
+var helper = require("../tasks/utils/config-helper");
 
 function execTask(taskName, args){
+    helper.configCheck();
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'run';
-    task[command] && task[command](args, flags.version);
-    !task[command] && task['adhoc'] && task['adhoc'](command);
-    !task[command] && !task['adhoc'] && help(task, taskName);
+    args = (args.length<2) ? args[0] : args;
+    if (task[command]){
+        task[command](args);
+    } else if (task['adhoc']){
+        task['adhoc'](command);
+    } else {
+        help(task, taskName);
+    }
 }
 
 function help(task, taskName){
@@ -43,6 +44,9 @@ var commands = {
     test: function(args){
         execTask('test', args)
     },
+    bump: function(args){
+        execTask('bump', args)
+    },
     release: function(args){
         execTask('release', args)
     },
@@ -59,15 +63,15 @@ var commands = {
 };
 
 (function main() {
-  var argv = process.argv.slice(1)
-  if (!argv.length) return commands['--help']();
-  var cwd =  argv.shift();
-  var command = argv.shift();
+    var argv = process.argv.slice(1)
+    if (!argv.length) return commands['--help']();
+    var cwd =  argv.shift();
+    var command = argv.shift();
     if (argv.length && argv[0].indexOf('--') === 0){
         argv=[]
     }
-  commands[command] && commands[command](argv);
-  !commands[command] && commands['--help']();
+    commands[command] && commands[command](argv);
+    !commands[command] && commands['--help']();
 })();
 
 

@@ -1,5 +1,5 @@
-var Karma = require('../tasks/wrappers/karma');
-var log = require('../tasks/utils/log');
+var Karma = require('../../tasks/wrappers/karma');
+var log = require('../../tasks/utils/log');
 
 function onError(e){
     console.log('** Test Error **')

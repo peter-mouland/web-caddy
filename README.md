@@ -8,7 +8,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
  * Compile Sass and CommonJS or AMD to CSS/JS and `.min` equivalents 
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
- * Deploy to github.io, Bower and Amazon S3
+ * [Continuous (or manual) Deployment](RELEASING.md) to github.io, Bower and/or Amazon S3
  * Customise the build process using [component.config.js](component-structure/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
@@ -58,8 +58,9 @@ CLI | Node
 [component test](API.md/#testing) | `component.test.run()`
 [component test tdd](API.md/#tdd) | `component.test.tdd()`
 [component init bower](API.md/#bower) | `component.init.bower()`
-[component init remoteGit](API.md/#bower) | `component.init.remoteGit(repository)` <br>(mandatory: Git SSH URL)
-[component release](API.md/#releasing) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component init git](API.md/#git) | `component.init.git(repository)` <br>(mandatory: Git URL)
+[component bump *Semantic Version*](API.md/#bump-the-version) | `component.bump.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component release *Semantic Version*](API.md/#releasing) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
 [component release gh-pages](API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
 [component release s3](API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
 
@@ -77,11 +78,11 @@ Using Node (or Gulp) you can customise the build process even more.
 
 To add regression testing, please see [Sheut](https://github.com/skyglobal/Sheut)
 
-## Releasing your Component
+## Releasing
 
-If you are ready for your component to go public, you can release the code to Bower, github.io (gh-pages branch) and to the cloud (AWS).
-
-[Read More >](RELEASING.md)
+ * [Continuous Deployment](RELEASING.md#continuous-deployment)
+ * [Manual Deployment](RELEASING.md#manual-deployment)
+ * [Amazon S3](API.md#s3)
 
 ## Contributing to the Helper
 

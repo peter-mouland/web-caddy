@@ -1,15 +1,15 @@
-var utils = require('./utils/common');
-var paths = utils.paths;
-var Promise = utils.Promise;
-var pkg = utils.pkg;
-var log = utils.log;
-var component = utils.component;
+var Promise = require('es6-promise').Promise;
+var log = require('./utils/log');
+var fs = require('./utils/fs');
+var helper = require('./utils/config-helper');
+var component;
 
 var browserSync = require('browser-sync');
 var build = require('./build');
 
 function start(options){
-    options = Array.isArray(options) && options.length>0 ? options[0] : (component[component.serve]) || {};
+    component = helper.getConfig();
+    options = options || (component[component.serve]) || {};
     return nodeApp(options).then(function(){
         if (!options.server && !options.proxy){
             log.warn('component.config.js may be incorrect. please check');
@@ -19,6 +19,8 @@ function start(options){
 }
 
 function nodeApp(options){
+    component = helper.getConfig();
+    if (options.server) return Promise.resolve();
     var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
         nodemon(options).on('start', function(e){
@@ -33,6 +35,8 @@ function buildAndReload(task){
 }
 
 function watch(){
+    component = helper.getConfig();
+    var paths = component.paths;
     var fs = require('./utils/fs');
     var htmlPaths = [ ];
     var stylesPaths = [paths.source.styles + '/**/*' ];
@@ -51,14 +55,15 @@ function watch(){
 }
 
 function adhoc(path){
+    component = helper.getConfig();
     //todo: test if path ext is js or html
     //    : if html serve staticApp
     //    : if js serve nodeApp
     component.serve = 'staticApp';
-    return start([{
+    return start({
         server: { baseDir : path },
         port: 3456
-    }]);
+    });
 }
 
 function run(args){
