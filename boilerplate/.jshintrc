@@ -7,6 +7,9 @@
     "module": true,
     "process": true,
     "setTimeout": true,
-    "Buffer": true
+    "Buffer": true,
+    "window": true,
+    "define": true,
+    "document": true
   }
 }

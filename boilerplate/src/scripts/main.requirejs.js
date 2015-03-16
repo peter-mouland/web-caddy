@@ -1,3 +1,4 @@
+/*jshint -W069 */
 var local = {}; local['{{ component }}'] = require('./{{ component }}');
 
 if (typeof window.define === "function" && window.define.amd) {
