@@ -4,13 +4,13 @@
 
 > This method relies on the version number being incremented manually before code is pushed to Git.
 
-`npm test && component release`
-
  * Ensure all changes are made and pushed to feature branches
  * Once the feature/bug-fix is complete, rebase from master.
- * merge your changes into master
- * bump the version number manually
-   * `component bump` or see [api](https://github.com/skyglobal/component-helper/blob/master/API.md#bump-the-version)
+ * Merge your changes into master
+ * `npm test` : Run the tests again
+ * `component bump` : Bump the version number (see [api](https://github.com/skyglobal/component-helper/blob/master/API.md#bump-the-version) for options)
+ * `git push` : to kick of the deploy process
+ * CircleCI will then run your test, tag the new release within git and deploy.
 
 Your `circle.yml` should look something like:
 
@@ -41,8 +41,7 @@ machine:
 `npm test && component release`
 
    * This will run your tests, if they fail the release will stop.
-   * It bumps the version number (`patch` by default)
-     * See [api](https://github.com/skyglobal/component-helper/blob/master/API.md#bump-the-version) to be specific
+   * It bumps the version number (`patch` by default, see [api](https://github.com/skyglobal/component-helper/blob/master/API.md#bump-the-version) for options)
    * Tag the version number and push to Git
    * Push the demo `site` to github.io
    * Push the compiled assets to the S3 (if configured)
@@ -63,9 +62,9 @@ machine:
 
 ## Bower
 
-`component init bower`
+Bower will be updated every time github has a new tag.  Ensure bower has been initiated:
 
-To release to Bower please ensure your `component.config.js` includes the `bower.json` object.
+`component init bower`
 
 ## Releasing API
 
