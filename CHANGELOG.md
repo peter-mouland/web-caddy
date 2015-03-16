@@ -4,7 +4,7 @@
 
  * **1.2.0** Breaking change
      * Speed improvements
-     * Updated  **Breaking change** `Release` is more flexible by specifying `target` directory within
+     * Updated  **Breaking change** `Release` task is more flexible. Use `target` within `component.config.js`
      * Updated  **Breaking change** `init gitRemote` step to be `init git` config.
      * Updated  **Breaking change** All steps are implicit. ie. `component test` now only runs tests, not the build too.
         * if implicit tasks are wanted, please customise this in `npm scripts` object.
