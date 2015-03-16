@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.2.x Next Release
+## 1.2.x
 
  * **1.2.0** Breaking change
      * Speed improvements
