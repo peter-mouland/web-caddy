@@ -12,6 +12,7 @@
      * Updated `build html` step to produce minified html
      * Updated `init git` to accept SSH or HTTP URLS
      * Updated testing into `unit` and `functional` with examples.
+     * Added JSHint to `npm test` task by default.
      * Added global Alias for browserified JS files.
         * i.e. You can now call `require('component-name');` within your html.
      * Added `vendorBundle` option to browseify config.
