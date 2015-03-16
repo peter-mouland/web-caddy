@@ -165,6 +165,8 @@ Use this if you want to demo the `site` on github.io within a project that was s
 
 `component init git`
 
+This will add files from within the current directory, commit and push them to the provided git repo.
+
 ## Bump the Version
 
 `component bump`
@@ -202,8 +204,6 @@ This will push the current files within `_site` to gh-pages branch (making your 
 This will push the current files from within `_site` to S3 using the options within [component.config.js](component-structure/component.config.js).
 Setting this option to false will prevent a release.
 
-For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
-
 **Example 1: Using Environment Variables**
 ```javascript
     ...
@@ -229,3 +229,10 @@ For more details please see [RELEASING.md](RELEASING.md#amazon-web-services-aws)
     },
 ```
 Ensure you have created the file : `~/.aws/credentials`. For more information see [Credentials in the AWS](http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs#).
+
+```yml
+    [s3-profile-name]
+    aws_access_key_id = ACCESS_KEY
+    aws_secret_access_key = SECRET_KEY
+    aws_session_token = TOKEN
+```
