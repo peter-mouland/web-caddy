@@ -8,11 +8,7 @@
     "bin",
     "paths",
     "tasks",
-    "CHANGELOG.md",
-    "CONTRIBUTING.md",
-    "API.md",
-    "README.md",
-    "LICENSE.md",
+    "*.md",
     "index.js"
   ],
   "keywords": [
