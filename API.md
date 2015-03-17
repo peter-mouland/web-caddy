@@ -6,6 +6,7 @@
  * [Serve](#serve) - Serving your site
  * [Testing](#testing) - Testing and code-coverage
  * [Init](#init) - Initialising Bower
+ * [Bump](#bump-the-version) - Bump the version number in a number of files
  * [Releasing](#releasing) - Release to git, gh-pages, aws
 
 ## New
