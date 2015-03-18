@@ -2,6 +2,7 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
+var clean = require('./clean');
 var component, paths, pkg;
 
 function initConfig(){
@@ -10,7 +11,11 @@ function initConfig(){
     pkg = component.pkg;
 }
 
-var clean = require('./clean');
+function serverConfigFiles(){
+    initConfig();
+    var source = paths.source.root +'/' + '{CNAME,.htaccess,robots.txt}';
+    return fs.copy(source, paths.site.root);
+}
 
 function html(replacements) {
     initConfig();
@@ -89,7 +94,7 @@ function scripts(options){
     }).catch(log.warn);
 }
 
-function buildStyles(options){
+function styles(options){
     initConfig();
     if (!component.build.styles){
         log.info('build.styles set to false within component.config.js : skipping building styles');
@@ -110,10 +115,11 @@ function run(replacements){
     return clean.all().then(function(){
         log.info('Build :');
         return Promise.all([
+                serverConfigFiles(),
                 scripts(),
                 fonts(),
                 images(),
-                buildStyles(),
+                styles(),
                 html(replacements)
             ]);
     }).then(function(){
@@ -123,7 +129,8 @@ function run(replacements){
 
 module.exports = {
     html: html,
-    styles: buildStyles,
+    'server-config-files': serverConfigFiles,
+    styles: styles,
     scripts: scripts,
     images: images,
     fonts: fonts,

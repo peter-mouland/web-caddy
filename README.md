@@ -53,6 +53,7 @@ CLI | Node
 [component build scripts](API.md/#scripts) | `component.build.scripts()`
 [component build styles](API.md/#styles) | `component.build.styles()`
 [component build html](API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
+[component build server-config-files](API.md/#server-config-files) | `component.build.serverConfigFiles()`
 [component serve](API.md/#serve) | `component.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
 [component serve path/to/serve](API.md/#adhoc) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
 [component test](API.md/#testing) | `component.test.run()`
