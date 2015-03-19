@@ -8,7 +8,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
  * Compile [Sass](http://en.wikipedia.org/wiki/Sass_(stylesheet_language)) and [CommonJS](http://en.wikipedia.org/wiki/CommonJS) or [AMD](http://en.wikipedia.org/wiki/Asynchronous_module_definition) to CSS/JS and `.min` minified equivalents 
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
- * [Continuous (or manual) Deployment](docs/RELEASING.md) to [github.io](https://pages.github.com), [Bower](http://bower.io) and/or [Amazon S3](http://en.wikipedia.org/wiki/Amazon_S3)
+ * [Continuous (or manual) Deployment](docs/RELEASE.md) to [github.io](https://pages.github.com), [Bower](http://bower.io) and/or [Amazon S3](http://en.wikipedia.org/wiki/Amazon_S3)
  * Customise the build process using [component.config.js](boilerplate/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
