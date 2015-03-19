@@ -214,7 +214,7 @@ Setting this option to false will prevent a release.
         region: process.env.YOUR_AWS_REGION,
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
-        directoryPrefix: 'components/'
+        target: 'components/' + pkg.name + '/' + pkg.version + '/'
     },
 ```
 
@@ -226,7 +226,7 @@ Setting this option to false will prevent a release.
         bucket: process.env.YOUR_AWS_BUCKET,
         region: process.env.YOUR_AWS_REGION,
         profile: pkg.name,
-        directoryPrefix: false
+        target: false
     },
 ```
 Ensure you have created the file : `~/.aws/credentials`. For more information see [Credentials in the AWS](http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs#).
