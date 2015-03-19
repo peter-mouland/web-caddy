@@ -28,7 +28,7 @@ function s3(version){
     log.info("\nReleasing : \n");
     var Release = require('./wrappers/' + (component.release || 's3'));
     var options = (component[component.release]) || {};
-    var target = options.target || options.directoryPrefix || '';//deprecate directoryPrefix
+    var target = options.target || '';
     if (version){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + version + '$2');
     }

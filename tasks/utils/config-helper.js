@@ -31,6 +31,9 @@ var helper = {
         if (!config.pkg.version){
             message.push(' * The package.json requires as a `version` string (even "version": "0.0.0" is fine)');
         }
+        if (config.s3 && config.s3.directoryPrefix){
+            message.push(' * Please update `directoryPrefix` to `target` within the `s3` config.  See API.md#s3');
+        }
         //check build config
         if (config.build && config.build.scripts && !config[config.build.scripts]){
             message.push(' * There is no build scripts config object: `' + config.build.scripts + ':{...}`');
