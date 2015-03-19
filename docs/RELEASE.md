@@ -9,8 +9,6 @@ There are a number of use cases for release:
  * [Deploying to github.io](#deploying-to-github.io)
  * [Bump](#bump-the-version)
 
-For many more command options please see the [API.md#releasing](API.md#releasing)
-
 ## Continuous Deployment
 
 > This method relies on the version number being incremented manually before code is pushed to Git.
