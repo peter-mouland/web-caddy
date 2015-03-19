@@ -11,7 +11,6 @@
       "build": "component build",
       "start": "component build && component serve",
       "test": "jshint src && component build && component test",
-      "tdd": "component test tdd",
       "release": "npm test && component release"
     },
     "devDependencies": {

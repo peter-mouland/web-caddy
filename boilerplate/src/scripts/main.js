@@ -1,5 +1,5 @@
 // By default JS dependency is handled using CommonJS and browserify
-// please see 'API.md#scripts' for more info
+// please see 'docs/API.md#scripts' for more info
 //
 // You may need other components. i.e. Run and uncomment the following :
 // $ bower install dependency-name --save

@@ -1,8 +1,6 @@
-var bower = require('./bower.json');
 var pkg = require('./package.json');
 
 module.exports = {
-    bower: bower,
     build: {
         fonts: true, // true or false. Set to false if you are doing your own thing in the fonts directory
         images: true, // true or false.
