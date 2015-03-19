@@ -53,7 +53,7 @@ function newComponent(component) {
             ' * View the basic site, run:               $ npm start',
             ' * Test on the fly, run in a new tab:      $ npm run tdd',
             ' * To see more tasks please go to : ',
-            '   https://github.com/skyglobal/component-helper/blob/master/API.md'
+            '   https://github.com/skyglobal/component-helper/blob/master/docs/API.md'
         ].join('\n'));
     }).catch(log.onError);
 }

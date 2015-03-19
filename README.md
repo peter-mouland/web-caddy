@@ -1,6 +1,6 @@
 Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.svg)](https://www.npmjs.org/package/component-helper) [![Circle CI](https://circleci.com/gh/skyglobal/component-helper/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/component-helper/tree/master)
 ========================
-> Create, Build, Test, Serve and Release quickly
+> Create, Build, Test, Serve and Release. Quickly
 
  * Build and serve static or [NodeJS](http://en.wikipedia.org/wiki/Node.js) sites
  * Automatic browser refresh when source code is changed
@@ -8,7 +8,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
  * Compile [Sass](http://en.wikipedia.org/wiki/Sass_(stylesheet_language)) and [CommonJS](http://en.wikipedia.org/wiki/CommonJS) or [AMD](http://en.wikipedia.org/wiki/Asynchronous_module_definition) to CSS/JS and `.min` minified equivalents 
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
- * [Continuous (or manual) Deployment](RELEASING.md) to [github.io](https://pages.github.com), [Bower](http://bower.io) and/or [Amazon S3](http://en.wikipedia.org/wiki/Amazon_S3)
+ * [Continuous (or manual) Deployment](docs/RELEASING.md) to [github.io](https://pages.github.com), [Bower](http://bower.io) and/or [Amazon S3](http://en.wikipedia.org/wiki/Amazon_S3)
  * Customise the build process using [component.config.js](boilerplate/component.config.js) or using [gulp](examples/gulpfile.js).
 
 ## Installation
@@ -48,41 +48,37 @@ Once required (`var component = require('component-helper');`), you can call the
 
 CLI | Node
 --- | ----
-[component new *component-name*](API.md/#new) | *unavailable*
-[component build](API.md/#build) | `component.build.run(replacements)`<br> (optional: replacements object)
-[component build scripts](API.md/#scripts) | `component.build.scripts()`
-[component build styles](API.md/#styles) | `component.build.styles()`
-[component build html](API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
-[component serve](API.md/#serve) | `component.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
-[component serve path/to/serve](API.md/#adhoc) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
-[component test](API.md/#testing) | `component.test.run()`
-[component test tdd](API.md/#tdd) | `component.test.tdd()`
-[component init bower](API.md/#bower) | `component.init.bower()`
-[component init git](API.md/#git) | `component.init.git(repository)` <br>(mandatory: Git URL)
-[component bump *Semantic Version*](API.md/#bump-the-version) | `component.bump.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
-[component release *Semantic Version*](API.md/#releasing) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
-[component release gh-pages](API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
-[component release s3](API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
+[component new *component-name*](docs/API.md/#new) | *unavailable*
+[component build](docs/API.md/#build) | `component.build.run(replacements)`<br> (optional: replacements object)
+[component build scripts](docs/API.md/#scripts) | `component.build.scripts()`
+[component build styles](docs/API.md/#styles) | `component.build.styles()`
+[component build html](docs/API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
+[component serve](docs/API.md/#serve) | `component.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
+[component serve path/to/serve](docs/API.md/#adhoc) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
+[component test](docs/API.md/#testing) | `component.test.run()`
+[component test tdd](docs/API.md/#tdd) | `component.test.tdd()`
+[component init bower](docs/API.md/#bower) | `component.init.bower()`
+[component init git](docs/API.md/#git) | `component.init.git(repository)` <br>(mandatory: Git URL)
+[component bump *Semantic Version*](docs/API.md/#bump-the-version) | `component.bump.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component release *Semantic Version*](docs/API.md/#releasing) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component release gh-pages](docs/API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
+[component release s3](docs/API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
 
 The CLI and Node will use the config set within [component.config.js](boilerplate/component.config.js) in your project root.
 
 [API in Detail >](API.md)
 
-### Advanced Customisation + Gulp
+### Use Cases
 
-Using Node (or Gulp) you can customise the build process even more.
+## Testing
 
-[Customisation Examples >](Customisation-Examples.md)
-
-### Regression/Screen-shot tests
-
-To add regression testing, please see [Sheut](https://github.com/skyglobal/Sheut)
+ * [TDD](docs/TESTING.md#tdd)
 
 ## Releasing
 
- * [Continuous Deployment](RELEASING.md#continuous-deployment)
- * [Manual Deployment](RELEASING.md#manual-deployment)
- * [Amazon S3](API.md#s3)
+ * [Continuous Deployment](docs/RELEASING.md#continuous-deployment)
+ * [Manual Deployment](docs/RELEASING.md#manual-deployment)
+ * [Deploying to Bower](docs/RELEASING.md#deploying-to-bower)
 
 ## Contributing to the Helper
 
