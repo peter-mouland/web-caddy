@@ -1,6 +1,6 @@
 # Testing Your App
 
-There are a number of use cases for testing:
+Using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http://jasmine.github.io/2.2/introduction.html).
 
  * [TDD](#tdd)
  * [Single test run](#single-test-run)
@@ -8,15 +8,13 @@ There are a number of use cases for testing:
  * [Unit Tests](#unit-tests)
  * [Code Coverage](#code-coverage)
 
-For more command options please see the [API.md#testing](API.md#testing)
-
 ## Single test run
 
 > Run the complete test suite before pushing any changes to git
 
 `component test`
 
-Using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http://jasmine.github.io/2.2/introduction.html), it will run through the `.spec.js` files found in `/test/` directory (unit and functional).
+This will run through the `.spec.js` files found in `/test/` directory (unit and functional).
 A [code-coverage](#code-coverage) report will also be produced.
 
 We recommend that your package.json `scripts` object is updated to check your JS for error, run the build, then run tests.

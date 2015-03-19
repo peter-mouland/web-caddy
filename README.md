@@ -48,37 +48,31 @@ Once required (`var component = require('component-helper');`), you can call the
 
 CLI | Node
 --- | ----
-[component new *component-name*](docs/API.md/#new) | *unavailable*
-[component build](docs/API.md/#build) | `component.build.run(replacements)`<br> (optional: replacements object)
-[component build scripts](docs/API.md/#scripts) | `component.build.scripts()`
-[component build styles](docs/API.md/#styles) | `component.build.styles()`
-[component build html](docs/API.md/#html) | `component.build.html(replacements)` <br>(optional: replacements object)
-[component serve](docs/API.md/#serve) | `component.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
-[component serve path/to/serve](docs/API.md/#adhoc) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
-[component test](docs/API.md/#testing) | `component.test.run()`
-[component test tdd](docs/API.md/#tdd) | `component.test.tdd()`
-[component init bower](docs/API.md/#bower) | `component.init.bower()`
-[component init git](docs/API.md/#git) | `component.init.git(repository)` <br>(mandatory: Git URL)
-[component bump *Semantic Version*](docs/API.md/#bump-the-version) | `component.bump.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
-[component release *Semantic Version*](docs/API.md/#releasing) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
-[component release gh-pages](docs/API.md/#gh-pages) | `component.release.ghPages(message)` <br>(optional: commit *message*)
-[component release s3](docs/API.md/#s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
+component new *component-name* | *unavailable*
+[component build](docs/BUILD.md) | `component.build.run(replacements)`<br> (optional: replacements object)
+[component build scripts](docs/BUILD.md#scripts) | `component.build.scripts()`
+[component build styles](docs/BUILD.md#styles) | `component.build.styles()`
+[component build html](docs/BUILD.md#html) | `component.build.html(replacements)` <br>(optional: replacements object)
+[component serve](docs/SERVE.md) | `component.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
+[component serve path/to/serve](docs/SERVE.md#adhoc-pages) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
+[component test](docs/TEST.md#testing) | `component.test.run()`
+[component test tdd](docs/TEST.md#tdd) | `component.test.tdd()`
+[component init bower](docs/INITIALISING.md#bower) | `component.init.bower()`
+[component init git](docs/INITIALISING.md#remote-git-repository) | `component.init.git(repository)` <br>(mandatory: Git URL)
+[component bump *Semantic Version*](docs/RELEASE.md#bump-the-version) | `component.bump.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component release *Semantic Version*](docs/RELEASE.md#manual-deployment) | `component.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[component release gh-pages](docs/RELEASE.md#deploying-to-github.io) | `component.release.ghPages(message)` <br>(optional: commit *message*)
+[component release s3](docs/RELEASE.md#deploying-to-amazon-s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
 
 The CLI and Node will use the config set within [component.config.js](boilerplate/component.config.js) in your project root.
 
-[API in Detail >](API.md)
-
 ### Use Cases
 
-## Testing
-
- * [TDD](docs/TESTING.md#tdd)
-
-## Releasing
-
- * [Continuous Deployment](docs/RELEASING.md#continuous-deployment)
- * [Manual Deployment](docs/RELEASING.md#manual-deployment)
- * [Deploying to Bower](docs/RELEASING.md#deploying-to-bower)
+ * [Initialise](docs/INITIALISING.md)
+ * [Build](docs/BUILD.md)
+ * [Serve](docs/SERVE.md)
+ * [Test](docs/TEST.md)
+ * [Release](docs/RELEASE.md)
 
 ## Contributing to the Helper
 
