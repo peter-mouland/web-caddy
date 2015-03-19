@@ -67,8 +67,6 @@ CLI | Node
 
 The CLI and Node will use the config set within [component.config.js](boilerplate/component.config.js) in your project root.
 
-[API in Detail >](API.md)
-
 ### Use Cases
 
 ## Testing
