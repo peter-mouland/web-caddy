@@ -9,37 +9,40 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
  * Test your code and automatically retest on the fly with each code change. True TDD!
  * Code coverage reporting by default with adjustable thresholds
  * [Continuous (or manual) Deployment](docs/RELEASE.md) to [github.io](https://pages.github.com), [Bower](http://bower.io) and/or [Amazon S3](http://en.wikipedia.org/wiki/Amazon_S3)
- * Customise the build process using [component.config.js](boilerplate/component.config.js) or using [gulp](examples/gulpfile.js).
+ * Customise the build process using [component.config.js](boilerplate/component.config.js) or using [gulp](examples/gulpfile.js)
 
 ## Installation
 
 `npm install -g component-helper`
 
-## Creating a New Component
+## Quick Start
 
-1. Create a repository on github (optional)
-2. Run `component new *component-name*` (which will create your component directory)
-3. *follow on-screen instructions.*
-4. in your component's directory, Run `npm start` .
-5. Run `npm run tdd` : test your code even while making code changes.
+#### Creating A New Component
 
-### Generated Directory Structure
+> To create a new project with a build process, tdd and continuous deployment already set-up
 
-    $ component
-    ├── test            => Home of your test config plus test specs
-    ├── demo            => source code used soley for demoing the functionality
-    │   ├- _includes    => Contains any html files to be concatenated to index.html
-    │   ├- scripts      => any javascript needed to get the demo working
-    │   ├- styles       => any Sass needed to get the demo working
-    │   ├- images       => demo images directories
-    │   └- index.html
-    ├── src             => source code for the component.
-    │   ├- scripts      => component javascript
-    │   ├- styles       => component Sass
-    ├── circle.yml      => Configuration to enable automatic build using circleci.com
-    ├── gulpfile.js     => Default gulp setup to enable build, serve, test and release
-    └── component.config.js       => Store the build config including the AWS variables
-     
+1. Run `component new *component-name*` (which will create your component directory)
+2. *follow on-screen instructions.*
+3. Run `npm start` within your new directory
+
+[More Info >](INITIALISING.md)
+
+#### Enhancing An Existing Project
+
+> Get the CLI (build, test, release etc) working within an existing project
+
+1. Copy the [component.config.js](boilerplate/component.config.js) into your project root
+2. Remove and Update the the config for your needs
+3. Update the `paths` object to match your directory structure
+
+## Use Cases
+
+ * [Initialise](docs/INITIALISING.md)
+ * [Build](docs/BUILD.md)
+ * [Serve](docs/SERVE.md)
+ * [Test](docs/TEST.md)
+ * [Release Process](docs/RELEASE.md)
+
 ## API
 
 The component helper can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks are almost exactly the same.
@@ -65,14 +68,6 @@ component new *component-name* | *unavailable*
 [component release s3](docs/RELEASE.md#deploying-to-amazon-s3) | `component.release.s3(version)` <br>(optional: semantic *version*)
 
 The CLI and Node will use the config set within [component.config.js](boilerplate/component.config.js) in your project root.
-
-### Use Cases
-
- * [Initialise](docs/INITIALISING.md)
- * [Build](docs/BUILD.md)
- * [Serve](docs/SERVE.md)
- * [Test](docs/TEST.md)
- * [Release](docs/RELEASE.md)
 
 ## Contributing to the Helper
 
