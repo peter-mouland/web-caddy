@@ -1,10 +1,35 @@
 # Initialising
 
- * [Bower](#bower)
- * [gh-pages (github.io)](#gh-pages-github.io)
- * [Remote Git Repository)](#remote-git-repository)
+ * [Creating A New Component](#creating-a-new-component)
+ * [Register With Bower](#register-with-bower)
+ * [Create A github.io/*your-project*)](#create-a-github.io)
+ * [Add A Remote Git Repository)](#remote-git-repository)
 
-#### Bower
+#### Creating A New Component
+
+> To create a new project with a build process, tdd and continuous deployment already set-up
+
+`component new *component-name*`
+
+**Generated Directory Structure**
+
+    $ component
+    ├── demo            => source code to demo the component
+    │   ├- _includes
+    │   ├- images
+    │   ├- scripts
+    │   ├- styles
+    │   └- index.html
+    ├── src             => source code for the component.
+    │   ├- scripts
+    │   └- styles
+    ├── test            => Test config and specs
+    │   ├- functional
+    │   └- unit
+    ├── circle.yml
+    └── component.config.js       => The build config
+
+#### Register With Bower
 
 > Putting your code into Bowers registry so that other can `bower install`
 
@@ -18,7 +43,7 @@ Both of the other release process include git-tagging.
 
 For any other bower questions, i.e. to unregister your repository etc see [bower.io](http://bower.io/).
 
-#### gh-pages (github.io)
+#### Create A github.io
 
 > Put an existing project onto github.io
 
