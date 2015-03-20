@@ -7,10 +7,6 @@ var component, paths, pkg;
 
 function ghPagesRelease(message){
     component = helper.getConfig();
-    if (!component.release){
-        log.info('Skipping GH-Pages Release : `release` set to false within component.config.js');
-        return Promise.resolve();
-    }
     var ghPages = require('gh-pages');
     message = message || 'Update';
     log.info("\nReleasing to gh-pages : `" + message + "`\n");
@@ -29,6 +25,7 @@ function s3(version){
         log.info('Skipping Release : `release` set to false within component.config.js');
         return Promise.resolve();
     }
+    if (component.release.indexOf('s3') < 0) return;
     log.info("\nReleasing : \n");
     var Release = require('./wrappers/' + (component.release || 's3'));
     var options = (component[component.release]) || {};
