@@ -34,5 +34,6 @@ function run(options){
 
 module.exports = {
     tdd: tdd,
-    run: run
+    run: run,
+    all: run
 };
