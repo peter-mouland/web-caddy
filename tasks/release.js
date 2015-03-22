@@ -64,5 +64,6 @@ module.exports = {
     'gh-pages': ghPagesRelease,
     s3: s3,
     run: run,
+    all: run,
     adhoc: run
 };

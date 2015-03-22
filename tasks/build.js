@@ -134,5 +134,6 @@ module.exports = {
     scripts: scripts,
     images: images,
     fonts: fonts,
-    run: run
+    run: run,
+    all: run
 };

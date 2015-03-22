@@ -21,5 +21,6 @@ function run(type){
 
 module.exports = {
     run: run,
+    all: run,
     adhoc: run
 };

@@ -15,7 +15,7 @@
     },
     "devDependencies": {
       "browserify-istanbul": "^0.2.1",
-      "component-helper" : "^1.2.0",
+      "component-helper" : "^1.2.1",
       "jshint": "^2.6.3"
     },
     "author": "{{ git.author }}"

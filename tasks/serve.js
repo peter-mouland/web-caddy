@@ -74,5 +74,6 @@ function run(args){
 
 module.exports = {
     run: run,
+    all: run,
     adhoc: adhoc
 };
