@@ -44,5 +44,7 @@ Any changes made to the component-helper will be picked up by the component. Use
 
  * Update [package.json](package.json) and [examples/package.json](examples/package.json) version number appropriately
  * `npm adduser` (first time only)
+ * `npm dedupe`
+ * `npm shrinkwrap`
  * `npm pack && tar -tf *.tgz && rm *.tgz` : Check the files in your package (especially index.js!)
  * `npm publish` : (needs npm v2.1.0+) https://www.npmjs.org/package/npm-release
