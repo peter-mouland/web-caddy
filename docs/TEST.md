@@ -17,7 +17,7 @@ Using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http:
 This will run through the `.spec.js` files found in `/test/` directory (unit and functional).
 A [code-coverage](#code-coverage) report will also be produced.
 
-We recommend that your package.json `scripts` object is updated to check your JS for error, run the build, then run tests.
+We recommend that your package.json `scripts` object is updated so you do not rely on a global install and to check your JS for errors, run the build, then run tests.
 
 ```javascript
     "test": "jshint src && component build && component test",`
@@ -34,6 +34,14 @@ You can then use `npm test`.
 This will run functional and unit tests (without code-coverage) which can be viewed in the browser by going to the site specified by the Karma console output (by default: http://localhost:9876/).
 
 Making changes to your tests, or your code, will cause the suite to re-run.  To see code changes within `debug` page you should manually refresh the browser.
+
+We recommend that your package.json `scripts` object is updated so you do not rely on a global install:
+
+```javascript
+    "tdd": "component test tdd",`
+```
+
+You can then use `npm run tdd`.
 
 ## Functional Testing
 
