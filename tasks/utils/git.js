@@ -45,9 +45,7 @@ module.exports = {
     }()),
     release: function release(version){
         var git = this;
-        return git.add(['.']).then(function() {
-            return git.commit('v' + version);
-        }).then(function(){
+        return git.commit('v' + version).then(function() {
             return git.push(['origin', 'master']);
         }).then(function(){
             return git.tag('v' + version).catch(function(msg){
