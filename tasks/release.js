@@ -13,7 +13,7 @@ function getConfig(){
 
 function ghPagesRelease(message){
     getConfig();
-    if (component.release.indexOf('s3') <0){
+    if (!component.release || component.release.indexOf('gh-pages') <0){
         log.info('Skipping gh-pages Release');
         return Promise.resolve();
     }
@@ -31,7 +31,7 @@ function ghPagesRelease(message){
 
 function s3(version){
     getConfig();
-    if (component.release.indexOf('s3') <0){
+    if (!component.release || component.release.indexOf('s3') <0){
         log.info('Skipping S3 Release');
         return Promise.resolve();
     }
@@ -47,13 +47,13 @@ function s3(version){
 
 function releaseGit(version){
     getConfig();
-    if (component.release.indexOf('git') <0){
+    if (!component.release || component.release.indexOf('git') <0){
         log.info('Skipping Git Release');
         return Promise.resolve();
     }
     var git = require('./utils/git');
     if (!git.checkRemote()){
-        log.onError(['No valid Remote Git URL.',
+        return log.onError(['No valid Remote Git URL.',
             'Please update your `.git/config` file or run:',
             '$ component init git'].join('\n'));
     }
