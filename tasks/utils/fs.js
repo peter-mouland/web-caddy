@@ -118,7 +118,7 @@ function copy(srcGlob, destinationDirectory){
 }
 
 function glob(globArray){
-    var stream = gs.create(globArray);
+    var stream = gs.create(globArray, { allowEmpty: true });
     return new Promise(function(resolve, reject){
         var files = [];
         stream.on('data', function(fileObj){
