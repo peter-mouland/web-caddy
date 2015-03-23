@@ -9,7 +9,7 @@ module.exports = {
         scripts: 'browserify' // 'browserify' or 'requirejs'
     },
     test: 'karma', // or false.
-    release: 's3', // or false.
+    release: ['git', 'gh-pages', 's3'], // ['git', 'gh-pages','s3'] or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
     browserify: {
         insertGlobals : true,

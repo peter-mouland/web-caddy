@@ -1,15 +1,25 @@
 var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
-var git = require('./utils/git');
 var helper = require('./utils/config-helper');
 var component, paths, pkg;
 
-function ghPagesRelease(message){
+function getConfig(){
     component = helper.getConfig();
+    component.release = (typeof component.release == 'string') ?
+        ['git', 'gh-pages', component.release] :
+        component.release;
+}
+
+function ghPagesRelease(message){
+    getConfig();
+    if (component.release.indexOf('s3') <0){
+        log.info('Skipping gh-pages Release');
+        return Promise.resolve();
+    }
     var ghPages = require('gh-pages');
     message = message || 'Update';
-    log.info("\nReleasing to gh-pages : `" + message + "`\n");
+    log.info("\nReleasing to gh-pages\n");
     return new Promise(function(resolve, reject){
         ghPages.publish(component.paths.site.root, {message: message }, function(err) {
             ghPages.clean();
@@ -20,15 +30,14 @@ function ghPagesRelease(message){
 }
 
 function s3(version){
-    component = helper.getConfig();
-    if (!component.release){
-        log.info('Skipping Release : `release` set to false within component.config.js');
+    getConfig();
+    if (component.release.indexOf('s3') <0){
+        log.info('Skipping S3 Release');
         return Promise.resolve();
     }
-    if (component.release.indexOf('s3') < 0) return;
-    log.info("\nReleasing : \n");
-    var Release = require('./wrappers/' + (component.release || 's3'));
-    var options = (component[component.release]) || {};
+    log.info("\nReleasing s3\n");
+    var Release = require('./wrappers/s3');
+    var options = component.s3 || {};
     var target = options.target || '';
     if (version){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + version + '$2');
@@ -37,12 +46,19 @@ function s3(version){
 }
 
 function releaseGit(version){
-    if (!git.checkRemote()){
-        log.onError('No valid Remote Git URL.\nPlease update your `.git/config` file or run:\n $ component init git');
+    getConfig();
+    if (component.release.indexOf('git') <0){
+        log.info('Skipping Git Release');
+        return Promise.resolve();
     }
-    component = helper.getConfig();
+    var git = require('./utils/git');
+    if (!git.checkRemote()){
+        log.onError(['No valid Remote Git URL.',
+            'Please update your `.git/config` file or run:',
+            '$ component init git'].join('\n'));
+    }
     version = version || component.pkg.version;
-    log.info('Start release to Git : ' + version);
+    log.info('Releasing to Git');
     return git.release(version);
 }
 
