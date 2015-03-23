@@ -37,7 +37,7 @@ function s3(version){
     }
     log.info("\nReleasing s3\n");
     var Release = require('./wrappers/s3');
-    var options = (component['s3']) || {};
+    var options = component.s3 || {};
     var target = options.target || options.directoryPrefix || '';//deprecate directoryPrefix
     if (version){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + version + '$2');
