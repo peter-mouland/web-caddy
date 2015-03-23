@@ -46,7 +46,7 @@ var helper = {
         }
 
         //check release config
-        if (config.release.indexOf('s3')>0 && !config.s3){
+        if (config.release.indexOf('s3')>=0 && !config.s3){
             error.push(' * There is no release config object:  `s3:{...}`');
         }
 
