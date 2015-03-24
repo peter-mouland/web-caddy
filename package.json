@@ -26,7 +26,7 @@
     "gh-pages"
   ],
   "scripts": {
-    "test": "jshint tasks && jshint bin && jshint boilerplate/component.config.js && ./node_modules/jasmine/bin/jasmine.js"
+    "test": "jshint tasks && jshint bin && jshint boilerplate/component.config.js && istanbul cover ./node_modules/jasmine/bin/jasmine.js spec/all.js"
   },
   "dependencies": {
     "autoprefixer": "^5.0.0",
@@ -75,6 +75,7 @@
     "email": "peter.mouland@gmail.com"
   },
   "devDependencies": {
+    "istanbul": "^0.3.10",
     "jasmine": "^2.1.1",
     "jshint": "^2.6.3"
   },
