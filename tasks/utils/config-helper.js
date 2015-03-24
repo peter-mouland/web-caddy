@@ -23,6 +23,9 @@ var helper = {
     configCheck : function(){
         var config = this.getConfig();
         var error = [
+            'Your `component.config.js` seems to be incorrect.'
+        ];
+        var warn = [
             'Your `component.config.js` seems to be out of date.'
         ];
         if (!config){
@@ -30,6 +33,13 @@ var helper = {
         }
         if (!config.pkg.version){
             error.push(' * The package.json requires as a `version` string (even "version": "0.0.0" is fine)');
+        }
+        //check old config
+        if (config.build && !Array.isArray(config.build)){
+            warn.push(' * Please update `build` to be an array of items to be built.');
+        }
+        if (config.release && !Array.isArray(config.release)){
+            warn.push(' * Please update `release` to be an array of items to be released.');
         }
         //check build config
         if (config.build && config.build.scripts && !config[config.build.scripts]){
@@ -53,6 +63,10 @@ var helper = {
         if (error.length>1){
             log.onError(error.join('\n'));
             return error.join('\n');
+        }
+        if (warn.length>1){
+            log.warn(warn.join('\n'));
+            return warn.join('\n');
         }
         return true;
     }

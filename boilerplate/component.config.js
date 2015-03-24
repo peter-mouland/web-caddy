@@ -1,15 +1,7 @@
-var bower = require('./bower.json');
 var pkg = require('./package.json');
 
 module.exports = {
-    bower: bower,
-    build: {
-        fonts: true, // true or false. Set to false if you are doing your own thing in the fonts directory
-        images: true, // true or false.
-        styles: 'sass', // 'sass'. less not yet available
-        html: 'mustache',// 'mustache' or 'jade'. handlebars not yet available
-        scripts: 'browserify' // 'browserify' or 'requirejs'
-    },
+    build: ['fonts', 'images', 'sass', 'mustache', 'browserify'], //plus 'requirejs', 'jade'
     test: 'karma', // or false. mocha not yet available.
     release: ['git', 'gh-pages', 's3'], // ['git', 'gh-pages','s3'] or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
