@@ -16,15 +16,30 @@ function serverConfigFiles(){
     var source = paths.source.root +'/' + '{CNAME,.htaccess,robots.txt}';
     return fs.copy(source, paths.site.root);
 }
+function matches(config, plugins){
+    //for backwards compatibility. deprecate in version 2
+    var compatibility = [];
+    if (config.fonts) compatibility.push('fonts');
+    if (config.images) compatibility.push('images');
+    if (config.styles) compatibility.push(config.styles);
+    if (config.html) compatibility.push(config.html);
+    if (config.scripts) compatibility.push(config.scripts);
+    if (compatibility.length) config = compatibility;
+
+    return config && config.map(function(i){
+        if (plugins.indexOf(i)>-1) return i;
+    }).join('');
+}
 
 function html(replacements) {
     initConfig();
-    replacements = replacements || {};
-    if (!component.build.html || !component.paths.demo){
-        log.info('build.html or paths.demo set to false within component.config.js : skipping building html');
+    var build = matches(component.build, ['jade','mustache']);
+    if (!build || !paths.demo){
+        log.info('Skipping build html');
         return Promise.resolve();
     }
-    var Html = require('./wrappers/' + (component.build.html || 'mustache'));
+    replacements = replacements || {};
+    var Html = require('./wrappers/' + build);
     var htmlMinify = require('html-minifier').minify;
 
     var now = Date().split(' ').splice(0,5).join(' ');
@@ -56,7 +71,7 @@ function html(replacements) {
 function fonts() {
     initConfig();
     if (!component.build.fonts) {
-        log.info('build.fonts within component.config.js is set to false : skipping copying fonts');
+        log.info('skipping build fonts');
         return Promise.resolve();
     }
     var location = [
@@ -69,7 +84,7 @@ function fonts() {
 function images() {
     initConfig();
     if (!paths.site) {
-        log.info('paths.site within component.config.js is missing : skipping copying images');
+        log.info('skipping build images');
         return Promise.resolve();
     }
     var src = paths.demo.images + '/**/*';
@@ -78,12 +93,13 @@ function images() {
 
 function scripts(options){
     initConfig();
-    if (!component.build.scripts){
-        log.info('build.scripts set to false within component.config.js : skipping building scripts');
+    var build = matches(component.build, ['browserify','requirejs']);
+    if (!build){
+        log.info('skipping build scripts');
         return Promise.resolve();
     }
-    var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
-    options = options || (component[component.build.scripts]) || {};
+    var Scripts = require('./wrappers/' + build);
+    options = options || component[build] || {};
     options.browserify = pkg.browserify;
     return Promise.all([
         paths.dist && paths.dist.scripts && new Scripts(paths.source.scripts, paths.dist.scripts, options).write(),
@@ -96,12 +112,13 @@ function scripts(options){
 
 function styles(options){
     initConfig();
-    if (!component.build.styles){
-        log.info('build.styles set to false within component.config.js : skipping building styles');
+    var build = matches(component.build, ['sass']);
+    if (!build){
+        log.info('Skipping build Sass');
         return Promise.resolve();
     }
-    var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
-    options = options || (component[component.build.scripts]) || {};
+    var Styles = require('./wrappers/' + build);
+    options = options || (component[build]) || {};
     return Promise.all([
         paths.dist && paths.dist.styles && new Styles(paths.source.styles, paths.dist.styles, options).write(),
         paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
