@@ -3,6 +3,20 @@ var findup = require('findup-sync');
 var config;
 
 var helper = {
+    matches: function matches(config, plugins){
+        //for backwards compatibility. deprecate in version 2
+        var compatibility = [];
+        if (config.fonts) compatibility.push('fonts');
+        if (config.images) compatibility.push('images');
+        if (config.styles) compatibility.push(config.styles);
+        if (config.html) compatibility.push(config.html);
+        if (config.scripts) compatibility.push(config.scripts);
+        if (compatibility.length) config = compatibility;
+
+        return config && config.map(function(i){
+                if (plugins.indexOf(i)>-1) return i;
+            }).join('');
+    },
     getConfig : function(){
         if (config) return config;
         var configPath = findup('component.config.js');
@@ -42,8 +56,8 @@ var helper = {
             warn.push(' * Please update `release` to be an array of items to be released.');
         }
         //check build config
-        if (config.build && config.build.scripts && !config[config.build.scripts]){
-            error.push(' * There is no build scripts config object: `' + config.build.scripts + ':{...}`');
+        if (config.build && config.build.indexOf && config.build.indexOf('requirejs')>=0 && !config.requirejs){
+            error.push(' * There is no scripts config object:  `requirejs:{...}`');
         }
         //check test config
         if (config.test && !config[config.test]){
