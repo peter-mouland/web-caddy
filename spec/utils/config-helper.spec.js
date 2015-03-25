@@ -105,13 +105,14 @@ describe("Config-helper ", function() {
             expect(isCompatible).toContain('version');
         });
 
-        it("knows if the config is incorrect: missing browserify config", function () {
-            delete completeConfig.browserify;
+        it("knows if the config is incorrect: missing requirejs config", function () {
+            completeConfig.build= ['requirejs'];
+            delete completeConfig.requirejs;
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be incorrect');
-            expect(isCompatible).toContain(completeConfig.build.scripts);
+            expect(isCompatible).toContain(completeConfig.build[0]);
         });
 
 

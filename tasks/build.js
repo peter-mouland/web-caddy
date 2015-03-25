@@ -2,7 +2,6 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var clean = require('./clean');
 var component, paths, pkg;
 
 function initConfig(){
@@ -11,30 +10,17 @@ function initConfig(){
     pkg = component.pkg;
 }
 
+var clean = require('./clean');
+
 function serverConfigFiles(){
     initConfig();
     var source = paths.source.root +'/' + '{CNAME,.htaccess,robots.txt}';
     return fs.copy(source, paths.site.root);
 }
-function matches(config, plugins){
-    //for backwards compatibility. deprecate in version 2
-    var compatibility = [];
-    if (config.fonts) compatibility.push('fonts');
-    if (config.images) compatibility.push('images');
-    if (config.styles) compatibility.push(config.styles);
-    if (config.html) compatibility.push(config.html);
-    if (config.scripts) compatibility.push(config.scripts);
-    if (compatibility.length) config = compatibility;
-
-    return config && config.map(function(i){
-        if (plugins.indexOf(i)>-1) return i;
-    }).join('');
-}
-
 function html(replacements) {
     initConfig();
-    var build = matches(component.build, ['jade','mustache']);
-    if (!build || !paths.demo){
+    var build = helper.matches(component.build, ['jade','mustache']);
+    if (!build || !paths.demo || !paths.site){
         log.info('Skipping build html');
         return Promise.resolve();
     }
@@ -70,30 +56,33 @@ function html(replacements) {
 
 function fonts() {
     initConfig();
-    if (!component.build.fonts) {
+    var build = helper.matches(component.build, ['fonts']);
+    if (!build || !paths.site) {
         log.info('skipping build fonts');
         return Promise.resolve();
     }
-    var location = [
-        paths.source.fonts + '/**/*',
-        paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}'
-    ];
-    return fs.copy(location, paths.site.fonts).catch(log.warn);
+    var location = [];
+    paths.source && paths.source.fonts && location.push(paths.source.fonts + '/**/*.{eot,ttf,woff,svg}');
+    paths.bower && paths.bower.fonts && location.push(paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}');
+    return fs.copy(location, paths.site.fonts);
 }
 
 function images() {
     initConfig();
-    if (!paths.site) {
+    var build = helper.matches(component.build, ['images']);
+    if (!build || !paths.site) {
         log.info('skipping build images');
         return Promise.resolve();
     }
-    var src = paths.demo.images + '/**/*';
-    fs.copy(src, paths.site.images).catch(log.warn);
+    var location = [];
+    paths.source && paths.source.images && location.push(paths.source.images + '/**/*');
+    paths.demo && paths.demo.images && location.push(paths.demo.images + '/**/*');
+    return fs.copy(location, paths.site.images);
 }
 
 function scripts(options){
     initConfig();
-    var build = matches(component.build, ['browserify','requirejs']);
+    var build = helper.matches(component.build, ['browserify','requirejs']);
     if (!build){
         log.info('skipping build scripts');
         return Promise.resolve();
@@ -112,7 +101,7 @@ function scripts(options){
 
 function styles(options){
     initConfig();
-    var build = matches(component.build, ['sass']);
+    var build = helper.matches(component.build, ['sass']);
     if (!build){
         log.info('Skipping build Sass');
         return Promise.resolve();

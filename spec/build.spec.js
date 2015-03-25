@@ -7,11 +7,13 @@ var browserify = require('../tasks/wrappers/browserify');
 var Jade = require('../tasks/wrappers/jade');
 var Mustache = require('../tasks/wrappers/mustache');
 var sass = require('../tasks/wrappers/sass');
+var fs = require('../tasks/utils/fs');
 var htmlMinify = require('html-minifier');
 
 describe("Build task", function() {
 
     beforeEach(function(){
+        spyOn(fs,'copy').and.callFake(function(){ return Promise.resolve();});
         spyOn(log, "info").and.callFake(function(msg) { return msg; });
         spyOn(log, "onError").and.callFake(function(msg) { return msg; });
         spyOn(requirejs.prototype, "write").and.callFake(function(msg) { return Promise.resolve([]); });
@@ -79,6 +81,34 @@ describe("Build task", function() {
             });
         });
 
+        it("fonts", function (done) {
+            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
+            build.fonts().then(function(){
+                expect(fs.copy.calls.count()).toEqual(1);
+                expect(log.info).not.toHaveBeenCalled();
+                done();
+            });
+        });
+
+        it("images", function (done) {
+            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
+            build.images().then(function(){
+                expect(fs.copy.calls.count()).toEqual(1);
+                expect(log.info).not.toHaveBeenCalled();
+                done();
+            });
+        });
+
+        it("images when turned off", function (done) {
+            config.build.images = false;
+            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
+            build.images().then(function(){
+                expect(fs.copy.calls.count()).toEqual(0);
+                expect(log.info).toHaveBeenCalled();
+                done();
+            });
+        });
+
     });
 
     describe("will handle new style of build config for", function() {
@@ -127,6 +157,34 @@ describe("Build task", function() {
             build.styles().then(function(){
                 expect(sass.prototype.write.calls.count()).toEqual(1);
                 expect(log.info).toHaveBeenCalledWith('Build Styles Complete');
+                done();
+            });
+        });
+
+        it("fonts", function (done) {
+            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
+            build.fonts().then(function(){
+                expect(fs.copy.calls.count()).toEqual(1);
+                expect(log.info).not.toHaveBeenCalled();
+                done();
+            });
+        });
+
+        it("images", function (done) {
+            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
+            build.images().then(function(){
+                expect(fs.copy.calls.count()).toEqual(1);
+                expect(log.info).not.toHaveBeenCalled();
+                done();
+            });
+        });
+
+        it("images turned off", function (done) {
+            config.build[1] = false;
+            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
+            build.images().then(function(){
+                expect(fs.copy.calls.count()).toEqual(0);
+                expect(log.info).toHaveBeenCalled();
                 done();
             });
         });

@@ -40,6 +40,12 @@ describe("Release", function() {
             expect(log.info).toHaveBeenCalled();
         });
 
+        it("old config", function () {
+            config.release = 's3';
+            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
+            expect(release.s3()).toBe('/11.11.11/');
+        });
+
     });
 
     describe("gh-pages", function() {
