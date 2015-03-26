@@ -1,5 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
+var debowerify = require('debowerify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
 var fs = require('../utils/fs');
@@ -12,38 +13,26 @@ function Browserify(location, destination, options){
     this.options = options;
 }
 
-Browserify.prototype.checkForDeboweify = function(){
-    var options = this.options;
-    if (options.browserify && options.browserify.transform){
-        var transforms = options.browserify.transform;
-        transforms.forEach(function(item, i){
-            if (item === 'debowerify'){
-                log.onError([
-                    'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
-                    'Please remove `debowerify` from browserify.transform within your package.json.',
-                    'You could add the a `browser` object into your package.json to work around this.',
-                    ' * If this is bothersome, please raise an issue or PR',
-                ].join('\n'));
-            }
-        });
-    }
-};
-
-
 Browserify.prototype.buildVendor = function(options){
     var self = this;
     if (!options.vendorBundle) return Promise.resolve();
-    this.checkForDeboweify();
+    delete this.options.entries;
     return new Promise(function(resolve, reject) {
-        delete options.entries;
-        var b = browserify(options);
-        b.require(options.vendorBundle);
-        b.bundle(function(err, contents){
-            err && reject(err);
-            var newFile = new File({ path: path.resolve(self.destination, 'vendor.js') });
-            newFile.contents = contents;
-            !err && resolve(newFile);
-        });
+        var v_ws = fs.createWriteStream(path.resolve(self.destination, 'vendor.js'));
+        browserify()
+            .transform('debowerify')
+            .require(options.vendorBundle)
+            .bundle().pipe(v_ws)
+            .on('end', resolve);
+        v_ws.on('error', reject);
+    });
+};
+
+Browserify.prototype.mapExternalFiles = function() {
+    if (!this.options.vendorBundle) return;
+    return this.options.vendorBundle.map(function (v) {
+        if (typeof v === 'string') return v;
+        return v.expose;
     });
 };
 
@@ -52,21 +41,13 @@ Browserify.prototype.file = function(fileObj) {
     var options = this.options || {};
     return new Promise(function(resolve, reject){
         options.entries = fileObj.path;
+        var b_ws = fs.createWriteStream(path.resolve(self.destination, fileObj.name));
         var b = browserify(options);
-        if (options.vendorBundle){
-            var external = options.vendorBundle.map(function (v) {
-                if (typeof v === 'string') return v;
-                return v.file;
-            });
-            b.external(external);
-        }
-        b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
-        b.bundle(function(err, contents){
-            err && reject(err);
-            var newFile = new File({ path: path.resolve(self.destination, fileObj.name) });
-            newFile.contents = contents;
-            !err && resolve(newFile);
-        });
+        //b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
+        b.external(self.mapExternalFiles());
+        b.bundle().pipe(b_ws);
+        b.on('end', resolve);
+        b_ws.on('error', reject);
     });
 };
 
@@ -85,8 +66,6 @@ Browserify.prototype.write = function(){
             promises.push(self.buildVendor(options));
         }
         return Promise.all(promises);
-    }).then(function(fileObjs){
-        return fs.write(fileObjs);
     }).then(function(fileObjs){
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {

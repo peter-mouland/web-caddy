@@ -2,6 +2,7 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
+var clean = require('./clean');
 var component, paths, pkg;
 
 function initConfig(){
@@ -21,12 +22,13 @@ function html(replacements) {
     }
     var Html = require('./wrappers/' + (component.build.html || 'mustache'));
     var htmlMinify = require('html-minifier').minify;
-
     var now = Date().split(' ').splice(0,5).join(' ');
     var version = replacements.version || component.pkg.version;
     var name = replacements.name || component.pkg.name;
     replacements.site = {now: now, version:version, name: name};
-    var src = [ paths.demo.root + '/*.{html,jade,mustache,ms}'];
+    var src = [];
+    paths.demo && src.push(paths.demo.root + '/*.{html,jade,mustache,ms}');
+    paths.source && src.push(paths.source.root + '/*.{html,jade,mustache,ms}');
     var htmlPromise = new Html(src, paths.site.root, replacements).write();
     return htmlPromise.then(function(fileObjs){
         var promises = [];
@@ -80,6 +82,8 @@ function scripts(options){
     var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
     options = options || (component[component.build.scripts]) || {};
     options.browserify = pkg.browserify;
+    options.browser = pkg.browser;
+    options["browserify-shim"] = pkg["browserify-shim"];
     return Promise.all([
         paths.dist && paths.dist.scripts && new Scripts(paths.source.scripts, paths.dist.scripts, options).write(),
         paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),

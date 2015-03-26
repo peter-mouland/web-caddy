@@ -5,6 +5,7 @@ var path = require('path');
 var ncp = require('ncp').ncp;
 var gs = require('glob-stream');
 var chokidar = require('chokidar');
+var mkdirp = require('mkdirp');
 var log = require('./log');
 var File = require('./file');
 
@@ -191,6 +192,13 @@ function watch(src, actions){
     ;
 }
 
+function createWriteStream(path, options){
+    var arr = path.split('/');
+    arr.pop();
+    mkdirp(arr.join('/'));
+    return fs.createWriteStream(path, options)
+}
+
 module.exports = {
     read: read,
     write: write,
@@ -201,5 +209,6 @@ module.exports = {
     replace: replace,
     watch: watch,
     glob: glob,
-    existsSync: fs.existsSync
+    existsSync: fs.existsSync,
+    createWriteStream: createWriteStream
 };
