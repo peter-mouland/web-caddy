@@ -1,6 +1,5 @@
 var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
-var debowerify = require('debowerify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
 var fs = require('../utils/fs');
@@ -11,7 +10,18 @@ function Browserify(location, destination, options){
     this.location = location;
     this.destination = destination;
     this.options = options;
+    this.checkForDeboweify();
 }
+
+Browserify.prototype.checkForDeboweify = function(){
+    var options = this.options;
+    if (options.browserify && options.browserify.transform.indexOf('debowerify')==-1){ return false; }
+    log.onError([
+        'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
+        'Please remove `debowerify` from browserify.transform within your package.json.',
+        ' * https://github.com/eugeneware/debowerify/issues/62'
+    ].join('\n'));
+};
 
 Browserify.prototype.buildVendor = function(options){
     var self = this;
@@ -20,7 +30,6 @@ Browserify.prototype.buildVendor = function(options){
     return new Promise(function(resolve, reject) {
         var v_ws = fs.createWriteStream(path.resolve(self.destination, 'vendor.js'));
         browserify()
-            .transform('debowerify')
             .require(options.vendorBundle)
             .bundle().pipe(v_ws)
             .on('end', resolve);
@@ -30,21 +39,32 @@ Browserify.prototype.buildVendor = function(options){
 
 Browserify.prototype.mapExternalFiles = function() {
     if (!this.options.vendorBundle) return;
+    var options = this.options;
     return this.options.vendorBundle.map(function (v) {
-        if (typeof v === 'string') return v;
-        return v.expose;
+        var dependency = (typeof v === 'string') ? v : v.expose;
+        if (options.browser[dependency]){
+            log.warn(['You have `browser.' + dependency + '` within your package.json.',
+                'This may cause problems. Ensure within the `vendorBundle` you have:',
+            ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
+            ' * node_module: have the node name within the `vendorBundle` e.g. \'' + dependency + '\'',
+            ''].join('\n'))
+        }
+        return dependency;
     });
 };
 
 Browserify.prototype.file = function(fileObj) {
     var self = this;
     var options = this.options || {};
-    return new Promise(function(resolve, reject){
+    var vendor = self.mapExternalFiles();
+    return new Promise(function(resolve, reject) {
         options.entries = fileObj.path;
         var b_ws = fs.createWriteStream(path.resolve(self.destination, fileObj.name));
         var b = browserify(options);
-        //b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
-        b.external(self.mapExternalFiles());
+        if (vendor){
+            b.external(vendor);
+        }
+        b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
         b.bundle().pipe(b_ws);
         b.on('end', resolve);
         b_ws.on('error', reject);
