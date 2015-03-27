@@ -34,10 +34,10 @@ Browserify.prototype.buildVendor = function(options){
         var v_ws = fs.createWriteStream(vendorPath);
         browserify()
             .require(options.vendorBundle)
-            .bundle().pipe(v_ws)
-            .on('end', function(){
-                return resolve(newFile);
-            });
+            .bundle().pipe(v_ws);
+        v_ws.end = function(){
+            return resolve(newFile);
+        };
         v_ws.on('error', reject);
     });
 };
@@ -71,9 +71,9 @@ Browserify.prototype.file = function(fileObj) {
         }
         b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
         b.bundle().pipe(b_ws);
-        b.on('end', function(){
+        b_ws.end = function(){
             return resolve(fileObj);
-        });
+        };
         b_ws.on('error', reject);
     });
 };
@@ -104,6 +104,7 @@ Browserify.prototype.write = function(){
     });
 };
 
+//todo: don't minify in dev mode?
 Browserify.prototype.minify = function(fileObj){
     var newFile = new File({ path: fileObj.path });
     newFile.name = fileObj.name.replace('.js','.min.js');
