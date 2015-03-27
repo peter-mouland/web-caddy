@@ -15,12 +15,13 @@ function Browserify(location, destination, options){
 
 Browserify.prototype.checkForDeboweify = function(){
     var options = this.options;
-    if (options.browserify && options.browserify.transform.indexOf('debowerify')==-1){ return false; }
-    log.onError([
-        'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
-        'Please remove `debowerify` from browserify.transform within your package.json.',
-        ' * https://github.com/eugeneware/debowerify/issues/62'
-    ].join('\n'));
+    if (options.browserify && options.browserify.transform && options.browserify.transform.indexOf('debowerify')>-1){
+        log.onError([
+            'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
+            'Please remove `debowerify` from browserify.transform within your package.json.',
+            ' * https://github.com/eugeneware/debowerify/issues/62'
+        ].join('\n'));
+    }
 };
 
 Browserify.prototype.buildVendor = function(options){
@@ -42,7 +43,7 @@ Browserify.prototype.mapExternalFiles = function() {
     var options = this.options;
     return this.options.vendorBundle.map(function (v) {
         var dependency = (typeof v === 'string') ? v : v.expose;
-        if (options.browser[dependency]){
+        if (options.browser && options.browser[dependency]){
             log.warn(['You have `browser.' + dependency + '` within your package.json.',
                 'This may cause problems. Ensure within the `vendorBundle` you have:',
             ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
