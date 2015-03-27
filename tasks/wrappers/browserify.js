@@ -15,12 +15,13 @@ function Browserify(location, destination, options){
 
 Browserify.prototype.checkForDeboweify = function(){
     var options = this.options;
-    if (options.browserify && options.browserify.transform.indexOf('debowerify')==-1){ return false; }
-    log.onError([
-        'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
-        'Please remove `debowerify` from browserify.transform within your package.json.',
-        ' * https://github.com/eugeneware/debowerify/issues/62'
-    ].join('\n'));
+    if (options.browserify && options.browserify.transform && options.browserify.transform.indexOf('debowerify')>-1){
+        log.onError([
+            'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
+            'Please remove `debowerify` from browserify.transform within your package.json.',
+            ' * https://github.com/eugeneware/debowerify/issues/62'
+        ].join('\n'));
+    }
 };
 
 Browserify.prototype.buildVendor = function(options){
@@ -28,11 +29,15 @@ Browserify.prototype.buildVendor = function(options){
     if (!options.vendorBundle) return Promise.resolve();
     delete this.options.entries;
     return new Promise(function(resolve, reject) {
-        var v_ws = fs.createWriteStream(path.resolve(self.destination, 'vendor.js'));
+        var vendorPath = path.resolve(self.destination, 'vendor.js');
+        var newFile = new File({ path: vendorPath });
+        var v_ws = fs.createWriteStream(vendorPath);
         browserify()
             .require(options.vendorBundle)
             .bundle().pipe(v_ws)
-            .on('end', resolve);
+            .on('end', function(){
+                return resolve(newFile);
+            });
         v_ws.on('error', reject);
     });
 };
@@ -42,7 +47,7 @@ Browserify.prototype.mapExternalFiles = function() {
     var options = this.options;
     return this.options.vendorBundle.map(function (v) {
         var dependency = (typeof v === 'string') ? v : v.expose;
-        if (options.browser[dependency]){
+        if (options.browser && options.browser[dependency]){
             log.warn(['You have `browser.' + dependency + '` within your package.json.',
                 'This may cause problems. Ensure within the `vendorBundle` you have:',
             ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
@@ -66,7 +71,9 @@ Browserify.prototype.file = function(fileObj) {
         }
         b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
         b.bundle().pipe(b_ws);
-        b.on('end', resolve);
+        b.on('end', function(){
+            return resolve(fileObj);
+        });
         b_ws.on('error', reject);
     });
 };
