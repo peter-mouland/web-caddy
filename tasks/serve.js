@@ -36,6 +36,7 @@ function buildAndReload(task){
 }
 
 function watch(){
+    if (!component.build) return;
     component = helper.getConfig();
     var paths = component.paths;
     var fs = require('./utils/fs');
@@ -50,9 +51,16 @@ function watch(){
     fs.watch(htmlPaths, [buildAndReload('html')]);
     fs.watch(stylesPaths, [buildAndReload('styles')]);
     fs.watch(imagesPaths,   [buildAndReload('images')]);
-    new Browserify(paths.source.scripts, paths.site.scripts).watch().catch(log.onError);
-    if (paths.demo && paths.demo.scripts){
-        new Browserify(paths.demo.scripts, paths.site.scripts).watch().catch(log.onError);
+    //todo: use configHelper.matches on merge
+    if (component.build.scripts=='browserify' ){
+        new Browserify(paths.source.scripts, paths.site.scripts).watch().catch(log.onError);
+        if (paths.demo && paths.demo.scripts){
+            new Browserify(paths.demo.scripts, paths.site.scripts).watch().catch(log.onError);
+        }
+    } else {
+        var scriptsPaths = [paths.source.scripts + '/**/*' ];
+        paths.demo && scriptsPaths.push(paths.demo.scripts + '/**/*');
+        fs.watch(scriptsPaths,   [buildAndReload('scripts')]);
     }
 }
 
