@@ -71,13 +71,13 @@ Browserify.prototype.file = function(fileObj, browserSync) {
             b.on('update', function () {
                 self.bundle(b, fileObj).then(function(){
                     browserSync.reload();
-                    resolve()
+                    resolve();
                 });
             });
             b.bundle();
         });
     } else {
-        return self.bundle(b, fileObj, watch);
+        return self.bundle(b, fileObj);
     }
 };
 
