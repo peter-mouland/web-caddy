@@ -3,7 +3,6 @@ var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
 var watchify = require('watchify');
-var fromArgs = require('watchify/bin/args');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
