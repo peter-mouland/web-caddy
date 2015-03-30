@@ -2,6 +2,8 @@ var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
+var watchify = require('watchify');
+var fromArgs = require('watchify/bin/args');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
@@ -10,6 +12,7 @@ function Browserify(location, destination, options){
     this.location = location;
     this.destination = destination;
     this.options = options;
+    this.options.watch = true;
     this.checkForDeboweify();
 }
 
@@ -34,10 +37,10 @@ Browserify.prototype.buildVendor = function(options){
         var v_ws = fs.createWriteStream(vendorPath);
         browserify()
             .require(options.vendorBundle)
-            .bundle().pipe(v_ws)
-            .on('end', function(){
-                return resolve(newFile);
-            });
+            .bundle().pipe(v_ws);
+        v_ws.end = function(){
+            return resolve(newFile);
+        };
         v_ws.on('error', reject);
     });
 };
@@ -65,15 +68,21 @@ Browserify.prototype.file = function(fileObj) {
     return new Promise(function(resolve, reject) {
         options.entries = fileObj.path;
         var b_ws = fs.createWriteStream(path.resolve(self.destination, fileObj.name));
-        var b = browserify(options);
+        var b = browserify(options, options.watch ? watchify.args : undefined);
         if (vendor){
             b.external(vendor);
+            b.on('update', function(){
+                b.bundle().pipe(b_ws);
+            });
+        }
+        if (options.watch) {
+            b = watchify(b);
         }
         b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
         b.bundle().pipe(b_ws);
-        b.on('end', function(){
+        b_ws.end = function(){
             return resolve(fileObj);
-        });
+        };
         b_ws.on('error', reject);
     });
 };
@@ -82,6 +91,7 @@ Browserify.prototype.write = function(){
     var self = this;
     var options = this.options || {};
     return fs.glob(this.location + '/*.js').then(function(fileObjs){
+        self.bundles = fileObjs;
         if (fileObjs.length===0){
             log.info('no .js files found within `' + self.location + '`');
         }
@@ -104,6 +114,7 @@ Browserify.prototype.write = function(){
     });
 };
 
+//todo: don't minify in dev mode?
 Browserify.prototype.minify = function(fileObj){
     var newFile = new File({ path: fileObj.path });
     newFile.name = fileObj.name.replace('.js','.min.js');

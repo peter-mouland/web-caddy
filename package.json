@@ -65,7 +65,8 @@
     "requirejs": "^2.1.16",
     "semver": "^4.3.1",
     "shelljs": "^0.3.0",
-    "uglify-js": "^2.4.17"
+    "uglify-js": "^2.4.17",
+    "watchify": "^3.0.0"
   },
   "repository": {
     "type": "git",
