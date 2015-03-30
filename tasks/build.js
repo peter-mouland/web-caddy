@@ -20,7 +20,7 @@ function serverConfigFiles(){
 function html(replacements) {
     initConfig();
     var build = helper.matches(component.build, ['jade','mustache']);
-    if (!build || !paths.demo || !paths.site){
+    if (!build || !paths.site){
         log.info('Skipping build html');
         return Promise.resolve();
     }
