@@ -47,30 +47,58 @@ Browserify.prototype.mapExternalFiles = function() {
         if (options.browser && options.browser[dependency]){
             log.warn(['You have `browser.' + dependency + '` within your package.json.',
                 'This may cause problems. Ensure within the `vendorBundle` you have:',
-            ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
-            ' * node_module: have the node name within the `vendorBundle` e.g. \'' + dependency + '\'',
-            ''].join('\n'));
+                ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
+                ' * node_module: have the node name within the `vendorBundle` e.g. \'' + dependency + '\'',
+                ''].join('\n'));
         }
         return dependency;
     });
 };
 
-Browserify.prototype.file = function(fileObj) {
+Browserify.prototype.file = function(fileObj, browserSync) {
+    var self = this;
     var options = this.options || {};
     options.entries = fileObj.path;
+    var b = browserify(options, (browserSync) ? watchify.args : undefined);
     var vendor = this.mapExternalFiles();
-    var b_ws = fs.createWriteStream(path.resolve(this.destination, fileObj.name));
-    var b = browserify(options);
     if (vendor){
         b.external(vendor);
     }
     b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
+    if (browserSync) {
+        return new Promise(function(resolve, reject) {
+            b = watchify(b);
+            b.on('update', function () {
+                self.bundle(b, fileObj).then(function(){
+                    browserSync.reload();
+                    resolve()
+                });
+            });
+            b.bundle();
+        });
+    } else {
+        return self.bundle(b, fileObj, watch);
+    }
+};
+
+Browserify.prototype.bundle = function(b, fileObj) {
+    var b_ws = fs.createWriteStream(path.resolve(this.destination, fileObj.name));
     b.bundle().pipe(b_ws);
     return new Promise(function(resolve, reject) {
         b_ws.end = function(){
+            log.info(fileObj.name + ' saved');
             return resolve(fileObj);
         };
         b_ws.on('error', reject);
+    });
+};
+
+Browserify.prototype.watch = function(browserSync) {
+    var self = this;
+    return fs.glob(this.location + '/*.js').then(function(fileObjs) {
+        fileObjs.forEach(function (fileObj, i) {
+            self.file(fileObj, browserSync);
+        });
     });
 };
 
@@ -108,27 +136,5 @@ Browserify.prototype.minify = function(fileObj){
     newFile.contents = UglifyJS.minify(fileObj.path).code;
     return Promise.resolve(newFile);
 };
-
-Browserify.prototype.watch = function() {
-    var self = this;
-    var options = this.options || {};
-    return fs.glob(this.location + '/*.js').then(function(fileObjs) {
-        fileObjs.forEach(function (fileObj, i) {
-            options.entries = fileObj.path;
-            var b = browserify(options, watchify.args);
-            b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
-            var w = watchify(b);
-            w.on('update', function (e) {
-                var b_ws = fs.createWriteStream(path.resolve(self.destination, fileObj.name));
-                w.bundle().pipe(b_ws);
-                b_ws.end = function(){
-                    return log.info(fileObj.name + ' update saved');
-                };
-            });
-            w.bundle();
-        });
-    });
-};
-
 
 module.exports = Browserify;
