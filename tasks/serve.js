@@ -52,10 +52,11 @@ function watch(){
     fs.watch(stylesPaths, [buildAndReload('styles')]);
     fs.watch(imagesPaths,   [buildAndReload('images')]);
     //todo: use configHelper.matches on merge
-    if (component.build.scripts=='browserify' ){
-        new Browserify(paths.source.scripts, paths.site.scripts).watch().catch(log.onError);
+    if (component.build.scripts=='browserify' || (
+        component.build.indexOf && component.build.indexOf('browserify')>-1) ){
+        new Browserify(paths.source.scripts, paths.site.scripts).watch(browserSync);
         if (paths.demo && paths.demo.scripts){
-            new Browserify(paths.demo.scripts, paths.site.scripts).watch().catch(log.onError);
+            new Browserify(paths.demo.scripts, paths.site.scripts).watch(browserSync);
         }
     } else {
         var scriptsPaths = [paths.source.scripts + '/**/*' ];
