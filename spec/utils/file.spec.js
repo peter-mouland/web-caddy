@@ -1,5 +1,6 @@
 var File = require('../../tasks/utils/file');
 var log = require('../../tasks/utils/log');
+var path = require('path');
 
 function onError(e){
     console.log('** Test Error **')
@@ -11,10 +12,10 @@ describe("File ", function(){
 
     it("can correctly separate file name from file path", function() {
         var fileObj = new File({ path:'spec/fixtures/file/File.txt'})
-        expect(fileObj.path).toBe('spec/fixtures/file/File.txt');
+        expect(fileObj.path).toBe(path.normalize('spec/fixtures/file/File.txt'));
         expect(fileObj.contents).toBe(undefined);
         expect(fileObj.name).toBe('File.txt');
-        expect(fileObj.dir).toBe('spec/fixtures/file');
+        expect(fileObj.dir).toBe(path.normalize('spec/fixtures/file'));
         expect(fileObj.cwd).toBe(undefined);
         expect(fileObj.base).toBe(undefined);
         expect(fileObj.ext).toBe('txt');
@@ -22,8 +23,8 @@ describe("File ", function(){
     it("can save contents if passed", function() {
         var fileObj = new File({ path:'spec/fixtures/file/File.txt', contents:'awesome'})
         expect(fileObj.name).toBe('File.txt');
-        expect(fileObj.dir).toBe('spec/fixtures/file');
-        expect(fileObj.path).toBe('spec/fixtures/file/File.txt');
+        expect(fileObj.dir).toBe(path.normalize('spec/fixtures/file'));
+        expect(fileObj.path).toBe(path.normalize('spec/fixtures/file/File.txt'));
         expect(fileObj.contents).toBe('awesome');
         expect(fileObj.cwd).toBe(undefined);
         expect(fileObj.base).toBe(undefined);
@@ -42,39 +43,39 @@ describe("File ", function(){
         var fileObj = new File({ path:'spec/fixtures/file/File.txt'});
 
         fileObj.path = 'spec/fixtures/newFile/newFile.md';
-        expect(fileObj.path).toBe('spec/fixtures/newFile/newFile.md');
+        expect(fileObj.path).toBe(path.normalize('spec/fixtures/newFile/newFile.md'));
         expect(fileObj.name).toBe('newFile.md');
-        expect(fileObj.dir).toBe('spec/fixtures/newFile');
+        expect(fileObj.dir).toBe(path.normalize('spec/fixtures/newFile'));
         expect(fileObj.ext).toBe('md');
     });
     it('updates path, dir, and ext when name is updated', function () {
         var fileObj = new File({ path:'spec/fixtures/file/File.txt'});
 
         fileObj.name = 'newFile.md';
-        expect(fileObj.path).toBe('spec/fixtures/file/newFile.md');
+        expect(fileObj.path).toBe(path.normalize('spec/fixtures/file/newFile.md'));
         expect(fileObj.name).toBe('newFile.md');
-        expect(fileObj.dir).toBe('spec/fixtures/file');
+        expect(fileObj.dir).toBe(path.normalize('spec/fixtures/file'));
         expect(fileObj.ext).toBe('md');
     });
     it('updates path, name, and ext when dir is updated', function () {
         var fileObj = new File({ path:'spec/fixtures/file/file.txt'});
 
         fileObj.dir = 'spec/fixtures/newFile';
-        expect(fileObj.path).toBe('spec/fixtures/newFile/file.txt');
+        expect(fileObj.path).toBe(path.normalize('spec/fixtures/newFile/file.txt'));
         expect(fileObj.name).toBe('file.txt');
-        expect(fileObj.dir).toBe('spec/fixtures/newFile');
+        expect(fileObj.dir).toBe(path.normalize('spec/fixtures/newFile'));
         expect(fileObj.ext).toBe('txt');
     });
     it('updates path, name, and dir when ext is updated', function () {
         var fileObj = new File({ path:'spec/fi.txtures/file/file.txt'});
 
         fileObj.ext = 'md';
-        expect(fileObj.path).toBe('spec/fi.txtures/file/file.md');
+        expect(fileObj.path).toBe(path.normalize('spec/fi.txtures/file/file.md'));
         expect(fileObj.name).toBe('file.md');
-        expect(fileObj.dir).toBe('spec/fi.txtures/file');
+        expect(fileObj.dir).toBe(path.normalize('spec/fi.txtures/file'));
         expect(fileObj.ext).toBe('md');
     });
-    it('throws an error when path contains a slash', function () {
+    it('throws an error when name contains a slash', function () {
         spyOn(log, "onError").and.callFake(function(msg) {
             return msg;
         });
