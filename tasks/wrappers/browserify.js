@@ -11,14 +11,13 @@ var log = require('../utils/log');
 function Browserify(location, destination, options){
     this.location = location;
     this.destination = destination;
-    this.options = options;
-    this.options.watch = true;
+    this.options = options || {};
     this.checkForDeboweify();
 }
 
 Browserify.prototype.checkForDeboweify = function(){
     var options = this.options;
-    if (options.browserify && options.browserify.transform && options.browserify.transform.indexOf('debowerify')>-1){
+    if (options.vendorBundle && options.browserify && options.browserify.transform && options.browserify.transform.indexOf('debowerify')>-1){
         log.onError([
             'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
             'Please remove `debowerify` from browserify.transform within your package.json.',
@@ -55,7 +54,7 @@ Browserify.prototype.mapExternalFiles = function() {
                 'This may cause problems. Ensure within the `vendorBundle` you have:',
             ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
             ' * node_module: have the node name within the `vendorBundle` e.g. \'' + dependency + '\'',
-            ''].join('\n'))
+            ''].join('\n'));
         }
         return dependency;
     });
@@ -71,12 +70,6 @@ Browserify.prototype.file = function(fileObj) {
         var b = browserify(options, options.watch ? watchify.args : undefined);
         if (vendor){
             b.external(vendor);
-            b.on('update', function(){
-                b.bundle().pipe(b_ws);
-            });
-        }
-        if (options.watch) {
-            b = watchify(b);
         }
         b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
         b.bundle().pipe(b_ws);
@@ -91,7 +84,6 @@ Browserify.prototype.write = function(){
     var self = this;
     var options = this.options || {};
     return fs.glob(this.location + '/*.js').then(function(fileObjs){
-        self.bundles = fileObjs;
         if (fileObjs.length===0){
             log.info('no .js files found within `' + self.location + '`');
         }
@@ -122,5 +114,27 @@ Browserify.prototype.minify = function(fileObj){
     newFile.contents = UglifyJS.minify(fileObj.path).code;
     return Promise.resolve(newFile);
 };
+
+Browserify.prototype.watch = function() {
+    var self = this;
+    var options = this.options || {};
+    return fs.glob(this.location + '/*.js').then(function(fileObjs) {
+        fileObjs.forEach(function (fileObj, i) {
+            options.entries = fileObj.path;
+            var b = browserify(options, watchify.args);
+            b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
+            var w = watchify(b);
+            w.on('update', function (e) {
+                var b_ws = fs.createWriteStream(path.resolve(self.destination, fileObj.name));
+                w.bundle().pipe(b_ws);
+                b_ws.end = function(){
+                    return log.info(fileObj.name + ' update saved');
+                };
+            });
+            w.bundle();
+        });
+    });
+};
+
 
 module.exports = Browserify;

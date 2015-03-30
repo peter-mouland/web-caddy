@@ -196,7 +196,7 @@ function createWriteStream(path, options){
     var arr = path.split('/');
     arr.pop();
     mkdirp(arr.join('/'));
-    return fs.createWriteStream(path, options)
+    return fs.createWriteStream(path, options);
 }
 
 module.exports = {
