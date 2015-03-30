@@ -1,5 +1,6 @@
 var fs = require('../../tasks/utils/fs');
 var log = require('../../tasks/utils/log');
+var path = require('path');
 
 function onError(e){
     console.log('** Test Error **')
@@ -84,7 +85,7 @@ describe("fs", function() {
             var filesGlob = './spec/fixtures/file/del.*';
             fs.read(filesGlob).then(function (files) {
                 expect(files.length).toBe(1);
-                expect(files[0].dir).toContain('/spec/fixtures/file');
+                expect(files[0].dir).toContain(path.normalize('/spec/fixtures/file'));
                 expect(files[0].name).toBe('del.txt');
                 expect(files[0].ext).toBe('txt');
                 expect(files[0].stat.size).toBe(1);
@@ -103,16 +104,16 @@ describe("fs", function() {
                 return fs.read(filesGlob);
             }).then(function(files){
                 expect(files.length).toBe(2);
-                expect(files[0].dir).toContain('/spec/fixtures/file');
-                expect(files[0].path).toContain('/spec/fixtures/file/del.js');
+                expect(files[0].dir).toContain(path.normalize('/spec/fixtures/file'));
+                expect(files[0].path).toContain(path.normalize('/spec/fixtures/file/del.js'));
                 expect(files[0].ext).toBe('js');
                 expect(files[0].name).toBe('del.js');
                 expect(files[0].stat.size).toBe(9);
                 expect(Buffer.isBuffer(files[0].contents)).toBe(true);
                 expect(files[0].contents.toString()).toBe('temp file');
 
-                expect(files[1].dir).toContain('/spec/fixtures/file');
-                expect(files[1].path).toContain('/spec/fixtures/file/del.txt');
+                expect(files[1].dir).toContain(path.normalize('/spec/fixtures/file'));
+                expect(files[1].path).toContain(path.normalize('/spec/fixtures/file/del.txt'));
                 expect(files[1].ext).toBe('txt');
                 expect(files[1].name).toBe('del.txt');
                 expect(files[1].stat.size).toBe(1);
@@ -125,7 +126,7 @@ describe("fs", function() {
             var filesGlob = './spec/fixtures/file/del.*';
             fs.del(filesGlob).then(function(files){
                 expect(files.length).toBe(2);
-                expect(files[0]).toContain('/spec/fixtures/file/del.js');
+                expect(files[0]).toContain(path.normalize('/spec/fixtures/file/del.js'));
                 return fs.read(files)
             }).then(function(files){
                 expect(files.length).toBe(0);
