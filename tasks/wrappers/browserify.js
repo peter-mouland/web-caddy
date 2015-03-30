@@ -26,18 +26,14 @@ Browserify.prototype.checkForDeboweify = function(){
 };
 
 Browserify.prototype.buildVendor = function(options){
-    var self = this;
     if (!options.vendorBundle) return Promise.resolve();
     delete this.options.entries;
+    var vendorFile = new File({ path: path.resolve(this.destination, 'vendor.js') });
+    var v_ws = fs.createWriteStream(vendorFile.path);
+    browserify().require(options.vendorBundle).bundle().pipe(v_ws);
     return new Promise(function(resolve, reject) {
-        var vendorPath = path.resolve(self.destination, 'vendor.js');
-        var newFile = new File({ path: vendorPath });
-        var v_ws = fs.createWriteStream(vendorPath);
-        browserify()
-            .require(options.vendorBundle)
-            .bundle().pipe(v_ws);
         v_ws.end = function(){
-            return resolve(newFile);
+            return resolve(vendorFile);
         };
         v_ws.on('error', reject);
     });
@@ -60,18 +56,17 @@ Browserify.prototype.mapExternalFiles = function() {
 };
 
 Browserify.prototype.file = function(fileObj) {
-    var self = this;
     var options = this.options || {};
-    var vendor = self.mapExternalFiles();
+    options.entries = fileObj.path;
+    var vendor = this.mapExternalFiles();
+    var b_ws = fs.createWriteStream(path.resolve(this.destination, fileObj.name));
+    var b = browserify(options);
+    if (vendor){
+        b.external(vendor);
+    }
+    b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
+    b.bundle().pipe(b_ws);
     return new Promise(function(resolve, reject) {
-        options.entries = fileObj.path;
-        var b_ws = fs.createWriteStream(path.resolve(self.destination, fileObj.name));
-        var b = browserify(options, options.watch ? watchify.args : undefined);
-        if (vendor){
-            b.external(vendor);
-        }
-        b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
-        b.bundle().pipe(b_ws);
         b_ws.end = function(){
             return resolve(fileObj);
         };
