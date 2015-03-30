@@ -2,7 +2,6 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var clean = require('./clean');
 var component, paths, pkg;
 
 function initConfig(){
