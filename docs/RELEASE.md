@@ -13,16 +13,24 @@ There are a number of use cases for release:
 
 > This method relies on the version number being incremented manually before code is pushed to Git.
 
+**Submitting a PR**
  * Ensure all changes are made and pushed to feature branches
  * Once the feature/bug-fix is complete, rebase from master.
- * Merge your changes into master
+ * `npm test` : Run the tests
+
+**Accepting a PR**
+ * Switch to the PR branch and review code
+ * `npm test` : Run the tests
+ * Merge the PR into master
  * `npm test` : Run the tests again
- * `npm run bump` : See [bump-the-version](#bump-the-version) for options.
+ * `npm run report` :  take a look at the code coverage report
+ * `npm run bump`
+   * alternatively run `npm run bump -- [patch|minor|major|vx.x.x]`. [more info >](#bump-the-version).
  * `git push` : to kick of the deploy process
 
 CircleCI will then run your tests, and if successful:
  * Tag the version number and push to Git
- * Push the demo `site` to github.io
+ * Push the demo `site` to github.io (if configured)
  * Push the compiled assets to the S3 (if configured)
 
 Your `circle.yml` should look something like:
