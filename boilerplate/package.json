@@ -9,11 +9,12 @@
     },
     "scripts": {
       "build": "component build",
-      "start": "component build && component serve",
-      "test": "jshint src && component build && component test",
-      "tdd": "component test tdd",
       "bump": "component bump",
-      "release": "npm test && component release"
+      "release": "npm test && component release",
+      "report": "component serve test/coverage/phantomjs/",
+      "start": "component build && component serve",
+      "tdd": "component test tdd",
+      "test": "jshint src && component build && component test"
     },
     "devDependencies": {
       "browserify-istanbul": "^0.2.1",
