@@ -40,7 +40,7 @@ function watch(){
     component = helper.getConfig();
     var paths = component.paths;
     var fs = require('./utils/fs');
-    var htmlPaths = [ ];
+    var htmlPaths = [ paths.source.root + '/**/*.{html,ms,mustache,jade}'];
     var stylesPaths = [paths.source.styles + '/**/*' ];
     var imagesPaths =   [paths.source.images + '/**/*' ];
     if (paths.demo){
