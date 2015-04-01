@@ -3,6 +3,8 @@
 ## 1.3.x
  * **1.3.0**
     * Updated to work with windows
+    * Updated Documents to explain more use-cases
+    * Updated dependencies to be on fixed versions
 
 ## 1.2.x
 
