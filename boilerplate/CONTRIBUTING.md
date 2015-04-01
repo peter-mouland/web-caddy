@@ -41,8 +41,3 @@ If you want to make changes to the bower dependencies, you can clone them down f
  * `bower link`
  * `cd {{ component }}/`
  * `bower link some-bower-dependency`
-
-
-## Releasing
-
-For recommendations on how to release, please see the [Component helper API](https://github.com/skyglobal/component-helper/blob/master/RELEASING.md)
