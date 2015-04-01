@@ -6,6 +6,7 @@
     * Updated Documents to explain more use-cases
     * Updated dependencies to be on fixed versions
     * Updated serve to watch and rebuild scripts faster
+    * Updated `release` and `build` config to be more fluid
 
 ## 1.2.x
 
