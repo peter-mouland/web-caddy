@@ -1,4 +1,6 @@
 var log = require('./log');
+var nodePath = require('path');
+//todo: update to use more of https://nodejs.org/api/path.html#path_path_delimiter
 
 module.exports = function File(fileObj){
     if (!fileObj.path) {
@@ -9,6 +11,7 @@ module.exports = function File(fileObj){
     var name;
     var dir;
     var ext;
+    var slash = nodePath.sep;
     var cwd = fileObj.cwd;
     var base = fileObj.base;
     var contents = fileObj.contents;
@@ -30,12 +33,12 @@ module.exports = function File(fileObj){
             return path;
         },
         set: function (value) {
-            var outDirs = value.split('/');
+            path = nodePath.normalize(value);
+            var outDirs = path.split(slash);
             outDirs.pop();
 
-            path = value;
-            name = path.split('/').pop();
-            dir = outDirs.join('/');
+            name = path.split(slash).pop();
+            dir = outDirs.join(slash);
             ext = name.split('.').pop();
         }
     });
@@ -54,14 +57,14 @@ module.exports = function File(fileObj){
             return name;
         },
         set: function (value) {
-            if (value.indexOf('/') > -1) {
+            if (value.indexOf('/') > -1 || value.indexOf('\\') > -1) {
                 return log.onError('File name cannot contain slashes');
             }
 
-            var outDirs = path.split('/');
+            var outDirs = path.split(slash);
             outDirs.pop();
 
-            this.path = outDirs.join('/') + '/' + value;
+            this.path = outDirs.join(slash) + slash + value;
         }
     });
 
@@ -70,7 +73,7 @@ module.exports = function File(fileObj){
             return dir;
         },
         set: function (value) {
-            this.path = value + '/' + name;
+            this.path = value + slash + name;
         }
     });
 
@@ -85,5 +88,5 @@ module.exports = function File(fileObj){
         }
     });
 
-    this.path = fileObj.path;
+    this.path = nodePath.normalize(fileObj.path);
 };
