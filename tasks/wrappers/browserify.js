@@ -2,6 +2,7 @@ var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
 var path = require('path');
 var UglifyJS = require("uglify-js");
+var watchify = require('watchify');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
@@ -9,63 +10,94 @@ var log = require('../utils/log');
 function Browserify(location, destination, options){
     this.location = location;
     this.destination = destination;
-    this.options = options;
+    this.options = options || {};
+    this.checkForDeboweify();
 }
 
 Browserify.prototype.checkForDeboweify = function(){
     var options = this.options;
-    if (options.browserify && options.browserify.transform){
-        var transforms = options.browserify.transform;
-        transforms.forEach(function(item, i){
-            if (item === 'debowerify'){
-                log.onError([
-                    'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
-                    'Please remove `debowerify` from browserify.transform within your package.json.',
-                    'You could add the a `browser` object into your package.json to work around this.',
-                    ' * If this is bothersome, please raise an issue or PR',
-                ].join('\n'));
-            }
-        });
+    if (options.vendorBundle && options.browserify && options.browserify.transform && options.browserify.transform.indexOf('debowerify')>-1){
+        log.onError([
+            'The browserify transform `debowerify` does not currenlty work with `vendorBundle`.',
+            'Please remove `debowerify` from browserify.transform within your package.json.',
+            ' * https://github.com/eugeneware/debowerify/issues/62'
+        ].join('\n'));
     }
 };
 
-
 Browserify.prototype.buildVendor = function(options){
-    var self = this;
     if (!options.vendorBundle) return Promise.resolve();
-    this.checkForDeboweify();
+    delete this.options.entries;
+    var vendorFile = new File({ path: path.resolve(this.destination, 'vendor.js') });
+    var v_ws = fs.createWriteStream(vendorFile.path);
+    browserify().require(options.vendorBundle).bundle().pipe(v_ws);
     return new Promise(function(resolve, reject) {
-        delete options.entries;
-        var b = browserify(options);
-        b.require(options.vendorBundle);
-        b.bundle(function(err, contents){
-            err && reject(err);
-            var newFile = new File({ path: path.resolve(self.destination, 'vendor.js') });
-            newFile.contents = contents;
-            !err && resolve(newFile);
-        });
+        v_ws.end = function(){
+            return resolve(vendorFile);
+        };
+        v_ws.on('error', reject);
     });
 };
 
-Browserify.prototype.file = function(fileObj) {
+Browserify.prototype.mapExternalFiles = function() {
+    if (!this.options.vendorBundle) return;
+    var options = this.options;
+    return this.options.vendorBundle.map(function (v) {
+        var dependency = (typeof v === 'string') ? v : v.expose;
+        if (options.browser && options.browser[dependency]){
+            log.warn(['You have `browser.' + dependency + '` within your package.json.',
+                'This may cause problems. Ensure within the `vendorBundle` you have:',
+                ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
+                ' * node_module: have the node name within the `vendorBundle` e.g. \'' + dependency + '\'',
+                ''].join('\n'));
+        }
+        return dependency;
+    });
+};
+
+Browserify.prototype.file = function(fileObj, browserSync) {
     var self = this;
     var options = this.options || {};
-    return new Promise(function(resolve, reject){
-        options.entries = fileObj.path;
-        var b = browserify(options);
-        if (options.vendorBundle){
-            var external = options.vendorBundle.map(function (v) {
-                if (typeof v === 'string') return v;
-                return v.file;
+    options.entries = fileObj.path;
+    var b = browserify(options, (browserSync) ? watchify.args : undefined);
+    var vendor = this.mapExternalFiles();
+    if (vendor){
+        b.external(vendor);
+    }
+    b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
+    if (browserSync) {
+        return new Promise(function(resolve, reject) {
+            b = watchify(b);
+            b.on('update', function () {
+                self.bundle(b, fileObj).then(function(){
+                    browserSync.reload();
+                    resolve();
+                });
             });
-            b.external(external);
-        }
-        b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
-        b.bundle(function(err, contents){
-            err && reject(err);
-            var newFile = new File({ path: path.resolve(self.destination, fileObj.name) });
-            newFile.contents = contents;
-            !err && resolve(newFile);
+            b.bundle();
+        });
+    } else {
+        return self.bundle(b, fileObj);
+    }
+};
+
+Browserify.prototype.bundle = function(b, fileObj) {
+    var b_ws = fs.createWriteStream(path.resolve(this.destination, fileObj.name));
+    b.bundle().pipe(b_ws);
+    return new Promise(function(resolve, reject) {
+        b_ws.end = function(){
+            log.info(fileObj.name + ' saved');
+            return resolve(fileObj);
+        };
+        b_ws.on('error', reject);
+    });
+};
+
+Browserify.prototype.watch = function(browserSync) {
+    var self = this;
+    return fs.glob(this.location + '/*.js').then(function(fileObjs) {
+        fileObjs.forEach(function (fileObj, i) {
+            self.file(fileObj, browserSync);
         });
     });
 };
@@ -86,8 +118,6 @@ Browserify.prototype.write = function(){
         }
         return Promise.all(promises);
     }).then(function(fileObjs){
-        return fs.write(fileObjs);
-    }).then(function(fileObjs){
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
             promises.push(self.minify(fileObj));
@@ -98,6 +128,7 @@ Browserify.prototype.write = function(){
     });
 };
 
+//todo: don't minify in dev mode?
 Browserify.prototype.minify = function(fileObj){
     var newFile = new File({ path: fileObj.path });
     newFile.name = fileObj.name.replace('.js','.min.js');
