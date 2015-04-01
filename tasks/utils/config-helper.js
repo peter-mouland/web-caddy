@@ -55,6 +55,9 @@ var helper = {
         if (config.release && !Array.isArray(config.release)){
             warn.push(' * Please update `release` to be an array of items to be released.');
         }
+        if (config.s3 && config.s3.directoryPrefix){
+            message.push(' * Please update `directoryPrefix` to `target` within the `s3` config.  See API.md#s3');
+        }
         //check build config
         if (config.build && config.build.indexOf && config.build.indexOf('requirejs')>=0 && !config.requirejs){
             error.push(' * There is no scripts config object:  `requirejs:{...}`');
