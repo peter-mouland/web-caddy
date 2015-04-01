@@ -79,7 +79,6 @@
   },
   "devDependencies": {
     "istanbul": "^0.3.10",
-    "jasmine": "^2.1.1",
     "jshint": "^2.6.3"
   },
   "bin": {
