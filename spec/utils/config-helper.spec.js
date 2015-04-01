@@ -57,6 +57,7 @@ describe("Config-helper ", function() {
 
         beforeEach(function(){
             spyOn(log,'onError').and.callFake(function(){ return true;});
+            spyOn(log,'warn').and.callFake(function(){ return true;});
 
             completeConfig = {
                 build: {
@@ -75,10 +76,23 @@ describe("Config-helper ", function() {
             };
         });
 
-        it("knows when config is fine", function () {
+        it("knows when config is out of date", function () {
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).not.toHaveBeenCalled();
+            expect(log.warn).toHaveBeenCalled();
+            expect(isCompatible).toContain('be out of date');
+            expect(isCompatible).toContain('release');
+            expect(isCompatible).toContain('build');
+        });
+
+        it("knows when config is as expected", function () {
+            completeConfig.build = [];
+            completeConfig.release = [];
+            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
+            var isCompatible = helper.configCheck();
+            expect(log.onError).not.toHaveBeenCalled();
+            expect(log.warn).not.toHaveBeenCalled();
             expect(isCompatible).toBe(true);
         });
 
@@ -87,17 +101,18 @@ describe("Config-helper ", function() {
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
-            expect(isCompatible).toContain('be out of date');
+            expect(isCompatible).toContain('be incorrect');
             expect(isCompatible).toContain('version');
         });
 
-        it("knows if the config is incorrect: missing browserify config", function () {
-            delete completeConfig.browserify;
+        it("knows if the config is incorrect: missing requirejs config", function () {
+            completeConfig.build= ['requirejs'];
+            delete completeConfig.requirejs;
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
-            expect(isCompatible).toContain('be out of date');
-            expect(isCompatible).toContain(completeConfig.build.scripts);
+            expect(isCompatible).toContain('be incorrect');
+            expect(isCompatible).toContain(completeConfig.build[0]);
         });
 
 
@@ -106,7 +121,7 @@ describe("Config-helper ", function() {
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
-            expect(isCompatible).toContain('be out of date');
+            expect(isCompatible).toContain('be incorrect');
             expect(isCompatible).toContain(completeConfig.test);
         });
 
@@ -115,7 +130,7 @@ describe("Config-helper ", function() {
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
-            expect(isCompatible).toContain('be out of date');
+            expect(isCompatible).toContain('be incorrect');
             expect(isCompatible).toContain(completeConfig.release);
         });
 
@@ -124,7 +139,7 @@ describe("Config-helper ", function() {
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
-            expect(isCompatible).toContain('be out of date');
+            expect(isCompatible).toContain('be incorrect');
             expect(isCompatible).toContain(completeConfig.serve);
         });
     })

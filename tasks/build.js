@@ -14,12 +14,13 @@ var clean = require('./clean');
 
 function html(replacements) {
     initConfig();
-    replacements = replacements || {};
-    if (!component.build.html || !component.paths.demo){
-        log.info('build.html or paths.demo set to false within component.config.js : skipping building html');
+    var build = helper.matches(component.build, ['jade','mustache']);
+    if (!build || !paths.demo || !paths.site){
+        log.info('Skipping build html');
         return Promise.resolve();
     }
-    var Html = require('./wrappers/' + (component.build.html || 'mustache'));
+    replacements = replacements || {};
+    var Html = require('./wrappers/' + build);
     var htmlMinify = require('html-minifier').minify;
     var now = Date().split(' ').splice(0,5).join(' ');
     var version = replacements.version || component.pkg.version;
@@ -51,35 +52,39 @@ function html(replacements) {
 
 function fonts() {
     initConfig();
-    if (!component.build.fonts) {
-        log.info('build.fonts within component.config.js is set to false : skipping copying fonts');
+    var build = helper.matches(component.build, ['fonts']);
+    if (!build || !paths.site) {
+        log.info('skipping build fonts');
         return Promise.resolve();
     }
-    var location = [
-        paths.source.fonts + '/**/*',
-        paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}'
-    ];
-    return fs.copy(location, paths.site.fonts).catch(log.warn);
+    var location = [];
+    paths.source && paths.source.fonts && location.push(paths.source.fonts + '/**/*.{eot,ttf,woff,svg}');
+    paths.bower && paths.bower.fonts && location.push(paths.bower.fonts + '/**/*.{eot,ttf,woff,svg}');
+    return fs.copy(location, paths.site.fonts);
 }
 
 function images() {
     initConfig();
-    if (!paths.site) {
-        log.info('paths.site within component.config.js is missing : skipping copying images');
+    var build = helper.matches(component.build, ['images']);
+    if (!build || !paths.site) {
+        log.info('skipping build images');
         return Promise.resolve();
     }
-    var src = paths.demo.images + '/**/*';
-    fs.copy(src, paths.site.images).catch(log.warn);
+    var location = [];
+    paths.source && paths.source.images && location.push(paths.source.images + '/**/*');
+    paths.demo && paths.demo.images && location.push(paths.demo.images + '/**/*');
+    return fs.copy(location, paths.site.images);
 }
 
 function scripts(options){
     initConfig();
-    if (!component.build.scripts){
-        log.info('build.scripts set to false within component.config.js : skipping building scripts');
+    var build = helper.matches(component.build, ['browserify','requirejs']);
+    if (!build){
+        log.info('skipping build scripts');
         return Promise.resolve();
     }
-    var Scripts = require('./wrappers/' + (component.build.scripts || 'browserify'));
-    options = options || (component[component.build.scripts]) || {};
+    var Scripts = require('./wrappers/' + build);
+    options = options || component[build] || {};
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
@@ -92,14 +97,15 @@ function scripts(options){
     }).catch(log.warn);
 }
 
-function buildStyles(options){
+function styles(options){
     initConfig();
-    if (!component.build.styles){
-        log.info('build.styles set to false within component.config.js : skipping building styles');
+    var build = helper.matches(component.build, ['sass']);
+    if (!build){
+        log.info('Skipping build Sass');
         return Promise.resolve();
     }
-    var Styles = require('./wrappers/' + (component.build.styles || 'sass'));
-    options = options || (component[component.build.scripts]) || {};
+    var Styles = require('./wrappers/' + build);
+    options = options || (component[build]) || {};
     return Promise.all([
         paths.dist && paths.dist.styles && new Styles(paths.source.styles, paths.dist.styles, options).write(),
         paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
@@ -116,7 +122,7 @@ function run(replacements){
                 scripts(),
                 fonts(),
                 images(),
-                buildStyles(),
+                styles(),
                 html(replacements)
             ]);
     }).then(function(){
@@ -126,7 +132,7 @@ function run(replacements){
 
 module.exports = {
     html: html,
-    styles: buildStyles,
+    styles: styles,
     scripts: scripts,
     images: images,
     fonts: fonts,
