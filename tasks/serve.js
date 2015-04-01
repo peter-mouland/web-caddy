@@ -2,6 +2,7 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
+var Browserify = require('./wrappers/browserify.js');
 var component;
 
 var browserSync = require('browser-sync');
@@ -35,23 +36,33 @@ function buildAndReload(task){
 }
 
 function watch(){
+    if (!component.build) return;
     component = helper.getConfig();
     var paths = component.paths;
     var fs = require('./utils/fs');
-    var htmlPaths = [ ];
+    var htmlPaths = [ paths.source.root + '/**/*.{html,ms,mustache,jade}'];
     var stylesPaths = [paths.source.styles + '/**/*' ];
-    var scriptsPaths =   [paths.source.scripts + '/**/*' ];
     var imagesPaths =   [paths.source.images + '/**/*' ];
     if (paths.demo){
         htmlPaths.push(paths.demo.root + '/**/*.{html,ms,mustache,jade}');
         stylesPaths.push(paths.demo.styles + '/**/*');
-        scriptsPaths.push(paths.demo.styles + '/**/*');
         imagesPaths.push(paths.demo.images + '/**/*');
     }
     fs.watch(htmlPaths, [buildAndReload('html')]);
     fs.watch(stylesPaths, [buildAndReload('styles')]);
-    fs.watch(scriptsPaths,   [buildAndReload('scripts')]);
     fs.watch(imagesPaths,   [buildAndReload('images')]);
+    //todo: use configHelper.matches on merge
+    if (component.build.scripts=='browserify' || (
+        component.build.indexOf && component.build.indexOf('browserify')>-1) ){
+        new Browserify(paths.source.scripts, paths.site.scripts).watch(browserSync);
+        if (paths.demo && paths.demo.scripts){
+            new Browserify(paths.demo.scripts, paths.site.scripts).watch(browserSync);
+        }
+    } else {
+        var scriptsPaths = [paths.source.scripts + '/**/*' ];
+        paths.demo && scriptsPaths.push(paths.demo.scripts + '/**/*');
+        fs.watch(scriptsPaths,   [buildAndReload('scripts')]);
+    }
 }
 
 function adhoc(path){
@@ -69,7 +80,7 @@ function adhoc(path){
 function run(args){
     return start(args).then(function(){
         watch();
-    });
+    }).catch(log.onError);
 }
 
 module.exports = {
