@@ -5,6 +5,7 @@
     * Updated to work with windows
     * Updated Documents to explain more use-cases
     * Updated dependencies to be on fixed versions
+    * Updated serve to watch and rebuild scripts faster
 
 ## 1.2.x
 
