@@ -5,6 +5,7 @@ tmp/
 _site/*
 node_modules/
 bower_components/
+spec/coverage/
 npm-debug.log
 *.iml
 *.tgz
