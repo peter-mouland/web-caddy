@@ -6,7 +6,8 @@
   "files": [
     "boilerplate",
     "bin",
-    "paths",
+    "docs",
+    "spec",
     "tasks",
     "*.md",
     "index.js"
