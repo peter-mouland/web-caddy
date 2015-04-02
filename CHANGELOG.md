@@ -2,12 +2,12 @@
 
 ## 1.3.x
  * **1.3.0**
-    * Updated to work with windows
     * Updated Documents to explain more use-cases
     * Updated dependencies to be on fixed versions
     * Updated serve to watch and rebuild scripts faster
-    * Updated `release` and `build` config to be more fluid
-    * Added server config files to build process (.htaccess etc)
+    * Updated `release` and `build` config
+    * Added ability to push server config files to the 'site' root (e.g. .htaccess)
+    * Added windows support
 
 ## 1.2.x
 
