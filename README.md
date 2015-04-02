@@ -37,10 +37,10 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
 
 ## Use Cases
 
- * [Initialise](docs/INITIALISING.md)
- * [Build](docs/BUILD.md)
- * [Serve](docs/SERVE.md)
- * [Test](docs/TEST.md)
+ * [Initialise Bower, Git, github.io](docs/INITIALISING.md)
+ * [Building Assets](docs/BUILD.md)
+ * [Serving Apps/Sites](docs/SERVE.md)
+ * [Testing](docs/TEST.md)
  * [Release Process](docs/RELEASE.md)
 
 ## API
