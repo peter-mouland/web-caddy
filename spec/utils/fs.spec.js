@@ -34,7 +34,7 @@ describe("fs", function() {
             var destDir = 'spec/fixtures/file/copy'
 
             fs.read(srcGlob).then(function(files){
-                expect(files[1].stat.size).toBe(72433);
+                expect(files[1].stat.size).toBe(71008);
                 expect(files[1].contents.toString()).toContain('@charset "UTF-8";');
                 expect(files[0].stat.size).toBe(12);
                 expect(files[0].contents.toString()).toContain('another copy');
@@ -44,7 +44,7 @@ describe("fs", function() {
             }).then(function (files) {
                 expect(files.length).toBe(2);
                 expect(files[1].contents.toString()).toContain('@charset "UTF-8";');
-                expect(files[1].stat.size).toBe(72433);
+                expect(files[1].stat.size).toBe(71008);
                 expect(files[0].stat.size).toBe(12);
                 expect(files[0].contents.toString()).toContain('another copy');
             }).then(done).catch(onError)
@@ -55,7 +55,7 @@ describe("fs", function() {
             var destDir = 'spec/fixtures/file/copy'
 
             fs.read(srcGlob).then(function(files){
-                expect(files[1].stat.size).toBe(72433);
+                expect(files[1].stat.size).toBe(71008);
                 expect(files[1].contents.toString()).toContain('@charset "UTF-8";');
                 expect(files[0].stat.size).toBe(12);
                 expect(files[0].contents.toString()).toContain('another copy');
@@ -65,7 +65,7 @@ describe("fs", function() {
             }).then(function (files) {
                 expect(files.length).toBe(2);
                 expect(files[1].contents.toString()).toContain('@charset "UTF-8";');
-                expect(files[1].stat.size).toBe(72433);
+                expect(files[1].stat.size).toBe(71008);
                 expect(files[0].stat.size).toBe(12);
                 expect(files[0].contents.toString()).toContain('another copy');
             }).then(function(){
