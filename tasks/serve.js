@@ -13,7 +13,7 @@ function start(options){
     options = options || (component[component.serve]) || {};
     return nodeApp(options).then(function(){
         if (!options.server && !options.proxy){
-            log.warn('component.config.js may be incorrect. please check');
+            log.warn('caddy.config.js may be incorrect. please check');
         }
         browserSync(options);
     });

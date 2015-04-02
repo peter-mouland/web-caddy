@@ -15,7 +15,7 @@ To build the Component Helper locally, you'll need to install:
 1. Fork the project
 2. `git clone your-repo` the fork
 3. Setup your 'upstream'
-`git remote add upstream https://github.com/skyglobal/component-helper.git`
+`git remote add upstream https://github.com/peter-mouland/web-caddy.git`
 4. Run npm install `npm install`
 5. Create a topic branch to contain your change
 `git checkout -b my-feature`
@@ -28,19 +28,19 @@ To build the Component Helper locally, you'll need to install:
 `git push origin my-feature`
 11. Create a pull request and describe what your change does and the why you think it should be merged.
 
-## Running component-helper Locally
+## Running web-caddy Locally
 
  * `npm test`
 
-If you want to upgrade or test an existing component locally, you can link the component to `component-helper`.
-Any changes made to the component-helper will be picked up by the component. Useful for modifying the tasks.
+If you want to upgrade or test an existing component locally, you can link the component to `web-caddy`.
+Any changes made to the web-caddy will be picked up by the component. Useful for modifying the tasks.
 
- * `cd component-helper`
+ * `cd web-caddy`
  * `npm link`
  * `cd some-component`
- * `npm link component-helper`
+ * `npm link web-caddy`
 
-## Releasing component-helper (admin only)
+## Releasing web-caddy (admin only)
 
  * Update [package.json](package.json) and [examples/package.json](examples/package.json) version number appropriately
  * `npm adduser` (first time only)

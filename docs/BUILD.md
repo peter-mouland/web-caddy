@@ -26,21 +26,21 @@ By default we assume the styles are written using [Sass](http://sass-lang.com/).
 This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `src/styles` **root**.
 A `.min.css` will also be created for each compiled file.
 
-These will be saved within the `dist` and `site` roots set within [component.config.js](boilerplate/component.config.js)
+These will be saved within the `dist` and `site` roots set within [caddy.config.js](boilerplate/caddy.config.js)
 
 #### Scripts
 
 `component build scripts`
 
 By default we assume the javascript is written in CommonJS, so we [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/) if you wish.
-Just update `build.scripts` within [component.config.js](boilerplate/component.config.js)
+Just update `build.scripts` within [caddy.config.js](boilerplate/caddy.config.js)
 
 This will create a compiled file for each `.js` file found in the `src/scripts` **root**.
 Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.
 
-These will be saved within the `dist` and `site` roots set within [component.config.js](boilerplate/component.config.js)
+These will be saved within the `dist` and `site` roots set within [caddy.config.js](boilerplate/caddy.config.js)
 
-The build can be configured more by adding a `browserify` or `requirejs` object to the [component.config.js](boilerplate/component.config.js).
+The build can be configured more by adding a `browserify` or `requirejs` object to the [caddy.config.js](boilerplate/caddy.config.js).
 
 **Example 1 : browserify**
 
@@ -77,9 +77,9 @@ Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 
 `component build html`
 
-This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [component.config.js](boilerplate/component.config.js)).
+This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [caddy.config.js](boilerplate/caddy.config.js)).
 
-These will be saved within the `site` roots set within [component.config.js](boilerplate/component.config.js)
+These will be saved within the `site` roots set within [caddy.config.js](boilerplate/caddy.config.js)
 
 By default, during the build it will also replace *site.now*, *site.name* and *site.version* variables.
 

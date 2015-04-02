@@ -1,4 +1,4 @@
-Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.svg)](https://www.npmjs.org/package/component-helper) [![Circle CI](https://circleci.com/gh/skyglobal/component-helper/tree/master.svg?style=svg)](https://circleci.com/gh/skyglobal/component-helper/tree/master)
+Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://www.npmjs.org/package/web-caddy) [![Circle CI](https://circleci.com/gh/peter-mouland/web-caddy/tree/master.svg?style=svg)](https://circleci.com/gh/peter-mouland/web-caddy/tree/master)
 ========================
 > Create, Build, Test, Serve and Release. Quickly
 
@@ -13,7 +13,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
 
 ## Installation
 
-`npm install -g component-helper`
+`npm install -g web-caddy`
 
 ## Quick Start
 
@@ -47,7 +47,7 @@ Component Helper [![NPM version](http://img.shields.io/npm/v/component-helper.sv
 
 The component helper can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks are almost exactly the same.
 
-Once required (`var component = require('component-helper');`), you can call the following:
+Once required (`var component = require('web-caddy');`), you can call the following:
 
 CLI | Node
 --- | ----

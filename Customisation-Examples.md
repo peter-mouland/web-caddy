@@ -10,7 +10,7 @@ Below is an example of how to serve a node project with one config, then also se
 
 ```javascript
 var gulp = require('gulp');
-var component = require('component-helper');
+var component = require('web-caddy');
 
 gulp.task('build', function() {
     return helper.build.run().catch(onError)

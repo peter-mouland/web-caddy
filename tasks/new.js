@@ -20,7 +20,7 @@ function renameFiles(component){
 
 function copyBoilerplate(component){
     log.info("\nCopying Component Files ... \n");
-    var moduleDir = npmGlobalPath() + '/component-helper/boilerplate';
+    var moduleDir = npmGlobalPath() + '/web-caddy/boilerplate';
     return fs.copyDirectory(moduleDir, './' + component,
         function(read, write, file){
             read.pipe(replaceStream('{{ component }}', component))
@@ -53,7 +53,7 @@ function newComponent(component) {
             ' * View the basic site, run:               $ npm start',
             ' * Test on the fly, run in a new tab:      $ npm run tdd',
             ' * To see more tasks please go to : ',
-            '   https://github.com/skyglobal/component-helper/blob/master/docs/API.md'
+            '   https://github.com/peter-mouland/web-caddy/blob/master/docs/API.md'
         ].join('\n'));
     }).catch(log.onError);
 }

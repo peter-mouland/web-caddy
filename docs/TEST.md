@@ -47,15 +47,15 @@ You can then use `npm run tdd`.
 
 > Test user journeys and private functions.
 
-This is setup with `karma.functional.js` (by default, you can rename this if you also update `component.config.js`).
-If you do not wish to run any functional tests you can set `karma.functional:false` within `component.config.js`.
+This is setup with `karma.functional.js` (by default, you can rename this if you also update `caddy.config.js`).
+If you do not wish to run any functional tests you can set `karma.functional:false` within `caddy.config.js`.
 
 ## Unit Tests
 
 > Test complex snippets of code and saving code coverage reports.
 
-This is setup with `karma.unit.js` (by default, you can rename this if you also update `component.config.js`).
-If you do not wish to run any functional tests you can set `karma.unit:false` within `component.config.js`.
+This is setup with `karma.unit.js` (by default, you can rename this if you also update `caddy.config.js`).
+If you do not wish to run any functional tests you can set `karma.unit:false` within `caddy.config.js`.
 
 ## Code Coverage
 

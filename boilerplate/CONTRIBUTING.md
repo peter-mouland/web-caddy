@@ -9,7 +9,6 @@ We encourage small change pull requests, the smaller the change the quicker and 
 To build the component locally, you'll need to install these globally :
  * [node.js](http://nodejs.org)
  * [Bower](http://bower.io)
- * [component-helper](https://github.com/skyglobal/component-helper)
 
 ## Workflow
 
@@ -35,7 +34,7 @@ To build the component locally, you'll need to install these globally :
 
 ## Working with dependencies
 
-If you want to make changes to the bower dependencies, you can clone them down from [here](http://github.com/skyglobal) and do the following.
+If you want to make changes to the bower dependencies:
 
  * `cd some-bower-dependency/`
  * `bower link`

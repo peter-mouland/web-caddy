@@ -8,22 +8,22 @@
 Include the {{ component }} assets in your project either as **Static Resources**
 
 ```html
-<link rel="stylesheet" href="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/styles/{{ component }}.min.css" />
-<script type="text/javascript" src="http://web-toolkit.global.sky.com/components/{{ component }}/0.0.1/scripts/{{ component }}.min.js"></script>
+<link rel="stylesheet" href="http:// WEB ADDRESS /{{ component }}/0.0.1/styles/{{ component }}.min.css" />
+<script type="text/javascript" src="http:// WEB ADDRESS /{{ component }}/0.0.1/scripts/{{ component }}.min.js"></script>
 ```
 
 or alternatively, **Via Bower**
 
- * Run: `bower install --save-dev bskyb-{{ component }}`
- * Include Sass: `@import 'bower_components/bskyb-{{ component }}/src/styles/{{ component }}';`
- * Include JS: `var {{ component }} = require('../../bower_components/bskyb-{{ component }}/src/scripts/{{ component }}');`
+ * Run: `bower install --save-dev {{ component }}`
+ * Include Sass: `@import 'bower_components/{{ component }}/src/styles/{{ component }}';`
+ * Include JS: `var {{ component }} = require('../../bower_components/{{ component }}/src/scripts/{{ component }}');`
 
 
 #### Dependencies
 
 This component relies on other components and you must also include these in your project.
 
- * [Dependency Name](https://github.com/skyglobal/DependencyName)
+ * [Dependency Name](https://github.com/DependencyName)
 
 #### Developer Notes
 

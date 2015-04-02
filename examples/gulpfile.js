@@ -1,6 +1,6 @@
 var gulp = require('gulp');
-var component = require('component-helper');
-var paths = component.paths;
+var caddy = require('web-caddy');
+var paths = caddy.paths;
 var argv = process.argv.slice(3).toString();
 
 function onError(err) {
@@ -9,18 +9,18 @@ function onError(err) {
 }
 
 gulp.task('build', function() {
-    return component.build.run().catch(onError);
+    return caddy.build.run().catch(onError);
 });
 
 gulp.task('serve',  function() {
-    return component.serve.run().catch(onError);
+    return caddy.serve.run().catch(onError);
 });
 
 gulp.task('test', function(){
-    return component.test.run().catch(onError);
+    return caddy.test.run().catch(onError);
 });
 
 gulp.task('release', function(){
     var version = argv.split('--version=')[1];
-    return component.release.run(version).catch(onError);
+    return caddy.release.run(version).catch(onError);
 });

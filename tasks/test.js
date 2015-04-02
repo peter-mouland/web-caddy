@@ -9,7 +9,7 @@ function checkConfig(){
     if (component.test){
         Test = require('./wrappers/' + (component.test || 'karma'));
     } else {
-        log.info('Test set to false within component.config.js : skipping');
+        log.info('Test set to false within caddy.config.js : skipping');
         return Promise.resolve();
     }
 }

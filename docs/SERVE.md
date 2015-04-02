@@ -10,7 +10,7 @@ You can serve static sites and node apps.  Using [browserSync](https://www.npmjs
 
 `component serve`
 
-Within the [component.config.js](boilerplate/component.config.js):
+Within the [caddy.config.js](boilerplate/caddy.config.js):
 
 ```javascript
     ...
@@ -37,7 +37,7 @@ You can then use: `npm start`
 
 `component serve`
 
-Within the [component.config.js](boilerplate/component.config.js):
+Within the [caddy.config.js](boilerplate/caddy.config.js):
 
 ```javascript
     ...

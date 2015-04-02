@@ -49,7 +49,7 @@ deployment:
   production:
     branch: master
     commands:
-      - ./node_modules/component-helper/bin/component release current
+      - ./node_modules/web-caddy/bin/component release current
 machine:
   node:
     version: v0.10.33
@@ -102,7 +102,7 @@ See [INITIALISING.md#bower](INITIALISING.md#bower).
 
 `component release s3`
 
-This will push the current files from within `_site` to S3 using the options within [component.config.js](boilerplate/component.config.js).
+This will push the current files from within `_site` to S3 using the options within [caddy.config.js](boilerplate/caddy.config.js).
 Setting this option to false will prevent a release.
 
 **Example 1: Using Environment Variables**

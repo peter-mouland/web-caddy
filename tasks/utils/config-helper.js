@@ -19,7 +19,7 @@ var helper = {
     },
     getConfig : function(){
         if (config) return config;
-        var configPath = findup('component.config.js');
+        var configPath = findup('caddy.config.js');
         config = (configPath) ? require(configPath) : false;
         config.paths = this.parsePaths(config.paths);
         return config;
@@ -37,13 +37,13 @@ var helper = {
     configCheck : function(){
         var config = this.getConfig();
         var error = [
-            'Your `component.config.js` seems to be incorrect.'
+            'Your `caddy.config.js` seems to be incorrect.'
         ];
         var warn = [
-            'Your `component.config.js` seems to be out of date.'
+            'Your `caddy.config.js` seems to be out of date.'
         ];
         if (!config){
-            log.onError('You must have a component.config.js in the root of your project.');
+            log.onError('You must have a caddy.config.js in the root of your project.');
         }
         if (!config.pkg.version){
             error.push(' * The package.json requires as a `version` string (even "version": "0.0.0" is fine)');

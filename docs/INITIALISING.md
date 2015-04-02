@@ -27,7 +27,7 @@
     │   ├- functional
     │   └- unit
     ├── circle.yml
-    └── component.config.js       => The build config
+    └── caddy.config.js       => The config
 
 #### Register With Bower
 

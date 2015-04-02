@@ -1,5 +1,8 @@
 # Change Log
 
+## 2.0.x
+    * Renamed to `web-caddy`
+
 ## 1.3.x
  * **1.3.0**
     * Updated Documents to explain more use-cases
