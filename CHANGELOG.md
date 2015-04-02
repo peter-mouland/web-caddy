@@ -7,6 +7,7 @@
     * Updated dependencies to be on fixed versions
     * Updated serve to watch and rebuild scripts faster
     * Updated `release` and `build` config to be more fluid
+    * Added server config files to build process (.htaccess etc)
 
 ## 1.2.x
 
