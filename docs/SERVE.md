@@ -8,7 +8,7 @@ You can serve static sites and node apps.  Using [browserSync](https://www.npmjs
 
 ## Static Sites
 
-`component serve`
+`caddy serve`
 
 Within the [caddy.config.js](boilerplate/caddy.config.js):
 
@@ -28,14 +28,14 @@ Within the [caddy.config.js](boilerplate/caddy.config.js):
 We recommend that the package.json `scripts` object is updated to build your site first:
 
 ```
-  "start": "component build && component serve",
+  "start": "caddy build && caddy serve",
 ```
 
 You can then use: `npm start`
 
 ## NodeJS Apps
 
-`component serve`
+`caddy serve`
 
 Within the [caddy.config.js](boilerplate/caddy.config.js):
 
@@ -58,7 +58,7 @@ Within the [caddy.config.js](boilerplate/caddy.config.js):
 We recommend that the package.json `scripts` object is updated to build your site first:
 
 ```
-  "start": "component build && component serve",
+  "start": "caddy build && caddy serve",
 ```
 
 You can then use: `npm start`
@@ -67,6 +67,6 @@ You can then use: `npm start`
 
 > Serve any file quickly
 
-`component serve path/to/serve`
+`caddy serve path/to/serve`
 
 This serve the path given as a static site, ie. your code coverage report

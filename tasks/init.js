@@ -15,12 +15,12 @@ function initBower(){
     });
 }
 
-function remoteGit(gitRepo, component){
+function remoteGit(gitRepo, project){
     log.info("\nInitialising Git Remotely... \n");
     return askForGitRepo(gitRepo)
         .then(function(reply) {
             gitRepo = reply;
-            return replaceGitVariables(gitRepo, component);
+            return replaceGitVariables(gitRepo, project);
         }).then(function(){
             return pushFirstPush(gitRepo);
         }).then(function(){
@@ -54,12 +54,12 @@ function askForGitRepo(gitRepo){
     });
 }
 
-function replaceGitVariables(repo, componentName){
+function replaceGitVariables(repo, project){
     if (!git.validRepo(repo)){
         log.info(['',
             'Github Repository SSH URL invalid:',
                 'When you are ready to push to git, Please run:',
-                '`component init git` '
+                '`caddy init git` '
             ].join('\n'));
         return Promise.resolve();
     }
@@ -67,7 +67,7 @@ function replaceGitVariables(repo, componentName){
     var isSSH = repo.indexOf('git@')>-1;
     var sshUrl = (isSSH) ? repo : repo.replace('https://', 'git@').replace('.com/', '.com:');
     var httpUrl = (!isSSH) ? repo : repo.replace('git@', 'https://').replace('.com:','.com/');
-    var ioUrl = sshUrl.replace(username,'').replace('git@', 'http://' + username + '.').replace('.com:','.io').replace(componentName + '.git', componentName);
+    var ioUrl = sshUrl.replace(username,'').replace('git@', 'http://' + username + '.').replace('.com:','.io').replace(project + '.git', project);
     var replacements = [
         { replace: /{{ git.SSH-URL }}/g, with: sshUrl },
         { replace: /{{ git.HTTPS-URL }}/g, with: httpUrl},
@@ -76,13 +76,13 @@ function replaceGitVariables(repo, componentName){
         { replace: /{{ git.author }}/g, with: git.user.name},
         { replace: /{{ git.email }}/g, with: git.user.email }
     ];
-    if (!componentName){
-        var component = helper.getConfig();
-        componentName = component.pkg.name;
+    if (!project){
+        var config = helper.getConfig();
+        project = config.pkg.name;
     }
     var dest = process.cwd();
-    if (dest.indexOf('/' + componentName)==-1){
-        dest = path.join(dest, componentName);
+    if (dest.indexOf('/' + project)==-1){
+        dest = path.join(dest, project);
     }
     return fs.replace(dest + '**/*.*', replacements);
 }

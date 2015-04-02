@@ -21,9 +21,9 @@ function help(task, taskName){
     for (var arg in task){
         if (arg!=='run' && arg!=='adhoc') args.push(arg);
     }
-    var helpStr = (taskName === '') ? '' : '`component ' + taskName + '` or ';
+    var helpStr = (taskName === '') ? '' : '`caddy ' + taskName + '` or ';
     log.info([ taskName + " arguments: " + args.join(', '),
-        "Usage: " + helpStr + "`component " + taskName + " " + args[0] + "`"].join("\n"));
+        "Usage: " + helpStr + "`caddy " + taskName + " " + args[0] + "`"].join("\n"));
 }
 
 var commands = {

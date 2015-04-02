@@ -11,30 +11,30 @@ function npmGlobalPath() {
     return shell.exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;
 }
 
-function renameFiles(component){
+function renameFiles(project){
     return Promise.all([
         fs.rename('./dot.gitignore', 'dot',''),
-        fs.rename('./**/main.*', 'main',component)
+        fs.rename('./**/main.*', 'main',project)
     ]);
 }
 
-function copyBoilerplate(component){
+function copyBoilerplate(project){
     log.info("\nCopying Component Files ... \n");
     var moduleDir = npmGlobalPath() + '/web-caddy/boilerplate';
-    return fs.copyDirectory(moduleDir, './' + component,
+    return fs.copyDirectory(moduleDir, './' + project,
         function(read, write, file){
-            read.pipe(replaceStream('{{ component }}', component))
+            read.pipe(replaceStream('{{ project }}', project))
                 .pipe(write);
     });
 }
 
-function newComponent(component) {
-    if (fs.existsSync(component)){
-        log.onError('Component `' + component + '` already exists');
+function newComponent(project) {
+    if (fs.existsSync(project)){
+        log.onError('Component `' + project + '` already exists');
     }
-    return copyBoilerplate(component).then(function(output) {
-        shell.cd(component);
-        return renameFiles(component);
+    return copyBoilerplate(project).then(function(output) {
+        shell.cd(project);
+        return renameFiles(project);
     }).then(function(output){
         return init.localGit();
     }).then(function(output){
@@ -45,11 +45,11 @@ function newComponent(component) {
         return bower.install();
     }).then(function(output){
         log.onSuccess(output);
-        return init.git(undefined, component);
+        return init.git(undefined, project);
     }).then(function(){
         log.info(['',
             'Ready!',
-            ' * Please go to your new directory:        $ cd ' + component,
+            ' * Please go to your new directory:        $ cd ' + project,
             ' * View the basic site, run:               $ npm start',
             ' * Test on the fly, run in a new tab:      $ npm run tdd',
             ' * To see more tasks please go to : ',

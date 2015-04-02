@@ -1,22 +1,22 @@
-[{{ component }}]({{ git.io-URL }})  [![Circle CI](https://circleci.com/gh/{{ git.username }}/{{ component }}/tree/master.svg?style=svg)](https://circleci.com/gh/{{ git.username }}/{{ component }}/tree/master)
+[{{ project }}]({{ git.io-URL }})  [![Circle CI](https://circleci.com/gh/{{ git.username }}/{{ project }}/tree/master.svg?style=svg)](https://circleci.com/gh/{{ git.username }}/{{ project }}/tree/master)
 ========================
 
 > Please take a look at the [demo page]({{ git.io-URL }})
 
 ## Quick-Start
 
-Include the {{ component }} assets in your project either as **Static Resources**
+Include the {{ project }} assets in your project either as **Static Resources**
 
 ```html
-<link rel="stylesheet" href="http:// WEB ADDRESS /{{ component }}/0.0.1/styles/{{ component }}.min.css" />
-<script type="text/javascript" src="http:// WEB ADDRESS /{{ component }}/0.0.1/scripts/{{ component }}.min.js"></script>
+<link rel="stylesheet" href="http:// WEB ADDRESS /{{ project }}/0.0.1/styles/{{ project }}.min.css" />
+<script type="text/javascript" src="http:// WEB ADDRESS /{{ project }}/0.0.1/scripts/{{ project }}.min.js"></script>
 ```
 
 or alternatively, **Via Bower**
 
- * Run: `bower install --save-dev {{ component }}`
- * Include Sass: `@import 'bower_components/{{ component }}/src/styles/{{ component }}';`
- * Include JS: `var {{ component }} = require('../../bower_components/{{ component }}/src/scripts/{{ component }}');`
+ * Run: `bower install --save-dev {{ project }}`
+ * Include Sass: `@import 'bower_components/{{ project }}/src/styles/{{ project }}';`
+ * Include JS: `var {{ project }} = require('../../bower_components/{{ project }}/src/scripts/{{ project }}');`
 
 
 #### Dependencies
@@ -27,7 +27,7 @@ This component relies on other components and you must also include these in you
 
 #### Developer Notes
 
-Choose a type of {{ component }} component and copy the relevant html.
+Choose a type of {{ project }} component and copy the relevant html.
  * [example](demo/_includes/example.html)
  * [example](demo/_includes/example.html),
 

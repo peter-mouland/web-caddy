@@ -2,12 +2,12 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var component, paths, pkg;
+var config, paths, pkg;
 
 function initConfig(){
-    component = helper.getConfig();
-    paths = component.paths;
-    pkg = component.pkg;
+    config = helper.getConfig();
+    paths = config.paths;
+    pkg = config.pkg;
 }
 
 function serverConfig(){

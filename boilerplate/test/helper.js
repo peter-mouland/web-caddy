@@ -13,7 +13,7 @@ function appendScript(fileObj){
 function loadAssets(page){
     document.body.innerHTML = __html__['_site/' + (page || 'index') + '.html'];
     appendCSS({path: '_site/styles/demo.css'});
-    appendCSS({path: '_site/styles/{{ component }}.css'});
+    appendCSS({path: '_site/styles/{{ project }}.css'});
     appendScript({path: '_site/scripts/' + page + '.js'});
 }
 

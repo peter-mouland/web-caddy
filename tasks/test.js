@@ -2,12 +2,12 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var component, Test;
+var config, Test;
 
 function checkConfig(){
-    component = helper.getConfig();
-    if (component.test){
-        Test = require('./wrappers/' + (component.test || 'karma'));
+    config = helper.getConfig();
+    if (config.test){
+        Test = require('./wrappers/' + (config.test || 'karma'));
     } else {
         log.info('Test set to false within caddy.config.js : skipping');
         return Promise.resolve();
@@ -16,13 +16,13 @@ function checkConfig(){
 
 function tdd(options){
     checkConfig();
-    options = options || (component[component.test]) || {};
+    options = options || (config[config.test]) || {};
     return new Test(options).run(false);
 }
 
 function run(options){
     checkConfig();
-    options = options || (component[component.test]) || {};
+    options = options || (config[config.test]) || {};
     var test = new Test(options);
     var clean = require('./clean');
     return clean.test().then(function(){

@@ -2,12 +2,12 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var component, paths, pkg;
+var config, paths, pkg;
 
 function initConfig(){
-    component = helper.getConfig();
-    paths = component.paths;
-    pkg = component.pkg;
+    config = helper.getConfig();
+    paths = config.paths;
+    pkg = config.pkg;
 }
 
 var clean = require('./clean');
@@ -19,7 +19,7 @@ function serverConfigFiles(){
 }
 function html(replacements) {
     initConfig();
-    var build = helper.matches(component.build, ['jade','mustache']);
+    var build = helper.matches(config.build, ['jade','mustache']);
     if (!build || !paths.site){
         log.info('Skipping build html');
         return Promise.resolve();
@@ -28,8 +28,8 @@ function html(replacements) {
     var Html = require('./wrappers/' + build);
     var htmlMinify = require('html-minifier').minify;
     var now = Date().split(' ').splice(0,5).join(' ');
-    var version = replacements.version || component.pkg.version;
-    var name = replacements.name || component.pkg.name;
+    var version = replacements.version || config.pkg.version;
+    var name = replacements.name || config.pkg.name;
     replacements.site = {now: now, version:version, name: name};
     var src = [];
     paths.demo && src.push(paths.demo.root + '/*.{html,jade,mustache,ms}');
@@ -57,7 +57,7 @@ function html(replacements) {
 
 function fonts() {
     initConfig();
-    var build = helper.matches(component.build, ['fonts']);
+    var build = helper.matches(config.build, ['fonts']);
     if (!build || !paths.site) {
         log.info('skipping build fonts');
         return Promise.resolve();
@@ -70,7 +70,7 @@ function fonts() {
 
 function images() {
     initConfig();
-    var build = helper.matches(component.build, ['images']);
+    var build = helper.matches(config.build, ['images']);
     if (!build || !paths.site) {
         log.info('skipping build images');
         return Promise.resolve();
@@ -83,13 +83,13 @@ function images() {
 
 function scripts(options){
     initConfig();
-    var build = helper.matches(component.build, ['browserify','requirejs']);
+    var build = helper.matches(config.build, ['browserify','requirejs']);
     if (!build){
         log.info('skipping build scripts');
         return Promise.resolve();
     }
     var Scripts = require('./wrappers/' + build);
-    options = options || component[build] || {};
+    options = options || config[build] || {};
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
@@ -104,13 +104,13 @@ function scripts(options){
 
 function styles(options){
     initConfig();
-    var build = helper.matches(component.build, ['sass']);
+    var build = helper.matches(config.build, ['sass']);
     if (!build){
         log.info('Skipping build Sass');
         return Promise.resolve();
     }
     var Styles = require('./wrappers/' + build);
-    options = options || (component[build]) || {};
+    options = options || (config[build]) || {};
     return Promise.all([
         paths.dist && paths.dist.styles && new Styles(paths.source.styles, paths.dist.styles, options).write(),
         paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),

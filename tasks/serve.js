@@ -3,14 +3,14 @@ var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var Browserify = require('./wrappers/browserify.js');
-var component;
+var config;
 
 var browserSync = require('browser-sync');
 var build = require('./build');
 
 function start(options){
-    component = helper.getConfig();
-    options = options || (component[component.serve]) || {};
+    config = helper.getConfig();
+    options = options || (config[config.serve]) || {};
     return nodeApp(options).then(function(){
         if (!options.server && !options.proxy){
             log.warn('caddy.config.js may be incorrect. please check');
@@ -20,7 +20,7 @@ function start(options){
 }
 
 function nodeApp(options){
-    component = helper.getConfig();
+    config = helper.getConfig();
     if (options.server) return Promise.resolve();
     var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
@@ -36,9 +36,9 @@ function buildAndReload(task){
 }
 
 function watch(){
-    if (!component.build) return;
-    component = helper.getConfig();
-    var paths = component.paths;
+    if (!config.build) return;
+    config = helper.getConfig();
+    var paths = config.paths;
     var fs = require('./utils/fs');
     var htmlPaths = [ paths.source.root + '/**/*.{html,ms,mustache,jade}'];
     var stylesPaths = [paths.source.styles + '/**/*' ];
@@ -52,8 +52,8 @@ function watch(){
     fs.watch(stylesPaths, [buildAndReload('styles')]);
     fs.watch(imagesPaths,   [buildAndReload('images')]);
     //todo: use configHelper.matches on merge
-    if (component.build.scripts=='browserify' || (
-        component.build.indexOf && component.build.indexOf('browserify')>-1) ){
+    if (config.build.scripts=='browserify' || (
+        config.build.indexOf && config.build.indexOf('browserify')>-1) ){
         new Browserify(paths.source.scripts, paths.site.scripts).watch(browserSync);
         if (paths.demo && paths.demo.scripts){
             new Browserify(paths.demo.scripts, paths.site.scripts).watch(browserSync);
@@ -66,11 +66,11 @@ function watch(){
 }
 
 function adhoc(path){
-    component = helper.getConfig();
+    config = helper.getConfig();
     //todo: test if path ext is js or html
     //    : if html serve staticApp
     //    : if js serve nodeApp
-    component.serve = 'staticApp';
+    config.serve = 'staticApp';
     return start({
         server: { baseDir : path },
         port: 3456

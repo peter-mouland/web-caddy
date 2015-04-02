@@ -1,11 +1,11 @@
 {
-    "name": "{{ component }}",
+    "name": "{{ project }}",
     "version": "0.0.0",
     "homepage": "{{ git.HTTPS-URL }}",
     "authors": [
         "{{ git.author }} <{{ git.email }}>"
     ],
-    "description": "{{ component }}",
+    "description": "{{ project }}",
     "main": "dist",
     "license": "BSD3",
     "ignore": [

@@ -1,9 +1,9 @@
 /*jshint -W069 */
-var local = {}; local['{{ component }}'] = require('./{{ component }}');
+var local = {}; local['{{ project }}'] = require('./{{ project }}');
 
 if (typeof window.define === "function" && window.define.amd) {
-    define('bower_components/{{ component }}/dist/scripts/{{ component }}.requirejs', [], function() {
+    define('bower_components/{{ project }}/dist/scripts/{{ project }}.requirejs', [], function() {
         'use strict';
-        return local['{{ component }}'];
+        return local['{{ project }}'];
     });
 }

@@ -57,8 +57,7 @@ Karma.prototype.coverage = function(){
                 }
             }
         }
-        log.info(['To view coverage results please run',
-            ' $ component serve test/coverage/phantomjs/'].join('\n'));
+        log.info(['Coverage results available: test/coverage/phantomjs/'].join('\n'));
         err && reject('Test Coverage FAILED');
         !err && resolve('Test Coverage SUCCESS');
     });

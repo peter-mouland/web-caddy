@@ -49,7 +49,7 @@ deployment:
   production:
     branch: master
     commands:
-      - ./node_modules/web-caddy/bin/component release current
+      - ./node_modules/web-caddy/bin/caddy release current
 machine:
   node:
     version: v0.10.33
@@ -59,7 +59,7 @@ machine:
 
 > This method relies on the tests being run locally.
 
-`component release`
+`caddy release`
 
    * This will automatically bump the version number (using [bump-the-version](#bump-the-version)).
    * Tag the version number and push to Git
@@ -69,7 +69,7 @@ machine:
 It is recommended you update your package.json `scripts` object to automatically run tests first (see [TESTING.md](TESTING.md)):
 
 ```javascript
-  "release": "npm test && component release"
+  "release": "npm test && caddy release"
 ```
 
 You can then run `npm run release` for simple patch releases. Feel free to setup shortcuts for any other release types.
@@ -100,7 +100,7 @@ See [INITIALISING.md#bower](INITIALISING.md#bower).
 
 > If the deployment timed out at the last step, you can redeploy to the s3 in isolation
 
-`component release s3`
+`caddy release s3`
 
 This will push the current files from within `_site` to S3 using the options within [caddy.config.js](boilerplate/caddy.config.js).
 Setting this option to false will prevent a release.
@@ -142,7 +142,7 @@ Ensure you have created the file : `~/.aws/credentials`. For more information se
 
 > To push an update to the demo pages
 
-`component release gh-pages`
+`caddy release gh-pages`
 
 This will push the current files within `_site` to gh-pages branch (making your demo available on github.io).
 
@@ -151,14 +151,14 @@ This will push the current files within `_site` to gh-pages branch (making your 
 
 > Bump the version within your app
 
-`component bump`
+`caddy bump`
 
 This will update the version number in all the docs (package.json, version.js, *.md and *.html).
 
 It is recommended you update your package.json `scripts` object:
 
 ```javascript
-  "bump": "component bump"
+  "bump": "caddy bump"
 ```
 
 By default, this applies a  `patch`.  Add either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.

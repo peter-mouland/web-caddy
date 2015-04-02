@@ -1,26 +1,26 @@
 # Initialising
 
- * [Creating A New Component](#creating-a-new-component)
+ * [Creating A New Project](#creating-a-new-project)
  * [Register With Bower](#register-with-bower)
  * [Create A github.io/*your-project*)](#create-a-github.io)
  * [Add A Remote Git Repository)](#remote-git-repository)
 
-#### Creating A New Component
+#### Creating A New Project
 
 > To create a new project with a build process, tdd and continuous deployment already set-up
 
-`component new *component-name*`
+`caddy new *project-name*`
 
 **Generated Directory Structure**
 
-    $ component
-    ├── demo            => source code to demo the component
+    $ project
+    ├── demo            => source code to demo the project
     │   ├- _includes
     │   ├- images
     │   ├- scripts
     │   ├- styles
     │   └- index.html
-    ├── src             => source code for the component.
+    ├── src             => source code for the project.
     │   ├- scripts
     │   └- styles
     ├── test            => Test config and specs
@@ -35,7 +35,7 @@
 
 Ensure you have a [bower.json](https://github.com/bower/bower.json-spec) with the correct `name` and that the `repository` is up to date within your [package.json](https://docs.npmjs.com/files/package.json).
 
-`component init bower`
+`caddy init bower`
 
 You only need to complete this step once.
 Bower will then be updated every time you tag your code in git.
@@ -47,7 +47,7 @@ For any other bower questions, i.e. to unregister your repository etc see [bower
 
 > Put an existing project onto github.io
 
-`component init gh-pages`
+`caddy init gh-pages`
 
 This will create a gh-pages branch locally and send a test file remotely.
 
@@ -57,6 +57,6 @@ See [#deploying-to-github.io](#deploying-to-github.io) for next steps.
 
 > Initialise a remote Git repository for the first time
 
-`component init git`
+`caddy init git`
 
 This will add files from within the current directory, commit and push them to the provided git repo.

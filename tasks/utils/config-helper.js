@@ -4,18 +4,9 @@ var config;
 
 var helper = {
     matches: function matches(config, plugins){
-        //for backwards compatibility. deprecate in version 2
-        var compatibility = [];
-        if (config.fonts) compatibility.push('fonts');
-        if (config.images) compatibility.push('images');
-        if (config.styles) compatibility.push(config.styles);
-        if (config.html) compatibility.push(config.html);
-        if (config.scripts) compatibility.push(config.scripts);
-        if (compatibility.length) config = compatibility;
-
         return config && config.map(function(i){
-                if (plugins.indexOf(i)>-1) return i;
-            }).join('');
+            if (plugins.indexOf(i)>-1) return i;
+        }).join('');
     },
     getConfig : function(){
         if (config) return config;

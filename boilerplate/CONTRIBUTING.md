@@ -38,5 +38,5 @@ If you want to make changes to the bower dependencies:
 
  * `cd some-bower-dependency/`
  * `bower link`
- * `cd {{ component }}/`
+ * `cd {{ project }}/`
  * `bower link some-bower-dependency`

@@ -2,13 +2,13 @@
 require('../helper').loadAssets();
 
 /* Require file to test */
-var local = {}; local['{{ component }}'] = require('../../src/scripts/{{ component }}');
+var local = {}; local['{{ project }}'] = require('../../src/scripts/{{ project }}');
 
 /* Start Test */
-describe('{{ component }} module can ', function () {
+describe('{{ project }} module can ', function () {
 
     it('print the sum to the dom', function () {
-        new local['{{ component }}']().write([1,2,3]);
+        new local['{{ project }}']().write([1,2,3]);
 
         expect(document.getElementById('demo-functional').innerHTML).toBe('6');
 

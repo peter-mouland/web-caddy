@@ -10,14 +10,14 @@ Below is an example of how to serve a node project with one config, then also se
 
 ```javascript
 var gulp = require('gulp');
-var component = require('web-caddy');
+var caddy = require('web-caddy');
 
 gulp.task('build', function() {
-    return helper.build.run().catch(onError)
+    return caddy.build.run().catch(onError)
 });
 
 gulp.task('serve', function() {
-    return helper.serve.run({
+    return caddy.serve.run({
         script : 'src/app/server.js',
         host: 'http://localhost:3000',
         port: 3001,
@@ -26,13 +26,13 @@ gulp.task('serve', function() {
 });
 
 gulp.task('test', function(){
-    return helper.serve.run({
+    return caddy.serve.run({
         script : 'src/test/testserver.js',
         host: 'http://localhost:3001',
         port: 3002,
         env: { NODE_ENV: 'test', PORT: 3001}
     }).then(function(){
-        return helper.test.run();
+        return caddy.test.run();
     }).catch(onError);
 });
 

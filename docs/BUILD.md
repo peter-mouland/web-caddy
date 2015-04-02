@@ -1,25 +1,25 @@
 # Tasks
 
  * [Clean](#clean) - clean (remove) the contents of your set asset directories
- * [Build](#build) - Building the assets needed for your component
+ * [Build](#build) - Building the assets needed for your project
 
 ## Clean
 
-`component clean`
+`caddy clean`
 
 This will remove any files from within all target directories (site & dist).  
 
-You can also `component clean (scripts|styles|html|images|fonts)` etc. to specifiy exect directories to clean.
+You can also `caddy clean (scripts|styles|html|images|fonts)` etc. to specifiy exect directories to clean.
 
 ## Build
 
-`component build`
+`caddy build`
 
 This will clean all target directories (site & dist) and execute all the Build tasks below.
 
 #### Styles
 
-`component build styles`
+`caddy build styles`
 
 By default we assume the styles are written using [Sass](http://sass-lang.com/). *If you would like Less, please submit a pull request.*
 
@@ -30,7 +30,7 @@ These will be saved within the `dist` and `site` roots set within [caddy.config.
 
 #### Scripts
 
-`component build scripts`
+`caddy build scripts`
 
 By default we assume the javascript is written in CommonJS, so we [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/) if you wish.
 Just update `build.scripts` within [caddy.config.js](boilerplate/caddy.config.js)
@@ -75,7 +75,7 @@ Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 
 #### HTML
 
-`component build html`
+`caddy build html`
 
 This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [caddy.config.js](boilerplate/caddy.config.js)).
 
@@ -85,7 +85,7 @@ By default, during the build it will also replace *site.now*, *site.name* and *s
 
 #### Server Config Files
 
-`component build server-config-files`
+`caddy build server-config-files`
 
 This will copy any server config files (currently `CNAME`, `.htaccess` and `robots.txt`) found in `paths.source.root` to your `paths.site.root`.
 
