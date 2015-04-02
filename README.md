@@ -56,6 +56,7 @@ component new *component-name* | *unavailable*
 [component build scripts](docs/BUILD.md#scripts) | `component.build.scripts()`
 [component build styles](docs/BUILD.md#styles) | `component.build.styles()`
 [component build html](docs/BUILD.md#html) | `component.build.html(replacements)` <br>(optional: replacements object)
+[component build server-config-files](docs/BUILD.md#server-config-files) | `component.build.serverConfigFiles()`
 [component serve](docs/SERVE.md) | `component.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
 [component serve path/to/serve](docs/SERVE.md#adhoc-pages) | `component.serve.adhoc(path)` <br>(mandatory: path/to/serve)
 [component test](docs/TEST.md#testing) | `component.test.run()`
