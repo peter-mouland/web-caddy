@@ -1,22 +1,31 @@
 # Change Log
 
+## 1.3.x
+ * **1.3.0**
+    * Updated to work with windows
+    * Updated Documents to explain more use-cases
+    * Updated dependencies to be on fixed versions
+    * Updated serve to watch and rebuild scripts faster
+    * Updated `release` and `build` config to be more fluid
+    * Added server config files to build process (.htaccess etc)
+
 ## 1.2.x
 
  * **1.2.0** Breaking change
-     * Speed improvements
-     * Updated  **Breaking change** `Release` task is more flexible. Use `target` within `component.config.js`
-     * Updated  **Breaking change** `init gitRemote` step to be `init git` config.
-     * Updated  **Breaking change** All steps are implicit. ie. `component test` now only runs tests, not the build too.
-        * if implicit tasks are wanted, please customise this in `npm scripts` object.
-     * Updated `circle.yml` to allow for continuous deployment by default
-     * Updated `build html` step to produce minified html
-     * Updated `init git` to accept SSH or HTTP URLS
-     * Updated testing into `unit` and `functional` with examples.
-     * Added JSHint to `npm test` task by default.
-     * Added global Alias for browserified JS files.
-        * i.e. You can now call `require('component-name');` within your html.
-     * Added `vendorBundle` option to browseify config.
-        * This allows you to specifiy which external files should be built separately from your main js files.
+    * Speed improvements
+    * Updated  **Breaking change** `Release` task is more flexible. Use `target` within `component.config.js`
+    * Updated  **Breaking change** `init gitRemote` step to be `init git` config.
+    * Updated  **Breaking change** All steps are implicit. ie. `component test` now only runs tests, not the build too.
+    * if implicit tasks are wanted, please customise this in `npm scripts` object.
+    * Updated `circle.yml` to allow for continuous deployment by default
+    * Updated `build html` step to produce minified html
+    * Updated `init git` to accept SSH or HTTP URLS
+    * Updated testing into `unit` and `functional` with examples.
+    * Added JSHint to `npm test` task by default.
+    * Added global Alias for browserified JS files.
+    * i.e. You can now call `require('component-name');` within your html.
+    * Added `vendorBundle` option to browseify config.
+    * This allows you to specifiy which external files should be built separately from your main js files.
 
 ## 1.1.x Breaking change
 

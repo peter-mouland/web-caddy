@@ -41,17 +41,8 @@ Browserify.prototype.buildVendor = function(options){
 
 Browserify.prototype.mapExternalFiles = function() {
     if (!this.options.vendorBundle) return;
-    var options = this.options;
     return this.options.vendorBundle.map(function (v) {
-        var dependency = (typeof v === 'string') ? v : v.expose;
-        if (options.browser && options.browser[dependency]){
-            log.warn(['You have `browser.' + dependency + '` within your package.json.',
-                'This may cause problems. Ensure within the `vendorBundle` you have:',
-                ' * bower_components: have the full path  e.g. {file:\'./bower_components/path/' + dependency + '.js\',expose:\'' + dependency + '\'}',
-                ' * node_module: have the node name within the `vendorBundle` e.g. \'' + dependency + '\'',
-                ''].join('\n'));
-        }
-        return dependency;
+        return (typeof v === 'string') ? v : v.expose;
     });
 };
 
