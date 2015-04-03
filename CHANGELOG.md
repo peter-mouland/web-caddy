@@ -2,6 +2,8 @@
 
 ## 2.0.x
     * Renamed to `web-caddy`
+    * Updated `Clean` to be a function that accepts a location or 'type'
+    * Removed `dist` path config option
 
 ## 1.3.x
  * **1.3.0**

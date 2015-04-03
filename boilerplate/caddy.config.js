@@ -3,7 +3,7 @@ var pkg = require('./package.json');
 module.exports = {
     build: ['fonts', 'images', 'sass', 'mustache', 'browserify'], //plus 'requirejs', 'jade'
     test: 'karma', // or false. mocha not yet available.
-    release: ['git', 'gh-pages', 's3'], // ['git', 'gh-pages','s3'] or false.
+    release: ['git', 'gh-pages', 's3', 'bower'], // ['git', 'gh-pages','s3'] or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
     browserify: {
         insertGlobals : true,
@@ -22,26 +22,18 @@ module.exports = {
     },
     staticApp:{
         server: { baseDir : '_site' }, // '_site' or ['_site','bower_component'] etc using 'browserSync' api
-        port: 3456
+        port: 3456 //todo: make this dynamic
     },
     paths: {
         /*
-        All paths also have `script`, `styles`, `fonts`, `icons` and `images` properties
-        Feel free to specify a custom path i.e. `scripts: './src/js'`
-        */
-        "bower": {
-            root: './bower_components',
-            fonts: './bower_components/*/dist/fonts'
-        },
+         All paths also have `script`, `styles`, `fonts`, `icons` and `images` properties
+         Feel free to specify a custom path i.e.  add `scripts: './src/js'`
+         */
         source: { //source files to build your component / site
             root: "./src"
         },
         "demo": { // files used to demo the source code or an accompanying site.
-                  // not files you would want to distribute.
             root: "./demo"
-        },
-        dist : { // Compiled source code to be redistributed i.e. via bower
-            root: "./dist"
         },
         "site": { // Final build (Compiled demo + source) code pushed to your chosen release cloud i.e. AWS
             root: './_site'

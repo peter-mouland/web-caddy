@@ -29,7 +29,10 @@ Sass.prototype.file = function(fileObj, outputStyle){
                 newFileObj.contents = autoprefixer().process(output.css).css;
                 resolve(newFileObj);
             },
-            error : reject
+            error : function(e){
+                log.warn('Sass Error');
+                reject(e)
+            }
         });
     });
 };

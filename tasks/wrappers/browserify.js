@@ -78,7 +78,8 @@ Browserify.prototype.bundle = function(b, fileObj) {
     b.bundle().pipe(b_ws);
     return new Promise(function(resolve, reject) {
         b_ws.end = function(){
-            log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
+            //todo: verbose mode?
+            //log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
             return resolve(fileObj);
         };
         b_ws.on('error', reject);
@@ -98,9 +99,9 @@ Browserify.prototype.write = function(){
     var self = this;
     var options = this.options || {};
     return fs.glob(this.location + '/*.js').then(function(fileObjs){
-        if (fileObjs.length===0){
-            log.info('no .js files found within `' + self.location + '`');
-        }
+        //if (fileObjs.length===0){
+        //    log.info('no .js files found within `' + self.location + '`');
+        //}
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
             promises.push(self.file(fileObj));
@@ -126,7 +127,8 @@ Browserify.prototype.minify = function(fileObj){
     newFile.name = fileObj.name.replace('.js','.min.js');
     newFile.dir = this.destination;
     newFile.contents = UglifyJS.minify(fileObj.path).code;
-    log.info(' * ' + newFile.name + ' saved in ' + newFile.dir);
+    //todo: verbose mode?
+    //log.info(' * ' + newFile.name + ' saved in ' + newFile.dir);
     return Promise.resolve(newFile);
 };
 
