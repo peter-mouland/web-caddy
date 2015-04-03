@@ -18,7 +18,7 @@ function info(msg) {
 }
 
 function warn(msg) {
-    console.log(chalk.yellow(msg));
+    console.log(chalk.yellow(msg.message || msg));
 }
 
 module.exports = {

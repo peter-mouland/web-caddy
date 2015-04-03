@@ -15,12 +15,12 @@ function Sass(location, destination, options){
 Sass.prototype.file = function(fileObj, outputStyle){
     var self = this;
     var options = this.options || {};
+    var name = fileObj.name.replace('.scss','.css');
+    if (outputStyle === 'compressed'){
+        name = name.replace('.css','.min.css');
+    }
+    var newFileObj = new File({path: path.resolve(self.destination, name)});
     return new Promise(function(resolve, reject){
-        var name = fileObj.name.replace('.scss','.css');
-        if (outputStyle === 'compressed'){
-            name = name.replace('.css','.min.css');
-        }
-        var newFileObj = new File({path: path.resolve(self.destination, name)});
         sass.render({
             file : fileObj.path,
             outputStyle : outputStyle || options.outputStyle || "nested",

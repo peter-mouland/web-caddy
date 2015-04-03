@@ -1,5 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var replaceStream = require('replacestream');
+var path = require('path');
 var shell = require("shelljs");
 var init = require('./init');
 var log = require('./utils/log');
@@ -19,7 +20,7 @@ function renameFiles(project){
 }
 
 function copyBoilerplate(project){
-    log.info("\nCopying Component Files ... \n");
+    log.info("\nCopying Files ... \n");
     var moduleDir = npmGlobalPath() + '/web-caddy/boilerplate';
     return fs.copyDirectory(moduleDir, './' + project,
         function(read, write, file){
@@ -30,7 +31,7 @@ function copyBoilerplate(project){
 
 function newComponent(project) {
     if (fs.existsSync(project)){
-        log.onError('Component `' + project + '` already exists');
+        log.onError('`' + project + '` already exists');
     }
     return copyBoilerplate(project).then(function(output) {
         shell.cd(project);
@@ -53,7 +54,7 @@ function newComponent(project) {
             ' * View the basic site, run:               $ npm start',
             ' * Test on the fly, run in a new tab:      $ npm run tdd',
             ' * To see more tasks please go to : ',
-            '   https://github.com/peter-mouland/web-caddy/blob/master/docs/API.md'
+            '   https://github.com/peter-mouland/web-caddy/blob/master/docs'
         ].join('\n'));
     }).catch(log.onError);
 }

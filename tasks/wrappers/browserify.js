@@ -73,11 +73,12 @@ Browserify.prototype.file = function(fileObj, browserSync) {
 };
 
 Browserify.prototype.bundle = function(b, fileObj) {
+    var self = this;
     var b_ws = fs.createWriteStream(path.resolve(this.destination, fileObj.name));
     b.bundle().pipe(b_ws);
     return new Promise(function(resolve, reject) {
         b_ws.end = function(){
-            log.info(fileObj.name + ' saved');
+            log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
             return resolve(fileObj);
         };
         b_ws.on('error', reject);
@@ -125,6 +126,7 @@ Browserify.prototype.minify = function(fileObj){
     newFile.name = fileObj.name.replace('.js','.min.js');
     newFile.dir = this.destination;
     newFile.contents = UglifyJS.minify(fileObj.path).code;
+    log.info(' * ' + newFile.name + ' saved in ' + newFile.dir);
     return Promise.resolve(newFile);
 };
 
