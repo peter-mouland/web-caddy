@@ -22,37 +22,29 @@ function serverConfigFiles(){
 function html(replacements) {
     initConfig();
     var build = helper.matches(config.build, ['jade','mustache']);
-    if (!build || !paths.site){
-        return Promise.resolve();
-    }
-    replacements = replacements || {};
+    if (!build || !paths.site) return Promise.resolve();
+
     var Html = require('./wrappers/' + build);
-    var htmlMinify = require('html-minifier').minify;
-    var now = Date().split(' ').splice(0,5).join(' ');
-    var version = replacements.version || config.pkg.version;
-    var name = replacements.name || config.pkg.name;
-    replacements.site = {now: now, version:version, name: name};
+    replacements = replacements || config.pkg;
+    replacements.now = Date().split(' ').splice(0,5).join(' ');
     var src = [];
     paths.demo && src.push(paths.demo.root + '/*.{html,jade,mustache,ms}');
     paths.source && src.push(paths.source.root + '/*.{html,jade,mustache,ms}');
-    var htmlPromise = new Html(src, paths.site.root, replacements).write();
-    return htmlPromise.then(function(fileObjs){
-        var promises = [];
-        fileObjs.forEach(function(fileObj){
-            fileObj.contents = htmlMinify(fileObj.contents, {
-                removeAttributeQuotes: true,
-                collapseBooleanAttributes : true,
-                collapseWhitespace: true,
-                useShortDoctype: true,
-                removeComments:true,
-                removeCommentsFromCdata:true,
-                removeEmptyAttributes: true
-            });
-            promises.push(fs.write(fileObj));
-        });
-        return Promise.all(promises);
-    }).then(function(){
-        log.info(' * HTML Complete');
+    return new Html(src, paths.site.root, replacements).write()
+        .then(function(fileObjs){
+            log.info(' * HTML Complete');
+            return htmlMin(fileObjs);
+        })
+        .catch(log.warn);
+}
+
+function htmlMin(fileObjs) {
+    var build = helper.matches(config.build, ['html-min']);
+    if (!build || !paths.site) return Promise.resolve();
+
+    var Html = require('./wrappers/html-min');
+    return new Html(fileObjs).write().then(function(){
+        log.info(' * HTML Min Complete');
     }).catch(log.warn);
 }
 
@@ -60,9 +52,8 @@ function html(replacements) {
 function fonts() {
     initConfig();
     var build = helper.matches(config.build, ['fonts']);
-    if (!build || !paths.site) {
-        return Promise.resolve();
-    }
+    if (!build || !paths.site) return Promise.resolve();
+
     var location = [];
     paths.source && paths.source.fonts && location.push(paths.source.fonts + '/**/*.{eot,ttf,woff,svg}');
     paths.demo && paths.demo.fonts && location.push(paths.demo.fonts + '/**/*.{eot,ttf,woff,svg}');
@@ -73,9 +64,8 @@ function fonts() {
 function images() {
     initConfig();
     var build = helper.matches(config.build, ['images']);
-    if (!build || !paths.site) {
-        return Promise.resolve();
-    }
+    if (!build || !paths.site) return Promise.resolve();
+
     var location = [];
     paths.source && paths.source.images && location.push(paths.source.images + '/**/*');
     paths.demo && paths.demo.images && location.push(paths.demo.images + '/**/*');
@@ -85,9 +75,8 @@ function images() {
 function scripts(options){
     initConfig();
     var build = helper.matches(config.build, ['browserify','requirejs']);
-    if (!build){
-        return Promise.resolve();
-    }
+    if (!build) return Promise.resolve();
+
     var Scripts = require('./wrappers/' + build);
     options = options || config[build] || {};
     options.browserify = pkg.browserify;
@@ -104,9 +93,8 @@ function scripts(options){
 function styles(options){
     initConfig();
     var build = helper.matches(config.build, ['sass']);
-    if (!build){
-        return Promise.resolve();
-    }
+    if (!build) return Promise.resolve();
+
     var Styles = require('./wrappers/' + build);
     options = options || (config[build]) || {};
     return Promise.all([

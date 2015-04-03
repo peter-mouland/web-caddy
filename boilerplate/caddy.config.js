@@ -1,7 +1,7 @@
 var pkg = require('./package.json');
 
 module.exports = {
-    build: ['fonts', 'images', 'sass', 'mustache', 'browserify'], //plus 'requirejs', 'jade'
+    build: ['fonts', 'images', 'sass', 'mustache', 'browserify', 'html-min'], //plus 'requirejs', 'jade'
     test: 'karma', // or false. mocha not yet available.
     release: ['git', 'gh-pages', 's3', 'bower'], // ['git', 'gh-pages','s3'] or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`

@@ -4,6 +4,9 @@
     * Renamed to `web-caddy`
     * Updated `Clean` to be a function that accepts a location or 'type'
     * Removed `dist` path config option
+    * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now.
+    * Added `package.json` to Mustache/Jade variables by default.
+    * Added `html-min` as separate build task.
 
 ## 1.3.x
  * **1.3.0**

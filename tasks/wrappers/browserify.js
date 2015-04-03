@@ -86,6 +86,8 @@ Browserify.prototype.bundle = function(b, fileObj) {
     });
 };
 
+//todo: remove ny hardcoded strings from wrapper
+//ie, put  '/*.js' into the build.js
 Browserify.prototype.watch = function(browserSync) {
     var self = this;
     return fs.glob(this.location + '/*.js').then(function(fileObjs) {
