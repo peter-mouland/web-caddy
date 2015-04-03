@@ -25,7 +25,7 @@ function run(options){
     options = options || (config[config.test]) || {};
     var test = new Test(options);
     var clean = require('./clean');
-    return clean.test().then(function(){
+    return clean('test').then(function(){
         return test.run(true);
     }).then(function(){
         return test.coverage();

@@ -11,65 +11,44 @@ function initConfig(){
 }
 
 function serverConfig(){
-    log.info('deleting server config files');
+    log.info(' * Server config files');
     initConfig();
-    var htmlPaths = [];
-    paths.site && htmlPaths.push(paths.site.root + '/{CNAME,.htaccess,robots.txt}');
-    return fs.del(htmlPaths);
+    return fs.del(paths.site.root + '/{CNAME,.htaccess,robots.txt}');
 }
 
 function html(){
-    log.info('deleting HTML');
+    log.info(' * HTML');
     initConfig();
-    var htmlPaths = [];
-    paths.dist && htmlPaths.push(paths.dist.root + '/*.{html,jade,ms,mustache}');
-    paths.site && htmlPaths.push(paths.site.root + '/*.{html,jade,ms,mustache}');
-    return fs.del(htmlPaths);
+    return fs.del(paths.site.root + '/*.{html,jade,ms,mustache}');
 }
 
 function styles(){
-    log.info('deleting styles');
+    log.info(' * Styles');
     initConfig();
-    var stylesPaths = [];
-    paths.dist && stylesPaths.push(paths.dist.styles + '/**/*.css');
-    paths.site && stylesPaths.push(paths.site.styles + '/**/*.css');
-    return fs.del(stylesPaths);
+    return fs.del(paths.site.styles + '/**/*.css');
 }
 
 function scripts(){
-    log.info('deleting scripts');
+    log.info(' * Scripts');
     initConfig();
-    var delPaths = [];
-    paths.dist && delPaths.push(paths.dist.scripts + '/**/*.js');
-    paths.site && delPaths.push(paths.site.scripts + '/**/*.js');
-    return fs.del(delPaths);
+    return fs.del(paths.site.scripts + '/**/*.js');
 }
 
 function fonts(){
+    log.info(' * Fonts');
     initConfig();
-    if (paths.site && paths.site.fonts) {
-        log.info('deleting fonts');
-        return fs.del(paths.site.fonts + '/**/*.{svg,ttf,eot,woff}');
-    } else {
-        log.info('Skipping `fonts` clean.');
-        return Promise.resolve();
-    }
+    return fs.del(paths.site.fonts + '/**/*.{svg,ttf,eot,woff}');
 }
 
 function images(){
     initConfig();
-    if (paths.site && paths.site.images) {
-        log.info('deleting images');
-        return fs.del(paths.site.images + '/**/*.{png,svg,jpg,gif}');
-    } else {
-        log.info('Skipping `images` clean.');
-        return Promise.resolve();
-    }
+    log.info(' * Images');
+    return fs.del(paths.site.images + '/**/*.{png,svg,jpg,gif}');
 }
 
 function test(){
     initConfig();
-    log.info('deleting test results');
+    log.info(' * Test report');
     return fs.del('./test/coverage/**/*');
 }
 
@@ -77,7 +56,7 @@ function all(){
     return Promise.all([serverConfig(), html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
 }
 
-module.exports = {
+var directories = {
     all: all,
     'server-config': serverConfig,
     test: test,
@@ -85,4 +64,10 @@ module.exports = {
     scripts: scripts,
     images: images,
     fonts: fonts
+};
+
+module.exports = function(location, options){
+    log.info('Deleting :');
+    if (location.indexOf('/')<0 && location.indexOf('\\')<0) directories[location]();
+    return fs.del(location);
 };
