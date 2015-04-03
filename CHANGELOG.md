@@ -1,13 +1,16 @@
 # Change Log
 
 ## 2.0.x
-    * Renamed to `web-caddy`
-    * Updated `Clean` to be a function that accepts a location or dir 'type'
-    * Removed `dist` path config option
-    * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
-    * Added `package.json` to Mustache/Jade variables by default.
-    * Added `html-min` as a separate build task.
-
+  * Renamed to `web-caddy`
+  * Updated `Clean` to be a function that accepts a location or dir 'type'
+  * Removed `dist` path config option
+  * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
+  * Added `package.json` to Mustache/Jade variables by default.
+  * Added `html-min` as a separate build task.
+  
+todo:
+  * Updated `release` task to be 'current' by default. i.e. `caddy release patch` to bump version + release
+ 
 ## 1.3.x
  * **1.3.0**
     * Updated Documents to explain more use-cases
@@ -19,11 +22,11 @@
 
 ## 1.2.x
 
- * **1.2.0** Breaking change
+ * **1.2.0**
     * Speed improvements
-    * Updated  **Breaking change** `Release` task is more flexible. Use `target` within `component.config.js`
-    * Updated  **Breaking change** `init gitRemote` step to be `init git` config.
-    * Updated  **Breaking change** All steps are implicit. ie. `component test` now only runs tests, not the build too.
+    * Updated `Release` task is more flexible. Use `target` within `component.config.js`
+    * Updated `init gitRemote` step to be `init git` config.
+    * Updated All steps are implicit. ie. `component test` now only runs tests, not the build too.
     * if implicit tasks are wanted, please customise this in `npm scripts` object.
     * Updated `circle.yml` to allow for continuous deployment by default
     * Updated `build html` step to produce minified html

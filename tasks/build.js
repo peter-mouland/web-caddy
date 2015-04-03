@@ -11,7 +11,6 @@ function initConfig(){
     pkg = config.pkg;
 }
 
-
 //todo: move to copy task
 function serverConfigFiles(){
     initConfig();
@@ -38,6 +37,7 @@ function html(replacements) {
         .catch(log.warn);
 }
 
+//todo: location for consistency or fileObjs for speed??
 function htmlMin(fileObjs) {
     var build = helper.matches(config.build, ['html-min']);
     if (!build || !paths.site) return Promise.resolve();

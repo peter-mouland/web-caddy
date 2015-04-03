@@ -62,6 +62,7 @@ function releaseGit(version){
     return git.release(version);
 }
 
+//todo: should be 'current' by default
 function run(type){
     var bump = require('./bump').run;
     var bumpedVersion;
