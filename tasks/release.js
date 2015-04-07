@@ -62,11 +62,28 @@ function releaseGit(version){
     return git.release(version);
 }
 
-//todo: should be 'current' by default
+function releaseBower(version){
+    getConfig();
+    if (!config.release || config.release.indexOf('bower') <0){
+        log.info('Skipping Bower Release');
+        return Promise.resolve();
+    }
+    var git = require('./utils/git');
+    var bower = require('./wrappers/bower');
+    if (!git.checkRemote()){
+        return log.onError(['No valid Remote Git URL.',
+            'Please update your `.git/config` file or run:',
+            '$ caddy init git'].join('\n'));
+    }
+    version = version || config.pkg.version;
+    log.info('Releasing to Bower');
+    return bower.release(version).catch(log.onError);
+}
+
 function run(type){
     var bump = require('./bump').run;
     var bumpedVersion;
-    return bump(type).then(function(version) {
+    return bump(type || 'current').then(function(version) {
         bumpedVersion = version;
         return releaseGit(version);
     }).then(function(){
@@ -77,6 +94,7 @@ function run(type){
 }
 
 module.exports = {
+    bower: releaseBower,
     git: releaseGit,
     'gh-pages': ghPagesRelease,
     s3: s3,

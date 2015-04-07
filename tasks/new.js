@@ -6,7 +6,7 @@ var init = require('./init');
 var log = require('./utils/log');
 var exec = require('./utils/exec').exec;
 var fs = require('./utils/fs');
-var bower = require('./utils/bower');
+var bower = require('./wrappers/bower');
 
 function npmGlobalPath() {
     return shell.exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;

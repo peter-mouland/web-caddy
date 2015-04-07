@@ -4,7 +4,7 @@ var path = require('path');
 var exec = require('./utils/exec').exec;
 var git = require('./utils/git');
 var fs = require('./utils/fs');
-var bower = require('./utils/bower');
+var bower = require('./wrappers/bower');
 var helper = require('./utils/config-helper');
 var prompt = require("prompt");
 require('colors');

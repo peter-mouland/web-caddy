@@ -2,14 +2,18 @@
 
 ## 2.0.x
   * Renamed to `web-caddy`
-  * Updated `Clean` to be a function that accepts a location or dir 'type'
+  * Updated `clean` to be a function that accepts a location or dir 'type'
+  * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
   * Removed `dist` path config option
   * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
   * Added `package.json` to Mustache/Jade variables by default.
   * Added `html-min` as a separate build task.
+  * Added `bower` as a separate `release` option.
   
 todo:
-  * Updated `release` task to be 'current' by default. i.e. `caddy release patch` to bump version + release
+  * standardise input to all tasks i.e. `src, dest, options`
+  * make serve port dynamic
+  * rename 'paths.site' to compiled or dest etc
  
 ## 1.3.x
  * **1.3.0**
