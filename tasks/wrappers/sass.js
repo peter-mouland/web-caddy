@@ -31,7 +31,7 @@ Sass.prototype.file = function(fileObj, outputStyle){
             },
             error : function(e){
                 log.warn('Sass Error');
-                reject(e)
+                reject(e);
             }
         });
     });

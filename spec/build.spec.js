@@ -39,7 +39,7 @@ describe("Build task", function() {
             build.html().then(function(){
                 expect(Mustache.prototype.write).toHaveBeenCalled();
                 expect(Jade.prototype.write).not.toHaveBeenCalled();
-                expect(log.info).toHaveBeenCalledWith('Build HTML Complete');
+                expect(log.info).toHaveBeenCalledWith(' * HTML Complete');
                 done();
             });
         });
@@ -49,7 +49,7 @@ describe("Build task", function() {
             build.scripts().then(function(){
                 expect(browserify.prototype.write.calls.count()).toEqual(1);
                 expect(requirejs.prototype.write).not.toHaveBeenCalled();
-                expect(log.info).toHaveBeenCalledWith('Build Scripts Complete');
+                expect(log.info).toHaveBeenCalledWith(' * Scripts Complete');
                 done();
             });
         });
@@ -60,7 +60,7 @@ describe("Build task", function() {
             build.scripts().then(function(){
                 expect(browserify.prototype.write.calls.count()).toEqual(0);
                 expect(requirejs.prototype.write).toHaveBeenCalled();
-                expect(log.info).toHaveBeenCalledWith('Build Scripts Complete');
+                expect(log.info).toHaveBeenCalledWith(' * Scripts Complete');
                 done();
             });
         });
@@ -69,7 +69,7 @@ describe("Build task", function() {
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             build.styles().then(function(){
                 expect(sass.prototype.write.calls.count()).toEqual(1);
-                expect(log.info).toHaveBeenCalledWith('Build Styles Complete');
+                expect(log.info).toHaveBeenCalledWith(' * Styles Complete');
                 done();
             });
         });
@@ -97,7 +97,7 @@ describe("Build task", function() {
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             build.images().then(function(){
                 expect(fs.copy.calls.count()).toEqual(0);
-                expect(log.info).toHaveBeenCalled();
+                //expect(log.info).toHaveBeenCalled();
                 done();
             });
         });
