@@ -209,6 +209,7 @@ module.exports = {
     replace: replace,
     watch: watch,
     glob: glob,
+    readFileSync: fs.readFileSync,
     existsSync: fs.existsSync,
     createWriteStream: createWriteStream
 };

@@ -11,6 +11,11 @@
   * Added `bower` as a separate `release` option.
   
 todo:
+  * stop separating source `syles` from `scripts` from `images` from `fonts`
+    * work from known extensions and just have `paths.src`
+    * not sure how to handle script includes :s
+  * move all logging into tasks and out of wrapper/util files
+  * move `*.requirejs.js` into a `use-case doc` to reduce confusing default code
   * standardise input to all tasks i.e. `src, dest, options`
   * make serve port dynamic
   * rename 'paths.site' to compiled or dest etc
