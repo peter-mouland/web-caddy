@@ -2,6 +2,13 @@
 var log = require("../tasks/utils/log");
 var helper = require("../tasks/utils/config-helper");
 
+function camelToHyphens(str){
+    return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
+}
+function hyphensToCamel(str){
+    return str.replace(/-(.)/g,function(a,b){return b.toUpperCase()})
+}
+
 function execTask(taskName, args){
     helper.configCheck();
     var task = require("../tasks/" + taskName);
@@ -73,15 +80,3 @@ var commands = {
     commands[command] && commands[command](argv);
     !commands[command] && commands['--help']();
 })();
-
-
-/*
-TODO: trasnfer repo
- */
-//gulp.task('transfer:user', function() {
-//    if (!gulp.env.oldUser || !gulp.env.newUser){
-//        onError('You must give `old-user` and `new-user` arguments i.e,\n'+
-//        '`gulp rename-user --old-user=someone --new-user=someone-else`');
-//    }
-//    return file.replace('./*', {replace: gulp.env.oldUser, with : gulp.env.newUser})
-//});

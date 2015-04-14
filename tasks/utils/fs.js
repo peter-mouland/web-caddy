@@ -11,7 +11,7 @@ var File = require('./file');
 
 function mkdir(dir){
     return new Promise(function(resolve, reject) {
-        fs.mkdirs(dir, function (err) {
+        mkdirp(dir, function (err) {
             err && reject(err);
             !err && resolve();
         });
@@ -200,6 +200,7 @@ function createWriteStream(path, options){
 }
 
 module.exports = {
+    mkdir: mkdir,
     read: read,
     write: write,
     del: clean,

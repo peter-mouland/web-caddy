@@ -82,10 +82,12 @@ function scripts(options){
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
-    return Promise.all([
-        paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),
-        paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, options).write()
-    ]).then(function(){
+    return fs.mkdir(paths.site.scripts).then(function() {
+        return Promise.all([
+            paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),
+            paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, options).write()
+        ]);
+    }).then(function(){
         log.info(' * Scripts Complete');
     }).catch(log.warn);
 }
@@ -97,10 +99,12 @@ function styles(options){
 
     var Styles = require('./wrappers/' + build);
     options = options || (config[build]) || {};
-    return Promise.all([
-        paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
-        paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles, options).write()
-    ]).then(function(){
+    return fs.mkdir(paths.site.styles).then(function(){
+        return Promise.all([
+            paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
+            paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles, options).write()
+        ]);
+    }).then(function(){
         log.info(' * Styles Complete');
     }).catch(log.warn);
 }
