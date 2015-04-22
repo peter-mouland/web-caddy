@@ -14,26 +14,43 @@ function checkConfig(){
     }
 }
 
-function tdd(options){
+function all(options, singleRun){
     checkConfig();
     options = options || (config[config.test]) || {};
-    return new Test(options).run(false);
+    var unitPromise, functionalPromise;
+    unitPromise = functionalPromise = Promise.resolve();
+    if (options.unit){
+        log.info(' * unit tests started');
+        unitPromise = new Test(options).run(singleRun, options.unit);
+    }
+    if (options.functional){
+        log.info(' * functional tests started');
+        functionalPromise = new Test(options).run(singleRun, options.functional);
+    }
+    return Promise.all([unitPromise,functionalPromise]);
+}
+
+function tdd(options){
+    return all(options, false);
 }
 
 function run(options){
-    checkConfig();
-    options = options || (config[config.test]) || {};
-    var test = new Test(options);
     var clean = require('./clean');
     return clean('test').then(function(){
-        return test.run(true);
+        log.info('Testing :');
+        return all(options, true);
     }).then(function(){
-        return test.coverage();
+        options = options || (config[config.test]) || {};
+        return new Test(options).coverage();
     }).then(log.onSuccess).catch(log.onError);
 }
 
-module.exports = {
-    tdd: tdd,
+var commands = {
     run: run,
+    tdd: tdd,
     all: run
+};
+
+module.exports = function(cmd, options){
+    return (commands[cmd]) ? commands[cmd](options) : 0;
 };

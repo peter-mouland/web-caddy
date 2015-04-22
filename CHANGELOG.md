@@ -11,7 +11,8 @@
   * Added `bower` as a separate `release` option.
   
 todo:
-  * enable a way to test a specific .spec file. tdd too.
+  * document how to test a specific .spec file (fit + fdescribe)
+  * remove 'new local['{{ project }}']' from example tests
   * stop separating source `syles` from `scripts` from `images` from `fonts`
     * work from known extensions and just have `paths.src`
     * not sure how to handle script includes :s
@@ -21,6 +22,7 @@ todo:
   * standardise input to all tasks i.e. `src, dest, options`
   * make serve port dynamic
   * rename 'paths.site' to compiled or dest etc
+  * //kill test tdd properly
  
 ## 1.3.x
  * **1.3.0**

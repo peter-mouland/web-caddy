@@ -4,19 +4,12 @@ var findup = require('findup-sync');
 var log = require('../utils/log');
 
 function Karma(options){
-    this.summaryPath = options.unitCoverage || options.summary;//options.summary deprecated
-    this.unitConfigPath = options.unit || options.config;//options.configPath deprecated
+    this.summaryPath = options.unitCoverage; //options.summary deprecated
+    this.unitConfigPath = options.unit; //options.configPath deprecated
     this.functionalConfigPath = options.functional;
 }
 
-Karma.prototype.run = function(singleRun){
-    return Promise.all([
-        this.test(singleRun, this.unitConfigPath),
-        this.test(singleRun, this.functionalConfigPath)
-    ]);
-};
-
-Karma.prototype.test = function(singleRun, configPath){
+Karma.prototype.run = function(singleRun, configPath){
     return new Promise(function(resolve, reject) {
         if (!configPath) {
             resolve();

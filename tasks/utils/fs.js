@@ -171,7 +171,7 @@ function clean(globby){
     return new Promise(function(resolve, reject){
         return del(globby, function (err, delPath){
             err && reject(err);
-            !err && setTimeout(function(){resolve(delPath);},150); //up timeout for windows. grr.
+            !err && setTimeout(function(){resolve(delPath);},50);
         });
     });
 }

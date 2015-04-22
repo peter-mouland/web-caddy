@@ -52,11 +52,16 @@ function test(){
     return fs.del('./test/coverage/**/*');
 }
 
+function adHoc(location, options){
+    log.info(' * adHoc : ' + location);
+    return fs.del(location);
+}
+
 function all(){
     return Promise.all([serverConfig(), html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
 }
 
-var directories = {
+var commands = {
     all: all,
     'server-config': serverConfig,
     test: test,
@@ -68,6 +73,5 @@ var directories = {
 
 module.exports = function(location, options){
     log.info('Deleting :');
-    if (location.indexOf('/')<0 && location.indexOf('\\')<0) directories[location]();
-    return fs.del(location);
+    return (commands[location]) ? commands[location](options) : adHoc(location, options);
 };

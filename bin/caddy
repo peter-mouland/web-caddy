@@ -14,7 +14,9 @@ function execTask(taskName, args){
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'run';
     args = (args.length<2) ? args[0] : args;
-    if (task[command]){
+    if (typeof task==='function'){//todo: all tasks should be functions
+        task(command,args);
+    } else if (task[command]){
         task[command](args);
     } else if (task['adhoc']){
         task['adhoc'](command);
