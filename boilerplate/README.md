@@ -1,11 +1,11 @@
-[{{ project }}]({{ git.io-URL }})  [![Circle CI](https://circleci.com/gh/{{ git.username }}/{{ project }}/tree/master.svg?style=svg)](https://circleci.com/gh/{{ git.username }}/{{ project }}/tree/master)
+[{{ project.toWord }}]({{ git.io-URL }})  [![Circle CI](https://circleci.com/gh/{{ git.username }}/{{ project }}/tree/master.svg?style=svg)](https://circleci.com/gh/{{ git.username }}/{{ project }}/tree/master)
 ========================
 
 > Please take a look at the [demo page]({{ git.io-URL }})
 
 ## Quick-Start
 
-Include the {{ project }} assets in your project either as **Static Resources**
+Include the {{ project.toWord }} assets in your project either as **Static Resources**
 
 ```html
 <link rel="stylesheet" href="http:// WEB ADDRESS /{{ project }}/0.0.1/styles/{{ project }}.min.css" />
@@ -27,7 +27,7 @@ This component relies on other components and you must also include these in you
 
 #### Developer Notes
 
-Choose a type of {{ project }} component and copy the relevant html.
+Choose a type of {{ project.toWord }} component and copy the relevant html.
  * [example](demo/_includes/example.html)
  * [example](demo/_includes/example.html),
 

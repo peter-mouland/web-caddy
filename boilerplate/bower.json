@@ -4,7 +4,7 @@
     "authors": [
         "{{ git.author }} <{{ git.email }}>"
     ],
-    "description": "{{ project }}",
+    "description": "{{ project.toWord }}",
     "main": "dist",
     "license": "BSD3",
     "ignore": [

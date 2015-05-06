@@ -7,7 +7,7 @@
 <!--end css conditionals-->
 <head lang="en">
     <meta charset="UTF-8"/>
-    <title>{{ project }}</title>
+    <title>{{ project.toWord }}</title>
 
     <link rel="stylesheet" href="styles/demo.css"/>
     <link rel="stylesheet" href="styles/{{ project }}.css"/>
@@ -18,7 +18,7 @@
 <body>
 
 <div class="demo-container">
-    <h1>{{ project }}
+    <h1>{{ project.toWord }}
         <small  class="demo-version text--secondary">v{{ site.version }}
             <a href="{{ git.HTTPS-URL }}" class="text--secondary">
                 <span class="demo-icon demo-icon--github"  aria-hidden=true></span>
