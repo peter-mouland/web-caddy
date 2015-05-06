@@ -87,5 +87,5 @@ By default, during the build it will also replace *site.now*, *site.name* and *s
 
 `caddy build server-config-files`
 
-This will copy any server config files (currently `CNAME`, `.htaccess` and `robots.txt`) found in `paths.source.root` to your `paths.site.root`.
+This will copy any server config files (currently `CNAME`, `.htaccess` and `robots.txt`) found in `paths.source.root` to your `paths.target.root`.
 

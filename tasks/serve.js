@@ -54,9 +54,9 @@ function watch(){
     //todo: use configHelper.matches on merge
     if (config.build.scripts=='browserify' || (
         config.build.indexOf && config.build.indexOf('browserify')>-1) ){
-        new Browserify(paths.source.scripts, paths.site.scripts).watch(browserSync);
+        new Browserify(paths.source.scripts, paths.target.scripts).watch(browserSync);
         if (paths.demo && paths.demo.scripts){
-            new Browserify(paths.demo.scripts, paths.site.scripts).watch(browserSync);
+            new Browserify(paths.demo.scripts, paths.target.scripts).watch(browserSync);
         }
     } else {
         var scriptsPaths = [paths.source.scripts + '/**/*' ];

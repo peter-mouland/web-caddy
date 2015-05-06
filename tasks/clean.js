@@ -13,37 +13,37 @@ function initConfig(){
 function serverConfig(){
     log.info(' * Server config files');
     initConfig();
-    return fs.del(paths.site.root + '/{CNAME,.htaccess,robots.txt}');
+    return fs.del(paths.target.root + '/{CNAME,.htaccess,robots.txt}');
 }
 
 function html(){
     log.info(' * HTML');
     initConfig();
-    return fs.del(paths.site.root + '/*.{html,jade,ms,mustache}');
+    return fs.del(paths.target.root + '/*.{html,jade,ms,mustache}');
 }
 
 function styles(){
     log.info(' * Styles');
     initConfig();
-    return fs.del(paths.site.styles + '/**/*.css');
+    return fs.del(paths.target.styles + '/**/*.css');
 }
 
 function scripts(){
     log.info(' * Scripts');
     initConfig();
-    return fs.del(paths.site.scripts + '/**/*.js');
+    return fs.del(paths.target.scripts + '/**/*.js');
 }
 
 function fonts(){
     log.info(' * Fonts');
     initConfig();
-    return fs.del(paths.site.fonts + '/**/*.{svg,ttf,eot,woff}');
+    return fs.del(paths.target.fonts + '/**/*.{svg,ttf,eot,woff}');
 }
 
 function images(){
     initConfig();
     log.info(' * Images');
-    return fs.del(paths.site.images + '/**/*.{png,svg,jpg,gif}');
+    return fs.del(paths.target.images + '/**/*.{png,svg,jpg,gif}');
 }
 
 function test(){

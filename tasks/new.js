@@ -8,6 +8,14 @@ var exec = require('./utils/exec').exec;
 var fs = require('./utils/fs');
 var bower = require('./wrappers/bower');
 
+function hyphensToSpaces(str){
+    var s = str.replace(/(?:^|-)\S/g, function(a) { return a.toUpperCase(); });
+    return s.replace(/-/g, ' ');
+}
+function hyphensToCamel(str){
+    return str.replace(/-(.)/g,function(a,b){return b.toUpperCase()})
+}
+
 function npmGlobalPath() {
     return shell.exec('npm config get prefix', {silent:true}).output.replace(/\s+$/g, '') + "/lib/node_modules" ;
 }
@@ -25,6 +33,8 @@ function copyBoilerplate(project){
     return fs.copyDirectory(moduleDir, './' + project,
         function(read, write, file){
             read.pipe(replaceStream('{{ project }}', project))
+            read.pipe(replaceStream('{{ project.toCamelCase }}', hyphensToCamel(project)))
+            read.pipe(replaceStream('{{ project.toWord }}', hyphensToSpaces(project)))
                 .pipe(write);
     });
 }

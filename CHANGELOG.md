@@ -4,6 +4,8 @@
   * Renamed to `web-caddy`
   * Updated `clean` to be a function that accepts a location or dir 'type'
   * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
+  * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs.
+  * Updated config option `paths.site` to `paths.target`.
   * Removed `dist` path config option
   * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
   * Added `package.json` to Mustache/Jade variables by default.
@@ -12,16 +14,15 @@
   
 todo:
   * document how to test a specific .spec file (fit + fdescribe)
-  * remove 'new local['{{ project }}']' from example tests
   * stop separating source `syles` from `scripts` from `images` from `fonts`
     * work from known extensions and just have `paths.src`
     * not sure how to handle script includes :s
   * make tasks only use wrappers . no fs utils etc
   * move all logging into tasks and out of wrapper/util files
   * move `*.requirejs.js` into a `use-case doc` to reduce confusing default code
+  * windows "when I save column.js=, it does refresh, but it doesn't always reflect the changes"
   * standardise input to all tasks i.e. `src, dest, options`
   * make serve port dynamic
-  * rename 'paths.site' to compiled or dest etc
   * //kill test tdd properly
  
 ## 1.3.x

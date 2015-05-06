@@ -15,13 +15,13 @@ function initConfig(){
 function serverConfigFiles(){
     initConfig();
     var source = paths.source.root +'/' + '{CNAME,.htaccess,robots.txt}';
-    return fs.copy(source, paths.site.root);
+    return fs.copy(source, paths.target.root);
 }
 
 function html(replacements) {
     initConfig();
     var build = helper.matches(config.build, ['jade','mustache']);
-    if (!build || !paths.site) return Promise.resolve();
+    if (!build || !paths.target) return Promise.resolve();
 
     var Html = require('./wrappers/' + build);
     replacements = replacements || config.pkg;
@@ -29,7 +29,7 @@ function html(replacements) {
     var src = [];
     paths.demo && src.push(paths.demo.root + '/*.{html,jade,mustache,ms}');
     paths.source && src.push(paths.source.root + '/*.{html,jade,mustache,ms}');
-    return new Html(src, paths.site.root, replacements).write()
+    return new Html(src, paths.target.root, replacements).write()
         .then(function(fileObjs){
             log.info(' * HTML Complete');
             return htmlMin(fileObjs);
@@ -40,7 +40,7 @@ function html(replacements) {
 //todo: location for consistency or fileObjs for speed??
 function htmlMin(fileObjs) {
     var build = helper.matches(config.build, ['html-min']);
-    if (!build || !paths.site) return Promise.resolve();
+    if (!build || !paths.target) return Promise.resolve();
 
     var Html = require('./wrappers/html-min');
     return new Html(fileObjs).write().then(function(){
@@ -52,24 +52,24 @@ function htmlMin(fileObjs) {
 function fonts() {
     initConfig();
     var build = helper.matches(config.build, ['fonts']);
-    if (!build || !paths.site) return Promise.resolve();
+    if (!build || !paths.target) return Promise.resolve();
 
     var location = [];
     paths.source && paths.source.fonts && location.push(paths.source.fonts + '/**/*.{eot,ttf,woff,svg}');
     paths.demo && paths.demo.fonts && location.push(paths.demo.fonts + '/**/*.{eot,ttf,woff,svg}');
-    return fs.copy(location, paths.site.fonts);
+    return fs.copy(location, paths.target.fonts);
 }
 
 //todo: move to copy task
 function images() {
     initConfig();
     var build = helper.matches(config.build, ['images']);
-    if (!build || !paths.site) return Promise.resolve();
+    if (!build || !paths.target) return Promise.resolve();
 
     var location = [];
     paths.source && paths.source.images && location.push(paths.source.images + '/**/*');
     paths.demo && paths.demo.images && location.push(paths.demo.images + '/**/*');
-    return fs.copy(location, paths.site.images);
+    return fs.copy(location, paths.target.images);
 }
 
 function scripts(options){
@@ -82,10 +82,10 @@ function scripts(options){
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
-    return fs.mkdir(paths.site.scripts).then(function() {
+    return fs.mkdir(paths.target.scripts).then(function() {
         return Promise.all([
-            paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.site.scripts, options).write(),
-            paths.site && paths.site.scripts && new Scripts(paths.source.scripts, paths.site.scripts, options).write()
+            paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.target.scripts, options).write(),
+            paths.target && paths.target.scripts && new Scripts(paths.source.scripts, paths.target.scripts, options).write()
         ]);
     }).then(function(){
         log.info(' * Scripts Complete');
@@ -99,10 +99,10 @@ function styles(options){
 
     var Styles = require('./wrappers/' + build);
     options = options || (config[build]) || {};
-    return fs.mkdir(paths.site.styles).then(function(){
+    return fs.mkdir(paths.target.styles).then(function(){
         return Promise.all([
-            paths.site && paths.site.styles && new Styles(paths.source.styles, paths.site.styles, options).write(),
-            paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.site.styles, options).write()
+            paths.target && paths.target.styles && new Styles(paths.source.styles, paths.target.styles, options).write(),
+            paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.target.styles, options).write()
         ]);
     }).then(function(){
         log.info(' * Styles Complete');

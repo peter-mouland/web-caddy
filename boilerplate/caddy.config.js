@@ -1,4 +1,34 @@
 var pkg = require('./package.json');
+/*
+ To configure this file further, please see http://
+ */
+
+//use the following as defaults and remove the details from this config file?
+//create a defualt.config.js in caddy that this merges from?
+//javascriptsDir: ['js','scripts','javascript','javascripts']
+//stylesheetsDir: ['css','sass','scss','styles','stylesheets']
+//karmaConfigs: ['karma.config.js','karma.functional.js','karma.unit.js']
+//unitCoverage:'coverage/summary.json'
+//staticApp:{
+//    server: { baseDir : '_site' }, //todo: use `target`
+//    port: 3456 //todo: make this dynamic
+//}
+//
+//module.exports = {
+//    pkg: pkg,
+//    paths: {
+//        source: "./src",
+//        demo: "./demo", //supporting code used to demonstrate
+//        target: './_site',
+//        tests: 'test'
+//    },
+//    copy: ['fonts', 'images'],
+//    build: ['sass', 'mustache', 'browserify'],
+//    test: 'karma',
+//    release: ['git'],
+//    serve: 'staticApp'
+//};
+
 
 module.exports = {
     build: ['fonts', 'images', 'sass', 'mustache', 'browserify', 'html-min'], //plus 'requirejs', 'jade'
