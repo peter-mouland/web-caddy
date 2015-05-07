@@ -27,6 +27,17 @@ var pkg = require('./package.json');
 //    serve: 'staticApp'
 //};
 
+//document:
+//browserify: {
+//    insertGlobals : true,
+//        detectGlobals : false
+//},
+
+//document:
+//staticApp:{
+//    server: { baseDir : '_site' }, // '_site' or ['_site','bower_component'] etc using 'browserSync' api
+//    port: 3456 //todo: make this dynamic
+//}
 
 module.exports = {
     pkg: pkg,
@@ -40,10 +51,6 @@ module.exports = {
     test: 'karma', // or false. mocha not yet available.
     release: ['git', 'gh-pages', 's3', 'bower'], // ['git', 'gh-pages','s3'] or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
-    browserify: {
-        insertGlobals : true,
-        detectGlobals : false
-    },
     karma:{
         functional: './test/karma.functional.js', // string or false. Karma config file.
         unit: './test/karma.unit.js', // string or false. Karma config file with coverage setup.
@@ -54,9 +61,5 @@ module.exports = {
         region: process.env.YOUR_AWS_REGION,
         profile: pkg.name, // profile to be used in ~/.aws/credentials
         target: pkg.name + '/' + pkg.version + '/' //target release destination i.e. 'components/'
-    },
-    staticApp:{
-        server: { baseDir : '_site' }, // '_site' or ['_site','bower_component'] etc using 'browserSync' api
-        port: 3456 //todo: make this dynamic
     }
 };

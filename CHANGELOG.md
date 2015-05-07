@@ -8,6 +8,7 @@
   * Updated `paths.site` config option to `paths.target`.
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
   * Updated `serve` task to serve `target` directory by default + to a free port if omitted. 
+  * Updated Mustache/Jade to use variables from `package.json` by default
   * Removed `dist` path config option
   * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
   * Added `copy` task to separate the task of copying images and server-config from building scripts etc.

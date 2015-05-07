@@ -92,14 +92,6 @@ describe("Config-helper ", function() {
             expect(isCompatible).toContain(completeConfig.release);
         });
 
-        it("knows if the config is incorrect: missing staticApp config", function () {
-            delete completeConfig.staticApp;
-            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
-            var isCompatible = helper.configCheck();
-            expect(log.onError).toHaveBeenCalled();
-            expect(isCompatible).toContain('be incorrect');
-            expect(isCompatible).toContain(completeConfig.serve);
-        });
     })
 
 });
