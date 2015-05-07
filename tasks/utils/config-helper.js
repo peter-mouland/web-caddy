@@ -37,12 +37,12 @@ var helper = {
         config.globs = {
             'testCoverage':'./test/coverage/**/*'
         };
-        for (var pathName in config.paths) {
-            config.globs[pathName] = {};
-            ['scripts', 'styles', 'fonts', 'images', 'serverConfig', 'html'].forEach(function (asset, i) {
+        ['scripts', 'styles', 'fonts', 'images', 'serverConfig', 'html'].forEach(function (asset, i) {
+            for (var pathName in config.paths) {
+                config.globs[pathName] = config.globs[pathName] || {};
                 config.globs[pathName][asset] = self.pathGlob(config.paths[pathName], asset);
-            });
-        }
+            }
+        });
     },
     configCheck : function(){
         var config = this.getConfig();

@@ -28,7 +28,8 @@ Browserify.prototype.checkForDeboweify = function(){
 Browserify.prototype.buildVendor = function(options){
     if (!options.vendorBundle) return Promise.resolve();
     delete this.options.entries;
-    var outFile = path.resolve(path.join(this.destination,fileObj.relativeDir), 'vendor.js');
+    //todo: test + fix this!!
+    var outFile = path.join(this.destination, 'vendor.js');//, fileObj.relativeDir
     var vendorFile = new File({ path: outFile });
     var v_ws = fs.createWriteStream(vendorFile.path);
     browserify().require(options.vendorBundle).bundle().pipe(v_ws);

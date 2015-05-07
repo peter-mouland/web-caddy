@@ -12,7 +12,7 @@ function hyphensToSpaces(str){
     return s.replace(/-/g, ' ');
 }
 function hyphensToCamel(str){
-    return str.replace(/-(.)/g,function(a,b){return b.toUpperCase()})
+    return str.replace(/-(.)/g,function(a,b){return b.toUpperCase();});
 }
 
 function npmGlobalPath() {
@@ -32,8 +32,8 @@ function copyBoilerplate(project){
     return fs.copyDirectory(moduleDir, './' + project,
         function(read, write, file){
             read.pipe(replaceStream('{{ project }}', project))
-            read.pipe(replaceStream('{{ project.toCamelCase }}', hyphensToCamel(project)))
-            read.pipe(replaceStream('{{ project.toWord }}', hyphensToSpaces(project)))
+                .pipe(replaceStream('{{ project.toCamelCase }}', hyphensToCamel(project)))
+                .pipe(replaceStream('{{ project.toWord }}', hyphensToSpaces(project)))
                 .pipe(write);
     });
 }

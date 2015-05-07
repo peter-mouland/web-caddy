@@ -18,10 +18,10 @@ function copy(fileType){
     paths.source && location.push(globs.source[fileType]);
     paths.demo && location.push(globs.demo[fileType]);
     return fs.glob(location).then(function(fileObjs){
-        var promises = []
+        var promises = [];
         fileObjs.forEach(function(fileObj){
             var outFile = path.join(paths.target, fileObj.relativeDir);
-            promises.push(fs.copy(fileObj.path, outFile))
+            promises.push(fs.copy(fileObj.path, outFile));
         });
         return promises;
     }).catch(log.warn);
