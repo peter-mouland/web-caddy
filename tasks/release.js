@@ -27,9 +27,9 @@ function ghPagesRelease(message){
 
 function s3(version){
     getConfig();
-    if (!config.release || config.release.indexOf('s3') <0){
-        return Promise.resolve();
-    }
+    var release = helper.matches(config.release, ['s3']);
+    if (!release) return Promise.resolve();
+
     log.info("\ * s3\n");
     var Release = require('./wrappers/s3');
     var options = config.s3 || {};
@@ -42,9 +42,9 @@ function s3(version){
 
 function releaseGit(version){
     getConfig();
-    if (!config.release || config.release.indexOf('git') <0){
-        return Promise.resolve();
-    }
+    var release = helper.matches(config.release, ['git']);
+    if (!release) return Promise.resolve();
+
     var git = require('./utils/git');
     if (!git.checkRemote()){
         return log.onError(['No valid Remote Git URL.',
@@ -58,9 +58,9 @@ function releaseGit(version){
 
 function releaseBower(version){
     getConfig();
-    if (!config.release || config.release.indexOf('bower') <0){
-        return Promise.resolve();
-    }
+    var release = helper.matches(config.release, ['bower']);
+    if (!release) return Promise.resolve();
+
     var git = require('./utils/git');
     var bower = require('./wrappers/bower');
     if (!git.checkRemote()){
