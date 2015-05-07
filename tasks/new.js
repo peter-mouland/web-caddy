@@ -53,7 +53,7 @@ function newComponent(project) {
         return bower.install();
     }).then(function(output){
         for (var i in output){
-            log.onSuccess( ' * installed ' + i)
+            log.onSuccess( ' * installed ' + i);
         }
         return init.git(undefined, project);
     }).then(function(){
