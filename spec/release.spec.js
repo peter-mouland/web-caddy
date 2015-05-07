@@ -37,13 +37,8 @@ describe("Release", function() {
             delete config.release;
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             release.s3('11.12.11');
-            expect(log.info).toHaveBeenCalled();
-        });
-
-        it("old config", function () {
-            config.release = 's3';
-            spyOn(helper,'getConfig').and.callFake(function(){ return config; });
-            expect(release.s3()).toBe('/11.11.11/');
+            expect(log.info).not.toHaveBeenCalled();
+            expect(Release.prototype.write).not.toHaveBeenCalled();
         });
 
     });
@@ -65,7 +60,7 @@ describe("Release", function() {
             delete config.release;
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             release['gh-pages']('v11.12.11');
-            expect(log.info).toHaveBeenCalled();
+            expect(log.info).not.toHaveBeenCalled();
             expect(ghPages.publish).not.toHaveBeenCalled();
         });
 
@@ -93,7 +88,7 @@ describe("Release", function() {
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             spyOn(git,'checkRemote').and.callFake(function(){ return true });
             release.git('v11.12.11');
-            expect(log.info).toHaveBeenCalled();
+            expect(log.info).not.toHaveBeenCalled();
             expect(git.release).not.toHaveBeenCalled();
         });
 
