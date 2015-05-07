@@ -4,9 +4,8 @@ var findup = require('findup-sync');
 var log = require('../utils/log');
 
 function Karma(options){
-    this.summaryPath = options.unitCoverage; //options.summary deprecated
-    this.unitConfigPath = options.unit; //options.configPath deprecated
-    this.functionalConfigPath = options.functional;
+    this.summaryPath = options.unitCoverage;
+    this.unitConfigPath = options.unit;
 }
 
 Karma.prototype.run = function(singleRun, configPath){
