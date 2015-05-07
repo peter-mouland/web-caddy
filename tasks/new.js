@@ -46,10 +46,8 @@ function newComponent(project) {
         shell.cd(project);
         return renameFiles(project);
     }).then(function(output){
+        log.onSuccess(' * Files copied');
         return init.localGit();
-    }).then(function(output){
-        log.onSuccess(output);
-        return installNpms();
     }).then(function(output){
         log.onSuccess(output);
         return bower.install();
@@ -62,18 +60,12 @@ function newComponent(project) {
         log.info(['',
             'Ready!',
             ' * Please go to your new directory:        $ cd ' + project,
+            ' * Install Node Modules:                   $ npm i',
             ' * View the basic site, run:               $ npm start',
             ' * Test on the fly, run in a new tab:      $ npm run tdd',
             ' * To see more tasks please go to : ',
             '   https://github.com/peter-mouland/web-caddy/blob/master/docs'
         ].join('\n'));
-    }).catch(log.onError);
-}
-
-function installNpms(){
-    log.info("\nInstalling Node Modules ... \n");
-    return exec('npm',['install']).then(function(output){
-        log.onSuccess(output);
     }).catch(log.onError);
 }
 

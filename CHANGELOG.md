@@ -10,7 +10,9 @@
   * Updated `paths.site` config option to `paths.target`.
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
   * Updated `serve` task to serve `target` directory by default + to a free port if omitted. 
+  * Updated `release` config option. this must be an array. 
   * Updated Mustache/Jade to use variables from `package.json` by default
+  * Removed automatic installation of npm modules wtih `caddy new xxx`
   * Removed `dist` path config option
   * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
   * Added `copy` task to separate the task of copying images and server-config from building scripts etc.
@@ -20,9 +22,6 @@
 todo:
   * vendorBundle
   * don't minify in dev mode
-  * test 'new'
-  * test 'init'
-  * test 'release'
   * test a node project
   * test in windows
   * speed, speed, speed

@@ -6,20 +6,16 @@ var config, paths, pkg;
 
 function getConfig(){
     config = helper.getConfig();
-    config.release = (typeof config.release == 'string') ?
-        ['git', 'gh-pages', config.release] :
-        config.release;
 }
 
 function ghPagesRelease(message){
     getConfig();
-    if (!config.release || config.release.indexOf('gh-pages') <0){
-        log.info('Skipping gh-pages Release');
-        return Promise.resolve();
-    }
+    var release = helper.matches(config.release, ['gh-pages']);
+    if (!release) return Promise.resolve();
+
     var ghPages = require('gh-pages');
     message = message || 'Update';
-    log.info("\nReleasing to gh-pages\n");
+    log.info("\n * gh-pages\n");
     return new Promise(function(resolve, reject){
         ghPages.publish(config.paths.target, {message: message }, function(err) {
             ghPages.clean();
@@ -32,10 +28,9 @@ function ghPagesRelease(message){
 function s3(version){
     getConfig();
     if (!config.release || config.release.indexOf('s3') <0){
-        log.info('Skipping S3 Release');
         return Promise.resolve();
     }
-    log.info("\nReleasing s3\n");
+    log.info("\ * s3\n");
     var Release = require('./wrappers/s3');
     var options = config.s3 || {};
     var target = options.target || '';
@@ -48,7 +43,6 @@ function s3(version){
 function releaseGit(version){
     getConfig();
     if (!config.release || config.release.indexOf('git') <0){
-        log.info('Skipping Git Release');
         return Promise.resolve();
     }
     var git = require('./utils/git');
@@ -58,14 +52,13 @@ function releaseGit(version){
             '$ caddy init git'].join('\n'));
     }
     version = version || config.pkg.version;
-    log.info('Releasing to Git');
+    log.info(' * Git');
     return git.release(version);
 }
 
 function releaseBower(version){
     getConfig();
     if (!config.release || config.release.indexOf('bower') <0){
-        log.info('Skipping Bower Release');
         return Promise.resolve();
     }
     var git = require('./utils/git');
@@ -76,11 +69,12 @@ function releaseBower(version){
             '$ caddy init git'].join('\n'));
     }
     version = version || config.pkg.version;
-    log.info('Releasing to Bower');
+    log.info(' * Bower');
     return bower.release(version).catch(log.onError);
 }
 
 function run(type){
+    log.info('Releasing :');
     var bump = require('./bump').run;
     var bumpedVersion;
     return bump(type || 'current').then(function(version) {
