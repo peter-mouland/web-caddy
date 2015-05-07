@@ -9,34 +9,6 @@ function onError(e){
 
 describe("Config-helper ", function() {
 
-    describe('parsePaths', function(){
-
-        var paths = {
-            src: {
-                root:'./src'
-            }
-        };
-
-        it("parsePaths ensures the object always has scripts, styles, fonts, icons and images", function () {
-            var newPaths = helper.parsePaths(paths)
-            expect(newPaths.src.scripts).toBe('./src/scripts');
-            expect(newPaths.src.styles).toBe('./src/styles');
-            expect(newPaths.src.fonts).toBe('./src/fonts');
-            expect(newPaths.src.icons).toBe('./src/icons');
-            expect(newPaths.src.images).toBe('./src/images');
-        });
-
-        it("does not override given paths", function () {
-            paths.src.images = './mypath/images-mofo'
-            var newPaths = helper.parsePaths(paths)
-            expect(newPaths.src.scripts).toBe('./src/scripts');
-            expect(newPaths.src.styles).toBe('./src/styles');
-            expect(newPaths.src.fonts).toBe('./src/fonts');
-            expect(newPaths.src.icons).toBe('./src/icons');
-            expect(newPaths.src.images).toBe('./mypath/images-mofo');
-        });
-    });
-
     describe('configCheck', function(){
 
         var completeConfig = {};

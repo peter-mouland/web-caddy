@@ -9,7 +9,8 @@ function checkConfig(){
     if (config.test){
         Test = require('./wrappers/' + (config.test || 'karma'));
     } else {
-        log.info('Test set to false within caddy.config.js : skipping');
+        //todo: verbose?
+        //log.info('Test set to false within caddy.config.js : skipping');
         return Promise.resolve();
     }
 }

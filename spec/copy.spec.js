@@ -10,10 +10,9 @@ var sass = require('../tasks/wrappers/sass');
 var fs = require('../tasks/utils/fs');
 var htmlMinify = require('html-minifier');
 
-describe("Build task will compile", function() {
+describe("Copy task will copy", function() {
 
     var config;
-
     beforeEach(function(){
         spyOn(fs,'copy').and.callFake(function(){ return Promise.resolve();});
         spyOn(log, "info").and.callFake(function(msg) { return msg; });
@@ -26,50 +25,41 @@ describe("Build task will compile", function() {
         spyOn(htmlMinify, "minify").and.callFake(function(msg) { return msg; });
         config = {
             pkg:{version:'11.11.11'},
+            copy: ['fonts', 'images', 'server-config'],
             build: ['sass', 'mustache', 'browserify'],
             globs:{demo:{},source:{},target:{}},
             paths:{demo:'./demo',source:'./src',target:'./_site'}
         };
     });
 
-    it("html", function (done) {
+
+    it("fonts", function (done) {
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
-        return build.html().then(function(){
-            expect(log.info).toHaveBeenCalledWith(' * HTML Complete');
-            expect(Jade.prototype.write).not.toHaveBeenCalled();
-            expect(Mustache.prototype.write).toHaveBeenCalled();
+        build.fonts().then(function(){
+            expect(fs.copy.calls.count()).toEqual(1);
+            expect(log.info).not.toHaveBeenCalled();
             done();
         });
     });
 
-    it("scripts with browserify", function (done) {
+    it("images", function (done) {
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
-        build.scripts().then(function(){
-            expect(browserify.prototype.write.calls.count()).toEqual(2);
-            expect(requirejs.prototype.write).not.toHaveBeenCalled();
-            expect(log.info).toHaveBeenCalledWith(' * Scripts Complete');
+        build.images().then(function(){
+            expect(fs.copy.calls.count()).toEqual(1);
+            expect(log.info).not.toHaveBeenCalled();
             done();
         });
     });
 
-    it("scripts with requirejs", function (done) {
-        config.build[2] = 'requirejs';
+    it("images turned off", function (done) {
+        config.copy[1] = false;
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
-        build.scripts().then(function(){
-            expect(browserify.prototype.write.calls.count()).toEqual(0);
-            expect(requirejs.prototype.write).toHaveBeenCalled();
-            expect(log.info).toHaveBeenCalledWith(' * Scripts Complete');
+        build.images().then(function(){
+            expect(fs.copy.calls.count()).toEqual(0);
+            //expect(log.info).toHaveBeenCalled();
             done();
         });
     });
 
-    it("styles", function (done) {
-        spyOn(helper,'getConfig').and.callFake(function(){ return config; });
-        build.styles().then(function(){
-            expect(sass.prototype.write.calls.count()).toEqual(2);
-            expect(log.info).toHaveBeenCalledWith(' * Styles Complete');
-            done();
-        });
-    });
 
 });

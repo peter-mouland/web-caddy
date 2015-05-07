@@ -28,7 +28,7 @@ describe('Browserify', function () {
             this.emit = function(e){             };
             return this
         });
-        var fileObj = {path:browserifyFile, name: browserifyName}
+        var fileObj = {path:browserifyFile, name: browserifyName, relativeDir:''}
         new Browserify('src','dest').file(fileObj).then(function(response){
             expect(fs.createWriteStream.calls.count()).toBe(1);
             //expect(response.contents.toString()).toContain(browserifyContents)
@@ -43,7 +43,7 @@ describe('Browserify', function () {
     });
 
     it('should minify a file', function (done) {
-        var fileObj = {path:browserifyFile, name: browserifyName}
+        var fileObj = {path:browserifyFile, name: browserifyName, relativeDir:''}
         new Browserify('src','dest').minify(fileObj).then(function(response){
             expect(response.contents.toString()).toBe('function sum(u){var n=0;return u.forEach(function(u){n+=u}),n}module.exports={sum:sum};');
             expect(response.name).toBe('browserify.min.js');

@@ -15,7 +15,7 @@ function initConfig(){
 function html(replacements) {
     initConfig();
     var build = helper.matches(config.build, ['jade','mustache']);
-    if (!build || !paths.target) return Promise.resolve();
+    if (!build) return Promise.resolve();
 
     var Html = require('./wrappers/' + build);
     replacements = replacements || config.pkg;
@@ -26,14 +26,13 @@ function html(replacements) {
     ]).then(function(fileObjs){
         log.info(' * HTML Complete');
         return htmlMin(fileObjs);
-    })
-    .catch(log.warn);
+    }).catch(log.warn);
 }
 
 //todo: location for consistency or fileObjs for speed??
 function htmlMin(fileObjs) {
     var build = helper.matches(config.build, ['html-min']);
-    if (!build || !paths.target) return Promise.resolve();
+    if (!build) return Promise.resolve();
 
     var Html = require('./wrappers/html-min');
     var promises = [];

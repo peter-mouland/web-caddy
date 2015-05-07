@@ -76,9 +76,8 @@ Browserify.prototype.file = function(fileObj, browserSync) {
 };
 
 Browserify.prototype.bundle = function(b, fileObj) {
-    var self = this;
-    var outFile = path.resolve(path.join(this.destination,fileObj.relativeDir), fileObj.name);
-    var b_ws = fs.createWriteStream(outFile);
+    var outFile = path.join(this.destination, fileObj.relativeDir, fileObj.name);
+    var b_ws = fs.createWriteStream(path.resolve(outFile));
     b.bundle().pipe(b_ws);
     return new Promise(function(resolve, reject) {
         b_ws.end = function(){

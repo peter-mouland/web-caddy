@@ -11,14 +11,14 @@ describe('Sass', function () {
 
     var sassFile = path.join('.','spec','fixtures','sass','sass.scss');
     var sassName = 'sass.scss';
-    var sassContents = ''
-    var fileObj = {path:sassFile, name: sassName}
+    var sassContents = '';
+    var fileObj = {path:sassFile, name: sassName, relativeDir: '', dir:'dest'};
 
     beforeEach(function(done){
         fs.read(sassFile).then(function(files){
             sassContents =  files[0].contents.toString()
         }).then(done);
-    })
+    });
 
     it('should css a file', function (done) {
         new Sass('src','dest').file(fileObj).then(function(response){

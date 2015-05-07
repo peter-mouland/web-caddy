@@ -30,7 +30,7 @@ function copy(fileType){
 function serverConfig(){
     initConfig();
     var doCopy = helper.matches(config.copy, ['server-config']);
-    if (!doCopy || !paths.target) return Promise.resolve();
+    if (!doCopy) return Promise.resolve();
 
     return copy('serverConfig').then(function(){
         log.info(' * Server Config Complete');
@@ -40,7 +40,7 @@ function serverConfig(){
 function fonts() {
     initConfig();
     var doCopy = helper.matches(config.copy, ['fonts']);
-    if (!doCopy || !paths.target) return Promise.resolve();
+    if (!doCopy) return Promise.resolve();
 
     return copy('fonts').then(function(){
         log.info(' * Fonts Complete');
@@ -50,7 +50,7 @@ function fonts() {
 function images() {
     initConfig();
     var doCopy = helper.matches(config.copy, ['images']);
-    if (!doCopy || !paths.target) return Promise.resolve();
+    if (!doCopy) return Promise.resolve();
 
     return copy('images').then(function(){
         log.info(' * Images Complete');

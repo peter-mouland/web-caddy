@@ -13,8 +13,8 @@ describe('Karma', function () {
             return message;
         });
         var karma = new Karma({
-            summary: './spec/fixtures/karma/summary.json',
-            config: './spec/fixtures/karma/karma.conf.js'
+            unitCoverage: './spec/fixtures/karma/summary.json',
+            unit: './spec/fixtures/karma/karma.conf.js'
         });
 
         karma.coverage().then(function(err){
@@ -32,8 +32,8 @@ describe('Karma', function () {
         });
 
         var karma = new Karma({
-            summary: './spec/fixtures/karma/summary-failing.json',
-            config: './spec/fixtures/karma/karma.conf.js'
+            unitCoverage: './spec/fixtures/karma/summary-failing.json',
+            unit: './spec/fixtures/karma/karma.conf.js'
         });
 
         karma.coverage().catch(function(err){
