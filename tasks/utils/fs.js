@@ -8,6 +8,7 @@ var log = require('./log');
 var File = require('./file');
 
 var mkdirpSync = function (dirpath) {
+    if (!dirpath) return log.warn('no directory to make');
     var parts = dirpath.replace(process.cwd(),'').split(path.sep);
     for( var i = 1; i <= parts.length; i++ ) {
         try {
@@ -19,7 +20,6 @@ var mkdirpSync = function (dirpath) {
 };
 
 function mkdir(dir){
-    if (!dir) log.warn('no directory to make');
     mkdirpSync(dir);
     return new Promise(function(resolve, reject) {
         resolve();

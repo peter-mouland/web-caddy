@@ -30,9 +30,8 @@ Browserify.prototype.buildVendor = function(options){
     delete this.options.entries;
     //todo: test + fix this!!
     var outFile = path.join(this.destination, 'vendor.js');//, fileObj.relativeDir
-    var dir = path.join(this.destination, fileObj.relativeDir);
     var vendorFile = new File({ path: outFile });
-    return fs.mkdir(dir).then(function(){
+    return fs.mkdir(this.destination).then(function(){
         var v_ws = fs.createWriteStream(vendorFile.path);
         browserify().require(options.vendorBundle).bundle().pipe(v_ws);
         return new Promise(function(resolve, reject) {
