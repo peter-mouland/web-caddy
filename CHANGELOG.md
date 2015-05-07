@@ -1,7 +1,9 @@
 # Change Log
 
-## 2.0.x
+## 2.0.x  Breaking change
   * Renamed to `web-caddy`
+  * Massive Speed improvements
+  * Improved logging
   * Updated `clean` to be a function that accepts a location or dir 'type'
   * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
   * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs.
@@ -16,10 +18,12 @@
   * Added `bower` as a separate `release` option.
   
 todo:
+  * vendorBundle
   * don't minify in dev mode
   * test 'new'
   * test 'init'
   * test 'release'
+  * test a node project
   * test in windows
   * speed, speed, speed
   * document how to test a specific .spec file (fit + fdescribe)
