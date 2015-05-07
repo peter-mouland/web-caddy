@@ -3,15 +3,23 @@ var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var Browserify = require('./wrappers/browserify.js');
-var config;
-
 var browserSync = require('browser-sync');
 var build = require('./build');
+var config, paths, globs, pkg;
+
+function initConfig(){
+    config = helper.getConfig();
+    paths = config.paths;
+    globs = config.globs;
+    pkg = config.pkg;
+}
 
 function start(options){
-    config = helper.getConfig();
+    initConfig();
     options = options || (config[config.serve]) || {};
+    options.server = options.server || { baseDir : paths.target };
     return nodeApp(options).then(function(){
+        log.warn('Server Started :');
         if (!options.server && !options.proxy){
             log.warn('caddy.config.js may be incorrect. please check');
         }
@@ -20,7 +28,7 @@ function start(options){
 }
 
 function nodeApp(options){
-    config = helper.getConfig();
+    initConfig();
     if (options.server) return Promise.resolve();
     var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
@@ -37,43 +45,38 @@ function buildAndReload(task){
 
 function watch(){
     if (!config.build) return;
-    config = helper.getConfig();
+    initConfig();
     var paths = config.paths;
     var fs = require('./utils/fs');
-    var htmlPaths = [ paths.source + '/**/*.{html,ms,mustache,jade}'];
-    var stylesPaths = [paths.source.styles + '/**/*' ];
-    var imagesPaths =   [paths.source.images + '/**/*' ];
+    var htmlPaths = [ globs.source.html.replace('*.{','**/*.{') ];
+    var stylesPaths = [globs.source.styles.replace('{.,*}','**').replace('!(_)','') ];
     if (paths.demo){
-        htmlPaths.push(paths.demo + '/**/*.{html,ms,mustache,jade}');
-        stylesPaths.push(paths.demo.styles + '/**/*');
-        imagesPaths.push(paths.demo.images + '/**/*');
+        htmlPaths.push(globs.demo.html.replace('*.{','**/*.{'));
+        stylesPaths.push(globs.demo.styles.replace('{.,*}','**').replace('!(_)',''));
     }
     fs.watch(htmlPaths, [buildAndReload('html')]);
     fs.watch(stylesPaths, [buildAndReload('styles')]);
-    fs.watch(imagesPaths,   [buildAndReload('images')]);
-    //todo: use configHelper.matches on merge
-    if (config.build.scripts=='browserify' || (
-        config.build.indexOf && config.build.indexOf('browserify')>-1) ){
-        new Browserify(paths.source.scripts, paths.target.scripts).watch(browserSync);
-        if (paths.demo && paths.demo.scripts){
-            new Browserify(paths.demo.scripts, paths.target.scripts).watch(browserSync);
+
+    if (helper.matches(config.build, ['browserify'])){
+        new Browserify(globs.source.scripts, paths.target).watch(browserSync);
+        if (paths.demo){
+            new Browserify(globs.demo.scripts, paths.target).watch(browserSync);
         }
-    } else {
-        var scriptsPaths = [paths.source.scripts + '/**/*' ];
-        paths.demo && scriptsPaths.push(paths.demo.scripts + '/**/*');
+    } else if (helper.matches(config.build, ['requirejs'])){
+        var scriptsPaths = [globs.source.scripts.replace('{.,*}','**') ];
+        paths.demo && scriptsPaths.push(globs.demo.scripts.replace('{.,*}','**'));
         fs.watch(scriptsPaths,   [buildAndReload('scripts')]);
     }
 }
 
-function adhoc(path){
-    config = helper.getConfig();
+function adhoc(baseDir){
+    initConfig();
     //todo: test if path ext is js or html
     //    : if html serve staticApp
     //    : if js serve nodeApp
     config.serve = 'staticApp';
     return start({
-        server: { baseDir : path },
-        port: 3456
+        server: { baseDir : baseDir }
     });
 }
 

@@ -5,9 +5,7 @@ var pkg = require('./package.json');
 
 //use the following as defaults and remove the details from this config file?
 //create a defualt.config.js in caddy that this merges from?
-//javascriptsDir: ['js','scripts','javascript','javascripts']
-//stylesheetsDir: ['css','sass','scss','styles','stylesheets']
-//karmaConfigs: ['karma.config.js','karma.functional.js','karma.unit.js']
+//karmaConfigs: ['karma.*.js','karma.functional.js','karma.unit.js']
 //unitCoverage:'coverage/summary.json'
 //staticApp:{
 //    server: { baseDir : '_site' }, //todo: use `target`

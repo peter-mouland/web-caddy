@@ -64,11 +64,6 @@ var helper = {
             error.push(' * There is no test config object: `' + config.test + ': {...}`');
         }
 
-        //check serve config
-        if (config.serve && !config[config.serve]){
-            error.push(' * There is no server config object:  `' + config.serve + ':{...}`');
-        }
-
         //check release config
         if (config.release.indexOf('s3')>=0 && !config.s3){
             error.push(' * There is no release config object:  `s3:{...}`');

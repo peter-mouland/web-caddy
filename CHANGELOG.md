@@ -6,7 +6,8 @@
   * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
   * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs.
   * Updated `paths.site` config option to `paths.target`.
-  * Updated build to detect CSS/JS root location and recreate within `target`
+  * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
+  * Updated `serve` task to serve `target` directory by default + to a free port if omitted. 
   * Removed `dist` path config option
   * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
   * Added `copy` task to separate the task of copying images and server-config from building scripts etc.
@@ -15,9 +16,6 @@
   * Added `bower` as a separate `release` option.
   
 todo:
-  * stop separating source `syles` from `scripts` from `images` from `fonts`
-    * work from known extensions and just have `paths.src`
-    * not sure how to handle script includes :s
   * speed, speed, speed
   * don't minify in dev mode
   * document how to test a specific .spec file (fit + fdescribe)
@@ -26,7 +24,6 @@ todo:
   * move `*.requirejs.js` into a `use-case doc` to reduce confusing default code
   * windows "when I save column.js=, it does refresh, but it doesn't always reflect the changes"
   * standardise input to all tasks i.e. `src, dest, options`
-  * make serve port dynamic
   * //kill test tdd properly
  
 ## 1.3.x
