@@ -3,19 +3,13 @@ var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var clean = require('./clean');
-var config, paths, pkg;
+var config, paths, globs, pkg;
 
 function initConfig(){
     config = helper.getConfig();
     paths = config.paths;
+    globs = config.globs;
     pkg = config.pkg;
-}
-
-//todo: move to copy task
-function serverConfigFiles(){
-    initConfig();
-    var source = paths.source.root +'/' + '{CNAME,.htaccess,robots.txt}';
-    return fs.copy(source, paths.target.root);
 }
 
 function html(replacements) {
@@ -26,15 +20,14 @@ function html(replacements) {
     var Html = require('./wrappers/' + build);
     replacements = replacements || config.pkg;
     replacements.now = Date().split(' ').splice(0,5).join(' ');
-    var src = [];
-    paths.demo && src.push(paths.demo.root + '/*.{html,jade,mustache,ms}');
-    paths.source && src.push(paths.source.root + '/*.{html,jade,mustache,ms}');
-    return new Html(src, paths.target.root, replacements).write()
-        .then(function(fileObjs){
-            log.info(' * HTML Complete');
-            return htmlMin(fileObjs);
-        })
-        .catch(log.warn);
+    return Promise.all([
+        paths.demo && new Html(globs.demo.html, paths.target, replacements).write(),
+        paths.target && new Html(globs.source.html, paths.target, replacements).write()
+    ]).then(function(fileObjs){
+        log.info(' * HTML Complete');
+        return htmlMin(fileObjs);
+    })
+    .catch(log.warn);
 }
 
 //todo: location for consistency or fileObjs for speed??
@@ -43,33 +36,13 @@ function htmlMin(fileObjs) {
     if (!build || !paths.target) return Promise.resolve();
 
     var Html = require('./wrappers/html-min');
-    return new Html(fileObjs).write().then(function(){
+    var promises = [];
+    fileObjs.forEach(function(fileObjs){
+        promises.push(new Html(fileObjs).write());
+    });
+    return Promise.all(promises).then(function(){
         log.info(' * HTML Min Complete');
     }).catch(log.warn);
-}
-
-//todo: move to copy task
-function fonts() {
-    initConfig();
-    var build = helper.matches(config.build, ['fonts']);
-    if (!build || !paths.target) return Promise.resolve();
-
-    var location = [];
-    paths.source && paths.source.fonts && location.push(paths.source.fonts + '/**/*.{eot,ttf,woff,svg}');
-    paths.demo && paths.demo.fonts && location.push(paths.demo.fonts + '/**/*.{eot,ttf,woff,svg}');
-    return fs.copy(location, paths.target.fonts);
-}
-
-//todo: move to copy task
-function images() {
-    initConfig();
-    var build = helper.matches(config.build, ['images']);
-    if (!build || !paths.target) return Promise.resolve();
-
-    var location = [];
-    paths.source && paths.source.images && location.push(paths.source.images + '/**/*');
-    paths.demo && paths.demo.images && location.push(paths.demo.images + '/**/*');
-    return fs.copy(location, paths.target.images);
 }
 
 function scripts(options){
@@ -82,12 +55,10 @@ function scripts(options){
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
-    return fs.mkdir(paths.target.scripts).then(function() {
-        return Promise.all([
-            paths.demo && paths.demo.scripts && new Scripts(paths.demo.scripts, paths.target.scripts, options).write(),
-            paths.target && paths.target.scripts && new Scripts(paths.source.scripts, paths.target.scripts, options).write()
-        ]);
-    }).then(function(){
+    return Promise.all([
+        paths.demo && new Scripts(globs.demo.scripts, paths.target, options).write(),
+        paths.target && new Scripts(globs.source.scripts, paths.target, options).write()
+    ]).then(function(){
         log.info(' * Scripts Complete');
     }).catch(log.warn);
 }
@@ -99,24 +70,19 @@ function styles(options){
 
     var Styles = require('./wrappers/' + build);
     options = options || (config[build]) || {};
-    return fs.mkdir(paths.target.styles).then(function(){
-        return Promise.all([
-            paths.target && paths.target.styles && new Styles(paths.source.styles, paths.target.styles, options).write(),
-            paths.demo && paths.demo.styles && new Styles(paths.demo.styles, paths.target.styles, options).write()
-        ]);
-    }).then(function(){
+    return Promise.all([
+        paths.target && new Styles(globs.source.styles, paths.target, options).write(),
+        paths.demo && new Styles(globs.demo.styles, paths.target, options).write()
+    ]).then(function(){
         log.info(' * Styles Complete');
     }).catch(log.warn);
 }
 
 function run(replacements){
-    return clean('all').then(function(){
+    return clean('build').then(function(){
         log.info('Building :');
         return Promise.all([
-                serverConfigFiles(),
                 scripts(),
-                fonts(),
-                images(),
                 styles(),
                 html(replacements)
             ]);
@@ -125,11 +91,8 @@ function run(replacements){
 
 module.exports = {
     html: html,
-    'server-config-files': serverConfigFiles,
     styles: styles,
     scripts: scripts,
-    images: images,
-    fonts: fonts,
     run: run,//todo: choose run or all, not both!
     all: run//todo: choose run or all, not both!
 };

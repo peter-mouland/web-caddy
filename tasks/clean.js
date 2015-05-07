@@ -2,54 +2,54 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var config, paths, pkg;
+var config, pkg, globs;
 
 function initConfig(){
     config = helper.getConfig();
-    paths = config.paths;
+    globs = config.globs;
     pkg = config.pkg;
 }
 
 function serverConfig(){
     log.info(' * Server config files');
     initConfig();
-    return fs.del(paths.target.root + '/{CNAME,.htaccess,robots.txt}');
+    return fs.del(globs.target.serverConfig);
 }
 
 function html(){
     log.info(' * HTML');
     initConfig();
-    return fs.del(paths.target.root + '/*.{html,jade,ms,mustache}');
+    return fs.del(globs.target.html);
 }
 
 function styles(){
     log.info(' * Styles');
     initConfig();
-    return fs.del(paths.target.styles + '/**/*.css');
+    return fs.del(globs.target.styles);
 }
 
 function scripts(){
     log.info(' * Scripts');
     initConfig();
-    return fs.del(paths.target.scripts + '/**/*.js');
+    return fs.del(globs.target.scripts);
 }
 
 function fonts(){
     log.info(' * Fonts');
     initConfig();
-    return fs.del(paths.target.fonts + '/**/*.{svg,ttf,eot,woff}');
+    return fs.del(globs.target.fonts);
 }
 
 function images(){
     initConfig();
     log.info(' * Images');
-    return fs.del(paths.target.images + '/**/*.{png,svg,jpg,gif}');
+    return fs.del(globs.target.images);
 }
 
 function test(){
     initConfig();
     log.info(' * Test report');
-    return fs.del('./test/coverage/**/*');
+    return fs.del(globs.testCoverage);
 }
 
 function adHoc(location, options){
@@ -61,8 +61,18 @@ function all(){
     return Promise.all([serverConfig(), html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
 }
 
+function copy(){
+    return Promise.all([serverConfig(), fonts(), images()]).catch(log.onError);
+}
+
+function build(){
+    return Promise.all([html(), styles(), scripts()]).catch(log.onError);
+}
+
 var commands = {
     all: all,
+    copy: copy,
+    build: build,
     'server-config': serverConfig,
     test: test,
     styles: styles,

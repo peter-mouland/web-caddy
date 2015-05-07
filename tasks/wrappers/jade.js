@@ -14,7 +14,8 @@ function Jade(location, destination, options){
 Jade.prototype.renderFile = function(fileObj){
     var replacements = this.options;
     var render = jade.compile(fileObj.contents.toString('utf-8'), { filename: fileObj.path, pretty: true });
-    var file = new File({path: path.join(this.destination,fileObj.name), contents:render(replacements)});
+    var outFile = path.join(this.destination,fileObj.relativeDir, fileObj.name)
+    var file = new File({path: outFile, contents:render(replacements)});
     file.ext = 'html';
     return file;
 };

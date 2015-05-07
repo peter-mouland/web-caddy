@@ -5,18 +5,22 @@
   * Updated `clean` to be a function that accepts a location or dir 'type'
   * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
   * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs.
-  * Updated config option `paths.site` to `paths.target`.
+  * Updated `paths.site` config option to `paths.target`.
+  * Updated build to detect CSS/JS root location and recreate within `target`
   * Removed `dist` path config option
   * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
+  * Added `copy` task to separate the task of copying images and server-config from building scripts etc.
   * Added `package.json` to Mustache/Jade variables by default.
   * Added `html-min` as a separate build task.
   * Added `bower` as a separate `release` option.
   
 todo:
-  * document how to test a specific .spec file (fit + fdescribe)
   * stop separating source `syles` from `scripts` from `images` from `fonts`
     * work from known extensions and just have `paths.src`
     * not sure how to handle script includes :s
+  * speed, speed, speed
+  * don't minify in dev mode
+  * document how to test a specific .spec file (fit + fdescribe)
   * make tasks only use wrappers . no fs utils etc
   * move all logging into tasks and out of wrapper/util files
   * move `*.requirejs.js` into a `use-case doc` to reduce confusing default code

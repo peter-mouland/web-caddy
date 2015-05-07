@@ -28,7 +28,8 @@ Browserify.prototype.checkForDeboweify = function(){
 Browserify.prototype.buildVendor = function(options){
     if (!options.vendorBundle) return Promise.resolve();
     delete this.options.entries;
-    var vendorFile = new File({ path: path.resolve(this.destination, 'vendor.js') });
+    var outFile = path.resolve(path.join(this.destination,fileObj.relativeDir), 'vendor.js');
+    var vendorFile = new File({ path: outFile });
     var v_ws = fs.createWriteStream(vendorFile.path);
     browserify().require(options.vendorBundle).bundle().pipe(v_ws);
     return new Promise(function(resolve, reject) {
@@ -56,6 +57,7 @@ Browserify.prototype.file = function(fileObj, browserSync) {
         b.external(vendor);
     }
     b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
+    //todo: move to watch function
     if (browserSync) {
         return new Promise(function(resolve, reject) {
             b = watchify(b);
@@ -74,7 +76,8 @@ Browserify.prototype.file = function(fileObj, browserSync) {
 
 Browserify.prototype.bundle = function(b, fileObj) {
     var self = this;
-    var b_ws = fs.createWriteStream(path.resolve(this.destination, fileObj.name));
+    var outFile = path.resolve(path.join(this.destination,fileObj.relativeDir), fileObj.name);
+    var b_ws = fs.createWriteStream(outFile);
     b.bundle().pipe(b_ws);
     return new Promise(function(resolve, reject) {
         b_ws.end = function(){
@@ -86,11 +89,9 @@ Browserify.prototype.bundle = function(b, fileObj) {
     });
 };
 
-//todo: remove ny hardcoded strings from wrapper
-//ie, put  '/*.js' into the build.js
 Browserify.prototype.watch = function(browserSync) {
     var self = this;
-    return fs.glob(this.location + '/*.js').then(function(fileObjs) {
+    return fs.glob(this.location).then(function(fileObjs) {
         fileObjs.forEach(function (fileObj, i) {
             self.file(fileObj, browserSync);
         });
@@ -100,7 +101,8 @@ Browserify.prototype.watch = function(browserSync) {
 Browserify.prototype.write = function(){
     var self = this;
     var options = this.options || {};
-    return fs.glob(this.location + '/*.js').then(function(fileObjs){
+    return fs.glob(this.location).then(function(fileObjs){
+        //todo: verbose mode?
         //if (fileObjs.length===0){
         //    log.info('no .js files found within `' + self.location + '`');
         //}
@@ -127,7 +129,7 @@ Browserify.prototype.write = function(){
 Browserify.prototype.minify = function(fileObj){
     var newFile = new File({ path: fileObj.path });
     newFile.name = fileObj.name.replace('.js','.min.js');
-    newFile.dir = this.destination;
+    newFile.dir = path.join(this.destination,fileObj.relativeDir);
     newFile.contents = UglifyJS.minify(fileObj.path).code;
     //todo: verbose mode?
     //log.info(' * ' + newFile.name + ' saved in ' + newFile.dir);

@@ -21,7 +21,7 @@ function ghPagesRelease(message){
     message = message || 'Update';
     log.info("\nReleasing to gh-pages\n");
     return new Promise(function(resolve, reject){
-        ghPages.publish(config.paths.target.root, {message: message }, function(err) {
+        ghPages.publish(config.paths.target, {message: message }, function(err) {
             ghPages.clean();
             err && reject(err);
             !err && resolve();
@@ -42,7 +42,7 @@ function s3(version){
     if (version){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + version + '$2');
     }
-    return new Release(config.paths.target.root + '/**/*.*', target, options).write();
+    return new Release(config.paths.target + '/**/*.*', target, options).write();
 }
 
 function releaseGit(version){

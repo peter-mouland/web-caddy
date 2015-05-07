@@ -10,7 +10,7 @@ function run(type){
     var build = require('./build');
     var Bump = require('./utils/bump');
     var newVersion;
-    return new Bump(['./package.json','./README.md', config.paths.source.root + '/**/version.js'], {type: type }).run()
+    return new Bump(['./package.json','./README.md', config.paths.source + '/**/version.js'], {type: type }).run()
         .then(function(version){
             log.info(" * Now on " + version);
             log.info("Rebuilding HTML");

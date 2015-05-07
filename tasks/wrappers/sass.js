@@ -14,12 +14,17 @@ function Sass(location, destination, options){
 
 Sass.prototype.file = function(fileObj, outputStyle){
     var self = this;
+    var dir;
     var options = this.options || {};
     var name = fileObj.name.replace('.scss','.css');
     if (outputStyle === 'compressed'){
         name = name.replace('.css','.min.css');
+        dir = fileObj.dir;
+    } else {
+        dir = path.join(this.destination,fileObj.relativeDir);
     }
-    var newFileObj = new File({path: path.resolve(self.destination, name)});
+    var outFile = path.resolve(dir, name);
+    var newFileObj = new File({path:outFile});
     return new Promise(function(resolve, reject){
         sass.render({
             file : fileObj.path,
@@ -48,7 +53,7 @@ Sass.prototype.minify = function(files){
 
 Sass.prototype.write = function() {
     var self = this;
-    return fs.glob(this.location + '/**/!(_)*.scss').then(function(files) {
+    return fs.glob(this.location).then(function(files) {
         if (files.length===0){
             log.info('no scss files found: ' + self.location);
         }

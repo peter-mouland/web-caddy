@@ -40,11 +40,11 @@ function watch(){
     config = helper.getConfig();
     var paths = config.paths;
     var fs = require('./utils/fs');
-    var htmlPaths = [ paths.source.root + '/**/*.{html,ms,mustache,jade}'];
+    var htmlPaths = [ paths.source + '/**/*.{html,ms,mustache,jade}'];
     var stylesPaths = [paths.source.styles + '/**/*' ];
     var imagesPaths =   [paths.source.images + '/**/*' ];
     if (paths.demo){
-        htmlPaths.push(paths.demo.root + '/**/*.{html,ms,mustache,jade}');
+        htmlPaths.push(paths.demo + '/**/*.{html,ms,mustache,jade}');
         stylesPaths.push(paths.demo.styles + '/**/*');
         imagesPaths.push(paths.demo.images + '/**/*');
     }

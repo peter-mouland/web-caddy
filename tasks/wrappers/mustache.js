@@ -46,7 +46,8 @@ Mustache.prototype.renderFile = function(fileObj){
             partials[partialObj.partial] = partialObj.contents;
         });
         var contents = mustache.render(fileObj.contents.toString(), replacements, partials);
-        var file = new File({path: path.join(self.destination,fileObj.name), contents:contents});
+        var outFile = path.join(self.destination, fileObj.relativeDir, fileObj.name);
+        var file = new File({path: outFile, contents:contents});
         file.ext = 'html';
         return file;
     });

@@ -10,6 +10,7 @@ var log = require('./log');
 var File = require('./file');
 
 function mkdir(dir){
+    if (!dir) log.warn('no directory to make');
     return new Promise(function(resolve, reject) {
         mkdirp(dir, function (err) {
             err && reject(err);
@@ -21,6 +22,8 @@ function mkdir(dir){
 function writeFile(fileObj){
     var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
     return mkdir(fileObj.dir).then(function(){
+        //todo: does windows then fire too soon?
+        //todo: move mkdir to write so it fires less?
         return new Promise(function(resolve, reject){
             fs.writeFile(path.join(fileObj.dir,fileObj.name), string, function(err, written, buffer){
                 err && reject(err);

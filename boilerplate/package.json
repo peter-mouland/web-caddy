@@ -8,11 +8,12 @@
         "url": "{{ git.SSH-URL }}"
     },
     "scripts": {
+      "copy": "caddy copy",
       "build": "caddy build",
       "bump": "caddy bump",
       "release": "npm test && caddy release",
       "report": "caddy serve test/coverage/phantomjs/",
-      "start": "caddy build && caddy serve",
+      "start": "caddy copy && caddy build && caddy serve",
       "tdd": "caddy test tdd",
       "test": "jshint src && caddy build && caddy test"
     },

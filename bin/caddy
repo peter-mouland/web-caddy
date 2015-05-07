@@ -2,13 +2,6 @@
 var log = require("../tasks/utils/log");
 var helper = require("../tasks/utils/config-helper");
 
-function camelToHyphens(str){
-    return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
-}
-function hyphensToCamel(str){
-    return str.replace(/-(.)/g,function(a,b){return b.toUpperCase()})
-}
-
 function execTask(taskName, args){
     helper.configCheck();
     var task = require("../tasks/" + taskName);
@@ -40,6 +33,9 @@ var commands = {
         var createNewComponent = require("../tasks/new");
         var componentName = args.shift() || log.onError('Please choose a project name as an argument');
         createNewComponent(componentName).then(log.onSuccess, log.onError);
+    },
+    copy: function(args){
+        execTask('copy', args)
     },
     build: function(args){
         execTask('build', args)

@@ -1,5 +1,6 @@
 var log = require('../utils/log');
 var findup = require('findup-sync');
+var fs = require('../utils/fs');
 var config;
 
 var helper = {
@@ -12,18 +13,36 @@ var helper = {
         if (config) return config;
         var configPath = findup('caddy.config.js');
         config = (configPath) ? require(configPath) : false;
-        config.paths = this.parsePaths(config.paths);
+        this.createGlobs(config);
         return config;
     },
-    parsePaths : function(paths) {
-        ['scripts', 'styles', 'fonts', 'icons', 'images'].forEach(function (asset, i) {
-            for (var pathName in paths) {
-                if (!paths[pathName][asset]) {
-                    paths[pathName][asset] = paths[pathName].root + '/' + asset;
-                }
-            }
-        });
-        return paths;
+    pathGlob : function (path, type){
+        switch (type) {
+            case 'serverConfig':
+                return path + '/*{CNAME,.htaccess,robots.txt}';
+            case 'html':
+                return path + '/*.{html,jade,ms,mustache}';
+            case 'styles':
+                return path + '/{.,*}/!(_)*.{css,scss,sass}';
+            case 'scripts':
+                return path + '/{.,*}/*.js';
+            case 'fonts':
+                return path + '/{.,*}/*.{svg,ttf,woff,eot}';
+            case 'images':
+                return path + '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}';
+        }
+    },
+    createGlobs : function(config) {
+        var self = this;
+        config.globs = {
+            'testCoverage':'./test/coverage/**/*'
+        };
+        for (var pathName in config.paths) {
+            config.globs[pathName] = {};
+            ['scripts', 'styles', 'fonts', 'images', 'serverConfig', 'html'].forEach(function (asset, i) {
+                config.globs[pathName][asset] = self.pathGlob(config.paths[pathName], asset);
+            });
+        }
     },
     configCheck : function(){
         var config = this.getConfig();

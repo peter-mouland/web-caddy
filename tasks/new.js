@@ -1,6 +1,5 @@
 var Promise = require('es6-promise').Promise;
 var replaceStream = require('replacestream');
-var path = require('path');
 var shell = require("shelljs");
 var init = require('./init');
 var log = require('./utils/log');

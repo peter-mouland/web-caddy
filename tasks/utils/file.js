@@ -10,6 +10,7 @@ module.exports = function File(fileObj){
     var path;
     var name;
     var dir;
+    var relativeDir;
     var ext;
     var slash = nodePath.sep;
     var cwd = fileObj.cwd;
@@ -28,6 +29,12 @@ module.exports = function File(fileObj){
         }
     });
 
+    Object.defineProperty(this, 'relativeDir', {
+        get: function () {
+            return relativeDir;
+        }
+    });
+
     Object.defineProperty(this, 'path', {
         get: function () {
             return path;
@@ -39,6 +46,7 @@ module.exports = function File(fileObj){
 
             name = path.split(slash).pop();
             dir = outDirs.join(slash);
+            relativeDir = (base) ? (dir + '/').replace(base,'') : undefined;
             ext = name.split('.').pop();
         }
     });
