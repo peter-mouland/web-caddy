@@ -30,14 +30,17 @@ Browserify.prototype.buildVendor = function(options){
     delete this.options.entries;
     //todo: test + fix this!!
     var outFile = path.join(this.destination, 'vendor.js');//, fileObj.relativeDir
+    var dir = path.join(this.destination, fileObj.relativeDir);
     var vendorFile = new File({ path: outFile });
-    var v_ws = fs.createWriteStream(vendorFile.path);
-    browserify().require(options.vendorBundle).bundle().pipe(v_ws);
-    return new Promise(function(resolve, reject) {
-        v_ws.end = function(){
-            return resolve(vendorFile);
-        };
-        v_ws.on('error', reject);
+    return fs.mkdir(dir).then(function(){
+        var v_ws = fs.createWriteStream(vendorFile.path);
+        browserify().require(options.vendorBundle).bundle().pipe(v_ws);
+        return new Promise(function(resolve, reject) {
+            v_ws.end = function(){
+                return resolve(vendorFile);
+            };
+            v_ws.on('error', reject);
+        });
     });
 };
 
@@ -77,15 +80,18 @@ Browserify.prototype.file = function(fileObj, browserSync) {
 
 Browserify.prototype.bundle = function(b, fileObj) {
     var outFile = path.join(this.destination, fileObj.relativeDir, fileObj.name);
-    var b_ws = fs.createWriteStream(path.resolve(outFile));
-    b.bundle().pipe(b_ws);
-    return new Promise(function(resolve, reject) {
-        b_ws.end = function(){
-            //todo: verbose mode?
-            //log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
-            return resolve(fileObj);
-        };
-        b_ws.on('error', reject);
+    var dir = path.join(this.destination, fileObj.relativeDir);
+    return fs.mkdir(dir).then(function(){
+        var b_ws = fs.createWriteStream(path.resolve(outFile));
+        b.bundle().pipe(b_ws);
+        return new Promise(function(resolve, reject) {
+            b_ws.end = function(){
+                //todo: verbose mode?
+                //log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
+                return resolve(fileObj);
+            };
+            b_ws.on('error', reject);
+        });
     });
 };
 

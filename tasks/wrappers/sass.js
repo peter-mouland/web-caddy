@@ -54,16 +54,17 @@ Sass.prototype.minify = function(files){
 Sass.prototype.write = function() {
     var self = this;
     return fs.glob(this.location).then(function(files) {
-        if (files.length===0){
-            log.info('no scss files found: ' + self.location);
-        }
+        //todo: verbose?
+        //if (files.length===0){
+            //log.info('no scss files found: ' + self.location);
+        //}
         var promises = [];
         files.forEach(function (fileObj, i) {
             promises.push(self.file(fileObj));
         });
         return Promise.all(promises);
-    }).then(function(fileObj){
-        return fs.write(fileObj);
+    }).then(function(fileObjs){
+        return fs.write(fileObjs);
     }).then(function(fileObj){
         return self.minify(fileObj);
     }).then(function(fileObj){

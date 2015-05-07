@@ -4,25 +4,32 @@ var fs = require("fs-extra");
 var path = require('path');
 var ncp = require('ncp').ncp;
 var gs = require('glob-stream');
-var mkdirp = require('mkdirp');
 var log = require('./log');
 var File = require('./file');
 
+var mkdirpSync = function (dirpath) {
+    var parts = dirpath.replace(process.cwd(),'').split(path.sep);
+    for( var i = 1; i <= parts.length; i++ ) {
+        try {
+            fs.mkdirSync( path.join.apply(null, parts.slice(0, i)) );
+        } catch(e) {
+            if ( e.code != 'EEXIST' ) throw e;
+        }
+    }
+};
+
 function mkdir(dir){
     if (!dir) log.warn('no directory to make');
+    mkdirpSync(dir);
     return new Promise(function(resolve, reject) {
-        mkdirp(dir, function (err) {
-            err && reject(err);
-            !err && resolve();
-        });
+        resolve();
     });
 }
 
 function writeFile(fileObj){
     var string = (Buffer.isBuffer(fileObj.contents)) ? fileObj.contents.toString('utf-8') : fileObj.contents;
     return mkdir(fileObj.dir).then(function(){
-        //todo: does windows then fire too soon?
-        //todo: move mkdir to write so it fires less?
+    //    //todo: move mkdir to write so it fires less?
         return new Promise(function(resolve, reject){
             fs.writeFile(path.join(fileObj.dir,fileObj.name), string, function(err, written, buffer){
                 err && reject(err);
@@ -181,7 +188,7 @@ function clean(globby){
 function createWriteStream(path, options){
     var arr = path.split('/');
     arr.pop();
-    mkdirp(arr.join('/'));
+    mkdirpSync(arr.join('/'));
     return fs.createWriteStream(path, options);
 }
 
