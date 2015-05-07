@@ -31,7 +31,14 @@ var pkg = require('./package.json');
 
 
 module.exports = {
-    build: ['fonts', 'images', 'sass', 'mustache', 'browserify', 'html-min'], //plus 'requirejs', 'jade'
+    pkg: pkg,
+    paths: {
+        source: "./src",
+        "demo": "./demo",
+        "target": './_site'
+    },
+    copy: ['fonts', 'images', 'server-config'],
+    build: ['sass', 'mustache', 'browserify', 'html-min'], //plus 'requirejs', 'jade'
     test: 'karma', // or false. mocha not yet available.
     release: ['git', 'gh-pages', 's3', 'bower'], // ['git', 'gh-pages','s3'] or false.
     serve: 'staticApp', // `staticApp` or `nodeApp`
@@ -53,21 +60,5 @@ module.exports = {
     staticApp:{
         server: { baseDir : '_site' }, // '_site' or ['_site','bower_component'] etc using 'browserSync' api
         port: 3456 //todo: make this dynamic
-    },
-    paths: {
-        /*
-         All paths also have `script`, `styles`, `fonts`, `icons` and `images` properties
-         Feel free to specify a custom path i.e.  add `scripts: './src/js'`
-         */
-        source: { //source files to build your component / site
-            root: "./src"
-        },
-        "demo": { // files used to demo the source code or an accompanying site.
-            root: "./demo"
-        },
-        "site": { // Final build (Compiled demo + source) code pushed to your chosen release cloud i.e. AWS
-            root: './_site'
-        }
-    },
-    pkg: pkg
+    }
 };
