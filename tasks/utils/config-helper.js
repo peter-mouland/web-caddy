@@ -16,33 +16,20 @@ var helper = {
         this.createGlobs(config);
         return config;
     },
-    pathGlob : function (path, type){
-        switch (type) {
-            case 'serverConfig':
-                return path + '/*{CNAME,.htaccess,robots.txt}';
-            case 'html':
-                return path + '/*.{html,jade,ms,mustache}';
-            case 'styles':
-                return path + '/{.,*}/!(_)*.{css,scss,sass}';
-            case 'scripts':
-                return path + '/{.,*}/*.js';
-            case 'fonts':
-                return path + '/{.,*}/*.{svg,ttf,woff,eot}';
-            case 'images':
-                return path + '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}';
-        }
-    },
     createGlobs : function(config) {
-        var self = this;
         config.globs = {
             'testCoverage':'./test/coverage/**/*'
         };
-        ['scripts', 'styles', 'fonts', 'images', 'serverConfig', 'html'].forEach(function (asset, i) {
-            for (var pathName in config.paths) {
-                config.globs[pathName] = config.globs[pathName] || {};
-                config.globs[pathName][asset] = self.pathGlob(config.paths[pathName], asset);
-            }
-        });
+        for (var pathName in config.paths) {
+            config.globs[pathName] = {
+                'serverConfig': config.paths[pathName] + '/*{CNAME,.htaccess,robots.txt}',
+                'html': config.paths[pathName] + '/*.{html,jade,ms,mustache}',
+                'styles': config.paths[pathName] + '/{.,*}/!(_)*.{css,scss,sass}',
+                'scripts': config.paths[pathName] + '/{.,*}/*.js',
+                'fonts': config.paths[pathName] + '/{.,*}/*.{svg,ttf,woff,eot}',
+                'images': config.paths[pathName] + '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}'
+            };
+        }
     },
     configCheck : function(){
         var config = this.getConfig();
