@@ -4,7 +4,6 @@ var fs = require("fs-extra");
 var path = require('path');
 var ncp = require('ncp').ncp;
 var gs = require('glob-stream');
-var chokidar = require('chokidar');
 var mkdirp = require('mkdirp');
 var log = require('./log');
 var File = require('./file');
@@ -179,22 +178,6 @@ function clean(globby){
     });
 }
 
-function watch(src, actions){
-    chokidar
-        .watch(src, { persistent: true})
-        .on('change', function(path) {
-            console.log('Watch: File', path, 'has been changed');
-            actions.forEach(function(action){
-                action();
-            });
-        })
-        .on('add', function(path) {    console.log('Watch: File', path, 'has been added'); })
-        .on('addDir', function(path) { console.log('Watch: Directory', path, 'has been added'); })
-        .on('error', function(error) { console.log('Watch: Error happened', error); })
-        .on('ready', function() {      console.log('Watch: Initial scan complete. Ready for changes.'); })
-    ;
-}
-
 function createWriteStream(path, options){
     var arr = path.split('/');
     arr.pop();
@@ -211,7 +194,6 @@ module.exports = {
     rename: rename,
     copyDirectory: copyDirectory,
     replace: replace,
-    watch: watch,
     glob: glob,
     readFileSync: fs.readFileSync,
     existsSync: fs.existsSync,
