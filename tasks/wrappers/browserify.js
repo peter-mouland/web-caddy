@@ -126,20 +126,19 @@ Browserify.prototype.write = function(){
             promises.push(self.minify(fileObj));
         });
         return Promise.all(promises);
-    }).then(function(fileObjs){
-        return fs.write(fileObjs);
     });
 };
 
 //todo: don't minify in dev mode?
 Browserify.prototype.minify = function(fileObj){
+    if (this.options.dev) return Promise.resolve();
     var newFile = new File({ path: fileObj.path });
     newFile.name = fileObj.name.replace('.js','.min.js');
     newFile.dir = path.join(this.destination,fileObj.relativeDir);
     newFile.contents = UglifyJS.minify(fileObj.path).code;
     //todo: verbose mode?
     //log.info(' * ' + newFile.name + ' saved in ' + newFile.dir);
-    return Promise.resolve(newFile);
+    return fs.write(newFile);
 };
 
 module.exports = Browserify;

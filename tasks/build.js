@@ -1,6 +1,5 @@
 var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
-var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var clean = require('./clean');
 var config, paths, globs, pkg, build = {};
@@ -71,8 +70,8 @@ build.styles = function styles(options){
 
 build.all = function all(options){
     return Promise.all([
-        build.scripts(),
-        build.styles(),
+        build.scripts(options),
+        build.styles(options),
         build.html(options)
     ]).catch(log.warn);
 };

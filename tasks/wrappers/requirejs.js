@@ -28,7 +28,7 @@ RequireJS.prototype.file = function(fileObj) {
 
 RequireJS.prototype.write = function(){
     var self = this;
-    return fs.glob(this.location + '/*.js').then(function(fileObjs){
+    return fs.glob(this.location).then(function(fileObjs){
         //todo: verbose?
         //if (fileObjs.length===0){
         //    log.info('no .js files found within `' + self.location + '`');
@@ -39,24 +39,23 @@ RequireJS.prototype.write = function(){
         });
         return Promise.all(promises);
     }).then(function(fileObjs){
-        return fs.glob(self.destination + '/*.js');
+        return fs.glob(self.destination);
     }).then(function(fileObjs){
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
             promises.push(self.minify(fileObj));
         });
         return Promise.all(promises);
-    }).then(function(fileObjs){
-        return fs.write(fileObjs);
     });
 };
 
 RequireJS.prototype.minify = function(fileObj){
+    if (this.options.dev) return Promise.resolve();
     var newFile = new File({ path: fileObj.path });
     newFile.name = fileObj.name.replace('.js','.min.js');
     newFile.dir = this.destination;
     newFile.contents = UglifyJS.minify(fileObj.path).code;
-    return Promise.resolve(newFile);
+    return fs.write(newFile);
 };
 
 module.exports = RequireJS;

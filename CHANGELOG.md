@@ -18,18 +18,16 @@
   * Added `copy` task to separate the task of copying images and server-config from building scripts etc.
   * Added `html-min` as a separate build task.
   * Added `bower` as a separate `release` option.
+  * Added `-dev` CLI option to prevent file minification and speed up build time
   
 todo:
   * vendorBundle
   * minify seems broken
-  * don't minify in dev mode
   * test a node project
   * test in windows
   * speed, speed, speed
   * document how to test a specific .spec file (fit + fdescribe)
   * document `*.requirejs.js` into a `use-case doc` to reduce confusing default code
-  * make tasks only use wrappers . no fs utils etc
-  * windows "when I save column.js=, it does refresh, but it doesn't always reflect the changes"
   * standardise input to all tasks i.e. `src, dest, options`
   * //kill test tdd properly
  
