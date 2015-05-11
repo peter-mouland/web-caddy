@@ -1,9 +1,9 @@
 var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
-var config;
+var config, bump = {};
 
-function all(type){
+bump.all = function all(type){
     if (type == 'current') return Promise.resolve(config.pkg.version);
 
     var build = require('./build');
@@ -17,17 +17,15 @@ function all(type){
         }).then(function(){
             return newVersion;
         }).catch(log.onError);
-}
+};
 
 function exec(task, options){
     config = helper.getConfig();
     log.info('Bumping :');
-    switch (task){
-        case 'all': all(options); break;
-        //default: help(task); break; //todo: help
-    }
+    if (bump[task]) return bump[task](options);
+    //if (!bump[task]) help[task]()
 }
 
 module.exports = {
-    all:  function(options){ exec('all', options); }
+    all:  function(options){ return exec('all', options); }
 };

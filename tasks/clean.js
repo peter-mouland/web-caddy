@@ -2,7 +2,7 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var config, pkg, globs;
+var config, pkg, globs, clean = {};
 
 function initConfig(){
     config = helper.getConfig();
@@ -10,78 +10,75 @@ function initConfig(){
     pkg = config.pkg;
 }
 
-function serverConfig(){
+clean.serverConfig = function serverConfig(){
     log.info(' * Server config files');
-    initConfig();
     return fs.del(globs.target.serverConfig);
-}
+};
 
-function html(){
+clean.html = function html(){
     log.info(' * HTML');
-    initConfig();
     return fs.del(globs.target.html);
-}
+};
 
-function styles(){
+clean.styles = function styles(){
     log.info(' * Styles');
-    initConfig();
     return fs.del(globs.target.styles);
-}
+};
 
-function scripts(){
+clean.scripts =  function scripts(){
     log.info(' * Scripts');
-    initConfig();
     return fs.del(globs.target.scripts);
-}
+};
 
-function fonts(){
+clean.fonts = function fonts(){
     log.info(' * Fonts');
-    initConfig();
     return fs.del(globs.target.fonts);
-}
+};
 
-function images(){
+clean.images = function images(){
     initConfig();
     log.info(' * Images');
     return fs.del(globs.target.images);
-}
-
-function test(){
-    initConfig();
-    log.info(' * Test report');
-    return fs.del(globs.testCoverage);
-}
-
-function adHoc(location, options){
-    log.info(' * adHoc : ' + location);
-    return fs.del(location);
-}
-
-function all(){
-    return Promise.all([serverConfig(), html(), styles(), scripts(), fonts(), images()]).catch(log.onError);
-}
-
-function copy(){
-    return Promise.all([serverConfig(), fonts(), images()]).catch(log.onError);
-}
-
-function build(){
-    return Promise.all([html(), styles(), scripts()]).catch(log.onError);
-}
-
-var commands = {
-    all: all,
-    copy: copy,
-    build: build,
-    'server-config': serverConfig,
-    test: test,
-    styles: styles,
-    scripts: scripts,
-    images: images,
-    fonts: fonts
 };
 
-module.exports = function(location, options){
+clean.test = function test(){
+    log.info(' * Test report');
+    return fs.del(globs.testCoverage);
+};
+
+clean.adhoc = function adHoc(location, options){
+    log.info(' * adHoc : ' + location);
+    return fs.del(location);
+};
+
+clean.all = function all(){
+    return Promise.all([clean.copy(), clean.build()]).catch(log.onError);
+};
+
+clean.copy = function copy(){
+    return Promise.all([clean.serverConfig(), clean.fonts(), clean.images()]).catch(log.onError);
+};
+
+clean.build = function build(){
+    return Promise.all([clean.html(), clean.styles(), clean.scripts()]).catch(log.onError);
+};
+
+function exec(task, options){
+    initConfig();
     log.info('Deleting :');
-    return (commands[location]) ? commands[location](options) : adHoc(location, options);
+    if (clean[task]) return clean[task](options);
+    //if (!clean[task]) return help[task](options); todo: help function
+}
+
+module.exports = {
+    'copy': function(options){ return exec('copy', options); },
+    'build': function(options){ return exec('build', options); },
+    'server-config': function(options){ return exec('serverConfig', options); },
+    'test': function(options){ return exec('test', options); },
+    'html': function(options){ return exec('html', options); },
+    'styles': function(options){ return exec('styles', options); },
+    'scripts': function(options){ return exec('scripts', options); },
+    'fonts': function(options){ return exec('fonts', options); },
+    'images': function(options){ return exec('images', options); },
+    'all': function(options){ return exec('all', options); }
 };

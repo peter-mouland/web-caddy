@@ -3,7 +3,6 @@ var path = require('path');
 var jade = require('jade');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
-var log = require('../utils/log');
 
 function Jade(location, destination, options){
     this.location = location;

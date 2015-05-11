@@ -60,37 +60,38 @@ Browserify.prototype.file = function(fileObj, browserSync) {
         b.external(vendor);
     }
     b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
-    //todo: move to watch function
-    if (browserSync) {
-        return new Promise(function(resolve, reject) {
-            b = watchify(b);
-            b.on('update', function () {
-                self.bundle(b, fileObj).then(function(){
-                    browserSync.reload();
-                    resolve();
-                });
-            });
-            b.bundle();
-        });
+    if (browserSync){
+        return self.watchBundle(b, fileObj, browserSync);
     } else {
         return self.bundle(b, fileObj);
     }
 };
 
+Browserify.prototype.watchBundle = function(b, fileObj, browserSync) {
+    var self = this;
+    b = watchify(b, { delay: 1000 });
+    return new Promise(function(resolve, reject) {
+        b.on('update', function () {
+            self.bundle(b, fileObj).then(function(){
+                browserSync.reload();
+                resolve();
+            });
+        });
+        b.bundle();
+    });
+};
+
 Browserify.prototype.bundle = function(b, fileObj) {
     var outFile = path.join(this.destination, fileObj.relativeDir, fileObj.name);
-    var dir = path.join(this.destination, fileObj.relativeDir);
-    return fs.mkdir(dir).then(function(){
-        var b_ws = fs.createWriteStream(path.resolve(outFile));
-        b.bundle().pipe(b_ws);
-        return new Promise(function(resolve, reject) {
-            b_ws.end = function(){
-                //todo: verbose mode?
-                //log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
-                return resolve(fileObj);
-            };
-            b_ws.on('error', reject);
-        });
+    var b_ws = fs.createWriteStream(path.resolve(outFile));
+    b.bundle().pipe(b_ws);
+    return new Promise(function(resolve, reject) {
+        b_ws.end = function(){
+            //todo: verbose mode?
+            //log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
+            return resolve(fileObj);
+        };
+        b_ws.on('error', reject);
     });
 };
 

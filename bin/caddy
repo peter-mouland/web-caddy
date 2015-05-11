@@ -2,17 +2,22 @@
 var log = require("../tasks/utils/log");
 var helper = require("../tasks/utils/config-helper");
 
+function logEnd(){
+    global.end = new Date()
+    console.log(' *** end ***', global.end)
+}
+
 function execTask(taskName, args){
     helper.configCheck();
     var task = require("../tasks/" + taskName);
-    var command = args.shift() || 'run';
+    var command = args.shift() || 'all';
     args = (args.length<2) ? args[0] : args;
     if (typeof task==='function'){//todo: all tasks should be functions
-        task(command,args);
+        task(command,args).then(logEnd);
     } else if (task[command]){
-        task[command](args);
+        task[command](args).then(logEnd);
     } else if (task['adhoc']){
-        task['adhoc'](command);
+        task['adhoc'](command).then(logEnd);
     } else {
         help(task, taskName);
     }
@@ -68,6 +73,8 @@ var commands = {
 };
 
 (function main() {
+    global.start = new Date()
+    console.log('*** start *** ', global.start);
     var argv = process.argv.slice(1)
     if (!argv.length) return commands['--help']();
     var cwd =  argv.shift();

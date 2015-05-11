@@ -35,7 +35,7 @@ describe("Build task will compile", function() {
     it("html", function (done) {
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
         return build.html().then(function(){
-            expect(log.info).toHaveBeenCalledWith(' * HTML Complete');
+            expect(log.info).toHaveBeenCalledWith(' * HTML');
             expect(Jade.prototype.write).not.toHaveBeenCalled();
             expect(Mustache.prototype.write).toHaveBeenCalled();
             done();
@@ -47,7 +47,7 @@ describe("Build task will compile", function() {
         build.scripts().then(function(){
             expect(browserify.prototype.write.calls.count()).toEqual(2);
             expect(requirejs.prototype.write).not.toHaveBeenCalled();
-            expect(log.info).toHaveBeenCalledWith(' * Scripts Complete');
+            expect(log.info).toHaveBeenCalledWith(' * Scripts');
             done();
         });
     });
@@ -58,7 +58,7 @@ describe("Build task will compile", function() {
         build.scripts().then(function(){
             expect(browserify.prototype.write.calls.count()).toEqual(0);
             expect(requirejs.prototype.write).toHaveBeenCalled();
-            expect(log.info).toHaveBeenCalledWith(' * Scripts Complete');
+            expect(log.info).toHaveBeenCalledWith(' * Scripts');
             done();
         });
     });
@@ -67,7 +67,7 @@ describe("Build task will compile", function() {
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
         build.styles().then(function(){
             expect(sass.prototype.write.calls.count()).toEqual(2);
-            expect(log.info).toHaveBeenCalledWith(' * Styles Complete');
+            expect(log.info).toHaveBeenCalledWith(' * Styles');
             done();
         });
     });

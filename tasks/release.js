@@ -2,20 +2,20 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var config, paths, pkg;
+var bump = require('./bump');
+var config, paths, pkg, release = {};
 
-function getConfig(){
+function initConfig(){
     config = helper.getConfig();
 }
 
-function ghPagesRelease(message){
-    getConfig();
+release.ghPages = function ghPagesRelease(message){
     var release = helper.matches(config.release, ['gh-pages']);
     if (!release) return Promise.resolve();
 
     var ghPages = require('gh-pages');
     message = message || 'Update';
-    log.info("\n * gh-pages\n");
+    log.info(" * gh-pages");
     return new Promise(function(resolve, reject){
         ghPages.publish(config.paths.target, {message: message }, function(err) {
             ghPages.clean();
@@ -23,14 +23,13 @@ function ghPagesRelease(message){
             !err && resolve();
         });
     });
-}
+};
 
-function s3(version){
-    getConfig();
+release.s3 = function s3(version){
     var release = helper.matches(config.release, ['s3']);
     if (!release) return Promise.resolve();
 
-    log.info("\ * s3\n");
+    log.info(" * S3");
     var Release = require('./wrappers/s3');
     var options = config.s3 || {};
     var target = options.target || '';
@@ -38,10 +37,9 @@ function s3(version){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + version + '$2');
     }
     return new Release(config.paths.target + '/**/*.*', target, options).write();
-}
+};
 
-function releaseGit(version){
-    getConfig();
+release.git = function releaseGit(version){
     var release = helper.matches(config.release, ['git']);
     if (!release) return Promise.resolve();
 
@@ -54,13 +52,13 @@ function releaseGit(version){
     version = version || config.pkg.version;
     log.info(' * Git');
     return git.release(version);
-}
+};
 
-function releaseBower(version){
-    getConfig();
+release.bower = function releaseBower(version){
     var release = helper.matches(config.release, ['bower']);
     if (!release) return Promise.resolve();
 
+    log.info(" * Bower");
     var git = require('./utils/git');
     var bower = require('./wrappers/bower');
     if (!git.checkRemote()){
@@ -71,28 +69,37 @@ function releaseBower(version){
     version = version || config.pkg.version;
     log.info(' * Bower');
     return bower.release(version).catch(log.onError);
-}
+};
 
-function run(type){
-    log.info('Releasing :');
-    var bump = require('./bump').run;
-    var bumpedVersion;
-    return bump(type || 'current').then(function(version) {
-        bumpedVersion = version;
-        return releaseGit(version);
+release.all = function all(options){
+    var bumpedVersion = options.version;
+    return release.git(bumpedVersion).then(function(){
+        return release.ghPages('v' + bumpedVersion);
     }).then(function(){
-        return ghPagesRelease('v' + bumpedVersion);
-    }).then(function(){
-        return s3(bumpedVersion);
+        return release.s3(bumpedVersion);
     }).catch(log.onError);
+};
+
+var prepare = {
+    all: function(type){ return bump.all(type || 'current'); },
+    noop: function(){ return Promise.resolve(); }
+};
+
+function exec(task, options){
+    initConfig();
+    if (!config.release) return Promise.resolve();
+    return (prepare[task] || prepare.noop)().then(function(version){
+        log.info('Releasing :');
+        if (version) (options || {}).version = version;
+        if (!!release[task]) return release[task](options);
+        //if (!release[task]) return help[task](options);
+    });
 }
 
 module.exports = {
-    bower: releaseBower,
-    git: releaseGit,
-    'gh-pages': ghPagesRelease,
-    s3: s3,
-    run: run,
-    all: run,
-    adhoc: run
+    'bower': function(options){ return exec('bower', options); },
+    'git':  function(options){  return exec('git', options); },
+    'gh-pages':  function(options){  return exec('ghPages', options); },
+    's3':  function(options){  return exec('s3', options); },
+    'all':  function(options){ return exec('all', options); }
 };

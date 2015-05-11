@@ -7,37 +7,9 @@ var fs = require('./utils/fs');
 var bower = require('./wrappers/bower');
 var helper = require('./utils/config-helper');
 var prompt = require("prompt");
+var init = {};
 require('colors');
 
-function initBower(){
-    return bower.register().catch(function(err){
-        log.onError('Error: Bower Register ' + err);
-    });
-}
-
-function remoteGit(gitRepo, project){
-    log.info("\nInitialising Git Remotely... \n");
-    return askForGitRepo(gitRepo)
-        .then(function(reply) {
-            gitRepo = reply;
-            return replaceGitVariables(gitRepo, project);
-        }).then(function(){
-            return pushFirstPush(gitRepo);
-        }).then(function(){
-            return initGhPages(gitRepo);
-        }).catch(log.onError);
-}
-
-function localGit(){
-    log.info("\nInitialising Git Locally... \n");
-    return git.init().then(function(output){
-        log.onSuccess(output);
-        return git.add(['.']);
-    }).then(function(output){
-        log.onSuccess(output);
-        return git.commit('first commit');
-    }).catch(log.onError);
-}
 
 function askForGitRepo(gitRepo){
     return new Promise(function(resolve){
@@ -58,9 +30,9 @@ function replaceGitVariables(repo, project){
     if (!git.validRepo(repo)){
         log.info(['',
             'Github Repository SSH URL invalid:',
-                'When you are ready to push to git, Please run:',
-                '`caddy init git` '
-            ].join('\n'));
+            'When you are ready to push to git, Please run:',
+            '`caddy init git` '
+        ].join('\n'));
         return Promise.resolve();
     }
     var username = git.repoUsername(repo);
@@ -98,12 +70,46 @@ function pushFirstPush(repo){
             return git.commit('first commit');
         }).then(function(){
             return git.push(['-u', 'origin', 'master']);
-    }).catch(log.onError);
+        }).catch(log.onError);
 }
 
-function initGhPages(repo){
+init.bower = function(){
+    log.info(" * Bower");
+    return bower.register().catch(function(err){
+        log.onError('Error: Bower Register ' + err);
+    });
+};
+
+init.remoteGit = function(options){
+    options = options || {};
+    log.info(" * Remote GIT");
+    var gitRepo = options.gitRepo,
+        project = options.project;
+    return askForGitRepo(gitRepo)
+        .then(function(reply) {
+            gitRepo = reply;
+            return replaceGitVariables(gitRepo, project);
+        }).then(function(){
+            return pushFirstPush(gitRepo);
+        }).then(function(){
+            return init.ghPages(gitRepo);
+        }).catch(log.onError);
+};
+
+init.localGit = function(){
+    log.info(" * Local GIT");
+    return git.init().then(function(output){
+        log.onSuccess(output);
+        return git.add(['.']);
+    }).then(function(output){
+        log.onSuccess(output);
+        return git.commit('first commit');
+    }).catch(log.onError);
+};
+
+init.ghPages = function(repo){
     if (!repo) return Promise.resolve();
-    log.info("\nInitialising gh-pages ... \n");
+    log.info(" * gh-pages");
     return git.checkout(['--orphan', 'gh-pages']).then(function(output){
         log.onSuccess(output);
         return git.rm(['-rf', '.']);
@@ -123,11 +129,17 @@ function initGhPages(repo){
         log.onSuccess(output);
         return git.checkout(['master']);
     }).catch(log.onError);
+};
+
+function run(task, options){
+    log.info('Initialising :', task);
+    if (init[task]) return init[task](options);
+    //if (!copy[task]) return help[task](options);
 }
 
 module.exports = {
-    bower: initBower,
-    'gh-pages': initGhPages,
-    localGit: localGit,
-    git: remoteGit
+    'bower': function(options){ return run('bower', options); },
+    'gh-pages':  function(options){ return run('ghPages', options); },
+    localGit:  function(options){ return run('localGit', options); },
+    git:  function(options){ return run('remoteGit', options); }
 };

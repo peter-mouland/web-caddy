@@ -3,7 +3,6 @@ var path = require('path');
 var mustache = require('mustache');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
-var log = require('../utils/log');
 
 function Mustache(location, destination, options){
     this.location = location;

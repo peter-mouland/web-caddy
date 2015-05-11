@@ -4,7 +4,7 @@ var fs = require('./utils/fs');
 var path = require('path');
 var helper = require('./utils/config-helper');
 var clean = require('./clean');
-var config, paths, globs, pkg;
+var config, paths, globs, pkg, copy = {};
 
 function initConfig(){
     config = helper.getConfig();
@@ -13,7 +13,7 @@ function initConfig(){
     pkg = config.pkg;
 }
 
-function copy(fileType){
+function copyFiles(fileType){
     var location = [];
     paths.source && location.push(globs.source[fileType]);
     paths.demo && location.push(globs.demo[fileType]);
@@ -27,51 +27,53 @@ function copy(fileType){
     }).catch(log.warn);
 }
 
-function serverConfig(){
+copy.serverConfig = function serverConfig(){
+    var verify = helper.matches(config.copy, ['server-config']);
+    if (!verify) return Promise.resolve();
+    log.info(' * Server Config');
+    return copyFiles('serverConfig');
+};
+
+copy.fonts = function fonts() {
+    var verify = helper.matches(config.copy, ['fonts']);
+    if (!verify) return Promise.resolve();
+    log.info(' * Fonts');
+    return copyFiles('fonts');
+};
+
+copy.images = function images() {
+    var verify = helper.matches(config.copy, ['images']);
+    if (!verify) return Promise.resolve();
+    log.info(' * Images');
+    return copyFiles('images');
+};
+
+copy.all = function all(){
+    return Promise.all([
+        copy.serverConfig(),
+        copy.fonts(),
+        copy.images()
+    ]).catch(log.warn);
+};
+
+var prepare = {
+    all: function(){ return clean.copy(); },
+    noop: function(){ return Promise.resolve(); }
+};
+
+function exec(task, options){
     initConfig();
-    var doCopy = helper.matches(config.copy, ['server-config']);
-    if (!doCopy) return Promise.resolve();
-
-    return copy('serverConfig').then(function(){
-        log.info(' * Server Config Complete');
-    });
-}
-
-function fonts() {
-    initConfig();
-    var doCopy = helper.matches(config.copy, ['fonts']);
-    if (!doCopy) return Promise.resolve();
-
-    return copy('fonts').then(function(){
-        log.info(' * Fonts Complete');
-    });
-}
-
-function images() {
-    initConfig();
-    var doCopy = helper.matches(config.copy, ['images']);
-    if (!doCopy) return Promise.resolve();
-
-    return copy('images').then(function(){
-        log.info(' * Images Complete');
-    });
-}
-
-function run(){
-    return clean('copy').then(function(){
+    if (!config.copy) return Promise.resolve();
+    return (prepare[task] || prepare.noop)().then(function(){
         log.info('Copying :');
-        return Promise.all([
-                serverConfig(),
-                fonts(),
-                images()
-            ]);
-    }).catch(log.warn);
+        if (copy[task]) return copy[task](options);
+        //if (!copy[task]) return help[task](options);
+    });
 }
 
 module.exports = {
-    'server-config': serverConfig,
-    images: images,
-    fonts: fonts,
-    run: run,//todo: choose run or all, not both!
-    all: run//todo: choose run or all, not both!
+    'server-config': function(options){ return exec('serverConfig', options); },
+    fonts:  function(options){ return exec('fonts', options); },
+    images:  function(options){ return exec('images', options); },
+    all:  function(options){ return exec('all', options); }
 };

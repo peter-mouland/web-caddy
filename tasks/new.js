@@ -27,7 +27,7 @@ function renameFiles(project){
 }
 
 function copyBoilerplate(project){
-    log.info("\nCopying Files ... \n");
+    log.info(" * Copying Files");
     var moduleDir = npmGlobalPath() + '/web-caddy/boilerplate';
     return fs.copyDirectory(moduleDir, './' + project,
         function(read, write, file){
@@ -42,20 +42,21 @@ function newComponent(project) {
     if (fs.existsSync(project)){
         log.onError('`' + project + '` already exists');
     }
+    log.onSuccess('Creating New Project :');
     return copyBoilerplate(project).then(function(output) {
         shell.cd(project);
         return renameFiles(project);
     }).then(function(output){
-        log.onSuccess(' * Files copied');
-        return init.localGit();
+        return init('localGit');
     }).then(function(output){
         log.onSuccess(output);
+        log.info(" * Installing Bower Modules");
         return bower.install();
     }).then(function(output){
         for (var i in output){
-            log.onSuccess( ' * installed ' + i);
+            log.onSuccess( ' * Installed ' + i);
         }
-        return init.git(undefined, project);
+        return init('git', {project: project});
     }).then(function(){
         log.info(['',
             'Ready!',

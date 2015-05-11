@@ -4,7 +4,6 @@ var path = require('path');
 var UglifyJS = require("uglify-js");
 var fs = require('../utils/fs');
 var File = require('../utils/file');
-var log = require('../utils/log');
 
 function RequireJS(location, destination, options){
     this.location = location;
@@ -30,9 +29,10 @@ RequireJS.prototype.file = function(fileObj) {
 RequireJS.prototype.write = function(){
     var self = this;
     return fs.glob(this.location + '/*.js').then(function(fileObjs){
-        if (fileObjs.length===0){
-            log.info('no .js files found within `' + self.location + '`');
-        }
+        //todo: verbose?
+        //if (fileObjs.length===0){
+        //    log.info('no .js files found within `' + self.location + '`');
+        //}
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
             promises.push(self.file(fileObj));

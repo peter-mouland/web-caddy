@@ -4,7 +4,7 @@ var helper = require('./utils/config-helper');
 var Browserify = require('./wrappers/browserify.js');
 var browserSync = require('browser-sync');
 var build = require('./build');
-var config, paths, globs, pkg;
+var config, paths, globs, pkg, serve = {};
 
 function initConfig(){
     config = helper.getConfig();
@@ -31,7 +31,7 @@ function getWatchOptions(){
             switch (event) {
                 case 'change':
                     log.info(['Watch: File `' + file + '` has been changed, running build.' + task + '()'].join('\n'));
-                    build[task]().then(browserSync.reload);
+                    build(task).then(browserSync.reload);
                     break;
                 default :
                     log.info(' * ' + event + ' ' + file);
@@ -50,7 +50,6 @@ function getWatchOptions(){
 }
 
 function start(options){
-    initConfig();
     options = options || (config[config.serve]) || {};
     //todo: test: does this now work as nodeApp??
     options.server = options.server || { baseDir : paths.target };
@@ -64,8 +63,14 @@ function start(options){
     });
 }
 
+function browserifyWatch(){
+    new Browserify(globs.source.scripts, paths.target).watch(browserSync);
+    if (paths.demo){
+        new Browserify(globs.demo.scripts, paths.target).watch(browserSync);
+    }
+}
+
 function nodeApp(options){
-    initConfig();
     if (options.server) return Promise.resolve();
     var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
@@ -76,15 +81,7 @@ function nodeApp(options){
     });
 }
 
-function browserifyWatch(){
-    new Browserify(globs.source.scripts, paths.target).watch(browserSync);
-    if (paths.demo){
-        new Browserify(globs.demo.scripts, paths.target).watch(browserSync);
-    }
-}
-
-function adhoc(baseDir){
-    initConfig();
+serve.adhoc = function adhoc(baseDir){
     //todo: test if path ext is js or html
     //    : if html serve staticApp
     //    : if js serve nodeApp
@@ -92,14 +89,21 @@ function adhoc(baseDir){
     return start({
         server: { baseDir : baseDir }
     });
-}
+};
 
-function run(args){
+serve.all = function all(args){
     return start(args).catch(log.onError);
+};
+
+function exec(task, options){
+    initConfig();
+    if (!config.serve) return Promise.resolve();
+    log.info('Serving :');
+    if (serve[task]) return serve[task](options);
+    //if (!serve[task]) return help[task](options);
 }
 
 module.exports = {
-    run: run,
-    all: run,
-    adhoc: adhoc
+    adhoc: function(options){ return exec('adhoc', options); },
+    all:  function(options){ return exec('all', options); }
 };
