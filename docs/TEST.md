@@ -3,7 +3,8 @@
 Using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http://jasmine.github.io/2.2/introduction.html).
 
  * [TDD](#tdd)
- * [Single test run](#single-test-run)
+ * [Single Test Run](#single-test-run)
+ * [Run a Specific Test](#run-a-specific-test)
  * [Functional Testing](#functional-testing)
  * [Unit Tests](#unit-tests)
  * [Code Coverage](#code-coverage)
@@ -42,6 +43,12 @@ We recommend that your package.json `scripts` object is updated so you do not re
 ```
 
 You can then use `npm run tdd`.
+
+## Run a Specific Test
+
+> `focus` on a single test or group of tests
+
+By using the `fdescribe` or `fit` (instead of describe or it) Jasmine will run only those tests.
 
 ## Functional Testing
 

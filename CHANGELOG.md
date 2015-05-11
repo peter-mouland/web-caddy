@@ -26,9 +26,6 @@ todo:
   * test a node project
   * test in windows
   * speed, speed, speed
-  * document how to test a specific .spec file (fit + fdescribe)
-  * document `*.requirejs.js` into a `use-case doc` to reduce confusing default code
-  * standardise input to all tasks i.e. `src, dest, options`
   * //kill test tdd properly
  
 ## 1.3.x
