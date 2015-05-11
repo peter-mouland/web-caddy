@@ -2,7 +2,7 @@
 
 ## 2.0.x  Breaking change
   * Renamed to `web-caddy`
-  * Massive Speed improvements
+  * Speed improvements
   * Improved logging
   * Updated `clean` to be a function that accepts a location or dir 'type'
   * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
@@ -14,7 +14,7 @@
   * Updated Mustache/Jade to use variables from `package.json` by default
   * Removed automatic installation of npm modules wtih `caddy new xxx`
   * Removed `dist` path config option
-  * Removed `site.` from Mustache/Jade variables i.e. `site.now` becomes `now`.
+  * Removed `site.` from Mustache/Jade variables i.e. `site.version` becomes `version`.
   * Added `copy` task to separate the task of copying images and server-config from building scripts etc.
   * Added `html-min` as a separate build task.
   * Added `bower` as a separate `release` option.

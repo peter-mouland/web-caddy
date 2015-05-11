@@ -36,7 +36,6 @@ test.tdd = function(options){
 };
 
 test.all = function(options){
-    console.log('all', i++)
     return all(options, true).then(function(){
         options = options || (config[config.test]) || {};
         return new TestWrapper(options).coverage();
