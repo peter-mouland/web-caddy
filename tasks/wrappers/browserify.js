@@ -24,21 +24,18 @@ Browserify.prototype.checkForDeboweify = function(){
     }
 };
 
-Browserify.prototype.buildVendor = function(options){
+Browserify.prototype.buildVendor = function(fileObj, options){
     if (!options.vendorBundle) return Promise.resolve();
     delete this.options.entries;
-    //todo: test + fix this!!
-    var outFile = path.join(this.destination, 'vendor.js');//, fileObj.relativeDir
+    var outFile = path.join(this.destination, options.vendorTarget);
     var vendorFile = new File({ path: outFile });
-    return fs.mkdir(this.destination).then(function(){
-        var v_ws = fs.createWriteStream(vendorFile.path);
-        browserify().require(options.vendorBundle).bundle().pipe(v_ws);
-        return new Promise(function(resolve, reject) {
-            v_ws.end = function(){
-                return resolve(vendorFile);
-            };
-            v_ws.on('error', reject);
-        });
+    var v_ws = fs.createWriteStream(vendorFile.path);
+    browserify().require(options.vendorBundle).bundle().pipe(v_ws);
+    return new Promise(function(resolve, reject) {
+        v_ws.end = function(){
+            return resolve(vendorFile);
+        };
+        v_ws.on('error', reject);
     });
 };
 
@@ -88,6 +85,7 @@ Browserify.prototype.bundle = function(b, fileObj) {
         b_ws.end = function(){
             //todo: verbose mode?
             //log.info(' * ' + fileObj.name + ' saved in ' + self.destination);
+            fileObj.path = outFile;
             return resolve(fileObj);
         };
         b_ws.on('error', reject);
@@ -116,7 +114,10 @@ Browserify.prototype.write = function(){
             promises.push(self.file(fileObj));
         });
         if (options.vendorBundle){
-            promises.push(self.buildVendor(options));
+            options.vendorBundle.forEach(function (vendorObj, i) {
+                var fileObj = new File({ path: vendorObj.file || vendorObj });
+                promises.push(self.buildVendor(fileObj, options));
+            });
         }
         return Promise.all(promises);
     });

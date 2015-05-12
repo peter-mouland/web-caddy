@@ -20,7 +20,6 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
-  * vendorBundle
   * test node api (all using options?)
   * caddy init if caddy config doesn't exist
   * speed, speed, speed
