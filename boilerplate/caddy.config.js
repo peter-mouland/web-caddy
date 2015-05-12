@@ -8,8 +8,8 @@ var pkg = require('./package.json');
 //karmaConfigs: ['karma.*.js','karma.functional.js','karma.unit.js']
 //unitCoverage:'coverage/summary.json'
 //staticApp:{
-//    server: { baseDir : '_site' }, //todo: use `target`
-//    port: 3456 //todo: make this dynamic
+//    server: { baseDir : '_site' },
+//    port: 3456
 //}
 //
 //module.exports = {

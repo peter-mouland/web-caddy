@@ -22,6 +22,7 @@
 todo:
   * test node api (all using options?)
   * caddy init if caddy config doesn't exist
+  * document config file properly
   * speed, speed, speed
   * kill `test tdd` process properly
  
