@@ -18,7 +18,11 @@ function info(msg) {
 }
 
 function warn(msg) {
-    console.log(chalk.yellow(msg.message || msg));
+    if (msg.toString){
+        console.log(chalk.yellow(msg.toString()));
+    } else {
+        console.log(msg.message || msg);
+    }
 }
 
 module.exports = {

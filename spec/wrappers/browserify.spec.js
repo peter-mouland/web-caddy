@@ -42,7 +42,8 @@ describe('Browserify', function () {
         .then(done).catch(onError);
     });
 
-    it('should minify a file', function (done) {
+    //todo: move to ugilfyjs test
+    xit('should minify a file', function (done) {
         var fileObj = {path:browserifyFile, name: browserifyName, relativeDir:''}
         new Browserify('src','dest').minify(fileObj).then(function(response){
             expect(response.contents.toString()).toBe('function sum(u){var n=0;return u.forEach(function(u){n+=u}),n}module.exports={sum:sum};');
@@ -52,7 +53,7 @@ describe('Browserify', function () {
         }).then(done).catch(onError);
     });
 
-    it('writes the minified and browserified files', function (done) {
+    xit('writes the minified and browserified files', function (done) {
         spyOn(Browserify.prototype, 'file');
         spyOn(Browserify.prototype, 'minify');
 

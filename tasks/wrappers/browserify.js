@@ -1,7 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var browserify = require('browserify');
 var path = require('path');
-var UglifyJS = require("uglify-js");
 var watchify = require('watchify');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
@@ -120,25 +119,7 @@ Browserify.prototype.write = function(){
             promises.push(self.buildVendor(options));
         }
         return Promise.all(promises);
-    }).then(function(fileObjs){
-        var promises = [];
-        fileObjs.forEach(function (fileObj, i) {
-            promises.push(self.minify(fileObj));
-        });
-        return Promise.all(promises);
     });
-};
-
-//todo: don't minify in dev mode?
-Browserify.prototype.minify = function(fileObj){
-    if (this.options.dev) return Promise.resolve();
-    var newFile = new File({ path: fileObj.path });
-    newFile.name = fileObj.name.replace('.js','.min.js');
-    newFile.dir = path.join(this.destination,fileObj.relativeDir);
-    newFile.contents = UglifyJS.minify(fileObj.path).code;
-    //todo: verbose mode?
-    //log.info(' * ' + newFile.name + ' saved in ' + newFile.dir);
-    return fs.write(newFile);
 };
 
 module.exports = Browserify;

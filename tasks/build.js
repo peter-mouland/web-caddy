@@ -1,6 +1,7 @@
 var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
+var UglifyJS = require("./wrappers/uglifyjs");
 var clean = require('./clean');
 var config, paths, globs, pkg, build = {};
 
@@ -52,7 +53,28 @@ build.scripts = function scripts(options){
     return Promise.all([
         paths.demo && new Scripts(globs.demo.scripts, paths.target, options).write(),
         paths.target && new Scripts(globs.source.scripts, paths.target, options).write()
-    ]).catch(log.warn);
+    ]).then(wait).then(function(fileObjPromises){
+        if (options.dev) return Promise.resolve();
+        build.jsMin(fileObjPromises[1]); ////only minify source code (not demo code)
+    }).catch(log.warn);
+};
+
+function wait(fileObjs){
+    return new Promise(function(resolve, reject) {
+        setTimeout(function(){
+            resolve(fileObjs);
+        },50);
+    });
+}
+
+build.jsMin = function (fileObjs){
+    log.info(' * Minifying JS');
+    var promises = [];
+    fileObjs.forEach(function (fileObj, i) {
+        log.info('    * ' + fileObj.name);
+        promises.push(new UglifyJS(fileObj, paths.target, build.options).minify());
+    });
+    return Promise.all(promises);
 };
 
 build.styles = function styles(options){

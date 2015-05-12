@@ -11,21 +11,22 @@
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
   * Updated `serve` task to serve `target` directory by default + to a free port if omitted. 
   * Updated `release` config option. this must be an array. 
+  * Updated `build.scripts` to only minify source code (not demo code)
   * Updated Mustache/Jade to use variables from `package.json` by default
   * Removed automatic installation of npm modules wtih `caddy new xxx`
   * Removed `dist` path config option
-  * Removed `site.` from Mustache/Jade variables i.e. `site.version` becomes `version`.
+  * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`.
   * Added `copy` task to separate the task of copying images and server-config from building scripts etc.
   * Added `html-min` as a separate build task.
   * Added `bower` as a separate `release` option.
   * Added `-dev` CLI option to prevent file minification and speed up build time
   
 todo:
-  * vendorBundle
-  * minify seems broken
+  * test a requirejs project
   * test a node project
   * test in windows
   * speed, speed, speed
+  * vendorBundle
   * //kill test tdd properly
  
 ## 1.3.x

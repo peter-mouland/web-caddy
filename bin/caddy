@@ -1,13 +1,21 @@
 #!/usr/bin/env node
 var log = require("../tasks/utils/log");
 var helper = require("../tasks/utils/config-helper");
-
-function logEnd(){
-    global.end = new Date()
-    console.log(' *** end ***', global.end)
-}
-
+//
+//global.times = [];
+//
+//function logEnd(){
+//    global.end = new Date();
+//    console.log('Exec Time : ', timeDifference(global.end,global.start) + 's');
+//}
+//function timeDifference(laterdate, earlierdate) {
+//    var difference = laterdate.getTime() - earlierdate.getTime();
+//    var secondsDifference = difference/1000;
+//    global.times.push(secondsDifference)
+//    return secondsDifference;
+//}
 function execTask(taskName, args){
+    //global.start = new Date()
     helper.configCheck();
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'all';
@@ -18,9 +26,9 @@ function execTask(taskName, args){
     }
     args = (args.length<2) ? args[0] : args;
     if (task[command]){
-        task[command](args).then(logEnd);
+        return task[command](args);//.then(logEnd);
     } else if (task['adhoc']){
-        task['adhoc'](command).then(logEnd);
+        return task['adhoc'](command);//.then(logEnd);
     } else {
         help(task, taskName);
     }
@@ -29,7 +37,7 @@ function execTask(taskName, args){
 function help(task, taskName){
     var args = [];
     for (var arg in task){
-        if (arg!=='run' && arg!=='adhoc') args.push(arg);
+        if (arg!=='all' && arg!=='adhoc') args.push(arg);
     }
     var helpStr = (taskName === '') ? '' : '`caddy ' + taskName + '` or ';
     log.info([ taskName + " arguments: " + args.join(', '),
@@ -76,8 +84,6 @@ var commands = {
 };
 
 (function main() {
-    global.start = new Date()
-    console.log('*** start *** ', global.start);
     var argv = process.argv.slice(1)
     if (!argv.length) return commands['--help']();
     var cwd =  argv.shift();
