@@ -186,9 +186,8 @@ function clean(globby){
 }
 
 function createWriteStream(path, options){
-    var arr = path.split('/');
-    arr.pop();
-    mkdirpSync(arr.join('/'));
+    var file = new File({path:path});
+    mkdirpSync(file.dir);
     return fs.createWriteStream(path, options);
 }
 
