@@ -46,7 +46,7 @@ module.exports = function File(fileObj){
 
             name = path.split(slash).pop();
             dir = outDirs.join(slash);
-            relativeDir = (base) ? (dir + '/').replace(base,'') : undefined;
+            relativeDir = (base) ? (dir + slash).replace(base,'') : undefined;
             ext = name.split('.').pop();
         }
     });
