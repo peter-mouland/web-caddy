@@ -23,7 +23,7 @@ HTML.prototype.min = function(fileObj){
 HTML.prototype.write = function(){
     var self = this;
     var promises = [];
-    this.fileObjs.forEach(function (fileObj, i) {
+    this.fileObjs && this.fileObjs.forEach(function (fileObj, i) {
         promises.push(self.min(fileObj));
     });
     return Promise.all(promises);

@@ -1,7 +1,6 @@
 var Promise = require('es6-promise').Promise;
 var requirejs = require('requirejs');
 var path = require('path');
-var UglifyJS = require("uglify-js");
 var fs = require('../utils/fs');
 var File = require('../utils/file');
 
@@ -13,16 +12,19 @@ function RequireJS(location, destination, options){
 
 RequireJS.prototype.file = function(fileObj) {
     var config = {
-        baseUrl: fileObj.base,
+        baseUrl: path.join(fileObj.base,fileObj.relativeDir),
         name: fileObj.name.replace('.js',''),
-        out: path.join(this.destination, fileObj.name),
+        out: path.join(this.destination, fileObj.relativeDir, fileObj.name),
         generateSourceMaps: true,
         preserveLicenseComments: false,
         optimize: "none",
         mainConfigFile: this.options.mainConfigFile
     };
     return new Promise(function(resolve, reject){
-        requirejs.optimize(config, resolve, reject);
+        requirejs.optimize(config, function(args){
+            var fileObj = new File({path:args.split('\n')[1]});
+            resolve(fileObj);
+        }, reject);
     });
 };
 
@@ -38,24 +40,7 @@ RequireJS.prototype.write = function(){
             promises.push(self.file(fileObj));
         });
         return Promise.all(promises);
-    }).then(function(fileObjs){
-        return fs.glob(self.destination);
-    }).then(function(fileObjs){
-        var promises = [];
-        fileObjs.forEach(function (fileObj, i) {
-            promises.push(self.minify(fileObj));
-        });
-        return Promise.all(promises);
     });
-};
-
-RequireJS.prototype.minify = function(fileObj){
-    if (this.options.dev) return Promise.resolve();
-    var newFile = new File({ path: fileObj.path });
-    newFile.name = fileObj.name.replace('.js','.min.js');
-    newFile.dir = this.destination;
-    newFile.contents = UglifyJS.minify(fileObj.path).code;
-    return fs.write(newFile);
 };
 
 module.exports = RequireJS;

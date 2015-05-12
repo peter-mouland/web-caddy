@@ -20,13 +20,11 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
-  * test a requirejs project
-  * test a node project
+  * vendorBundle
   * test node api (all using options?)
   * caddy init if caddy config doesn't exist
   * speed, speed, speed
-  * vendorBundle
-  * //kill test tdd properly
+  * kill `test tdd` process properly
  
 ## 1.3.x
  * **1.3.0**

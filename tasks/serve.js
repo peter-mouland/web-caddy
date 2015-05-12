@@ -3,6 +3,7 @@ var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var Browserify = require('./wrappers/browserify.js');
 var browserSync = require('browser-sync');
+var extend = require('util')._extend;
 var build = require('./build');
 var config, paths, globs, pkg, serve = {};
 
@@ -31,7 +32,7 @@ function getWatchOptions(){
             switch (event) {
                 case 'change':
                     log.info(['Watch: File `' + file + '` has been changed, running build.' + task + '()'].join('\n'));
-                    build(task).then(browserSync.reload);
+                    build[task]().then(browserSync.reload);
                     break;
                 default :
                     log.info(' * ' + event + ' ' + file);
@@ -50,14 +51,11 @@ function getWatchOptions(){
 }
 
 function start(options){
-    options = options || (config[config.serve]) || {};
-    //todo: test: does this now work as nodeApp??
-    options.server = options.server || { baseDir : paths.target };
+    options = extend(options, config[config.serve]);
+    if (config.serve === 'staticApp' && !options.server)
+        options.server = { baseDir : paths.target };
     return nodeApp(options).then(function(){
-        log.warn('Server Started :');
-        if (!options.server && !options.proxy){ //todo: now a problem?
-            log.warn('caddy.config.js may be incorrect. please check');
-        }
+        log.info(' * Started');
         options.files = getWatchOptions();
         browserSync(options);
     });
@@ -71,11 +69,10 @@ function browserifyWatch(){
 }
 
 function nodeApp(options){
-    if (options.server) return Promise.resolve();
+    if (config.serve === 'staticApp') return Promise.resolve();
     var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
         nodemon(options).on('start', function(e){
-            log.info('Server Started');
             resolve();
         });
     });
@@ -98,7 +95,8 @@ serve.all = function all(args){
 function exec(task, options){
     initConfig();
     if (!config.serve) return Promise.resolve();
-    log.info('Serving :');
+    options = options || {};
+    log.info('Server :');
     if (serve[task]) return serve[task](options);
     //if (!serve[task]) return help[task](options);
 }

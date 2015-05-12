@@ -2,6 +2,7 @@ var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var UglifyJS = require("./wrappers/uglifyjs");
+var extend = require('util')._extend;
 var clean = require('./clean');
 var config, paths, globs, pkg, build = {};
 
@@ -32,10 +33,10 @@ build.htmlMin = function htmlMin(fileObjs) {
     if (!htmlWrapper) return Promise.resolve();
     log.info(' * HTML Min');
 
-    var Html = require('./wrappers/html-min');
+    var HtmlMin = require('./wrappers/html-min');
     var promises = [];
     fileObjs.forEach(function(fileObjs){
-        promises.push(new Html(fileObjs).write());
+        promises.push(new HtmlMin(fileObjs).write());
     });
     return Promise.all(promises).catch(log.warn);
 };
@@ -46,7 +47,7 @@ build.scripts = function scripts(options){
     log.info(' * Scripts');
 
     var Scripts = require('./wrappers/' + scriptsWrapper);
-    options = options || config[scriptsWrapper] || {};
+    options = extend(options, config[scriptsWrapper]);
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
@@ -72,7 +73,7 @@ build.jsMin = function (fileObjs){
     var promises = [];
     fileObjs.forEach(function (fileObj, i) {
         log.info('    * ' + fileObj.name);
-        promises.push(new UglifyJS(fileObj, paths.target, build.options).write());
+        promises.push(new UglifyJS(fileObj, build.options).write());
     });
     return Promise.all(promises);
 };
@@ -106,6 +107,7 @@ var prepare = {
 function exec(task, options){
     initConfig();
     if (!config.build) return Promise.resolve();
+    options = options || {};
     return (prepare[task] || prepare.noop)().then(function(){
         log.info('Building :');
         if (build[task]) return build[task](options);

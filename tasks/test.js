@@ -3,12 +3,13 @@ var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var clean = require('./clean');
+var extend = require('util')._extend;
 var config, TestWrapper, test = {}, i=0;
 
 function checkConfig(){
     config = helper.getConfig();
     if (config.test){
-        TestWrapper = require('./wrappers/' + (config.test || 'karma'));
+        TestWrapper = require('./wrappers/karma');
     } else {
         //todo: verbose?
         //log.info('Test set to false within caddy.config.js : skipping');
@@ -17,7 +18,7 @@ function checkConfig(){
 }
 
 function all(options, singleRun){
-    options = options || (config[config.test]) || {};
+    options = extend(options, config[config.test]);
     var unitPromise, functionalPromise;
     unitPromise = functionalPromise = Promise.resolve();
     if (options.unit){
@@ -50,6 +51,7 @@ var prepare = {
 function run(task, options){
     checkConfig();
     return (prepare[task] || prepare.noop)().then(function() {
+        options = options || {};
         log.info('Testing :', task);
         if (!!test[task]) return test[task](options);
         //if (!copy[task]) return help[task](options);
