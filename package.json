@@ -1,6 +1,6 @@
 {
   "name": "web-caddy",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "Create, build, test, Serve and Release. Quickly",
   "main": "index.js",
   "files": [
