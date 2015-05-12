@@ -3,28 +3,30 @@
 ## 2.0.x  Breaking change
   * Renamed to `web-caddy`
   * Speed improvements
-  * Improved logging
-  * Updated `clean` to be a function that accepts a location or dir 'type'
-  * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
-  * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs.
-  * Updated `paths.site` config option to `paths.target`.
+  * Added `html-min` as a separate build task
+  * Added `bower` as a separate `release` option
+  * Added `-dev` CLI option to prevent file minification and speed up build time
+  * Added `copy` task to separate the task of copying images and server-config from building scripts etc
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
-  * Updated `serve` task to serve `target` directory by default + to a free port if omitted. 
-  * Updated `release` config option. this must be an array. 
+  * Updated `paths.site` config option to `paths.target`
+  * Updated `serve` task to serve `paths.target` directory by default + to a free port if omitted
+  * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
+  * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs
+  * Updated `release` config option. this must be an array
   * Updated `build.scripts` to only minify source code (not demo code)
   * Updated Mustache/Jade to use variables from `package.json` by default
   * Removed automatic installation of npm modules wtih `caddy new xxx`
   * Removed `dist` path config option
-  * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`.
-  * Added `copy` task to separate the task of copying images and server-config from building scripts etc.
-  * Added `html-min` as a separate build task.
-  * Added `bower` as a separate `release` option.
-  * Added `-dev` CLI option to prevent file minification and speed up build time
+  * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
+  * test in windows
+  * test version bumping
+  * test release s3
   * test a requirejs project
   * test a node project
-  * test in windows
+  * test node api
+  * caddy init if caddy config doesn't exist
   * speed, speed, speed
   * vendorBundle
   * //kill test tdd properly

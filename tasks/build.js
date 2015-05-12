@@ -72,7 +72,7 @@ build.jsMin = function (fileObjs){
     var promises = [];
     fileObjs.forEach(function (fileObj, i) {
         log.info('    * ' + fileObj.name);
-        promises.push(new UglifyJS(fileObj, paths.target, build.options).minify());
+        promises.push(new UglifyJS(fileObj, paths.target, build.options).write());
     });
     return Promise.all(promises);
 };

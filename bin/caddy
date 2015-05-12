@@ -19,16 +19,18 @@ function execTask(taskName, args){
     helper.configCheck();
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'all';
+    var argsObj = {};
     if (command.charAt(0) == '-') {
-        args = {};
-        args[command.substr(1)] = true;
+        argsObj[command.substr(1)] = true;
         command = 'all'
+    } else if (args.length >0 && args[0].charAt(0) == '-'){
+        argsObj[args[0].substr(1)] = true;
     }
-    args = (args.length<2) ? args[0] : args;
+    //args = (args.length<2) ? args[0] : args;
     if (task[command]){
-        return task[command](args);//.then(logEnd);
+        return task[command](argsObj);//.then(logEnd);
     } else if (task['adhoc']){
-        return task['adhoc'](command);//.then(logEnd);
+        return task['adhoc'](command, argsObj);//.then(logEnd);
     } else {
         help(task, taskName);
     }
