@@ -19,18 +19,19 @@ function execTask(taskName, args){
     helper.configCheck();
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'all';
-    var argsObj = {};
+    var options = {};
     if (command.charAt(0) == '-') {
-        argsObj[command.substr(1)] = true;
+        options.type = command.substr(1);
+        options[options.type] = true;
         command = 'all'
     } else if (args.length >0 && args[0].charAt(0) == '-'){
-        argsObj[args[0].substr(1)] = true;
+        options.type = args[0].substr(1);
+        options[options.type] = true;
     }
-    //args = (args.length<2) ? args[0] : args;
     if (task[command]){
-        return task[command](argsObj);//.then(logEnd);
+        return task[command](options);//.then(logEnd);
     } else if (task['adhoc']){
-        return task['adhoc'](command, argsObj);//.then(logEnd);
+        return task['adhoc'](command, options);//.then(logEnd);
     } else {
         help(task, taskName);
     }
@@ -41,9 +42,9 @@ function help(task, taskName){
     for (var arg in task){
         if (arg!=='all' && arg!=='adhoc') args.push(arg);
     }
-    var helpStr = (taskName === '') ? '' : '`caddy ' + taskName + '` or ';
+    var helpStr = (!args[0]) ? '' : 'or `caddy ' + taskName + ' ' +args[0] + '`';
     log.info([ taskName + " arguments: " + args.join(', '),
-        "Usage: " + helpStr + "`caddy " + taskName + " " + args[0] + "`"].join("\n"));
+        "Usage: `caddy " + taskName + "` " + helpStr].join("\n"));
 }
 
 var commands = {

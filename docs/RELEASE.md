@@ -25,7 +25,7 @@ There are a number of use cases for release:
  * `npm test` : Run the tests again
  * `npm run report` :  take a look at the code coverage report
  * `npm run bump`
-   * alternatively run `npm run bump -- [patch|minor|major|vx.x.x]`. [more info >](#bump-the-version).
+   * alternatively run `npm run bump -- [-patch|-minor|-major|-vx.x.x]`. [more info >](#bump-the-version).
  * `git push` : to kick of the deploy process
 
 CircleCI will then run your tests, and if successful:
@@ -61,8 +61,8 @@ machine:
 
 `caddy release`
 
-   * This will automatically bump the version number (using [bump-the-version](#bump-the-version)).
    * Tag the version number and push to Git
+     * To also bump the version number add `-patch` (read [Version Bump](#version-bump) for more).
    * Push the demo `site` to github.io
    * Push the compiled assets to the S3 (if configured)
 
@@ -114,7 +114,7 @@ Setting this option to false will prevent a release.
         region: process.env.YOUR_AWS_REGION,
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
-        directoryPrefix: 'components/'
+        target: 'components/'
     },
 ```
 
@@ -147,7 +147,7 @@ Ensure you have created the file : `~/.aws/credentials`. For more information se
 This will push the current files within `_site` to gh-pages branch (making your demo available on github.io).
 
 
-## Bump the Version
+## Version Bump
 
 > Bump the version within your app
 
@@ -161,6 +161,6 @@ It is recommended you update your package.json `scripts` object:
   "bump": "caddy bump"
 ```
 
-By default, this applies a  `patch`.  Add either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.
+By default, this applies a  `patch`.  Add either `-patch`, `-minor`, `-major`, `-prerelease` or even `-v3.2.1` to specify the type of bump.
 
-i.e. `npm run bump -- major`
+i.e. `npm run bump -- -major`

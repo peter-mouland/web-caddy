@@ -20,12 +20,9 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
-  * test in windows
-  * test version bumping
-  * test release s3
   * test a requirejs project
   * test a node project
-  * test node api
+  * test node api (all using options?)
   * caddy init if caddy config doesn't exist
   * speed, speed, speed
   * vendorBundle

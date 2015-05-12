@@ -3,13 +3,11 @@ var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var config, bump = {};
 
-bump.all = function all(type){
-    if (type == 'current') return Promise.resolve(config.pkg.version);
-
+bump.all = function all(options){
     var build = require('./build');
     var Bump = require('./utils/bump');
     var newVersion;
-    return new Bump(['./package.json','./README.md', config.paths.source + '/**/version.js'], {type: type }).run()
+    return new Bump(['./package.json','./README.md', config.paths.source + '/**/version.js'], options).run()
         .then(function(version){
             log.info(" * Now on " + version);
             newVersion = version;

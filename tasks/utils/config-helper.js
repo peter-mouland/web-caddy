@@ -67,6 +67,9 @@ var helper = {
         //check release config
         if (config.release.indexOf('s3')>=0 && !config.s3){
             error.push(' * There is no release config object:  `s3:{...}`');
+        } else if (config.release.indexOf('s3')>=0 && config.s3.profile &&
+            (config.s3.secret || config.s3.accessKey)){
+            error.push(' * Your s3 config need either `profile` OR `secret/accessKey` not all.');
         }
 
         if (error.length>1){

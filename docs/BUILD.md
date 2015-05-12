@@ -15,7 +15,7 @@ You can also `caddy clean (scripts|styles|html|images|fonts)` etc. to specifiy e
 
 `caddy build`
 
-This will clean all target directories (site & dist) and execute all the Build tasks below.
+This will clean target directories and execute all the Build tasks below.
 
 #### Styles
 
@@ -23,10 +23,10 @@ This will clean all target directories (site & dist) and execute all the Build t
 
 By default we assume the styles are written using [Sass](http://sass-lang.com/). *If you would like Less, please submit a pull request.*
 
-This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `src/styles` **root**.
+This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `paths.source` (or `paths.source/*`).
 A `.min.css` will also be created for each compiled file.
 
-These will be saved within the `dist` and `site` roots set within [caddy.config.js](boilerplate/caddy.config.js)
+These will be saved within the `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
 
 #### Scripts
 
@@ -35,10 +35,10 @@ These will be saved within the `dist` and `site` roots set within [caddy.config.
 By default we assume the javascript is written in CommonJS, so we [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/) if you wish.
 Just update `build.scripts` within [caddy.config.js](boilerplate/caddy.config.js)
 
-This will create a compiled file for each `.js` file found in the `src/scripts` **root**.
+This will create a compiled file for each `.js` file found in the `paths.source` (or `paths.source/*`).
 Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.
 
-These will be saved within the `dist` and `site` roots set within [caddy.config.js](boilerplate/caddy.config.js)
+These will be saved within the `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
 
 The build can be configured more by adding a `browserify` or `requirejs` object to the [caddy.config.js](boilerplate/caddy.config.js).
 
@@ -79,13 +79,13 @@ Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 
 This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [caddy.config.js](boilerplate/caddy.config.js)).
 
-These will be saved within the `site` roots set within [caddy.config.js](boilerplate/caddy.config.js)
+These will be saved within `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
 
-By default, during the build it will also replace *site.now*, *site.name* and *site.version* variables.
+By default, during the build it will also replace variables `{{ varName }}` that are matched within package.json.
 
 #### Server Config Files
 
 `caddy build server-config-files`
 
-This will copy any server config files (currently `CNAME`, `.htaccess` and `robots.txt`) found in `paths.source.root` to your `paths.target.root`.
+This will copy any server config files (currently `CNAME`, `.htaccess` and `robots.txt`) found in `paths.source` to your `paths.target`.
 

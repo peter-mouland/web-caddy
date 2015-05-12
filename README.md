@@ -52,19 +52,19 @@ Once required (`var caddy = require('web-caddy');`), you can call the following:
 CLI | Node
 --- | ----
 caddy new *project-name* | *unavailable*
-[caddy build](docs/BUILD.md) | `caddy.build.run(replacements)`<br> (optional: replacements object)
+[caddy build](docs/BUILD.md) | `caddy.build.all(replacements)`<br> (optional: replacements object)
 [caddy build scripts](docs/BUILD.md#scripts) | `caddy.build.scripts()`
 [caddy build styles](docs/BUILD.md#styles) | `caddy.build.styles()`
 [caddy build html](docs/BUILD.md#html) | `caddy.build.html(replacements)` <br>(optional: replacements object)
 [caddy build server-config-files](docs/BUILD.md#server-config-files) | `caddy.build.serverConfigFiles()`
-[caddy serve](docs/SERVE.md) | `caddy.serve.run(config)` <br>(optional: [server *config*](API.md#serve))
+[caddy serve](docs/SERVE.md) | `caddy.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
 [caddy serve path/to/serve](docs/SERVE.md#adhoc-pages) | `caddy.serve.adhoc(path)` <br>(mandatory: path/to/serve)
-[caddy test](docs/TEST.md#testing) | `caddy.test.run()`
+[caddy test](docs/TEST.md#testing) | `caddy.test.all()`
 [caddy test tdd](docs/TEST.md#tdd) | `caddy.test.tdd()`
 [caddy init bower](docs/INITIALISING.md#bower) | `caddy.init.bower()`
 [caddy init git](docs/INITIALISING.md#remote-git-repository) | `caddy.init.git(repository)` <br>(mandatory: Git URL)
-[caddy bump *Semantic Version*](docs/RELEASE.md#bump-the-version) | `caddy.bump.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
-[caddy release *Semantic Version*](docs/RELEASE.md#manual-deployment) | `caddy.release.run(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[caddy bump -*Semantic Version*](docs/RELEASE.md#bump-the-version) | `caddy.bump.all(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[caddy release -*Semantic Version*](docs/RELEASE.md#manual-deployment) | `caddy.release.all(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
 [caddy release gh-pages](docs/RELEASE.md#deploying-to-github.io) | `caddy.release.ghPages(message)` <br>(optional: commit *message*)
 [caddy release s3](docs/RELEASE.md#deploying-to-amazon-s3) | `caddy.release.s3(version)` <br>(optional: semantic *version*)
 
