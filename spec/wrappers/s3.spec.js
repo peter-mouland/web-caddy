@@ -83,10 +83,10 @@ describe('S3', function () {
         });
         spyOn(S3.prototype, 'setParams');
         spyOn(log, 'info').and.callFake(function (msg){ return;});
-        aws.upload({path:'my/test/path'}).then(function (msg) {
+        aws.upload({path:'users/me/project', relativeDir:'my/test/', name:'path'}).then(function (msg) {
             expect(AWSSDK.S3.calls.count()).toBe(1);
             expect(S3.prototype.setParams.calls.count()).toBe(1);
-            expect(msg).toBe('S3::putObject "my/test/path" send');
+            expect(msg).toBe('   * "my/test/path" ');
         }).then(done).catch(onError);
     });
 
