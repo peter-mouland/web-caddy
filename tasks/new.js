@@ -47,16 +47,16 @@ function newComponent(project) {
         shell.cd(project);
         return renameFiles(project);
     }).then(function(output){
-        return init('localGit');
+        return init.localGit();
     }).then(function(output){
         log.onSuccess(output);
         log.info(" * Installing Bower Modules");
         return bower.install();
     }).then(function(output){
         for (var i in output){
-            log.onSuccess( ' * Installed ' + i);
+            log.info( '   * Installed ' + i);
         }
-        return init('git', {project: project});
+        return init.git({project: project});
     }).then(function(){
         log.info(['',
             'Ready!',

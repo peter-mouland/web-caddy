@@ -131,13 +131,17 @@ init.ghPages = function(repo){
     }).catch(log.onError);
 };
 
+init.all = function(options){
+    log.info(" * caddy.config.js file");
+};
+
 function run(task, options){
-    log.info('Initialising :', task);
-    if (init[task]) return init[task](options);
-    //if (!copy[task]) return help[task](options);
+    log.info('Initialising :');
+    return init[task](options);
 }
 
 module.exports = {
+    'all': function(options){ return run('all', options); },
     'bower': function(options){ return run('bower', options); },
     'gh-pages':  function(options){ return run('ghPages', options); },
     localGit:  function(options){ return run('localGit', options); },

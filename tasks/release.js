@@ -10,12 +10,13 @@ function initConfig(){
     config = helper.getConfig();
 }
 
-release.ghPages = function ghPagesRelease(options){
+release.ghPages = function (options){
     var release = helper.matches(config.release, ['gh-pages']);
     if (!release) return Promise.resolve();
 
     var ghPages = require('gh-pages');
     log.info(" * gh-pages");
+    options.message = options.message || 'v' + options.version;
     return new Promise(function(resolve, reject){
         ghPages.publish(config.paths.target, options, function(err) {
             ghPages.clean();
@@ -25,13 +26,13 @@ release.ghPages = function ghPagesRelease(options){
     });
 };
 
-release.s3 = function s3(options){
+release.s3 = function (options){
     var release = helper.matches(config.release, ['s3']);
     if (!release) return Promise.resolve();
 
     log.info(" * S3");
     var Release = require('./wrappers/s3');
-    options = extend(options, config.s3);
+    options = extend(config.s3 || {}, options);
     var target = options.target || '';
     if (options.version){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + options.version + '$2');
@@ -39,44 +40,44 @@ release.s3 = function s3(options){
     return new Release(config.paths.target + '/**/*.*', target, options).write();
 };
 
-release.git = function releaseGit(options){
+release.git = function (options){
     var release = helper.matches(config.release, ['git']);
     if (!release) return Promise.resolve();
 
     var git = require('./utils/git');
+    var version = options.version || config.pkg.version;
+    log.info(' * Git');
     if (!git.checkRemote()){
         return log.onError(['No valid Remote Git URL.',
             'Please update your `.git/config` file or run:',
             '$ caddy init git'].join('\n'));
     }
-    log.info(' * Git');
-    var version = options.version || config.pkg.version;
     return git.release(version);
 };
 
-release.bower = function releaseBower(options){
+release.bower = function (options){
     var release = helper.matches(config.release, ['bower']);
     if (!release) return Promise.resolve();
 
-    log.info(" * Bower");
     var git = require('./utils/git');
     var bower = require('./wrappers/bower');
+    var version = options.version || config.pkg.version;
+    log.info(" * Bower");
     if (!git.checkRemote()){
         return log.onError(['No valid Remote Git URL.',
             'Please update your `.git/config` file or run:',
             '$ caddy init git'].join('\n'));
     }
-    log.info(' * Bower');
-    var version = options.version || config.pkg.version;
     return bower.release(version).catch(log.onError);
 };
 
-release.all = function all(options){
-    var bumpedVersion = options.version;
-    return release.git(bumpedVersion).then(function(){
-        return release.ghPages('v' + bumpedVersion);
+release.all = function (options){
+    return release.bower(options).then(function(){
+        return release.git(options);
     }).then(function(){
-        return release.s3({ version: bumpedVersion });
+        return release.ghPages(options);
+    }).then(function(){
+        return release.s3(options);
     });
 };
 
@@ -95,8 +96,7 @@ function exec(task, options){
     return (prepare[task] || prepare.noop)(options).then(function(version){
         log.info('Releasing :');
         if (version) options.version = version;
-        if (!!release[task]) return release[task](options);
-        //if (!release[task]) return help[task](options);
+        return release[task](options);
     });
 }
 
@@ -105,5 +105,6 @@ module.exports = {
     'git':  function(options){  return exec('git', options); },
     'gh-pages':  function(options){ return exec('ghPages', options); },
     's3':  function(options){  return exec('s3', options); },
-    'all':  function(options){ return exec('all', options); }
+    'all':  function(options){ return exec('all', options); },
+    'adhoc':  function(type){ return exec('all', { type : type }); }
 };

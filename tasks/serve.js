@@ -50,15 +50,10 @@ function getWatchOptions(){
     return files;
 }
 
-function start(options){
-    options = extend(options, config[config.serve]);
-    if (config.serve === 'staticApp' && !options.server)
-        options.server = { baseDir : paths.target };
-    return nodeApp(options).then(function(){
-        log.info(' * Started');
-        options.files = getWatchOptions();
-        browserSync(options);
-    });
+function startBrowserSync(options) {
+    log.info(' * Started');
+    options.files = getWatchOptions();
+    browserSync(options);
 }
 
 function browserifyWatch(){
@@ -69,27 +64,40 @@ function browserifyWatch(){
 }
 
 function nodeApp(options){
-    if (config.serve === 'staticApp') return Promise.resolve();
     var nodemon = require('nodemon');
     return new Promise(function(resolve, reject){
         nodemon(options).on('start', function(e){
-            resolve();
+            resolve(options);
         });
     });
 }
 
-serve.adhoc = function adhoc(baseDir){
-    //todo: test if path ext is js or html
-    //    : if html serve staticApp
-    //    : if js serve nodeApp
-    config.serve = 'staticApp';
-    return start({
-        server: { baseDir : baseDir }
-    });
+serve.adhoc = function (baseDir){
+    if (baseDir.split('.').pop() === 'js'){
+        return serve.staticApp({
+            server: { baseDir : baseDir }
+        });
+    } else {
+        return serve.nodeApp({
+            script: baseDir
+        });
+    }
 };
 
-serve.all = function all(args){
-    return start(args).catch(log.onError);
+serve.staticApp = function(options){
+    if (!options.server) options.server = { baseDir : paths.target };
+    return startBrowserSync(options);
+};
+
+serve.nodeApp = function(options){
+    if (!options.proxy) options.proxy = 'http://localhost:3000';
+    if (!options.port) options.port = 3001;
+    return nodeApp(options).then(startBrowserSync);
+};
+
+serve.all = function (options){
+    options = extend(config[config.serve] || {}, options);
+    return serve[config.serve](options)
 };
 
 function exec(task, options){
@@ -97,8 +105,7 @@ function exec(task, options){
     if (!config.serve) return Promise.resolve();
     options = options || {};
     log.info('Server :');
-    if (serve[task]) return serve[task](options);
-    //if (!serve[task]) return help[task](options);
+    return serve[task](options);
 }
 
 module.exports = {

@@ -15,11 +15,7 @@ module.exports = function(config) {
         ],
         exclude: [
             '**/*.png',
-            'src/**/*.requirejs.js',
-            '**/*.min.js',
-            'src/**/*.txt',
-            'src/**/*.csv',
-            'src/**/*.hbs'
+            '**/*.min.js'
         ]
     };
     var pkg = require('../package.json');

@@ -66,8 +66,7 @@ function exec(task, options){
     if (!config.copy) return Promise.resolve();
     return (prepare[task] || prepare.noop)().then(function(){
         log.info('Copying :');
-        if (copy[task]) return copy[task](options);
-        //if (!copy[task]) return help[task](options);
+        return copy[task](options);
     });
 }
 

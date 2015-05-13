@@ -66,8 +66,7 @@ clean.build = function build(){
 function exec(task, options){
     initConfig();
     log.info('Deleting :');
-    if (clean[task]) return clean[task](options);
-    //if (!clean[task]) return help[task](options); todo: help function
+    return clean[task](options);
 }
 
 module.exports = {

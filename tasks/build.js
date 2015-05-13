@@ -13,17 +13,17 @@ function initConfig(){
     pkg = config.pkg;
 }
 
-build.html = function html(replacements) {
+build.html = function html(options) {
     var htmlWrapper = helper.matches(config.build, ['jade','mustache']);
     if (!htmlWrapper) return Promise.resolve();
     log.info(' * HTML');
 
     var Html = require('./wrappers/' + htmlWrapper);
-    replacements = replacements || config.pkg;
-    replacements.now = Date().split(' ').splice(0,5).join(' ');
+    options = extend(config.pkg || {}, options);
+    options.now = Date().split(' ').splice(0,5).join(' ');
     return Promise.all([
-        paths.demo && new Html(globs.demo.html, paths.target, replacements).write(),
-        paths.target && new Html(globs.source.html, paths.target, replacements).write()
+        paths.demo && new Html(globs.demo.html, paths.target, options).write(),
+        paths.target && new Html(globs.source.html, paths.target, options).write()
     ]).then(build.htmlMin).catch(log.warn);
 };
 
@@ -47,7 +47,7 @@ build.scripts = function scripts(options){
     log.info(' * Scripts');
 
     var Scripts = require('./wrappers/' + scriptsWrapper);
-    options = extend(options, config[scriptsWrapper]);
+    options = extend(config[scriptsWrapper] || {}, options);
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
@@ -84,7 +84,7 @@ build.styles = function styles(options){
     log.info(' * Styles');
 
     var Styles = require('./wrappers/' + stylesWrapper);
-    options = options || (config[stylesWrapper]) || {};
+    options = extend(config[stylesWrapper] || {}, options);
     return Promise.all([
         paths.target && new Styles(globs.source.styles, paths.target, options).write(),
         paths.demo && new Styles(globs.demo.styles, paths.target, options).write()
@@ -110,8 +110,7 @@ function exec(task, options){
     options = options || {};
     return (prepare[task] || prepare.noop)().then(function(){
         log.info('Building :');
-        if (build[task]) return build[task](options);
-        //if (!build[task]) return help[task](options);
+        build[task](options);
     });
 }
 

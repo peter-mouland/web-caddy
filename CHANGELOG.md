@@ -9,6 +9,7 @@
   * Added `copy` task to separate the task of copying images and server-config from building scripts etc
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
   * Updated `paths.site` config option to `paths.target`
+  * Updated `serve` task to be able to serve ad-hoc nodeApps or static files
   * Updated `serve` task to serve `paths.target` directory by default + to a free port if omitted
   * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
   * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs
@@ -20,6 +21,8 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
+  * update suggested package.json scripts
+  * task help on unknown command
   * test node api (all using options?)
   * caddy init if caddy config doesn't exist
   * document config file properly

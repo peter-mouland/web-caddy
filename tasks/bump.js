@@ -20,10 +20,10 @@ bump.all = function all(options){
 function exec(task, options){
     config = helper.getConfig();
     log.info('Bumping :');
-    if (bump[task]) return bump[task](options);
-    //if (!bump[task]) help[task]()
+    return bump[task](options);
 }
 
 module.exports = {
-    all:  function(options){ return exec('all', options); }
+    all:  function(options){ return exec('all', options); },
+    adhoc:  function(type){ return exec('all', { type : type }); }
 };

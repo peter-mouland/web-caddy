@@ -30,7 +30,7 @@ function execTask(taskName, args){
     }
     if (task[command]){
         return task[command](options);//.then(logEnd);
-    } else if (task['adhoc']){
+    } else if (task['adhoc']){//allows a a single parameter to passed t othe adhoc function
         return task['adhoc'](command, options);//.then(logEnd);
     } else {
         help(task, taskName);

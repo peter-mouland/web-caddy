@@ -18,7 +18,7 @@ function checkConfig(){
 }
 
 function all(options, singleRun){
-    options = extend(options, config[config.test]);
+    options = extend(config[config.test] || {}, options);
     var unitPromise, functionalPromise;
     unitPromise = functionalPromise = Promise.resolve();
     if (options.unit){
@@ -53,8 +53,7 @@ function run(task, options){
     return (prepare[task] || prepare.noop)().then(function() {
         options = options || {};
         log.info('Testing :', task);
-        if (!!test[task]) return test[task](options);
-        //if (!copy[task]) return help[task](options);
+        return test[task](options);
     });
 }
 
