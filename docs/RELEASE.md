@@ -61,8 +61,8 @@ machine:
 
 `caddy release`
 
+   * [Version Bump](#version-bump) if you need to.
    * Tag the version number and push to Git
-     * To also bump the version number add `-patch` (read [Version Bump](#version-bump) for more).
    * Push the demo `site` to github.io
    * Push the compiled assets to the S3 (if configured)
 
@@ -72,7 +72,7 @@ It is recommended you update your package.json `scripts` object to automatically
   "release": "npm test && caddy release"
 ```
 
-You can then run `npm run release` for simple patch releases. Feel free to setup shortcuts for any other release types.
+You can then run `npm run release` to release. Feel free to setup shortcuts for any other release types.
 
 Your `circle.yml` should look something like:
 
@@ -110,8 +110,8 @@ Setting this option to false will prevent a release.
     ...
     release: 's3',
     s3: {
-        bucket: process.env.YOUR_AWS_BUCKET,
-        region: process.env.YOUR_AWS_REGION,
+        bucket: 'bucket-for-your-project',
+        region: 'eu-west-1',
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
         target: 'components/'
@@ -123,8 +123,8 @@ Setting this option to false will prevent a release.
     ...
     release: 's3',
     s3: {
-        bucket: process.env.YOUR_AWS_BUCKET,
-        region: process.env.YOUR_AWS_REGION,
+        bucket: 'bucket-for-your-project',
+        region: 'eu-west-1',
         profile: pkg.name,
         directoryPrefix: false
     },
@@ -144,7 +144,7 @@ Ensure you have created the file : `~/.aws/credentials`. For more information se
 
 `caddy release gh-pages`
 
-This will push the current files within `_site` to gh-pages branch (making your demo available on github.io).
+This will push the current files within `paths.target` to gh-pages branch (making your demo available on github.io).
 
 
 ## Version Bump
@@ -161,6 +161,6 @@ It is recommended you update your package.json `scripts` object:
   "bump": "caddy bump"
 ```
 
-By default, this applies a  `patch`.  Add either `-patch`, `-minor`, `-major`, `-prerelease` or even `-v3.2.1` to specify the type of bump.
+By default, this applies a  `patch`.  Add either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.
 
-i.e. `npm run bump -- -major`
+i.e. `npm run bump -- major`

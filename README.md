@@ -64,7 +64,7 @@ caddy new *project-name* | *unavailable*
 [caddy init bower](docs/INITIALISING.md#bower) | `caddy.init.bower()`
 [caddy init git](docs/INITIALISING.md#remote-git-repository) | `caddy.init.git(repository)` <br>(mandatory: Git URL)
 [caddy bump *Semantic Version*](docs/RELEASE.md#bump-the-version) | `caddy.bump.all(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
-[caddy release *Semantic Version*](docs/RELEASE.md#manual-deployment) | `caddy.release.all(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[caddy release](docs/RELEASE.md#manual-deployment) | `caddy.release.all()`
 [caddy release gh-pages](docs/RELEASE.md#deploying-to-github.io) | `caddy.release.ghPages(message)` <br>(optional: commit *message*)
 [caddy release s3](docs/RELEASE.md#deploying-to-amazon-s3) | `caddy.release.s3(version)` <br>(optional: semantic *version*)
 

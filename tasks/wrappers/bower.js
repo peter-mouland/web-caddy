@@ -55,18 +55,21 @@ function filesInGitPlusBowerFiles(){
 
 function release(opts){
     var ghPages = require('gh-pages');
-    var pkg = require(findup('./package.json'));
     opts = opts || {};
 
     return filesInGitPlusBowerFiles().then(function(files){
-        return ghPages.publish('.',{
-            src: '*{' + files.join(',') + '}',
-            message: opts.message || 'Bower Release',
-            branch: opts.branch || 'latest',
-            tag: pkg.version}, log.onError);
-    }).then(function() {
-        return ghPages.clean();
-    }, log.onError);
+        return new Promise(function(resolve, reject){
+            return ghPages.publish('.',{
+                src: '*{' + files.join(',') + '}',
+                message: opts.message || 'Bower Release',
+                branch: opts.branch || 'latest-tag',
+                tag: opts.tag},  function(err) {
+                ghPages.clean();
+                err && reject(err);
+                !err && resolve();
+            });
+        });
+    }).catch(log.onError);
 }
 
 module.exports = {

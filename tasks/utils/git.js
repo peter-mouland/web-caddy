@@ -43,25 +43,26 @@ module.exports = {
             email : shell.exec('git config user.email', {silent:true}).output.replace(/\s+$/g, '')
         };
     }()),
-    release: function release(version){
+    release: function (options){
         var git = this;
-        return git.commit('v' + version).then(function() {
+        return git.commit(options.tag).then(function() {
             return git.push(['origin', 'master']);
         }).then(function(){
-            return git.tag('v' + version).catch(function(msg){
+            return git.tag(options.tag).catch(function(msg){
                 log.warn(msg);
             });
         }).then(function(){
-            return git.push(['origin', 'master', 'v' + version]);
+            if (options.tagged) return Promise.resolve();
+            return git.push(['origin', 'master', options.tag]);
         });
     },
-    validRepo: function validepo(repo){
+    validRepo: function (repo){
         return (
         repo && (repo.match(/.com\:(.*)\//) ||
             repo.match(/http(.*)\/.git/))
         ) ? repo : false;
     },
-    checkRemote: function checkGit(){
+    checkRemote: function (){
         var repo = shell.exec('git config --get remote.origin.url', {silent:true}).output.replace(/\s+$/g, '');
         return this.validRepo(repo);
     },

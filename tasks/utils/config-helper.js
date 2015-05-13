@@ -46,31 +46,28 @@ var helper = {
             error.push(' * The package.json requires as a `version` string (even "version": "0.0.0" is fine)');
         }
         //check old config
-        if (config.build && !Array.isArray(config.build)){
-            warn.push(' * Please update `build` to be an array of items to be built.');
-        }
-        if (config.release && !Array.isArray(config.release)){
-            warn.push(' * Please update `release` to be an array of items to be released.');
-        }
-        if (config.s3 && config.s3.directoryPrefix){
-            warn.push(' * Please update `directoryPrefix` to `target` within the `s3` config.  See API.md#s3');
+        if (!config.tasks){
+            warn.push(' * Please ensure there is a `tasks` object within your caddy.config.js');
         }
         //check build config
-        if (config.build && config.build.indexOf && config.build.indexOf('requirejs')>=0 && !config.requirejs){
+        if (config.tasks.build && config.tasks.build.indexOf && config.tasks.build.indexOf('requirejs')>=0 && !config.requirejs){
             error.push(' * There is no scripts config object:  `requirejs:{...}`');
         }
         //check test config
-        if (config.test && !config[config.test]){
-            error.push(' * There is no test config object: `' + config.test + ': {...}`');
+        if (config.tasks.test && !config[config.tasks.test]){
+            error.push(' * There is no test config object: `' + config.tasks.test + ': {...}`');
         }
 
         //check release config
-        if (config.release && config.release.indexOf('s3')>=0 && !config.s3){
+        if (config.tasks.release && config.tasks.release.indexOf('s3')>=0 && !config.s3){
             error.push(' * There is no release config object:  `s3:{...}`');
-        } else if (config.release && config.release.indexOf('s3')>=0 && config.s3.profile &&
+        } else if (config.tasks.release && config.tasks.release.indexOf('s3')>=0 && config.s3.profile &&
             (config.s3.secret || config.s3.accessKey)){
             error.push(' * Your s3 config need either `profile` OR `secret/accessKey` not all.');
         }
+        //if (config.tasks.release && config.tasks.release.indexOf('git')>=0  && config.tasks.release.indexOf('bower')>=0){
+        //    error.push(' * There is no need to release to `git` and `bower` as both commands `tag` your release.\n * Please choose one.');
+        //}
 
         if (error.length>1){
             log.onError(error.join('\n'));
