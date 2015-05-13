@@ -2,7 +2,7 @@
 
  * [Creating A New Project](#creating-a-new-project)
  * [Register With Bower](#register-with-bower)
- * [Create A github.io/*your-project*)](#create-a-github.io)
+ * [Create A github.io/*your-project*)](#create-a-githubio)
  * [Add A Remote Git Repository)](#remote-git-repository)
 
 #### Creating A New Project

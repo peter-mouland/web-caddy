@@ -2,6 +2,10 @@
 
  * [Clean](#clean) - clean (remove) the contents of your set asset directories
  * [Build](#build) - Building the assets needed for your project
+    * [Styles](#styles)
+    * [Scripts](#scripts)
+    * [HTML](#html)
+    * [Server Config Files](#server-config-files)
 
 ## Clean
 
@@ -43,8 +47,12 @@ These will be saved within the `paths.target` set within [caddy.config.js](boile
 The build can be configured more by adding a `browserify` or `requirejs` object to the [caddy.config.js](boilerplate/caddy.config.js).
 
 **Example 1 : browserify**
-
+*caddy.config.js*
 ```javascript
+...
+    tasks: {
+        build: ['browserify']
+    },
     browserify: {
         insertGloabals : false,
         detectGlobals : false,
@@ -53,11 +61,12 @@ The build can be configured more by adding a `browserify` or `requirejs` object 
         ],
         vendorTarget: 'scripts/vendor.js'
     },
+...
 ```
 
 The `vendorBundle` option will create `vendorTarget` file from external files. *(`debowerify` will sometime cause problems).*
 Ensure you have the corresponding `browser` object in your `package.json`. i.e.
-
+*package.json*
 ```javascript
 ...
   "browser": {
@@ -67,8 +76,11 @@ Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 ```
 
 **Example 2 : requirejs**
-
+*caddy.config.js*
 ```javascript
+    tasks: {
+        build: ['requirejs']
+    },
     requirejs: {
         mainConfigFile: 'src/scripts/require.config.js'
     }
