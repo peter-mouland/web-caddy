@@ -97,7 +97,7 @@ serve.nodeApp = function(options){
 
 serve.all = function (options){
     options = extend(config[config.serve] || {}, options);
-    return serve[config.serve](options)
+    return serve[config.serve](options);
 };
 
 function exec(task, options){
