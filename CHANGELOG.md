@@ -3,10 +3,11 @@
 ## 2.0.x  Breaking change
   * Renamed to `web-caddy`
   * Speed improvements
-  * Added `html-min` as a separate build task
-  * Added `bower` as a separate `release` option
+  * Log output improvements (easier to know what is going on!)
+  * Added `html-min` as a separate `build` task
+  * Added `bower` as a separate `release` task
   * Added `-dev` CLI option to prevent file minification and speed up build time
-  * Added `copy` task to separate the task of copying images and server-config from building scripts etc
+  * Added `copy` task to separate the task of copying files from compiling code
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
   * Updated `paths.site` config option to `paths.target`
   * Updated `serve` task to be able to serve ad-hoc nodeApps or static files
@@ -22,9 +23,9 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
-  * task help on unknown command
   * verbose mode
   * test node api (all using options?)
+  * allow node api to overwrite path.src and paths.target within options obj
   * caddy init if caddy config doesn't exist
   * document config file properly
   * speed, speed, speed

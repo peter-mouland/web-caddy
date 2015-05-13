@@ -10,20 +10,20 @@ You can serve static sites and node apps.  Using [browserSync](https://www.npmjs
 
 `caddy serve`
 
-Within the [caddy.config.js](boilerplate/caddy.config.js):
+Within the *caddy.config.js*:
 
 ```javascript
     ...
     serve: 'staticApp',
     staticApp:{
         server: { baseDir : '_site' },
-        port: 3456
+        port: 3000
     },
     ...
 ```
-
- * *baseDir* can be a single directory string, or an array of directory strings.
- * *port* will where your browserSync instance is available with live reloading
+ * The `staticApp` config object is optional.
+ * *baseDir* (default: `paths.target`) A directory string, or an array of directory strings.
+ * *port* (default: any free port starting at 3000) will where your browserSync instance is available with live reloading
 
 We recommend that the package.json `scripts` object is updated to build your site first:
 
@@ -37,7 +37,7 @@ You can then use: `npm start`
 
 `caddy serve`
 
-Within the [caddy.config.js](boilerplate/caddy.config.js):
+Within the *caddy.config.js*:
 
 ```javascript
     ...
