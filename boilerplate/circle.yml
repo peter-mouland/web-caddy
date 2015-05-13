@@ -11,7 +11,7 @@ deployment:
   production:
     branch: master
     commands:
-      - ./node_modules/web-caddy/bin/caddy release current
+      - ./node_modules/web-caddy/bin/caddy release
 machine:
   timezone:
     Europe/London
