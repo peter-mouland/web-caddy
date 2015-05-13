@@ -38,6 +38,7 @@ Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://ww
 ## Use Cases
 
 > Setup your project to get the most out of `caddy`
+ * [Example config file](examples/caddy.config.js) delete where appropriate
  * [Initialising](docs/INITIALISING.md) remote services (Bower, Git + github.io)
  * [Building](docs/BUILD.md) code and automatically recreate the directory structure a set `target`
  * [Serving](docs/SERVE.md) static or NodeJS sites

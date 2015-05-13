@@ -9,18 +9,18 @@ function onError(err) {
 }
 
 gulp.task('build', function() {
-    return caddy.build.run().catch(onError);
+    return caddy.build.all().catch(onError);
 });
 
 gulp.task('serve',  function() {
-    return caddy.serve.run().catch(onError);
+    return caddy.serve.all().catch(onError);
 });
 
 gulp.task('test', function(){
-    return caddy.test.run().catch(onError);
+    return caddy.test.all().catch(onError);
 });
 
 gulp.task('release', function(){
     var version = argv.split('--version=')[1];
-    return caddy.release.run(version).catch(onError);
+    return caddy.release.all(version).catch(onError);
 });

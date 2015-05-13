@@ -22,7 +22,6 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
-  * update suggested package.json scripts
   * task help on unknown command
   * test node api (all using options?)
   * caddy init if caddy config doesn't exist
