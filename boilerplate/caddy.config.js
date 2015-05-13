@@ -7,11 +7,13 @@ module.exports = {
         "demo": "./demo",
         "target": './_site'
     },
-    copy: ['fonts', 'images', 'server-config'],
-    build: ['sass', 'mustache', 'browserify'],
-    test: 'karma',
-    release: ['git', 'gh-pages'],
-    serve: 'staticApp',
+    tasks : {
+        copy: ['fonts', 'images', 'server-config'],
+        build: ['sass', 'mustache', 'browserify'],
+        serve: 'staticApp',
+        test: 'karma',
+        release: ['git', 'gh-pages']
+    },
     karma:{
         functional: './test/karma.functional.js',
         unit: './test/karma.unit.js',

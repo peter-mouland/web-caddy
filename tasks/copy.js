@@ -28,21 +28,21 @@ function copyFiles(fileType){
 }
 
 copy.serverConfig = function serverConfig(){
-    var verify = helper.matches(config.copy, ['server-config']);
+    var verify = helper.matches(config.tasks.copy, ['server-config']);
     if (!verify) return Promise.resolve();
     log.info(' * Server Config');
     return copyFiles('serverConfig');
 };
 
 copy.fonts = function fonts() {
-    var verify = helper.matches(config.copy, ['fonts']);
+    var verify = helper.matches(config.tasks.copy, ['fonts']);
     if (!verify) return Promise.resolve();
     log.info(' * Fonts');
     return copyFiles('fonts');
 };
 
 copy.images = function images() {
-    var verify = helper.matches(config.copy, ['images']);
+    var verify = helper.matches(config.tasks.copy, ['images']);
     if (!verify) return Promise.resolve();
     log.info(' * Images');
     return copyFiles('images');
@@ -63,7 +63,8 @@ var prepare = {
 
 function exec(task, options){
     initConfig();
-    if (!config.copy) return Promise.resolve();
+    options = options || {};
+    if (!config.tasks.copy) return Promise.resolve();
     return (prepare[task] || prepare.noop)().then(function(){
         log.info('Copying :');
         return copy[task](options);

@@ -14,7 +14,7 @@ function initConfig(){
 }
 
 build.html = function html(options) {
-    var htmlWrapper = helper.matches(config.build, ['jade','mustache']);
+    var htmlWrapper = helper.matches(config.tasks.build, ['jade','mustache']);
     if (!htmlWrapper) return Promise.resolve();
     log.info(' * HTML');
 
@@ -29,7 +29,7 @@ build.html = function html(options) {
 
 //todo: location for consistency or fileObjs for speed??
 build.htmlMin = function htmlMin(fileObjs) {
-    var htmlWrapper = helper.matches(config.build, ['html-min']);
+    var htmlWrapper = helper.matches(config.tasks.build, ['html-min']);
     if (!htmlWrapper) return Promise.resolve();
     log.info(' * HTML Min');
 
@@ -42,7 +42,7 @@ build.htmlMin = function htmlMin(fileObjs) {
 };
 
 build.scripts = function scripts(options){
-    var scriptsWrapper = helper.matches(config.build, ['browserify','requirejs']);
+    var scriptsWrapper = helper.matches(config.tasks.build, ['browserify','requirejs']);
     if (!scriptsWrapper) return Promise.resolve();
     log.info(' * Scripts');
 
@@ -79,7 +79,7 @@ build.jsMin = function (fileObjs){
 };
 
 build.styles = function styles(options){
-    var stylesWrapper = helper.matches(config.build, ['sass']);
+    var stylesWrapper = helper.matches(config.tasks.build, ['sass']);
     if (!stylesWrapper) return Promise.resolve();
     log.info(' * Styles');
 
@@ -106,8 +106,8 @@ var prepare = {
 
 function exec(task, options){
     initConfig();
-    if (!config.build) return Promise.resolve();
     options = options || {};
+    if (!config.tasks.build) return Promise.resolve();
     return (prepare[task] || prepare.noop)().then(function(){
         log.info('Building :');
         build[task](options);

@@ -8,7 +8,7 @@ var config, TestWrapper, test = {}, i=0;
 
 function checkConfig(){
     config = helper.getConfig();
-    if (config.test){
+    if (config.tasks.test){
         TestWrapper = require('./wrappers/karma');
     } else {
         //todo: verbose?
@@ -18,7 +18,7 @@ function checkConfig(){
 }
 
 function all(options, singleRun){
-    options = extend(config[config.test] || {}, options);
+    options = extend(config[config.tasks.test] || {}, options);
     var unitPromise, functionalPromise;
     unitPromise = functionalPromise = Promise.resolve();
     if (options.unit){
@@ -38,7 +38,7 @@ test.tdd = function(options){
 
 test.all = function(options){
     return all(options, true).then(function(){
-        options = options || (config[config.test]) || {};
+        options = extend(config[config.tasks.test] || {}, options);
         return new TestWrapper(options).coverage();
     }).then(log.onSuccess).catch(log.onError);
 };
@@ -50,8 +50,8 @@ var prepare = {
 
 function run(task, options){
     checkConfig();
+    options = options || {};
     return (prepare[task] || prepare.noop)().then(function() {
-        options = options || {};
         log.info('Testing :', task);
         return test[task](options);
     });

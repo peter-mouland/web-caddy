@@ -19,7 +19,7 @@ describe("Release", function() {
     describe("s3", function() {
 
         var config = {
-            build:{},release:['s3'],pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
+            tasks:{build:{},release:['s3']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
             s3: { target: '/11.11.11/' }
         };
 
@@ -40,7 +40,7 @@ describe("Release", function() {
         });
 
         it("will not release to s3 if not in config", function (done) {
-            delete config.release;
+            delete config.tasks.release;
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             release.s3({ version : '11.12.11' }).then(function(ret){
                 expect(log.info).not.toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe("Release", function() {
     describe("gh-pages", function() {
 
         var config = {
-            build:{},release:['gh-pages'],pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
+            tasks:{build:{},release:['gh-pages']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
             s3: { target: '/11.11.11/' }
         };
 
@@ -67,7 +67,7 @@ describe("Release", function() {
         });
 
         it("will not release to gh-pages if not in config", function (done) {
-            delete config.release;
+            delete config.tasks.release;
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             release['gh-pages']('v11.12.11').then(function(){
                 expect(log.info).not.toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe("Release", function() {
         var config;
         beforeEach(function() {
             config = {
-                build: {}, release: ['git', 'gh-pages'], pkg: {version: '11.11.11'}, paths: {source: {}, target: {}},
+                tasks:{build: {}, release: ['git', 'gh-pages']}, pkg: {version: '11.11.11'}, paths: {source: {}, target: {}},
                 s3: {target: '/11.11.11/'}
             };
         });
@@ -98,7 +98,7 @@ describe("Release", function() {
         });
 
         it("will not release to git if not in config", function (done) {
-            delete config.release;
+            delete config.tasks.release;
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             spyOn(git,'checkRemote').and.callFake(function(){ return true });
             release.git('v11.12.11').then(function(){

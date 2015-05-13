@@ -26,7 +26,7 @@ describe("Build task will compile", function() {
         spyOn(htmlMinify, "minify").and.callFake(function(msg) { return msg; });
         config = {
             pkg:{version:'11.11.11'},
-            build: ['sass', 'mustache', 'browserify'],
+            tasks:{build: ['sass', 'mustache', 'browserify']},
             globs:{demo:{},source:{},target:{}},
             paths:{demo:'./demo',source:'./src',target:'./_site'}
         };
@@ -53,7 +53,7 @@ describe("Build task will compile", function() {
     });
 
     it("scripts with requirejs", function (done) {
-        config.build[2] = 'requirejs';
+        config.tasks.build[2] = 'requirejs';
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
         build.scripts().then(function(){
             expect(browserify.prototype.write.calls.count()).toEqual(0);

@@ -42,7 +42,7 @@ function getWatchOptions(){
     };
     files.push({ match: htmlPaths, fn: callBack('html'), options: chokidarOptions });
     files.push({ match: stylesPaths, fn: callBack('styles'), options: chokidarOptions });
-    if (helper.matches(config.build, ['browserify'])) {
+    if (helper.matches(config.tasks.build, ['browserify'])) {
         browserifyWatch();
     } else {
         files.push({ match: scriptsPaths, fn: callBack('scripts'), options: chokidarOptions });
@@ -96,14 +96,14 @@ serve.nodeApp = function(options){
 };
 
 serve.all = function (options){
-    options = extend(config[config.serve] || {}, options);
-    return serve[config.serve](options);
+    options = extend(config[config.tasks.serve] || {}, options);
+    return serve[config.tasks.serve](options);
 };
 
 function exec(task, options){
     initConfig();
-    if (!config.serve) return Promise.resolve();
     options = options || {};
+    if (!config.tasks.serve) return Promise.resolve();
     log.info('Server :');
     return serve[task](options);
 }

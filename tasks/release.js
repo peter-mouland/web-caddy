@@ -11,7 +11,7 @@ function initConfig(){
 }
 
 release.ghPages = function (options){
-    var release = helper.matches(config.release, ['gh-pages']);
+    var release = helper.matches(config.tasks.release, ['gh-pages']);
     if (!release) return Promise.resolve();
 
     var ghPages = require('gh-pages');
@@ -27,7 +27,7 @@ release.ghPages = function (options){
 };
 
 release.s3 = function (options){
-    var release = helper.matches(config.release, ['s3']);
+    var release = helper.matches(config.tasks.release, ['s3']);
     if (!release) return Promise.resolve();
 
     log.info(" * S3");
@@ -41,7 +41,7 @@ release.s3 = function (options){
 };
 
 release.git = function (options){
-    var release = helper.matches(config.release, ['git']);
+    var release = helper.matches(config.tasks.release, ['git']);
     if (!release) return Promise.resolve();
 
     var git = require('./utils/git');
@@ -56,7 +56,7 @@ release.git = function (options){
 };
 
 release.bower = function (options){
-    var release = helper.matches(config.release, ['bower']);
+    var release = helper.matches(config.tasks.release, ['bower']);
     if (!release) return Promise.resolve();
 
     var git = require('./utils/git');
@@ -91,8 +91,8 @@ var prepare = {
 
 function exec(task, options){
     initConfig();
-    if (!config.release) return Promise.resolve();
     options = options || {};
+    if (!config.tasks.release) return Promise.resolve();
     return (prepare[task] || prepare.noop)(options).then(function(version){
         log.info('Releasing :');
         if (version) options.version = version;
