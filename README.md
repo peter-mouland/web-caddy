@@ -38,10 +38,15 @@ Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://ww
 ## Use Cases
 
  * [Initialise Bower, Git, github.io](docs/INITIALISING.md)
+    * > Have the `caddy` setup a number of remote services
  * [Building Assets](docs/BUILD.md)
+    * > Compile code and automatically recreate the directory structure within your set `target`
  * [Serving Apps/Sites](docs/SERVE.md)
+    * > Serve static or NodeJS site
  * [Testing](docs/TEST.md)
+    * > Test while developing (TDD) or a single run before you release
  * [Release Process](docs/RELEASE.md)
+    * > Setup continuous or manual deployments
 
 ## API
 

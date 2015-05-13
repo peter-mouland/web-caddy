@@ -11,7 +11,7 @@
   * Updated `paths.site` config option to `paths.target`
   * Updated `serve` task to be able to serve ad-hoc nodeApps or static files
   * Updated `serve` task to serve `paths.target` directory by default + to a free port if omitted
-  * Updated `release` will not bump by default. Now add a semVer i.e. `caddy release patch` to bump + release
+  * Updated `release` will not bump by default. Explicitly bump first using `caddy bump`
   * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs
   * Updated `release` config option. this must be an array
   * Updated `build.scripts` to only minify source code (not demo code)

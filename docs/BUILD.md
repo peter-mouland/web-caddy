@@ -7,9 +7,9 @@
 
 `caddy clean`
 
-This will remove any files from within all target directories (site & dist).  
+This will remove any files from within the `target` directory.  
 
-You can also `caddy clean (scripts|styles|html|images|fonts)` etc. to specifiy exect directories to clean.
+You can also `caddy clean (scripts|styles|html|images|fonts)` etc. to specifiy exact directories to clean.
 
 ## Build
 
@@ -50,11 +50,12 @@ The build can be configured more by adding a `browserify` or `requirejs` object 
         detectGlobals : false,
         vendorBundle: [
             { file: './bower_components/d3/d3.js', expose: 'd3'}
-        ]
+        ],
+        vendorTarget: 'scripts/vendor.js'
     },
 ```
 
-The `vendorBundle` option will create `vendor.js` from external files. *(`debowerify` will sometime cause problems).*
+The `vendorBundle` option will create `vendorTarget` file from external files. *(`debowerify` will sometime cause problems).*
 Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 
 ```javascript
