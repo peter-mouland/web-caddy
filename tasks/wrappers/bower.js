@@ -26,6 +26,13 @@ function filesInGitPlusBowerFiles(){
     var parser = require('gitignore-parser');
     var gitignore = parser.compile(fs.readFileSync('.gitignore', 'utf8'));
     var bowerPkg = require(findup('./bower.json'));
+    var exclusionGlob = './!(node_modules|bower_components)*{*,**/**}';
+
+    log.info('    * Finding files that are not ignored (by either bower.json or .gitignore)');
+    bowerPkg.ignore = bowerPkg.ignore.map(function(glob){
+       if (glob === '**/*') return exclusionGlob;
+        return glob;
+    });
     return fs.glob(bowerPkg.ignore).then(function(fileObjs){
         var files = fileObjs.map(function(fileObj){
             return fileObj.path.replace(fileObj.base,'');
@@ -34,10 +41,13 @@ function filesInGitPlusBowerFiles(){
         files = files.map(function(file){
             return '!' + file;
         });
-        files.unshift('**/*');
+        files.unshift(exclusionGlob);
         return fs.glob(files);
     }).then(function(fileObjs){
+        log.info('    * Found ' + fileObjs.length + ' file(s)');
         return fileObjs.map(function(fileObj){
+            //todo: verbose mode?
+            //console.log(fileObj.path.replace(fileObj.base,''))
             return fileObj.path.replace(fileObj.base,'');
         });
     });
