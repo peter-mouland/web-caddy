@@ -11,6 +11,8 @@
 
 This will clean target directories and execute all the Build tasks below.
 
+Whenever files are compiled, the same top-level directory structure is maintained within the target.
+
 #### Styles
 
 `caddy build styles`

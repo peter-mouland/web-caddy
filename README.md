@@ -40,6 +40,7 @@ Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://ww
 > Setup your project to get the most out of `caddy`
  * [Example config file](examples/caddy.config.js)
  * [Initialising](docs/INITIALISING.md) remote services (Bower, Git + github.io)
+ * [Copy](docs/COPY.md) static (non-compiled) assets
  * [Building](docs/BUILD.md) code and automatically recreate the directory structure a set `target`
  * [Serving](docs/SERVE.md) static or NodeJS sites
  * [Testing](docs/TEST.md) while developing (TDD) or a single run before you release

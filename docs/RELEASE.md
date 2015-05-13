@@ -4,9 +4,9 @@ There are a number of use cases for release:
 
  * [Continuous deployment](#continuous-deployment)
  * [Manual deployment](#manual-deployment)
- * [Deploying to Bower](#deploying-to-bower)
- * [Deploying to Amazon S3](#deploying-to-amazon-s3)
- * [Deploying to github.io](#deploying-to-github.io)
+ * [Bower](#deploying-to-bower)
+ * [Amazon S3](#deploying-to-amazon-s3)
+ * [github.io](#deploying-to-github.io)
  * [Bump](#bump-the-version)
 
 ## Continuous Deployment
@@ -92,9 +92,18 @@ machine:
 
 > Putting your code into Bowers registry so that other can `bower install`
 
-This happens automatically with every git tag, if you have initialised bower first.
+You must first initialise Bower (See [INITIALISING.md#bower](INITIALISING.md#bower)).
 
-See [INITIALISING.md#bower](INITIALISING.md#bower).
+This will make files available to bower that match the `ignore` object within your bower.json (even if they are in your .gitignore file).
+
+*caddy.config.js*
+```javascript
+...
+    tasks: {
+        release: ['bower']
+    }
+...
+```
 
 ## Deploying to S3
 
@@ -106,9 +115,13 @@ This will push the current files from within `_site` to S3 using the options wit
 Setting this option to false will prevent a release.
 
 **Example 1: Using Environment Variables**
+
+*caddy.config.js*
 ```javascript
-    ...
-    release: 's3',
+...
+    tasks: {
+        release: ['s3']
+    },
     s3: {
         bucket: 'bucket-for-your-project',
         region: 'eu-west-1',
@@ -116,18 +129,24 @@ Setting this option to false will prevent a release.
         secret: process.env.YOUR_AWS_SECRET_ACCESS_KEY,
         target: 'components/'
     },
+...
 ```
 
 **Example 2: Using AWS Credentials**
+
+*caddy.config.js*
 ```javascript
-    ...
-    release: 's3',
+...
+    tasks: {
+        release: ['s3']
+    },
     s3: {
         bucket: 'bucket-for-your-project',
         region: 'eu-west-1',
         profile: pkg.name,
         directoryPrefix: false
     },
+...
 ```
 Ensure you have created the file : `~/.aws/credentials`. For more information see [Credentials in the AWS](http://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs#).
 
@@ -146,6 +165,14 @@ Ensure you have created the file : `~/.aws/credentials`. For more information se
 
 This will push the current files within `paths.target` to gh-pages branch (making your demo available on github.io).
 
+*caddy.config.js*
+```javascript
+...
+    tasks: {
+        release: ['gh-pages']
+    }
+...
+```
 
 ## Version Bump
 
