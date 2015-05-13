@@ -31,13 +31,13 @@ release.s3 = function (options){
     var release = helper.matches(config.tasks.release, ['s3']);
     if (!release) return Promise.resolve();
 
-    log.info(" * S3");
     var Release = require('./wrappers/s3');
     options = extend(config.s3 || {}, options);
     var target = options.target || '';
     if (options.version){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + options.version + '$2');
     }
+    log.info(" * S3 (" + options.bucket + ":" + target + ")");
     return new Release(config.paths.target + '/**/*.*', target, options).write();
 };
 

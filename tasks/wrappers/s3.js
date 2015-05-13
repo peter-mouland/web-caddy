@@ -24,7 +24,7 @@ function AWS(location, destination, options){
     this.s3 = new AWSSDK.S3(auth);
 
     this.params = {
-        Bucket : options.bucket || process.env.AWS_BUCKET || null,
+        Bucket : options.bucket || null,
         ACL    : options.acl || 'public-read',
         Key    : null,
         Body   : null
@@ -66,7 +66,7 @@ AWS.prototype.upload = function(fileObj) {
             if (err) {
                 reject({message: 'S3::putObject "' + self.params.Key + '" error!\n' + err});
             } else {
-                var msg ='S3::putObject "' + fileObj.path + '" send';
+                var msg ='   * "' + fileObj.relativeDir + fileObj.name + '" ';
                 log.info(msg);
                 resolve(msg);
             }
