@@ -40,7 +40,9 @@ By default we assume the javascript is written in CommonJS, so we [browserify](h
 Just update `build.scripts` within [caddy.config.js](boilerplate/caddy.config.js)
 
 This will create a compiled file for each `.js` file found in the `paths.source` (or `paths.source/*`).
-Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.
+Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.  To prevent minification use :
+
+`caddy build scripts -dev`
 
 These will be saved within the `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
 

@@ -23,6 +23,7 @@
   
 todo:
   * task help on unknown command
+  * verbose mode
   * test node api (all using options?)
   * caddy init if caddy config doesn't exist
   * document config file properly
