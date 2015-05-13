@@ -18,12 +18,12 @@ describe("Config-helper ", function() {
             spyOn(log,'warn').and.callFake(function(){ return true;});
 
             completeConfig = {
-                build: {
-                    scripts: 'browserify' // 'browserify' or 'requirejs'
+                tasks: {
+                    build: ['browserify'], // 'browserify' or 'requirejs'
+                    test: 'karma',
+                    release: ['s3'],
+                    serve: 'staticApp'
                 },
-                test: 'karma',
-                release: 's3',
-                serve: 'staticApp',
                 browserify: {  },
                 requirejs: { },
                 karma: {  },
@@ -34,19 +34,18 @@ describe("Config-helper ", function() {
             };
         });
 
-        it("knows when config is out of date", function () {
+        it("knows when config is incorrect", function () {
+            delete completeConfig.tasks;
+            completeConfig.build = {scripts:'d'};
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
-            expect(log.onError).not.toHaveBeenCalled();
-            expect(log.warn).toHaveBeenCalled();
-            expect(isCompatible).toContain('be out of date');
-            expect(isCompatible).toContain('release');
-            expect(isCompatible).toContain('build');
+            expect(log.onError).toHaveBeenCalled();
+            expect(log.warn).not.toHaveBeenCalled();
+            expect(isCompatible).toContain('incorrect');
+            expect(isCompatible).toContain('tasks');
         });
 
         it("knows when config is as expected", function () {
-            completeConfig.build = [];
-            completeConfig.release = [];
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).not.toHaveBeenCalled();
@@ -64,13 +63,13 @@ describe("Config-helper ", function() {
         });
 
         it("knows if the config is incorrect: missing requirejs config", function () {
-            completeConfig.build= ['requirejs'];
+            completeConfig.tasks.build= ['requirejs'];
             delete completeConfig.requirejs;
             spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be incorrect');
-            expect(isCompatible).toContain(completeConfig.build[0]);
+            expect(isCompatible).toContain(completeConfig.tasks.build[0]);
         });
 
 
@@ -80,7 +79,7 @@ describe("Config-helper ", function() {
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be incorrect');
-            expect(isCompatible).toContain(completeConfig.test);
+            expect(isCompatible).toContain(completeConfig.tasks.test);
         });
 
         it("knows if the config is incorrect: missing s3 config", function () {
@@ -89,7 +88,7 @@ describe("Config-helper ", function() {
             var isCompatible = helper.configCheck();
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be incorrect');
-            expect(isCompatible).toContain(completeConfig.release);
+            expect(isCompatible).toContain(completeConfig.tasks.release);
         });
 
     })

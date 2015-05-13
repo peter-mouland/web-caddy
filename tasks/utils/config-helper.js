@@ -47,27 +47,24 @@ var helper = {
         }
         //check old config
         if (!config.tasks){
-            warn.push(' * Please ensure there is a `tasks` object within your caddy.config.js');
+            error.push(' * Please ensure there is a `tasks` object within your caddy.config.js');
         }
         //check build config
-        if (config.tasks.build && config.tasks.build.indexOf && config.tasks.build.indexOf('requirejs')>=0 && !config.requirejs){
+        if (config.tasks && config.tasks.build && config.tasks.build.indexOf && config.tasks.build.indexOf('requirejs')>=0 && !config.requirejs){
             error.push(' * There is no scripts config object:  `requirejs:{...}`');
         }
         //check test config
-        if (config.tasks.test && !config[config.tasks.test]){
+        if (config.tasks && config.tasks.test && !config[config.tasks.test]){
             error.push(' * There is no test config object: `' + config.tasks.test + ': {...}`');
         }
 
         //check release config
-        if (config.tasks.release && config.tasks.release.indexOf('s3')>=0 && !config.s3){
+        if (config.tasks && config.tasks.release && config.tasks.release.indexOf('s3')>=0 && !config.s3){
             error.push(' * There is no release config object:  `s3:{...}`');
-        } else if (config.tasks.release && config.tasks.release.indexOf('s3')>=0 && config.s3.profile &&
+        } else if (config.tasks && config.tasks.release && config.tasks.release.indexOf('s3')>=0 && config.s3.profile &&
             (config.s3.secret || config.s3.accessKey)){
             error.push(' * Your s3 config need either `profile` OR `secret/accessKey` not all.');
         }
-        //if (config.tasks.release && config.tasks.release.indexOf('git')>=0  && config.tasks.release.indexOf('bower')>=0){
-        //    error.push(' * There is no need to release to `git` and `bower` as both commands `tag` your release.\n * Please choose one.');
-        //}
 
         if (error.length>1){
             log.onError(error.join('\n'));

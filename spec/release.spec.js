@@ -19,24 +19,18 @@ describe("Release", function() {
     describe("s3", function() {
 
         var config = {
-            tasks:{build:{},release:['s3']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
+            tasks:{build:[],release:['s3']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
             s3: { target: '/11.11.11/' }
         };
 
-        it("will set the target with the correct version", function (done) {
+        it("will set the target with the correct version", function () {
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
-            release.s3().then(function(ret){
-                expect(ret).toBe('/11.11.11/');
-                done();
-            }).catch(console.log)
+            expect(release.s3()).toBe('/11.11.11/');
         });
 
-        it("will update the target if the version has changed", function (done) {
+        it("will update the target if the version has changed", function () {
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
-            release.s3({ version : '11.12.11' }).then(function(ret){
-                expect(ret).toBe('/11.12.11/');
-                done();
-            })
+            expect(release.s3({ version : '11.12.11' })).toBe('/11.12.11/');
         });
 
         it("will not release to s3 if not in config", function (done) {
@@ -54,7 +48,7 @@ describe("Release", function() {
     describe("gh-pages", function() {
 
         var config = {
-            tasks:{build:{},release:['gh-pages']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
+            tasks:{build:[],release:['gh-pages']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
             s3: { target: '/11.11.11/' }
         };
 
@@ -83,18 +77,17 @@ describe("Release", function() {
         var config;
         beforeEach(function() {
             config = {
-                tasks:{build: {}, release: ['git', 'gh-pages']}, pkg: {version: '11.11.11'}, paths: {source: {}, target: {}},
+                tasks:{build: [], release: ['git', 'gh-pages']}, pkg: {version: '11.11.11'}, paths: {source: {}, target: {}},
                 s3: {target: '/11.11.11/'}
             };
         });
 
-        it("will release to git", function (done) {
+        it("will release to git", function () {
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             spyOn(git,'checkRemote').and.callFake(function(){ return true });
-            release.git().then(function(){
-                expect(git.release).toHaveBeenCalled();
-                done();
-            }).catch(console.log);
+            release.git();
+            expect(git.release).toHaveBeenCalled();
+
         });
 
         it("will not release to git if not in config", function (done) {
@@ -108,14 +101,13 @@ describe("Release", function() {
             });
         });
 
-        it("will not release to git if no remote", function (done) {
+        it("will not release to git if no remote", function () {
             spyOn(helper,'getConfig').and.callFake(function(){ return config; });
             spyOn(git,'checkRemote').and.callFake(function(){ return false });
-            release.git('v11.12.11').then(function(){
-                expect(log.onError).toHaveBeenCalled();
-                expect(git.release).not.toHaveBeenCalled();
-                done();
-            });
+            release.git('v11.12.11');
+            expect(log.onError).toHaveBeenCalled();
+            expect(git.release).not.toHaveBeenCalled();
+
         });
 
     });
