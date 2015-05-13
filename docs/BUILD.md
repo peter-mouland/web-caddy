@@ -25,6 +25,13 @@ This will clean target directories and execute all the Build tasks below.
 
 `caddy build styles`
 
+*caddy.config.js*
+```javascript
+    tasks: {
+        build: ['sass']
+    }
+```
+
 By default we assume the styles are written using [Sass](http://sass-lang.com/). *If you would like Less, please submit a pull request.*
 
 This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `paths.source` (or `paths.source/*`).
@@ -46,8 +53,10 @@ These will be saved within the `paths.target` set within [caddy.config.js](boile
 
 The build can be configured more by adding a `browserify` or `requirejs` object to the [caddy.config.js](boilerplate/caddy.config.js).
 
-**Example 1 : browserify**
+**Example 1 : browserify** 
+
 *caddy.config.js*
+
 ```javascript
 ...
     tasks: {
@@ -64,8 +73,8 @@ The build can be configured more by adding a `browserify` or `requirejs` object 
 ...
 ```
 
-The `vendorBundle` option will create `vendorTarget` file from external files. *(`debowerify` will sometime cause problems).*
-Ensure you have the corresponding `browser` object in your `package.json`. i.e.
+The `vendorBundle` option will create `vendorTarget` file from external files. Ensure you have the corresponding `browser` object in your `package.json`. *(`debowerify` will sometime cause problems).* 
+
 *package.json*
 ```javascript
 ...
@@ -76,6 +85,7 @@ Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 ```
 
 **Example 2 : requirejs**
+
 *caddy.config.js*
 ```javascript
     tasks: {
@@ -89,6 +99,13 @@ Ensure you have the corresponding `browser` object in your `package.json`. i.e.
 #### HTML
 
 `caddy build html`
+
+*caddy.config.js*
+```javascript
+    tasks: {
+        build: ['moustache']
+    }
+```
 
 This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) (as set in the [caddy.config.js](boilerplate/caddy.config.js)).
 
