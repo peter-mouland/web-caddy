@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var caddy = require('web-caddy');
-var paths = caddy.paths;
 var argv = process.argv.slice(3).toString();
 
 function onError(err) {
@@ -22,5 +21,5 @@ gulp.task('test', function(){
 
 gulp.task('release', function(){
     var version = argv.split('--version=')[1];
-    return caddy.release.all(version).catch(onError);
+    return caddy.release.all({version:version}).catch(onError);
 });

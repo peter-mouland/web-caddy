@@ -25,14 +25,14 @@ Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://ww
 2. *follow on-screen instructions.*
 3. Run `npm start` within your new directory
 
-[More Info >](INITIALISING.md)
+[More Info >](docs/INITIALISING.md)
 
 #### Enhancing An Existing Project
 
 > Get the CLI (build, test, release etc) working within an existing project
 
 1. Copy the [caddy.config.js](boilerplate/caddy.config.js) into your project root
-2. Remove and Update the the config for your needs
+2. Update the `tasks` object to match the jobs you need doing
 3. Update the `paths` object to match your directory structure
 
 ## Use Cases
@@ -56,10 +56,12 @@ CLI | Node
 --- | ----
 caddy new *project-name* | *unavailable*
 [caddy build](docs/BUILD.md) | `caddy.build.all(replacements)`<br> (optional: replacements object)
-[caddy build scripts](docs/BUILD.md#scripts) | `caddy.build.scripts()`
+[caddy build scripts](docs/BUILD.md#scripts) | `caddy.build.scripts(options)`<br> (optional: compiler object)
 [caddy build styles](docs/BUILD.md#styles) | `caddy.build.styles()`
 [caddy build html](docs/BUILD.md#html) | `caddy.build.html(replacements)` <br>(optional: replacements object)
-[caddy build server-config-files](docs/BUILD.md#server-config-files) | `caddy.build.serverConfigFiles()`
+[caddy copy](docs/COPY.md#copy) | `caddy.copy.all()`
+[caddy copy server-config-files](docs/COPY.md#server-config-files) | `caddy.copy.serverConfigFiles()`
+[caddy copy images](docs/COPY.md#images) | `caddy.copy.images()`
 [caddy serve](docs/SERVE.md) | `caddy.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
 [caddy serve path/to/serve](docs/SERVE.md#adhoc-pages) | `caddy.serve.adhoc(path)` <br>(mandatory: path/to/serve)
 [caddy test](docs/TEST.md#testing) | `caddy.test.all()`
@@ -70,6 +72,7 @@ caddy new *project-name* | *unavailable*
 [caddy release](docs/RELEASE.md#manual-deployment) | `caddy.release.all()`
 [caddy release gh-pages](docs/RELEASE.md#deploying-to-github.io) | `caddy.release.ghPages(message)` <br>(optional: commit *message*)
 [caddy release s3](docs/RELEASE.md#deploying-to-amazon-s3) | `caddy.release.s3(version)` <br>(optional: semantic *version*)
+[caddy release bower](docs/RELEASE.md#deploying-to-bower) | `caddy.release.bower(options)` <br>(optional: tag, message, branch)
 
 The CLI and Node will use the config set within [caddy.config.js](boilerplate/caddy.config.js) in your project root.
 
