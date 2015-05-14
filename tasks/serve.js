@@ -14,7 +14,7 @@ function initConfig(){
     pkg = config.pkg;
 }
 
-function getWatchOptions(){
+function getWatchOptions(options){
     var files = [];
     var htmlPaths = [ globs.source.html.replace('*.{','**/*.{') ];
     var stylesPaths = [globs.source.styles.replace('{.,*}','**').replace('!(_)','') ];
@@ -31,35 +31,37 @@ function getWatchOptions(){
         return function(event, file){
             switch (event) {
                 case 'change':
-                    log.info(['Watch: File `' + file + '` has been changed, running build.' + task + '()'].join('\n'));
-                    build[task]().then(browserSync.reload);
+                    log.info(['Watch: `' + file + '` changed'].join('\n'));
+                    options.reload = browserSync.reload;
+                    build[task](options).catch(log.onError);
                     break;
                 default :
-                    log.info(' * ' + event + ' ' + file);
+                    log.info('   * ' + ((event=='add')?'watch':event) + ' ' + file);
                     break;
             }
         };
     };
     files.push({ match: htmlPaths, fn: callBack('html'), options: chokidarOptions });
     files.push({ match: stylesPaths, fn: callBack('styles'), options: chokidarOptions });
-    if (helper.matches(config.tasks.build, ['browserify'])) {
-        browserifyWatch();
-    } else {
+    //todo: get watchify working with multiple dependant dirs i.e o-charts
+    //if (helper.matches(config.tasks.build, ['browserify'])) {
+    //    browserifyWatch();
+    //} else {
         files.push({ match: scriptsPaths, fn: callBack('scripts'), options: chokidarOptions });
-    }
+    //}
     return files;
 }
 
 function startBrowserSync(options) {
     log.info(' * Started');
-    options.files = getWatchOptions();
-    browserSync(options);
+    options.files = getWatchOptions(options);
+    browserSync(options); //todo: http://www.browsersync.io/docs/api/
 }
 
 function browserifyWatch(){
-    new Browserify(globs.source.scripts, paths.target).watch(browserSync);
+    (new Browserify(globs.source.scripts, paths.target)).watch(browserSync);
     if (paths.demo){
-        new Browserify(globs.demo.scripts, paths.target).watch(browserSync);
+        (new Browserify(globs.demo.scripts, paths.target)).watch(browserSync);
     }
 }
 

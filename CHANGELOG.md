@@ -23,6 +23,8 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
+  * update browserSync syntax as http://www.browsersync.io/docs/api/
+  * //todo: get watchify working with multiple dependant dirs i.e o-charts
   * verbose mode
   * test node api (all using options?)
   * allow node api to overwrite path.src and paths.target within options obj

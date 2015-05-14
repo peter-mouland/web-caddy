@@ -24,7 +24,7 @@ build.html = function html(options) {
     return Promise.all([
         paths.demo && new Html(globs.demo.html, paths.target, options).write(),
         paths.target && new Html(globs.source.html, paths.target, options).write()
-    ]).then(build.htmlMin).catch(log.warn);
+    ]).then(build.htmlMin).then(options.reload).catch(log.warn);
 };
 
 //todo: location for consistency or fileObjs for speed??
@@ -41,13 +41,13 @@ build.htmlMin = function htmlMin(fileObjs) {
     return Promise.all(promises).catch(log.warn);
 };
 
-build.scripts = function scripts(options){
+build.scripts = function scripts(options, cb){
     var scriptsWrapper = helper.matches(config.tasks.build, ['browserify','requirejs']);
     if (!scriptsWrapper) return Promise.resolve();
     log.info(' * Scripts');
 
     var Scripts = require('./wrappers/' + scriptsWrapper);
-    options = extend(config[scriptsWrapper] || {}, options);
+    options = extend(config[scriptsWrapper] || {}, options || {});
     options.browserify = pkg.browserify;
     options.browser = pkg.browser;
     options["browserify-shim"] = pkg["browserify-shim"];
@@ -56,15 +56,15 @@ build.scripts = function scripts(options){
         paths.target && new Scripts(globs.source.scripts, paths.target, options).write()
     ]).then(wait).then(function(fileObjPromises){
         if (options.dev) return Promise.resolve();
-        build.jsMin(fileObjPromises[1]); ////only minify source code (not demo code)
-    }).catch(log.warn);
+        return build.jsMin(fileObjPromises[1]); ////only minify source code (not demo code)
+    }).then(options.reload).catch(log.warn);
 };
 
 function wait(fileObjs){
     return new Promise(function(resolve, reject) {
         setTimeout(function(){
             resolve(fileObjs);
-        },50);
+        },100);
     });
 }
 
@@ -88,7 +88,7 @@ build.styles = function styles(options){
     return Promise.all([
         paths.target && new Styles(globs.source.styles, paths.target, options).write(),
         paths.demo && new Styles(globs.demo.styles, paths.target, options).write()
-    ]).catch(log.warn);
+    ]).then(options.reload).catch(log.warn);
 };
 
 build.all = function all(options){
