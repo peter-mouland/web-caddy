@@ -5,6 +5,7 @@ var path = require('path');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
+var bourbon = require('node-bourbon');
 
 function Sass(location, destination, options){
     this.location = location;
@@ -26,7 +27,7 @@ Sass.prototype.file = function(fileObj, outputStyle){
     var outFile = path.resolve(dir, name);
     var newFileObj = new File({path:outFile});
     return new Promise(function(resolve, reject){
-        sass.render({
+        var renderOptions = {
             file : fileObj.path,
             outputStyle : outputStyle || options.outputStyle || "nested",
             precision  : options.precision || 3,
@@ -38,7 +39,13 @@ Sass.prototype.file = function(fileObj, outputStyle){
                 log.warn('Sass Error');
                 reject(e);
             }
-        });
+        };
+
+        if (options.bourbon === true) {
+            renderOptions.includePaths = bourbon.includePaths;
+        }
+
+        sass.render(renderOptions);
     });
 };
 
