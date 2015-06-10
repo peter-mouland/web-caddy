@@ -18,18 +18,27 @@ function checkConfig(){
 }
 
 function all(options, singleRun){
+    return unit(options, singleRun).then(function(){
+        return functional(options, singleRun);
+    });
+}
+
+function unit(options, singleRun){
     options = extend(config[config.tasks.test] || {}, options);
-    var unitPromise, functionalPromise;
-    unitPromise = functionalPromise = Promise.resolve();
     if (options.unit){
         log.info(' * unit tests started');
-        unitPromise = new TestWrapper(options).run(singleRun, options.unit);
+        return new TestWrapper(options).run(singleRun, options.unit);
     }
+    return Promise.resolve();
+}
+
+function functional(options, singleRun){
+    options = extend(config[config.tasks.test] || {}, options);
     if (options.functional){
         log.info(' * functional tests started');
-        functionalPromise = new TestWrapper(options).run(singleRun, options.functional);
+        return new TestWrapper(options).run(singleRun, options.functional);
     }
-    return Promise.all([unitPromise,functionalPromise]);
+    return Promise.resolve();
 }
 
 test.tdd = function(options){
@@ -37,10 +46,7 @@ test.tdd = function(options){
 };
 
 test.all = function(options){
-    return all(options, true).then(function(){
-        options = extend(config[config.tasks.test] || {}, options);
-        return new TestWrapper(options).coverage();
-    }).then(log.onSuccess).catch(log.onError);
+    return all(options, true).then(log.onSuccess).catch(log.onError);
 };
 
 var prepare = {

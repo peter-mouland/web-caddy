@@ -1,4 +1,5 @@
-var autoprefixer = require('autoprefixer');
+var autoprefixer = require('autoprefixer-core');
+var postcss      = require('postcss');
 var Promise = require('es6-promise').Promise;
 var sass = require('node-sass');
 var path = require('path');
@@ -14,9 +15,14 @@ function Sass(location, destination, options){
 }
 
 Sass.prototype.file = function(fileObj, outputStyle){
-    var self = this;
     var dir;
     var name = fileObj.name.replace('.scss','.css');
+    var defaults = {
+        file : fileObj.path,
+        outputStyle : outputStyle || "nested",
+        precision  : 3
+    };
+    var options = extend(defaults, this.options);
     if (outputStyle === 'compressed'){
         name = name.replace('.css','.min.css');
         dir = fileObj.dir;
@@ -26,21 +32,24 @@ Sass.prototype.file = function(fileObj, outputStyle){
     var outFile = path.resolve(dir, name);
     var newFileObj = new File({path:outFile});
     return new Promise(function(resolve, reject){
-        var defaults = {
-            file : fileObj.path,
-            outputStyle : outputStyle || "nested",
-            precision  : 3,
-            success : function(output){
-                newFileObj.contents = autoprefixer().process(output.css).css;
-                resolve(newFileObj);
-            },
-            error : function(e){
-                log.warn('Sass Error');
-                reject(e);
-            }
-        };
-        var options = extend(defaults, self.options);
-        sass.render(options);
+        sass.render(options,
+            function(error, result){
+                if (error){
+                    log.warn('Sass Error');
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            });
+    }).then(function (result) {
+        return postcss([ autoprefixer ]).process(result.css);
+    }).then(function(result){
+        result.warnings().forEach(function (warn, i) {
+            if (i===0) log.warn('Sass (autoprefixer) Error');
+            log.warn(warn.toString());
+        });
+        newFileObj.contents = postcss([ autoprefixer ]).process(result.css).css;
+        return newFileObj;
     });
 };
 

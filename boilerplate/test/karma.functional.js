@@ -3,7 +3,7 @@ module.exports = function(config) {
         basePath: '..',
         browsers: ['PhantomJS'],
         frameworks: ['jasmine', 'browserify'],
-        reporters: ['progress'],
+        reporters: ['mocha'],
         preprocessors: {
             'test/functional/**/*.js': ['browserify'],
             '_site/*.html': ['html2js']
