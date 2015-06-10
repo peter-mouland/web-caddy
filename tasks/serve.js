@@ -43,12 +43,11 @@ function getWatchOptions(options){
     };
     files.push({ match: htmlPaths, fn: callBack('html'), options: chokidarOptions });
     files.push({ match: stylesPaths, fn: callBack('styles'), options: chokidarOptions });
-    //todo: get watchify working with multiple dependant dirs i.e o-charts
-    //if (helper.matches(config.tasks.build, ['browserify'])) {
-    //    browserifyWatch();
-    //} else {
+    if (helper.matches(config.tasks.build, ['browserify'])) {
+        browserifyWatch();
+    } else {
         files.push({ match: scriptsPaths, fn: callBack('scripts'), options: chokidarOptions });
-    //}
+    }
     return files;
 }
 

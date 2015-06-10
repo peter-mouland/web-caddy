@@ -23,9 +23,14 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
+  * hook into git isues/labels to do automatic version bump!
+  * //todo: merge sass options properly
+  * add watchify config to poll for osX problems
   * update browserSync syntax as http://www.browsersync.io/docs/api/
-  * //todo: get watchify working with multiple dependant dirs i.e o-charts
   * verbose mode
+  * move boilerplate to separate repo
+  * update `caddy new` to clone web-caddy-boilerplate repo
+  * caddy config -> to change which repo is cloned by default
   * test node api (all using options?)
   * allow node api to overwrite path.src and paths.target within options obj
   * caddy init if caddy config doesn't exist

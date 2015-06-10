@@ -8,6 +8,7 @@
         "url": "{{ git.SSH-URL }}"
     },
     "scripts": {
+      "postinstall": "bower install",
       "copy": "caddy copy",
       "build": "caddy build",
       "bump": "caddy bump",

@@ -18,10 +18,12 @@ function info(msg) {
 }
 
 function warn(msg) {
-    if (msg.toString){
-        console.log(chalk.yellow(msg.toString()));
-    } else {
-        console.log(msg.message || msg);
+    if (msg.toString && typeof msg !== 'string'){
+        for (var key in msg){
+            console.log(chalk.yellow(msg[key]));
+        }
+    } else  {
+        console.log(chalk.yellow(msg));
     }
 }
 

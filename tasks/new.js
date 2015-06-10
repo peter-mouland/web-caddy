@@ -49,19 +49,12 @@ function newComponent(project) {
     }).then(function(output){
         return init.localGit();
     }).then(function(output){
-        log.onSuccess(output);
-        log.info(" * Installing Bower Modules");
-        return bower.install();
-    }).then(function(output){
-        for (var i in output){
-            log.info( '   * Installed ' + i);
-        }
         return init.git({project: project});
     }).then(function(){
         log.info(['',
             'Ready!',
             ' * Please go to your new directory:        $ cd ' + project,
-            ' * Install Node Modules:                   $ npm i',
+            ' * Install Modules:                        $ npm i',
             ' * View the basic site, run:               $ npm start',
             ' * Test on the fly, run in a new tab:      $ npm run tdd',
             ' * To see more tasks please go to : ',

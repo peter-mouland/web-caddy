@@ -26,10 +26,12 @@ Sass.prototype.file = function(fileObj, outputStyle){
     var outFile = path.resolve(dir, name);
     var newFileObj = new File({path:outFile});
     return new Promise(function(resolve, reject){
+        //todo: merge options properly
         sass.render({
             file : fileObj.path,
             outputStyle : outputStyle || options.outputStyle || "nested",
             precision  : options.precision || 3,
+            includePaths: options.includePaths,
             success : function(output){
                 newFileObj.contents = autoprefixer().process(output.css).css;
                 resolve(newFileObj);
