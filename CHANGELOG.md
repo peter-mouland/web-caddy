@@ -24,7 +24,6 @@
   
 todo:
   * hook into git isues/labels to do automatic version bump!
-  * //todo: merge sass options properly
   * add watchify config to poll for osX problems
   * update browserSync syntax as http://www.browsersync.io/docs/api/
   * verbose mode
