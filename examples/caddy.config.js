@@ -30,6 +30,9 @@ module.exports = {
         unit: './test/karma.unit.js', // string or false. Karma config file with coverage setup.
         unitCoverage: './test/coverage/summary.json'// code coverage summary for unit tests
     },
+    sass: {
+        includePaths: 'bower_components',
+    },
     s3: { // add your aws release config here.
         bucket: 'prod-bucket',
         region: 'eu-west-1',

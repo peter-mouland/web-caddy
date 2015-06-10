@@ -17,18 +17,23 @@ Whenever files are compiled, the same top-level directory structure is maintaine
 
 `caddy build styles`
 
-By default we assume the styles are written using [Sass](http://sass-lang.com/).
+By default we use [Sass](http://sass-lang.com/) to compile styles, along with [AutoPrefixer](https://www.npmjs.com/package/autoprefixer).
 
 This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `paths.source` (or `paths.source/*`). A `.min.css` will also be created for each compiled file.
 
 These will be saved within the `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
+
+As with all build tasks, add an config object to customise the build.
 
 *caddy.config.js*
 ```javascript
 ...
     tasks: {
         build: ['sass']
-    }
+    },
+    sass: {
+        includePaths: 'bower_components',
+    },
 ...
 ```
 
