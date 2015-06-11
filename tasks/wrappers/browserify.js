@@ -52,7 +52,9 @@ Watch.prototype.reloadOnce = function() {
 Watch.prototype.file = function(b) {
     var self = this;
     this.w = watchify(b); //, { delay: 1000 }
-    log.info('   * watch ' + this.fileObj.relativeDir + this.fileObj.name ); //+ fileObj.name
+
+    //todo: verbose mode?
+    //log.info('   * watch ' + this.fileObj.relativeDir + this.fileObj.name ); //+ fileObj.name
     this.w.on('update', function () {
             bundle(self.w, self.fileObj, self.outFile).then(self.reloadOnce.bind(self)).catch(log.onError);
     });

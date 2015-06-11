@@ -36,7 +36,8 @@ function getWatchOptions(options){
                     build[task](options).catch(log.onError);
                     break;
                 default :
-                    log.info('   * ' + ((event=='add')?'watch':event) + ' ' + file);
+                    //todo: verbose mode?
+                    //log.info('   * ' + ((event=='add')?'watch':event) + ' ' + file);
                     break;
             }
         };
