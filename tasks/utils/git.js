@@ -47,14 +47,14 @@ module.exports = {
     release: function (options){
         var git = this;
         return git.commit(options.tag).then(function() {
-            return git.push(['origin', 'refactor/tidy-examples']);
+            return git.push(['origin', 'master']);
         }).then(function(){
             return git.tag(options.tag).catch(function(msg){
                 log.warn(msg);
             });
         }).then(function(){
             if (options.tagged) return Promise.resolve();
-            return git.push(['origin', 'refactor/tidy-examples', options.tag]);
+            return git.push(['origin', 'master', options.tag]);
         });
     },
     validRepo: function (repo){
