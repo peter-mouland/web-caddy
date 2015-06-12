@@ -17,6 +17,7 @@ module.exports = {
         }
     },
     tag : function(version) {
+        console.log(version)
         return exec('git', ['tag', '-a', version, '-m', version]);
     },
     init : function() {
@@ -46,14 +47,14 @@ module.exports = {
     release: function (options){
         var git = this;
         return git.commit(options.tag).then(function() {
-            return git.push(['origin', 'master']);
+            return git.push(['origin', 'refactor/tidy-examples']);
         }).then(function(){
             return git.tag(options.tag).catch(function(msg){
                 log.warn(msg);
             });
         }).then(function(){
             if (options.tagged) return Promise.resolve();
-            return git.push(['origin', 'master', options.tag]);
+            return git.push(['origin', 'refactor/tidy-examples', options.tag]);
         });
     },
     validRepo: function (repo){

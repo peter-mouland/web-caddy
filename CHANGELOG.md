@@ -9,7 +9,7 @@
   * Added `-dev` CLI option to prevent file minification and speed up build time
   * Added `copy` task to separate the task of copying files from compiling code
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
-  * Updated `paths.site` config option to `paths.target`
+  * Updated `paths` to be `buildPaths` and take an array.
   * Updated `serve` task to be able to serve ad-hoc nodeApps or static files
   * Updated `serve` task to serve `paths.target` directory by default + to a free port if omitted
   * Updated `release` will not bump by default. Explicitly bump first using `caddy bump`
@@ -25,7 +25,6 @@
 todo:
   * hook into git isues/labels to do automatic version bump!
   * add watchify config to poll for osX problems
-  * update browserSync syntax as http://www.browsersync.io/docs/api/
   * verbose mode
   * test node api (all using options?)
   * allow node api to overwrite path.src and paths.target within options obj

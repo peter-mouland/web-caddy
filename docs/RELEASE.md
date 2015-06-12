@@ -123,6 +123,7 @@ Setting this option to false will prevent a release.
         release: ['s3']
     },
     s3: {
+        baseDir: '_site,
         bucket: 'bucket-for-your-project',
         region: 'eu-west-1',
         accessKey: process.env.YOUR_AWS_ACCESS_KEY_ID,

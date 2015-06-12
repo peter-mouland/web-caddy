@@ -35,7 +35,7 @@ release.s3 = function (options){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + options.version + '$2');
     }
     log.info(" * S3 (" + options.bucket + ":" + target + ")");
-    return new Release(config.s3.directory + '/**/*.*', target, options).write();
+    return new Release(config.s3.baseDir + '/**/*.*', target, options).write();
 };
 
 release.git = function (options){
@@ -68,7 +68,6 @@ release.bower = function (options){
 };
 
 release.all = function (options){
-    options.tag = 'v' +  (options.version || config.pkg.version);
     return release.bower(options).then(function(){
         options.tagged = true;
         return release.git(options);
@@ -82,6 +81,7 @@ release.all = function (options){
 function exec(task, options){
     config = helper.getConfig();
     options = options || {};
+    options.tag = 'v' +  (options.version || config.pkg.version);
     if (!config.tasks.release) return Promise.resolve();
     log.info('Releasing :');
     return release[task](options);

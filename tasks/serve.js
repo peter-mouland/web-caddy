@@ -3,7 +3,7 @@ var path = require('path');
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var Browserify = require('./wrappers/browserify.js');
-var browserSync = require('browser-sync');
+var browserSync = require('browser-sync').create();
 var extend = require('util')._extend;
 var build = require('./build');
 var config, serve = {};
@@ -49,7 +49,7 @@ function getWatchOptions(options){
 function startBrowserSync(options) {
     log.info(' * Started');
     options.files = getWatchOptions(options);
-    browserSync(options); //todo: http://www.browsersync.io/docs/api/
+    browserSync.init(options); //todo: http://www.browsersync.io/docs/api/
 }
 
 function browserifyWatch(){
