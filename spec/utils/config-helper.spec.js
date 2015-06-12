@@ -24,6 +24,7 @@ describe("Config-helper ", function() {
                     release: ['s3'],
                     serve: 'staticApp'
                 },
+                buildPaths:  [ ],
                 browserify: {  },
                 requirejs: { },
                 karma: {  },

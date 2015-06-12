@@ -13,23 +13,27 @@ var helper = {
         if (config) return config;
         var configPath = findup('caddy.config.js');
         config = (configPath) ? require(configPath) : false;
+        this.createBuildPaths(config);
         this.createGlobs(config);
         return config;
     },
+    createBuildPaths : function(config) {
+        if (config.buildPaths){ return; }
+        config.buildPaths = [
+            { source: config.paths.source, targets:[config.paths.target]},
+            { source: config.paths.demo, targets:[config.paths.target]}
+        ];
+    },
     createGlobs : function(config) {
         config.globs = {
-            'testCoverage':'./test/coverage/**/*'
+            'testCoverage':'./test/coverage/**/*',
+            'serverConfig':  '/*{CNAME,.htaccess,robots.txt}',
+            'html':  '/*.{html,jade,ms,mustache}',
+            'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
+            'scripts': '/{.,*}/*.js',
+            'fonts': '/{.,*}/*.{svg,ttf,woff,eot}',
+            'images': '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}'
         };
-        for (var pathName in config.paths) {
-            config.globs[pathName] = {
-                'serverConfig': config.paths[pathName] + '/*{CNAME,.htaccess,robots.txt}',
-                'html': config.paths[pathName] + '/*.{html,jade,ms,mustache}',
-                'styles': config.paths[pathName] + '/{.,*}/!(_)*.{css,scss,sass}',
-                'scripts': config.paths[pathName] + '/{.,*}/*.js',
-                'fonts': config.paths[pathName] + '/{.,*}/*.{svg,ttf,woff,eot}',
-                'images': config.paths[pathName] + '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}'
-            };
-        }
     },
     configCheck : function(){
         var config = this.getConfig();
@@ -48,6 +52,9 @@ var helper = {
         //check old config
         if (!config.tasks){
             error.push(' * Please ensure there is a `tasks` object within your caddy.config.js');
+        }
+        if (!config.buildPaths){
+            error.push(' * Please ensure there is a `buildPaths` object within your caddy.config.js');
         }
         //check build config
         if (config.tasks && config.tasks.build && config.tasks.build.indexOf && config.tasks.build.indexOf('requirejs')>=0 && !config.requirejs){

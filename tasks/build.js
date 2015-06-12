@@ -3,14 +3,26 @@ var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var UglifyJS = require("./wrappers/uglifyjs");
 var extend = require('util')._extend;
+var path = require('path');
 var clean = require('./clean');
-var config, paths, globs, pkg, build = {};
+var config, build = {};
 
-function initConfig(){
-    config = helper.getConfig();
-    paths = config.paths;
-    globs = config.globs;
-    pkg = config.pkg;
+function buildPromises(wrapper, fileType, options){
+    var fn = require('./wrappers/' + wrapper);
+    var promises = [];
+    config.buildPaths.forEach(function(pathObj, i){
+        var src = path.join(pathObj.source, config.globs[fileType]);
+        pathObj.targets.forEach(function(target){
+            promises.push(new fn(src, target, options).write());
+        });
+    });
+    return promises;
+}
+
+function wait(fileObjs){
+    return new Promise(function(resolve, reject) {
+        setTimeout(function(){ resolve(fileObjs); }, 100);
+    });
 }
 
 build.html = function html(options) {
@@ -18,13 +30,10 @@ build.html = function html(options) {
     if (!htmlWrapper) return Promise.resolve();
     log.info(' * HTML');
 
-    var Html = require('./wrappers/' + htmlWrapper);
     options = extend(config.pkg || {}, options);
     options.now = Date().split(' ').splice(0,5).join(' ');
-    return Promise.all([
-        paths.demo && new Html(globs.demo.html, paths.target, options).write(),
-        paths.target && new Html(globs.source.html, paths.target, options).write()
-    ]).then(build.htmlMin).then(options.reload).catch(log.warn);
+    var promises = buildPromises(htmlWrapper, 'html', options);
+    return Promise.all(promises).then(build.htmlMin).then(options.reload).catch(log.warn);
 };
 
 //todo: location for consistency or fileObjs for speed??
@@ -41,39 +50,36 @@ build.htmlMin = function htmlMin(fileObjs) {
     return Promise.all(promises).catch(log.warn);
 };
 
-build.scripts = function scripts(options, cb){
+build.scripts = function scripts(options){
     var scriptsWrapper = helper.matches(config.tasks.build, ['browserify','requirejs']);
     if (!scriptsWrapper) return Promise.resolve();
     log.info(' * Scripts');
 
-    var Scripts = require('./wrappers/' + scriptsWrapper);
-    options = extend(config[scriptsWrapper] || {}, options || {});
-    options.browserify = pkg.browserify;
-    options.browser = pkg.browser;
-    options["browserify-shim"] = pkg["browserify-shim"];
-    return Promise.all([
-        paths.demo && new Scripts(globs.demo.scripts, paths.target, options).write(),
-        paths.target && new Scripts(globs.source.scripts, paths.target, options).write()
-    ]).then(wait).then(function(fileObjPromises){
-        if (options.dev) return Promise.resolve();
-        return build.jsMin(fileObjPromises[1]); ////only minify source code (not demo code)
-    }).then(options.reload).catch(log.warn);
-};
+    options = extend(config[scriptsWrapper] || {}, options);
+    options.browserify = config.pkg.browserify;
+    options.browser = config.pkg.browser;
+    options["browserify-shim"] = config.pkg["browserify-shim"];
 
-function wait(fileObjs){
-    return new Promise(function(resolve, reject) {
-        setTimeout(function(){
-            resolve(fileObjs);
-        },100);
+    var fn = require('./wrappers/' + scriptsWrapper);
+    var promises = [];
+    config.buildPaths.forEach(function(pathObj, i){
+        var src = path.join(pathObj.source, config.globs.scripts);
+        pathObj.targets.forEach(function(target){
+            promises.push(new fn(src, target, options).write().then(wait).then(function(fileObjPromises){
+                if (options.dev || !pathObj.minify) return Promise.resolve();
+                return build.jsMin(fileObjPromises);//todo copy duplicates rather than rebuild
+            }));
+        });
     });
-}
+    return Promise.all(promises).then(options.reload).catch(log.warn);
+};
 
 build.jsMin = function (fileObjs){
     log.info(' * Minifying JS');
     var promises = [];
     fileObjs.forEach(function (fileObj, i) {
         log.info('    * ' + fileObj.name);
-        promises.push(new UglifyJS(fileObj, build.options).write());
+        promises.push(new UglifyJS(fileObj).write());
     });
     return Promise.all(promises);
 };
@@ -83,12 +89,9 @@ build.styles = function styles(options){
     if (!stylesWrapper) return Promise.resolve();
     log.info(' * Styles');
 
-    var Styles = require('./wrappers/' + stylesWrapper);
     options = extend(config[stylesWrapper] || {}, options);
-    return Promise.all([
-        paths.target && new Styles(globs.source.styles, paths.target, options).write(),
-        paths.demo && new Styles(globs.demo.styles, paths.target, options).write()
-    ]).then(options.reload).catch(log.warn);
+    var promises = buildPromises(stylesWrapper, 'styles', options);
+    return Promise.all(promises).then(options.reload).catch(log.warn);
 };
 
 build.all = function all(options){
@@ -105,12 +108,12 @@ var prepare = {
 };
 
 function exec(task, options){
-    initConfig();
+    config = helper.getConfig();
     options = options || {};
-    if (!config.tasks.build) return Promise.resolve();
+    if (!config.tasks.build && task == 'all') return Promise.resolve();
     return (prepare[task] || prepare.noop)().then(function(){
         log.info('Building :');
-        build[task](options);
+        return build[task](options);
     });
 }
 

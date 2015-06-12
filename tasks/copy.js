@@ -4,48 +4,43 @@ var fs = require('./utils/fs');
 var path = require('path');
 var helper = require('./utils/config-helper');
 var clean = require('./clean');
-var config, paths, globs, pkg, copy = {};
+var config, copy = {};
 
-function initConfig(){
-    config = helper.getConfig();
-    globs = config.globs;
-    paths = config.paths;
-    pkg = config.pkg;
-}
-
-function copyFiles(fileType){
-    var location = [];
-    paths.source && location.push(globs.source[fileType]);
-    paths.demo && location.push(globs.demo[fileType]);
-    return fs.glob(location).then(function(fileObjs){
-        var promises = [];
-        fileObjs.forEach(function(fileObj){
-            var outFile = path.join(paths.target, fileObj.relativeDir);
-            promises.push(fs.copy(fileObj.path, outFile));
+function copyFiles(fileType, msg){
+    log.info(msg);
+    var promises = [];
+    config.buildPaths.forEach(function(pathObj, i){
+        pathObj.targets.forEach(function(target, i){
+            var src = path.join(pathObj.source, config.globs[fileType]);
+            promises.push(fs.glob(src).then(function(fileObjs){
+                var promises = [];
+                fileObjs.forEach(function(fileObj){
+                    var outFile = path.join(target, fileObj.relativeDir);
+                    promises.push(fs.copy(fileObj.path, outFile));
+                });
+                return promises;
+            })).catch(log.warn);
         });
-        return promises;
-    }).catch(log.warn);
+    });
+    return promises;
 }
 
 copy.serverConfig = function serverConfig(){
     var verify = helper.matches(config.tasks.copy, ['server-config']);
     if (!verify) return Promise.resolve();
-    log.info(' * Server Config');
-    return copyFiles('serverConfig');
+    return copyFiles('serverConfig', ' * Server Config');
 };
 
 copy.fonts = function fonts() {
     var verify = helper.matches(config.tasks.copy, ['fonts']);
     if (!verify) return Promise.resolve();
-    log.info(' * Fonts');
-    return copyFiles('fonts');
+    return copyFiles('fonts', ' * Fonts');
 };
 
 copy.images = function images() {
     var verify = helper.matches(config.tasks.copy, ['images']);
     if (!verify) return Promise.resolve();
-    log.info(' * Images');
-    return copyFiles('images');
+    return copyFiles('images', ' * Images');
 };
 
 copy.all = function all(){
@@ -62,7 +57,7 @@ var prepare = {
 };
 
 function exec(task, options){
-    initConfig();
+    config = helper.getConfig();
     options = options || {};
     if (!config.tasks.copy) return Promise.resolve();
     return (prepare[task] || prepare.noop)().then(function(){

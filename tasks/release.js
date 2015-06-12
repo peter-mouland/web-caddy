@@ -4,11 +4,7 @@ var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var bump = require('./bump');
 var extend = require('util')._extend;
-var config, paths, pkg, release = {};
-
-function initConfig(){
-    config = helper.getConfig();
-}
+var config, release = {};
 
 release.ghPages = function (options){
     var release = helper.matches(config.tasks.release, ['gh-pages']);
@@ -17,9 +13,10 @@ release.ghPages = function (options){
     var ghPages = require('gh-pages');
     log.info(" * gh-pages");
     options.message = options.message || options.tag;
+    options.basePath = options.basePath || config.buildPaths[0].targets[0];
     return new Promise(function(resolve, reject){
         options.tag = false;
-        ghPages.publish(config.paths.target, options, function(err) {
+        ghPages.publish(options.basePath, options, function(err) {
             ghPages.clean();
             err && reject(err);
             !err && resolve();
@@ -38,7 +35,7 @@ release.s3 = function (options){
         target = target.replace(/("|\/)[0-9]+\.[0-9]+\.[0-9]\-?(?:(?:[0-9A-Za-z-]+\.?)+)?("|\/)/g, '$1' + options.version + '$2');
     }
     log.info(" * S3 (" + options.bucket + ":" + target + ")");
-    return new Release(config.paths.target + '/**/*.*', target, options).write();
+    return new Release(config.s3.directory + '/**/*.*', target, options).write();
 };
 
 release.git = function (options){
@@ -71,7 +68,7 @@ release.bower = function (options){
 };
 
 release.all = function (options){
-    options.tag = 'v' +  ((options.version) ? options.version : config.pkg.version);
+    options.tag = 'v' +  (options.version || config.pkg.version);
     return release.bower(options).then(function(){
         options.tagged = true;
         return release.git(options);
@@ -83,7 +80,7 @@ release.all = function (options){
 };
 
 function exec(task, options){
-    initConfig();
+    config = helper.getConfig();
     options = options || {};
     if (!config.tasks.release) return Promise.resolve();
     log.info('Releasing :');

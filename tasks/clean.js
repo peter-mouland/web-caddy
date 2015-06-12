@@ -1,49 +1,59 @@
 var Promise = require('es6-promise').Promise;
+var path = require('path');
 var log = require('./utils/log');
 var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
-var config, pkg, globs, clean = {};
+var config, clean = {};
 
-function initConfig(){
-    config = helper.getConfig();
-    globs = config.globs;
-    pkg = config.pkg;
+function setTargets(buildPaths){
+    var targets = [];
+    buildPaths.forEach(function(pathObj, i){
+        pathObj.targets.forEach(function(target, i){
+            if (targets.indexOf(target)<0) {
+                targets.push(target);
+            }
+        });
+    });
+    return targets;
+}
+
+function del(fileType, msg){
+    log.info(msg);
+    var promises = [];
+    var targets = setTargets(config.buildPaths);
+    targets.forEach(function(target){
+        promises.push(fs.del(path.join(target, config.globs[fileType])));
+    });
+    return Promise.all(promises);
 }
 
 clean.serverConfig = function serverConfig(){
-    log.info(' * Server config files');
-    return fs.del(globs.target.serverConfig);
+    return del('serverConfig', ' * Server config files');
 };
 
 clean.html = function html(){
-    log.info(' * HTML');
-    return fs.del(globs.target.html);
+    return del('html', ' * html');
 };
 
 clean.styles = function styles(){
-    log.info(' * Styles');
-    return fs.del(globs.target.styles);
+    return del('styles', ' * Styles');
 };
 
 clean.scripts =  function scripts(){
-    log.info(' * Scripts');
-    return fs.del(globs.target.scripts);
+    return del('scripts', ' * Scripts');
 };
 
 clean.fonts = function fonts(){
-    log.info(' * Fonts');
-    return fs.del(globs.target.fonts);
+    return del('fonts', ' * Fonts');
 };
 
 clean.images = function images(){
-    initConfig();
-    log.info(' * Images');
-    return fs.del(globs.target.images);
+    return del('images', ' * Images');
 };
 
 clean.test = function test(){
     log.info(' * Test report');
-    return fs.del(globs.testCoverage);
+    return fs.del(config.globs.testCoverage);
 };
 
 clean.adhoc = function adHoc(location, options){
@@ -64,7 +74,7 @@ clean.build = function build(){
 };
 
 function exec(task, options){
-    initConfig();
+    config = helper.getConfig();
     log.info('Deleting :');
     return clean[task](options);
 }

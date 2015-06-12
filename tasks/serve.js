@@ -1,29 +1,23 @@
 var Promise = require('es6-promise').Promise;
+var path = require('path');
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var Browserify = require('./wrappers/browserify.js');
 var browserSync = require('browser-sync');
 var extend = require('util')._extend;
 var build = require('./build');
-var config, paths, globs, pkg, serve = {};
-
-function initConfig(){
-    config = helper.getConfig();
-    paths = config.paths;
-    globs = config.globs;
-    pkg = config.pkg;
-}
+var config, serve = {};
 
 function getWatchOptions(options){
-    var files = [];
-    var htmlPaths = [ globs.source.html.replace('*.{','**/*.{') ];
-    var stylesPaths = [globs.source.styles.replace('{.,*}','**').replace('!(_)','') ];
-    var scriptsPaths = [globs.source.scripts.replace('{.,*}','**') ];
-    if (paths.demo){
-        htmlPaths.push(globs.demo.html.replace('*.{','**/*.{'));
-        stylesPaths.push(globs.demo.styles.replace('{.,*}','**').replace('!(_)',''));
-        scriptsPaths.push(globs.demo.scripts.replace('{.,*}','**'));
-    }
+    var files = [],
+        htmlPaths = [],
+        stylesPaths = [],
+        scriptsPaths = [];
+    config.buildPaths.forEach(function(pathObj, i){
+        htmlPaths.push(path.join(pathObj.source, config.globs.html.replace('*.{','**/*.{')));
+        stylesPaths.push(path.join(pathObj.source, config.globs.styles.replace('{.,*}','**').replace('!(_)','')));
+        scriptsPaths.push(path.join(pathObj.source, config.globs.scripts.replace('{.,*}','**')));
+    });
     var chokidarOptions = {
         persistent: true
     };
@@ -59,10 +53,12 @@ function startBrowserSync(options) {
 }
 
 function browserifyWatch(){
-    (new Browserify(globs.source.scripts, paths.target)).watch(browserSync);
-    if (paths.demo){
-        (new Browserify(globs.demo.scripts, paths.target)).watch(browserSync);
-    }
+    config.buildPaths.forEach(function(pathObj, i){
+        var src = path.join(pathObj.source, config.globs.scripts);
+        pathObj.targets.forEach(function(target){
+            new Browserify(src, target).watch(browserSync);
+        });
+    });
 }
 
 function nodeApp(options){
@@ -76,18 +72,25 @@ function nodeApp(options){
 
 serve.adhoc = function (baseDir){
     if (baseDir.split('.').pop() === 'js'){
-        return serve.staticApp({
-            server: { baseDir : baseDir }
-        });
-    } else {
         return serve.nodeApp({
             script: baseDir
+        });
+    } else {
+        return serve.staticApp({
+            server: { baseDir : baseDir }
         });
     }
 };
 
 serve.staticApp = function(options){
-    if (!options.server) options.server = { baseDir : paths.target };
+    if (!options.server) {
+        var targets = '';
+        config.buildPaths.forEach(function(pathObj){ targets += ',' + pathObj.targets.join(',');});
+        targets = targets.split(',').filter(function removeDuplicates(elem, pos, self) {
+            return self.indexOf(elem) === pos && elem !== '';
+        });
+        options.server = { baseDir : targets };
+    }
     return startBrowserSync(options);
 };
 
@@ -103,7 +106,7 @@ serve.all = function (options){
 };
 
 function exec(task, options){
-    initConfig();
+    config = helper.getConfig();
     options = options || {};
     if (!config.tasks.serve) return Promise.resolve();
     log.info('Server :');

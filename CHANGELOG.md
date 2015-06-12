@@ -27,15 +27,10 @@ todo:
   * add watchify config to poll for osX problems
   * update browserSync syntax as http://www.browsersync.io/docs/api/
   * verbose mode
-  * move boilerplate to separate repo
-  * update `caddy new` to clone web-caddy-boilerplate repo
-  * caddy config -> to change which repo is cloned by default
   * test node api (all using options?)
   * allow node api to overwrite path.src and paths.target within options obj
   * caddy init if caddy config doesn't exist
   * document config file properly
-  * speed, speed, speed
-  * kill `test tdd` process properly
  
 ## 1.3.x
  * **1.3.0**

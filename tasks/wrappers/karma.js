@@ -3,11 +3,7 @@ var karma = require('karma').server;
 var findup = require('findup-sync');
 var log = require('../utils/log');
 
-function Karma(){
-
-}
-
-Karma.prototype.run = function(singleRun, configPath){
+function run(singleRun, configPath){
     return new Promise(function(resolve, reject) {
         if (!configPath) {
             resolve();
@@ -20,6 +16,6 @@ Karma.prototype.run = function(singleRun, configPath){
             !err && resolve();
         });
     });
-};
+}
 
-module.exports = Karma;
+module.exports = run;

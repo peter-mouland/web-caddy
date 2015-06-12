@@ -16,7 +16,7 @@
       "report": "caddy serve test/coverage/phantomjs/",
       "start": "caddy copy && caddy build -dev && caddy serve",
       "tdd": "caddy test tdd",
-      "test": "jshint src && caddy build && caddy test"
+      "test": "jshint src && caddy copy && caddy build && caddy test"
     },
     "devDependencies": {
       "browserify-istanbul": "^0.2.1",

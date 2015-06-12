@@ -19,7 +19,8 @@ describe("Release", function() {
     describe("s3", function() {
 
         var config = {
-            tasks:{build:[],release:['s3']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
+            tasks:{build:[],release:['s3']},pkg:{version:'11.11.11'},
+            buildPaths:[{source:{},targets:[]}],
             s3: { target: '/11.11.11/' }
         };
 
@@ -48,7 +49,8 @@ describe("Release", function() {
     describe("gh-pages", function() {
 
         var config = {
-            tasks:{build:[],release:['gh-pages']},pkg:{version:'11.11.11'}, paths:{source:{},target:{}},
+            tasks:{build:[],release:['gh-pages']},pkg:{version:'11.11.11'},
+            buildPaths:[{source:{},targets:[]}],
             s3: { target: '/11.11.11/' }
         };
 
@@ -77,7 +79,8 @@ describe("Release", function() {
         var config;
         beforeEach(function() {
             config = {
-                tasks:{build: [], release: ['git', 'gh-pages']}, pkg: {version: '11.11.11'}, paths: {source: {}, target: {}},
+                tasks:{build: [], release: ['git', 'gh-pages']}, pkg: {version: '11.11.11'},
+                buildPaths:[{source:{},targets:[]}],
                 s3: {target: '/11.11.11/'}
             };
         });

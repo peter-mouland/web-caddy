@@ -7,7 +7,8 @@ bump.all = function all(options){
     var build = require('./build');
     var Bump = require('./utils/bump');
     var newVersion;
-    return new Bump(['./package.json','./README.md', config.paths.source + '/**/version.js'], options).run()
+    var filesToBump = ['package.json','README.md', '*/app.json'];
+    return new Bump(filesToBump, options).run()
         .then(function(version){
             log.info(" * Now on " + version);
             newVersion = version;

@@ -2,11 +2,10 @@ var pkg = require('./package.json');
 
 module.exports = {
     pkg: pkg,
-    paths: {
-        source: "./src",
-        "demo": "./demo",
-        "target": './_site'
-    },
+    buildPaths: [
+        {source: "./src", targets: ['./_site', './dist']},
+        {source: "./examples", targets: ['./_site']}
+    ],
     tasks : {
         copy: ['fonts', 'images', 'server-config'],
         build: ['sass', 'mustache', 'browserify'],
@@ -14,9 +13,11 @@ module.exports = {
         test: 'karma',
         release: ['git', 'gh-pages']
     },
+    'gh-pages': {
+        directory: '_site'
+    },
     karma:{
         functional: './test/karma.functional.js',
-        unit: './test/karma.unit.js',
-        unitCoverage: './test/coverage/summary.json'
+        unit: './test/karma.unit.js'
     }
 };

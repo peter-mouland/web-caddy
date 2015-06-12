@@ -4,41 +4,16 @@ var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var clean = require('./clean');
 var extend = require('util')._extend;
-var config, TestWrapper, test = {}, i=0;
-
-function checkConfig(){
-    config = helper.getConfig();
-    if (config.tasks.test){
-        TestWrapper = require('./wrappers/karma');
-    } else {
-        //todo: verbose?
-        //log.info('Test set to false within caddy.config.js : skipping');
-        return Promise.resolve();
-    }
-}
+var test = {};
 
 function all(options, singleRun){
-    return unit(options, singleRun).then(function(){
-        return functional(options, singleRun);
+    var testWrapper = require('./wrappers/karma');
+    log.info(' * Karma Runing: ' + options[0]);
+    return testWrapper(singleRun, options[0]).then(function(){
+        if (options.length<2){ return Promise.resolve(); }
+        log.info(' * Karma Runing: ' + options[1]);
+        return testWrapper(singleRun, options[1]);
     });
-}
-
-function unit(options, singleRun){
-    options = extend(config[config.tasks.test] || {}, options);
-    if (options.unit){
-        log.info(' * unit tests started');
-        return new TestWrapper(options).run(singleRun, options.unit);
-    }
-    return Promise.resolve();
-}
-
-function functional(options, singleRun){
-    options = extend(config[config.tasks.test] || {}, options);
-    if (options.functional){
-        log.info(' * functional tests started');
-        return new TestWrapper(options).run(singleRun, options.functional);
-    }
-    return Promise.resolve();
 }
 
 test.tdd = function(options){
@@ -54,9 +29,11 @@ var prepare = {
     noop: function(){ return Promise.resolve(); }
 };
 
-function run(task, options){
-    checkConfig();
-    options = options || {};
+function exec(task, options){
+    var config = helper.getConfig();
+    if (!config.tasks.test){        return Promise.resolve();    }
+
+    options = extend(config[config.tasks.test] || {}, options);
     return (prepare[task] || prepare.noop)().then(function() {
         log.info('Testing :', task);
         return test[task](options);
@@ -64,6 +41,6 @@ function run(task, options){
 }
 
 module.exports = {
-    'tdd': function(options){ return run('tdd', options); },
-    all:  function(options){ return run('all', options); }
+    'tdd': function(options){ return exec('tdd', options); },
+    all:  function(options){ return exec('all', options); }
 };
