@@ -17,7 +17,6 @@ module.exports = {
         }
     },
     tag : function(version) {
-        console.log(version)
         return exec('git', ['tag', '-a', version, '-m', version]);
     },
     init : function() {

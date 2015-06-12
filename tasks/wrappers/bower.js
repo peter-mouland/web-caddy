@@ -31,10 +31,10 @@ function filesInGitPlusBowerFiles(){
             if (i===0) return '';
             return (glob.charAt(0) === '!') ? glob.substr(1) : glob;
         });
-        files = files.filter(function(file){ return file!='';});
-        files = '*{' + files.join(',') + '}'
+        files = files.filter(function(file){ return file!=='';});
+        files = '*{' + files.join(',') + '}';
     } else {
-        log.onError('Please invers bower.json "ignore" array.\n  ie. use \'**/*\' as the first item')
+        log.onError('Please invers bower.json "ignore" array.\n  ie. use \'**/*\' as the first item');
         //var exclusionGlob = './!(node_modules|bower_components)*{*,**/**}';
         //fs.glob(exclusionGlob).then(function(fileObjs){
         //
