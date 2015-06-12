@@ -3,7 +3,7 @@ var pkg = require('./package.json');
 module.exports = {
     pkg: pkg,
     buildPaths: [
-        {source: "./src", targets: ['./_site', './dist']},
+        {source: "./src", targets: ['./_site', './dist'], minify: true},
         {source: "./examples", targets: ['./_site']},
         {source: './test/fixtures', targets: ['./_test']}
     ],
@@ -25,19 +25,12 @@ module.exports = {
         ],
         vendorTarget: 'scripts/vendor.js'
     },
-    karma:{
-        functional: './test/karma.functional.js', // string or false. Karma config file.
-        unit: './test/karma.unit.js', // string or false. Karma config file with coverage setup.
-        unitCoverage: './test/coverage/summary.json'// code coverage summary for unit tests
-    },
-    'gh-pages': {
-        directory: '_site'
-    },
+    karma: ['./test/karma.functional.js','./test/karma.unit.js'],
     sass: {
-        includePaths: 'bower_components',
+        includePaths: 'bower_components'
     },
     s3: { // add your aws release config here.
-        directory: '_site',
+        baseDir: '_site',
         bucket: 'prod-bucket',
         region: 'eu-west-1',
         accessKey: process.env.AWS_ACCESS_KEY_ID,
