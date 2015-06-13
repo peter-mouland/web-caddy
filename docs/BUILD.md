@@ -19,11 +19,9 @@ Whenever files are compiled, the same top-level directory structure is maintaine
 
 By default we use [Sass](http://sass-lang.com/) to compile styles, along with [AutoPrefixer](https://www.npmjs.com/package/autoprefixer).
 
-This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `paths.source` (or `paths.source/*`). A `.min.css` will also be created for each compiled file.
+This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `buildPaths source` root directories and save them into the corresponding `targets` directories. A `.min.css` will also be created for each compiled file.
 
-These will be saved within the `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
-
-As with all build tasks, add an config object to customise the build.
+As with all build tasks, add an config object to customise the build with [Sass options](https://github.com/sass/node-sass#options)
 
 *caddy.config.js*
 ```javascript
@@ -44,9 +42,9 @@ As with all build tasks, add an config object to customise the build.
 By default javascript is compiled using [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/).
 Just update `build.scripts` within [caddy.config.js](boilerplate/caddy.config.js)
 
-This will create a compiled file for each `.js` file found in the `buildPaths` source root directories and save them into the corresponding `targets` directories.
+This will create a compiled file for each `.js` file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories.
 
-Adding `minify:true` with using [uglify-js](https://www.npmjs.com/package/uglify-js) to create `.min.js` files.  To prevent minification use :
+Adding `minify:true` will use [uglify-js](https://www.npmjs.com/package/uglify-js) to create `.min.js` files.  To prevent minification use :
 
 `caddy build scripts -dev`
 
@@ -73,7 +71,7 @@ Adding `minify:true` with using [uglify-js](https://www.npmjs.com/package/uglify
 ...
 ```
 
-The `vendorBundle` option will create `vendorTarget` file from external files. Ensure you have the corresponding `browser` object in your `package.json`. *(`debowerify` will sometime cause problems).* 
+For `browserify` the `vendorBundle` and `vendorTarget` option will create an external file. Ensure you have the corresponding `browser` object in your `package.json`. *(do not use `debowerify`)* 
 
 *package.json*
 ```javascript
@@ -100,9 +98,7 @@ The `vendorBundle` option will create `vendorTarget` file from external files. E
 
 `caddy build html`
 
-This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `demo` **root** using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/).
-
-These will be saved within `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
+This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `buildPaths source` root directories using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) and save them into the corresponding `targets` directories.
 
 By default, during the build it will also replace variables `{{ varName }}` that are matched within package.json.
 
