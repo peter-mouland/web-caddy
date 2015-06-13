@@ -41,17 +41,14 @@ As with all build tasks, add an config object to customise the build.
 
 `caddy build scripts`
 
-By default we assume the javascript is written in CommonJS, so we [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/) if you wish.
+By default javascript is compiled using [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/).
 Just update `build.scripts` within [caddy.config.js](boilerplate/caddy.config.js)
 
-This will create a compiled file for each `.js` file found in the `paths.source` (or `paths.source/*`).
-Using [uglify-js](https://www.npmjs.com/package/uglify-js), this will also create `.min.js` files.  To prevent minification use :
+This will create a compiled file for each `.js` file found in the `buildPaths` source root directories and save them into the corresponding `targets` directories.
+
+Adding `minify:true` with using [uglify-js](https://www.npmjs.com/package/uglify-js) to create `.min.js` files.  To prevent minification use :
 
 `caddy build scripts -dev`
-
-These will be saved within the `paths.target` set within [caddy.config.js](boilerplate/caddy.config.js)
-
-The build can be configured more by adding a `browserify` or `requirejs` object to the [caddy.config.js](boilerplate/caddy.config.js).
 
 **Example 1 : browserify** 
 
@@ -59,6 +56,9 @@ The build can be configured more by adding a `browserify` or `requirejs` object 
 
 ```javascript
 ...
+    buildPaths: [ 
+        {source:'src', targets: ['_site','dist'], minify: true }
+    ],
     tasks: {
         build: ['browserify']
     },
