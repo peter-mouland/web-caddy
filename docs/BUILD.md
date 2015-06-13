@@ -8,22 +8,24 @@
 
 *All* tasks create compiled files for each file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories. Adding `minify: true` will also creare `.min` equivilents.
 
-**BuildPaths example from caddy.config.js**
+**Example from caddy.config.js**
 ```javascript
-    tasks : {
+...
+   tasks : {
         build: ['sass', 'mustache', 'browserify'],
     },
     buildPaths: [
         {source: "./src", targets: ['./_site', './dist'], minify: true},
         {source: "./examples", targets: ['./_site']}
     ],
+...
 ```
 
 ## Build
 
 `caddy build`
 
-This will clean target directories and execute all the Build tasks below.
+This will clean target directories and execute all the Build tasks with the `build` array within caddy.config.js.
 
 #### Styles
 
@@ -33,7 +35,7 @@ By default we use [Sass](http://sass-lang.com/) to compile styles, along with [A
 
 This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `buildPaths source` root directories and save them into the corresponding `targets` directories. A `.min.css` will also be created for each compiled file.
 
-As with all build tasks, add an config object to customise the build with [Sass options](https://github.com/sass/node-sass#options)
+As with all build tasks, add a config object to customise the build with [Sass options](https://github.com/sass/node-sass#options)
 
 *caddy.config.js*
 ```javascript
@@ -52,11 +54,8 @@ As with all build tasks, add an config object to customise the build with [Sass 
 `caddy build scripts`
 
 By default javascript is compiled using [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/).
-Just update `build.scripts` within [caddy.config.js](boilerplate/caddy.config.js)
 
-This will create a compiled file for each `.js` file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories.
-
-Adding `minify:true` will use [uglify-js](https://www.npmjs.com/package/uglify-js) to create `.min.js` files.  To prevent minification use :
+This will create a compiled file for each `.js` file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories. Adding `minify:true` will use [uglify-js](https://www.npmjs.com/package/uglify-js) to create `.min.js` files.  To prevent minification use :
 
 `caddy build scripts -dev`
 
@@ -66,9 +65,6 @@ Adding `minify:true` will use [uglify-js](https://www.npmjs.com/package/uglify-j
 
 ```javascript
 ...
-    buildPaths: [ 
-        {source:'src', targets: ['_site','dist'], minify: true }
-    ],
     tasks: {
         build: ['browserify']
     },
