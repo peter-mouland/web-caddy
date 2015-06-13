@@ -13,7 +13,7 @@ Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://ww
 
 ## Installation
 
-`npm install -g web-caddy`
+`npm install web-caddy --save-dev`
 
 ## Quick Start
 
