@@ -10,6 +10,9 @@
 
 **BuildPaths example from caddy.config.js**
 ```javascript
+    tasks : {
+        build: ['sass', 'mustache', 'browserify'],
+    },
     buildPaths: [
         {source: "./src", targets: ['./_site', './dist'], minify: true},
         {source: "./examples", targets: ['./_site']}
