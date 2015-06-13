@@ -1,17 +1,26 @@
 # Tasks
+> Building the assets needed for your project
 
- * [Build](#build) - Building the assets needed for your project
+ * [Build](#build)
     * [Styles](#styles)
     * [Scripts](#scripts)
     * [HTML](#html)
+
+*All* tasks create compiled files for each file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories. Adding `minify: true` will also creare `.min` equivilents.
+
+**BuildPaths example from caddy.config.js**
+```javascript
+    buildPaths: [
+        {source: "./src", targets: ['./_site', './dist'], minify: true},
+        {source: "./examples", targets: ['./_site']}
+    ],
+```
 
 ## Build
 
 `caddy build`
 
 This will clean target directories and execute all the Build tasks below.
-
-Whenever files are compiled, the same top-level directory structure is maintained within the target.
 
 #### Styles
 
