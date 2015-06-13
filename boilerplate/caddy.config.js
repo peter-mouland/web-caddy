@@ -3,7 +3,7 @@ var pkg = require('./package.json');
 module.exports = {
     pkg: pkg,
     buildPaths: [
-        {source: "./src", targets: ['./_site', './dist']},
+        {source: "./src", targets: ['./_site', './dist'], minify: true},
         {source: "./examples", targets: ['./_site']}
     ],
     tasks : {
@@ -13,11 +13,5 @@ module.exports = {
         test: 'karma',
         release: ['git', 'gh-pages']
     },
-    'gh-pages': {
-        directory: '_site'
-    },
-    karma:{
-        functional: './test/karma.functional.js',
-        unit: './test/karma.unit.js'
-    }
+    karma: ['./test/karma.functional.js',  './test/karma.unit.js']
 };
