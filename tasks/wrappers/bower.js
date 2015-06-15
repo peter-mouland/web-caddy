@@ -58,7 +58,7 @@ function release(opts){
             return ghPages.publish('.',{
                 src: '*{' + files.join(',') + '}',
                 message: opts.message || 'Bower Release',
-                branch: opts.branch || 'latest-tag',
+                branch: opts.branch || 'latest',
                 tag: opts.tag},  function(err) {
                 ghPages.clean();
                 err && reject(err);

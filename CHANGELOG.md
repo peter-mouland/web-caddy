@@ -23,13 +23,11 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
-  * hook into git isues/labels to do automatic version bump!
   * add watchify config to poll for osX problems
   * verbose mode
   * test node api (all using options?)
   * allow node api to overwrite path.src and paths.target within options obj
   * caddy init if caddy config doesn't exist
-  * document config file properly
  
 ## 1.3.x
  * **1.3.0**
