@@ -13,16 +13,8 @@ var helper = {
         if (config) return config;
         var configPath = findup('caddy.config.js');
         config = (configPath) ? require(configPath) : false;
-        this.createBuildPaths(config);
         this.createGlobs(config);
         return config;
-    },
-    createBuildPaths : function(config) {
-        if (config.buildPaths){ return; }
-        config.buildPaths = [
-            { source: config.paths.source, targets:[config.paths.target]},
-            { source: config.paths.demo, targets:[config.paths.target]}
-        ];
     },
     createGlobs : function(config) {
         config.globs = {
