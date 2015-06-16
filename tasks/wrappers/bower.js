@@ -43,7 +43,6 @@ function filesInGitPlusBowerFiles(){
     return fs.glob(files).then(function(fileObjs){
         log.info('    * Found ' + fileObjs.length + ' file(s)');
         return fileObjs.map(function(fileObj){
-            //todo: verbose mode?
             return fileObj.path.replace(fileObj.base,'');
         });
     });

@@ -3,6 +3,7 @@ var path = require('path');
 var mustache = require('mustache');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
+var log = require('../utils/log');
 
 function Mustache(location, destination, options){
     this.location = location;
@@ -48,6 +49,9 @@ Mustache.prototype.renderFile = function(fileObj){
         var outFile = path.join(self.destination, fileObj.relativeDir, fileObj.name);
         var file = new File({path: outFile, contents:contents});
         file.ext = 'html';
+        if (self.options.verbose){
+            log.info("   * " + fileObj.relativeDir + "/" + fileObj.name + " > " + file.path);
+        }
         return file;
     });
 };

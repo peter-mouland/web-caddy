@@ -24,7 +24,6 @@
   
 todo:
   * add watchify config to poll for osX problems
-  * verbose mode
   * test node api (all using options?)
   * allow node api to overwrite path.src and paths.target within options obj
   * caddy init if caddy config doesn't exist

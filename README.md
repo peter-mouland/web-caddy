@@ -46,6 +46,9 @@ Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://ww
  * [Testing](docs/TEST.md) while developing (TDD) or a single run before you release
  * [Releasing](docs/RELEASE.md) to Amazon S3, Bower, GitHub.io and Git using continuous or manual deployments 
 
+**hint: add `-verbose` to the cli to see more logging**
+**hint: add `-dev` to the cli to prevent js/css minification**
+
 ## API
 
 The web-caddy can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks are almost exactly the same.

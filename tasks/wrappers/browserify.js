@@ -8,6 +8,13 @@ var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
 
+function wait(fileObjs){
+    return new Promise(function(resolve, reject) {
+        setTimeout(function(){ resolve(fileObjs); }, 100);
+    });
+}
+
+
 function mapExternalFiles(vendorBundle) {
     if (!vendorBundle) return;
     return vendorBundle.map(function (v) {
@@ -15,13 +22,14 @@ function mapExternalFiles(vendorBundle) {
     });
 }
 
-function bundle(b, fileObj, outFile) {
+function bundle(b, fileObj, outFile, options) {
     var b_ws = fs.createWriteStream(path.resolve(outFile));
     b.bundle().pipe(b_ws);
     return new Promise(function(resolve, reject) {
         b_ws.end = function(){
-            //todo: verbose mode?
-            //log.info(' * ' + outFile + ' saved' );
+            if (options.verbose) {
+                log.info('   * ' + outFile + ' saved' );
+            }
             fileObj.path = outFile;
             return resolve(fileObj);
         };
@@ -52,11 +60,12 @@ Watch.prototype.reloadOnce = function() {
 Watch.prototype.file = function(b) {
     var self = this;
     this.w = watchify(b); //, { delay: 1000 }
-
-    //todo: verbose mode?
-    //log.info('   * watch ' + this.fileObj.relativeDir + this.fileObj.name ); //+ fileObj.name
+    if (this.options.verbose) {
+        var  file = path.join(this.fileObj.relativeDir || '', this.fileObj.name );
+        log.info('   * watch ' + file);
+    }
     this.w.on('update', function () {
-            bundle(self.w, self.fileObj, self.outFile).then(self.reloadOnce.bind(self)).catch(log.onError);
+            bundle(self.w, self.fileObj, self.outFile, self.options).then(self.reloadOnce.bind(self)).catch(log.onError);
     });
     this.w.bundle();
 };
@@ -104,7 +113,12 @@ Browserify.prototype.file = function(fileObj, browserSync) {
         b.external(vendor);
     }
     b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
-    return bundle(b, fileObj, path.join(this.destination, fileObj.relativeDir, fileObj.name));
+    var  newFile = path.join(this.destination, fileObj.relativeDir, fileObj.name);
+    if (options.verbose) {
+        var  file = path.join(fileObj.relativeDir || '', fileObj.name );
+        log.info('   * ' + file + ' > ' + newFile);
+    }
+    return bundle(b, fileObj, newFile, options);
 };
 
 Browserify.prototype.watch = function(browserSync) {
@@ -124,10 +138,9 @@ Browserify.prototype.write = function(){
     var self = this;
     var options = this.options || {};
     return fs.glob(this.location).then(function(fileObjs){
-        //todo: verbose mode?
-        //if (fileObjs.length===0){
-        //    log.info('no .js files found within `' + self.location + '`');
-        //}
+        if (options.verbose && fileObjs.length===0){
+            log.info('no .js files found within `' + self.location + '`');
+        }
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
             promises.push(self.file(fileObj));
@@ -135,11 +148,35 @@ Browserify.prototype.write = function(){
         if (options.vendorBundle){
             options.vendorBundle.forEach(function (vendorObj, i) {
                 var fileObj = new File({ path: vendorObj.file || vendorObj });
+                if (options.verbose) {
+                    var  file = path.join(fileObj.relativeDir || '', fileObj.name );
+                    log.info('   * Read vendor file ' + file );
+                }
                 promises.push(self.buildVendor(fileObj, options));
             });
         }
         return Promise.all(promises);
+    }).then(function(fileObjs){
+        return wait(fileObjs);
+    }).then(function(fileObjs){
+        if (!self.options.minify) return Promise.resolve();
+        return self.minify(fileObjs);
     });
 };
 
+
+Browserify.prototype.minify = function(fileObjs) {
+    log.info(' * Minifying Scripts (' + this.destination + ')');
+    var Minify = require('./uglifyjs' );
+    var promises = [];
+    var self = this;
+    fileObjs.forEach(function(fileObj){
+        if (self.options.verbose) {
+            var file = path.join(fileObj.relativeDir || '', fileObj.name);
+            log.info('   * ' + file);
+        }
+        promises.push(new Minify(fileObj).write().catch(log.warn));
+    });
+    return Promise.all(promises).catch(log.warn);
+};
 module.exports = Browserify;

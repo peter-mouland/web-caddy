@@ -13,6 +13,7 @@ var helper = {
         if (config) return config;
         var configPath = findup('caddy.config.js');
         config = (configPath) ? require(configPath) : false;
+        config.appRoot = configPath.replace('caddy.config.js','');
         this.createGlobs(config);
         return config;
     },

@@ -8,6 +8,12 @@ var fs = require('../utils/fs');
 var File = require('../utils/file');
 var log = require('../utils/log');
 
+function wait(fileObjs){
+    return new Promise(function(resolve, reject) {
+        setTimeout(function(){ resolve(fileObjs); }, 100);
+    });
+}
+
 function Sass(location, destination, options){
     this.location = location;
     this.destination = destination;
@@ -32,6 +38,9 @@ Sass.prototype.file = function(fileObj, outputStyle){
     var outFile = path.resolve(dir, name);
     var newFileObj = new File({path:outFile});
     return new Promise(function(resolve, reject){
+        if (options.verbose){
+            log.info('   * ' + fileObj.path.replace(options.appRoot,''));
+        }
         sass.render(options,
             function(error, result){
                 if (error){
@@ -54,21 +63,23 @@ Sass.prototype.file = function(fileObj, outputStyle){
 };
 
 Sass.prototype.minify = function(files){
+    log.info(' * Minifying Styles (' + this.destination + ')');
     var self = this;
     var promises = [];
     files.forEach(function(fileObj){
         promises.push(self.file(fileObj, 'compressed'));
     });
-    return Promise.all(promises);
+    return Promise.all(promises).then(function(fileObjs){
+        return fs.write(fileObjs);
+    });
 };
 
 Sass.prototype.write = function() {
     var self = this;
     return fs.glob(this.location).then(function(files) {
-        //todo: verbose?
-        //if (files.length===0){
-            //log.info('no scss files found: ' + self.location);
-        //}
+        if (self.options.verbose && files.length===0){
+            log.info('no scss files found: ' + self.location);
+        }
         var promises = [];
         files.forEach(function (fileObj, i) {
             promises.push(self.file(fileObj));
@@ -76,10 +87,11 @@ Sass.prototype.write = function() {
         return Promise.all(promises);
     }).then(function(fileObjs){
         return fs.write(fileObjs);
-    }).then(function(fileObj){
-        return self.minify(fileObj);
-    }).then(function(fileObj){
-        return fs.write(fileObj);
+    }).then(function(fileObjs){
+        return wait(fileObjs);
+    }).then(function(fileObjs){
+        if (!self.options.minify) return Promise.resolve();
+        return self.minify(fileObjs);
     });
 };
 

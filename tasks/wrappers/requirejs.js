@@ -3,6 +3,7 @@ var requirejs = require('requirejs');
 var path = require('path');
 var fs = require('../utils/fs');
 var File = require('../utils/file');
+var log = require('../utils/log');
 
 function RequireJS(location, destination, options){
     this.location = location;
@@ -31,10 +32,9 @@ RequireJS.prototype.file = function(fileObj) {
 RequireJS.prototype.write = function(){
     var self = this;
     return fs.glob(this.location).then(function(fileObjs){
-        //todo: verbose?
-        //if (fileObjs.length===0){
-        //    log.info('no .js files found within `' + self.location + '`');
-        //}
+        if (self.options.verbose && fileObjs.length===0){
+            log.info('no .js files found within `' + self.location + '`');
+        }
         var promises = [];
         fileObjs.forEach(function (fileObj, i) {
             promises.push(self.file(fileObj));

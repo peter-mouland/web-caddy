@@ -30,8 +30,9 @@ function getWatchOptions(options){
                     build[task](options).catch(log.onError);
                     break;
                 default :
-                    //todo: verbose mode?
-                    //log.info('   * ' + ((event=='add')?'watch':event) + ' ' + file);
+                    if (options.verbose){
+                        log.info('   * ' + ((event=='add')?'watch':event) + ' ' + file);
+                    }
                     break;
             }
         };
@@ -39,7 +40,7 @@ function getWatchOptions(options){
     files.push({ match: htmlPaths, fn: callBack('html'), options: chokidarOptions });
     files.push({ match: stylesPaths, fn: callBack('styles'), options: chokidarOptions });
     if (helper.matches(config.tasks.build, ['browserify'])) {
-        browserifyWatch();
+        browserifyWatch(options);
     } else {
         files.push({ match: scriptsPaths, fn: callBack('scripts'), options: chokidarOptions });
     }
@@ -49,14 +50,14 @@ function getWatchOptions(options){
 function startBrowserSync(options) {
     log.info(' * Started');
     options.files = getWatchOptions(options);
-    browserSync.init(options); //todo: http://www.browsersync.io/docs/api/
+    browserSync.init(options);
 }
 
-function browserifyWatch(){
+function browserifyWatch(options){
     config.buildPaths.forEach(function(pathObj, i){
         var src = path.join(pathObj.source, config.globs.scripts);
         pathObj.targets.forEach(function(target){
-            new Browserify(src, target).watch(browserSync);
+            new Browserify(src, target, options).watch(browserSync);
         });
     });
 }

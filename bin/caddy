@@ -1,21 +1,8 @@
 #!/usr/bin/env node
 var log = require("../tasks/utils/log");
 var helper = require("../tasks/utils/config-helper");
-//
-//global.times = [];
-//
-//function logEnd(){
-//    global.end = new Date();
-//    console.log('Exec Time : ', timeDifference(global.end,global.start) + 's');
-//}
-//function timeDifference(laterdate, earlierdate) {
-//    var difference = laterdate.getTime() - earlierdate.getTime();
-//    var secondsDifference = difference/1000;
-//    global.times.push(secondsDifference)
-//    return secondsDifference;
-//}
+
 function execTask(taskName, args){
-    //global.start = new Date()
     helper.configCheck();
     var task = require("../tasks/" + taskName);
     var command = args.shift() || 'all';
@@ -29,9 +16,9 @@ function execTask(taskName, args){
         options[options.type] = true;
     }
     if (task[command]){
-        return task[command](options);//.then(logEnd);
-    } else if (task['adhoc']){//allows a a single parameter to passed t othe adhoc function
-        return task['adhoc'](command, options);//.then(logEnd);
+        return task[command](options);
+    } else if (task['adhoc']){//allows a a single parameter to passed to the adhoc function
+        return task['adhoc'](command, options);
     } else {
         help(task, taskName);
     }

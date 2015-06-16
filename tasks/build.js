@@ -1,42 +1,24 @@
 var Promise = require('es6-promise').Promise;
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
-var UglifyJS = require("./wrappers/uglifyjs");
 var extend = require('util')._extend;
 var path = require('path');
 var clean = require('./clean');
 var config, build = {};
 
 function buildPromises(wrapper, fileType, options){
-    var fn = require('./wrappers/' + wrapper);
+    var Fn = require('./wrappers/' + wrapper);
     var promises = [];
     config.buildPaths.forEach(function(pathObj, i){
         var src = path.join(pathObj.source, config.globs[fileType]);
         pathObj.targets.forEach(function(target){
-            promises.push(new fn(src, target, options).write());
+            var newOptions = extend({minify:(!options.dev && pathObj.minify)}, options || {});
+            promises.push((new Fn(src, target, newOptions)).write());
         });
     });
-    return promises;
+    return Promise.all(promises).then(options.reload).catch(log.warn);
 }
 
-function wait(fileObjs){
-    return new Promise(function(resolve, reject) {
-        setTimeout(function(){ resolve(fileObjs); }, 100);
-    });
-}
-
-build.html = function html(options) {
-    var htmlWrapper = helper.matches(config.tasks.build, ['jade','mustache']);
-    if (!htmlWrapper) return Promise.resolve();
-    log.info(' * HTML');
-
-    options = extend(config.pkg || {}, options);
-    options.now = Date().split(' ').splice(0,5).join(' ');
-    var promises = buildPromises(htmlWrapper, 'html', options);
-    return Promise.all(promises).then(build.htmlMin).then(options.reload).catch(log.warn);
-};
-
-//todo: location for consistency or fileObjs for speed??
 build.htmlMin = function htmlMin(fileObjs) {
     var htmlWrapper = helper.matches(config.tasks.build, ['html-min']);
     if (!htmlWrapper) return Promise.resolve();
@@ -50,48 +32,37 @@ build.htmlMin = function htmlMin(fileObjs) {
     return Promise.all(promises).catch(log.warn);
 };
 
+build.html = function html(options) {
+    var wrapper = helper.matches(config.tasks.build, ['jade','mustache']);
+    if (!wrapper) return Promise.resolve();
+    log.info(' * HTML');
+
+    options = extend(config.pkg || {}, options || {});
+    options.now = Date().split(' ').splice(0,5).join(' ');
+    return buildPromises(wrapper, 'html', options);
+};
+
 build.scripts = function scripts(options){
-    var scriptsWrapper = helper.matches(config.tasks.build, ['browserify','requirejs']);
-    if (!scriptsWrapper) return Promise.resolve();
+    var wrapper = helper.matches(config.tasks.build, ['browserify','requirejs']);
+    if (!wrapper) return Promise.resolve();
     log.info(' * Scripts');
 
-    options = extend(config[scriptsWrapper] || {}, options);
+    options = extend(config[wrapper] || {}, options);
     options.browserify = config.pkg.browserify;
     options.browser = config.pkg.browser;
     options["browserify-shim"] = config.pkg["browserify-shim"];
 
-    var fn = require('./wrappers/' + scriptsWrapper);
-    var promises = [];
-    config.buildPaths.forEach(function(pathObj, i){
-        var src = path.join(pathObj.source, config.globs.scripts);
-        pathObj.targets.forEach(function(target){
-            promises.push(new fn(src, target, options).write().then(wait).then(function(fileObjPromises){
-                if (options.dev || !pathObj.minify) return Promise.resolve();
-                return build.jsMin(fileObjPromises);//todo copy duplicates rather than rebuild
-            }));
-        });
-    });
-    return Promise.all(promises).then(options.reload).catch(log.warn);
-};
-
-build.jsMin = function (fileObjs){
-    log.info(' * Minifying JS');
-    var promises = [];
-    fileObjs.forEach(function (fileObj, i) {
-        log.info('    * ' + fileObj.name);
-        promises.push(new UglifyJS(fileObj).write());
-    });
-    return Promise.all(promises);
+    return buildPromises(wrapper, 'scripts', options);
 };
 
 build.styles = function styles(options){
-    var stylesWrapper = helper.matches(config.tasks.build, ['sass']);
-    if (!stylesWrapper) return Promise.resolve();
+    var wrapper = helper.matches(config.tasks.build, ['sass']);
+    if (!wrapper) return Promise.resolve();
     log.info(' * Styles');
 
-    options = extend(config[stylesWrapper] || {}, options);
-    var promises = buildPromises(stylesWrapper, 'styles', options);
-    return Promise.all(promises).then(options.reload).catch(log.warn);
+    options = extend(config[wrapper] || {}, options);
+    options.appRoot = config.appRoot;
+    return buildPromises(wrapper, 'styles', options);
 };
 
 build.all = function all(options){

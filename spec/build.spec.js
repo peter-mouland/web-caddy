@@ -39,7 +39,7 @@ describe("Build task will compile", function() {
             expect(Jade.prototype.write).not.toHaveBeenCalled();
             expect(Mustache.prototype.write).toHaveBeenCalled();
             done();
-        });
+        }).catch(console.log);
     });
 
     it("scripts with browserify", function (done) {
@@ -49,7 +49,7 @@ describe("Build task will compile", function() {
             expect(requirejs.prototype.write).not.toHaveBeenCalled();
             expect(log.info).toHaveBeenCalledWith(' * Scripts');
             done();
-        });
+        }).catch(console.log);
     });
 
     it("scripts with requirejs", function (done) {
@@ -60,7 +60,7 @@ describe("Build task will compile", function() {
             expect(requirejs.prototype.write).toHaveBeenCalled();
             expect(log.info).toHaveBeenCalledWith(' * Scripts');
             done();
-        });
+        }).catch(console.log);
     });
 
     it("styles", function (done) {
@@ -69,7 +69,7 @@ describe("Build task will compile", function() {
             expect(sass.prototype.write.calls.count()).toEqual(2);
             expect(log.info).toHaveBeenCalledWith(' * Styles');
             done();
-        });
+        }).catch(console.log);
     });
 
 });

@@ -48,8 +48,7 @@ describe('Sass', function () {
             return fileObj;
         });
 
-        new Sass('./spec/fixtures/sass/', 'dest').write().then(function () {
-            expect(fs.write.calls.count()).toBe(2);
+        new Sass('./spec/fixtures/sass/', 'dest', {minify:true}).write().then(function () {
             expect(Sass.prototype.file.calls.count()).toBe(1);
             expect(Sass.prototype.minify.calls.count()).toBe(1);
         }).then(done).catch(onError);
