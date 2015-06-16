@@ -14,6 +14,7 @@ var helper = {
         var configPath = findup('caddy.config.js');
         config = (configPath) ? require(configPath) : false;
         config.appRoot = configPath.replace('caddy.config.js','');
+        this.createBuildPaths(config);
         this.createGlobs(config);
         return config;
     },
@@ -27,6 +28,12 @@ var helper = {
             'fonts': '/{.,*}/*.{svg,ttf,woff,eot}',
             'images': '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}'
         };
+    },
+    createBuildPaths : function(config) {
+        if (config.buildPaths || !config.paths){ return; }
+        config.buildPaths = [];
+        config.paths.source && config.buildPaths.push({ source: config.paths.source, targets:[config.paths.target]});
+        config.paths.demo && config.buildPaths.push({ source: config.paths.demo, targets:[config.paths.target]});
     },
     configCheck : function(){
         var config = this.getConfig();
