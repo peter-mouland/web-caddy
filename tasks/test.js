@@ -8,6 +8,7 @@ var test = {};
 
 function all(options, singleRun){
     var testWrapper = require('./wrappers/karma');
+    if (typeof options==='string') options = [options];
     log.info(' * Karma Runing: ' + options[0]);
     return testWrapper(singleRun, options[0]).then(function(){
         if (options.length<2){ return Promise.resolve(); }

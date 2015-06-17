@@ -49,6 +49,10 @@ var helper = {
         if (!config.pkg.version){
             error.push(' * The package.json requires as a `version` string (even "version": "0.0.0" is fine)');
         }
+        if (!Array.isArray(config.karma) && typeof config.karma!=='string'){
+            error.push(' * The karma object within caddy.config.js must now be a String or an Array containing the karma config file(s) i.e. \n ' +
+                ' karma: [\'./test/karma.unit.js\',\'./test/karma.functional.js\']');
+        }
         //check old config
         if (!config.tasks){
             error.push(' * Please ensure there is a `tasks` object within your caddy.config.js');
