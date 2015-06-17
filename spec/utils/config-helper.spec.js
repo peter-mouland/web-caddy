@@ -27,7 +27,7 @@ describe("Config-helper ", function() {
                 buildPaths:  [ ],
                 browserify: {  },
                 requirejs: { },
-                karma: {  },
+                karma: [],
                 s3: { },
                 staticApp: { },
                 nodeApp: { },

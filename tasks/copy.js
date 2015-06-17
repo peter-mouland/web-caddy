@@ -6,12 +6,12 @@ var helper = require('./utils/config-helper');
 var clean = require('./clean');
 var config, copy = {};
 
-function copyFiles(fileType, msg){
+function copyFiles(fileType, msg, glob){
     log.info(msg);
     var promises = [];
     config.buildPaths.forEach(function(pathObj, i){
         pathObj.targets.forEach(function(target, i){
-            var src = path.join(pathObj.source, config.globs[fileType]);
+            var src = path.join(pathObj.source, glob || config.globs[fileType]);
             promises.push(fs.glob(src).then(function(fileObjs){
                 var promises = [];
                 fileObjs.forEach(function(fileObj){
@@ -19,7 +19,7 @@ function copyFiles(fileType, msg){
                     promises.push(fs.copy(fileObj.path, outFile));
                 });
                 return promises;
-            })).catch(log.warn);
+            }));
         });
     });
     return promises;
@@ -43,11 +43,22 @@ copy.images = function images() {
     return copyFiles('images', ' * Images');
 };
 
+copy.other = function images() {
+    if (!config.tasks.copy) return Promise.resolve();
+    var promises = [];
+    config.tasks.copy.forEach(function(copy){
+        if (['fonts', 'images', 'server-config'].indexOf(copy)>=0) return;
+        return copyFiles('other', ' * Others', copy);
+    });
+    return Promise.all(promises);
+};
+
 copy.all = function all(){
     return Promise.all([
-        copy.serverConfig(),
         copy.fonts(),
-        copy.images()
+        copy.images(),
+        copy.serverConfig(),
+        copy.other()
     ]).catch(log.warn);
 };
 
@@ -68,6 +79,7 @@ function exec(task, options){
 
 module.exports = {
     'server-config': function(options){ return exec('serverConfig', options); },
+    'other': function(options){ return exec('other', options); },
     fonts:  function(options){ return exec('fonts', options); },
     images:  function(options){ return exec('images', options); },
     all:  function(options){ return exec('all', options); }

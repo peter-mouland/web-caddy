@@ -21,7 +21,7 @@ var helper = {
     createGlobs : function(config) {
         config.globs = {
             'testCoverage':'./test/coverage/**/*',
-            'serverConfig':  '/*{CNAME,.htaccess,robots.txt,*.yml}',
+            'serverConfig':  '/*{CNAME,.htaccess,robots.txt,manifest.json}',
             'html':  '/*.{html,jade,ms,mustache}',
             'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
             'scripts': '/{.,*}/*.js',

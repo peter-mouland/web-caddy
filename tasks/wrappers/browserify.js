@@ -112,6 +112,7 @@ Browserify.prototype.file = function(fileObj, browserSync) {
     if (vendor){
         b.external(vendor);
     }
+    b.add(fileObj.path);
     b.require(fileObj.path, {expose: fileObj.name.split('.')[0]});
     var  newFile = path.join(this.destination, fileObj.relativeDir, fileObj.name);
     if (options.verbose) {
