@@ -16,7 +16,7 @@
   * Updated new projects to display the name using `camelCase` or as words (with spaces) throughout docs
   * Updated `release` config option. this must be an array
   * Updated `build.scripts` to only minify source code (not demo code)
-  * Updated `copy`, `build`, `serve`, `test` and `release` to be withina `tasks` object within the config
+  * Updated `copy`, `build`, `serve`, `test` and `release` to be within a `tasks` object within the config
   * Updated Mustache/Jade to use variables from `package.json` by default
   * Removed automatic installation of npm modules wtih `caddy new xxx`
   * Removed `dist` path config option

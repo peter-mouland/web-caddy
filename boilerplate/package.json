@@ -20,7 +20,7 @@
     },
     "devDependencies": {
       "browserify-istanbul": "^0.2.1",
-      "web-caddy" : "2.0.0-rc.4",
+      "web-caddy" : "2.0.0-rc.5",
       "jshint": "^2.6.3"
     },
     "author": "{{ git.author }}"
