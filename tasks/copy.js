@@ -29,7 +29,7 @@ copy.adhoc = function images() {
     var promises = [];
 
     if (config.tasks.copy.indexOf('server-config')>-1) {
-        log.warn('Please update caddy.config.js\nReplace \'server-config\' with : \'/*{CNAME,.htaccess,robots.txt,manifest.json}\'')
+        log.warn('Please update caddy.config.js\nReplace \'server-config\' with : \'/*{CNAME,.htaccess,robots.txt,manifest.json}\'');
     }
     config.tasks.copy.forEach(function(copy){
         return copyFiles('other', copy);
