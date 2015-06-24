@@ -8,6 +8,7 @@
   * Added `bower` as a separate `release` task
   * Added `-dev` CLI option to prevent file minification and speed up build time
   * Added `copy` task to separate the task of copying files from compiling code
+  * Added `bump` config object
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code
   * Updated `paths` to be `buildPaths` and take an array.
   * Updated `serve` task to be able to serve ad-hoc nodeApps or static files
@@ -23,6 +24,7 @@
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
 todo:
+  * add recommendation for bower ie. not a dist but use s3 instead
   * add watchify config to poll for osX problems
   * test node api (all using options?)
   * allow node api to overwrite path.src and paths.target within options obj

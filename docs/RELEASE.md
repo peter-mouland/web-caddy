@@ -181,10 +181,20 @@ This will push the current files within `paths.target` to gh-pages branch (makin
 
 `caddy bump`
 
-This will update the version number in all the docs (package.json, version.js, *.md and *.html).
+The files `package.json`, `app.json` and `README.md` are bumped by default. To specify different files you can add a bump task i.e.
+
+*caddy.config.js*
+```javascript
+...
+    tasks: {
+        bump: ['package.json','README.md', '*/app.json']
+    }
+...
+```
 
 It is recommended you update your package.json `scripts` object:
 
+*package.json*
 ```javascript
   "bump": "caddy bump"
 ```

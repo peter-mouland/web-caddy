@@ -1,4 +1,6 @@
 var pkg = require('./package.json');
+var imagesAndFontsGlob = '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg,ttf,woff,eot}';
+var serverFilesGlob = '/*{CNAME,.htaccess,robots.txt,manifest.json}';
 
 module.exports = {
     pkg: pkg,
@@ -7,7 +9,8 @@ module.exports = {
         {source: "./examples", targets: ['./_site']}
     ],
     tasks : {
-        copy: ['fonts', 'images', 'server-config'],
+        copy: [imagesAndFontsGlob, serverFilesGlob],
+        bump: ['package.json','README.md', '*/app.json'],
         build: ['sass', 'mustache', 'browserify'],
         serve: 'staticApp',
         test: 'karma',

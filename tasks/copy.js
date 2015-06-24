@@ -6,13 +6,13 @@ var helper = require('./utils/config-helper');
 var clean = require('./clean');
 var config, copy = {};
 
-function copyFiles(fileType, msg, glob){
-    log.info(msg);
+function copyFiles(fileType, glob){
     var promises = [];
     config.buildPaths.forEach(function(pathObj, i){
         pathObj.targets.forEach(function(target, i){
             var src = path.join(pathObj.source, glob || config.globs[fileType]);
             promises.push(fs.glob(src).then(function(fileObjs){
+                log.info(' * ' + src + ' > ' + target);
                 var promises = [];
                 fileObjs.forEach(function(fileObj){
                     var outFile = path.join(target, fileObj.relativeDir);
@@ -24,42 +24,21 @@ function copyFiles(fileType, msg, glob){
     });
     return promises;
 }
-
-copy.serverConfig = function serverConfig(){
-    var verify = helper.matches(config.tasks.copy, ['server-config']);
-    if (!verify) return Promise.resolve();
-    return copyFiles('serverConfig', ' * Server Config');
-};
-
-copy.fonts = function fonts() {
-    var verify = helper.matches(config.tasks.copy, ['fonts']);
-    if (!verify) return Promise.resolve();
-    return copyFiles('fonts', ' * Fonts');
-};
-
-copy.images = function images() {
-    var verify = helper.matches(config.tasks.copy, ['images']);
-    if (!verify) return Promise.resolve();
-    return copyFiles('images', ' * Images');
-};
-
-copy.other = function images() {
+copy.adhoc = function images() {
     if (!config.tasks.copy) return Promise.resolve();
     var promises = [];
+
+    if (config.tasks.copy.indexOf('server-config')>-1) {
+        log.warn('Please update caddy.config.js\nReplace \'server-config\' with : \'/*{CNAME,.htaccess,robots.txt,manifest.json}\'')
+    }
     config.tasks.copy.forEach(function(copy){
-        if (['fonts', 'images', 'server-config'].indexOf(copy)>=0) return;
-        return copyFiles('other', ' * Others', copy);
+        return copyFiles('other', copy);
     });
     return Promise.all(promises);
 };
 
 copy.all = function all(){
-    return Promise.all([
-        copy.fonts(),
-        copy.images(),
-        copy.serverConfig(),
-        copy.other()
-    ]).catch(log.warn);
+    return copy.adhoc().catch(log.warn);
 };
 
 var prepare = {
