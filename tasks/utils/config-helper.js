@@ -1,6 +1,8 @@
-var log = require('../utils/log');
 var findup = require('findup-sync');
+var path = require('path');
+var extend = require('util')._extend;
 var fs = require('../utils/fs');
+var log = require('../utils/log');
 var config;
 
 var helper = {
@@ -34,6 +36,30 @@ var helper = {
         config.buildPaths = [];
         config.paths.source && config.buildPaths.push({ source: config.paths.source, targets:[config.paths.target]});
         config.paths.demo && config.buildPaths.push({ source: config.paths.demo, targets:[config.paths.target]});
+    },
+    normaliseArgs : function (task, config, source, target, options){
+        if (Array.isArray(target)) { log.onError('target must be a string, is currently : ' + target); }
+        if (source){  //from node API
+            return [{ source: source, target: target, options: options}];
+        }
+        var executables = config.buildPaths.map(function(buildPath){
+            //add any other buildPath configs onto options object
+            var configOptions = JSON.parse(JSON.stringify(buildPath));
+            delete configOptions.target;
+            delete configOptions.source;
+            options = extend(configOptions || {}, options || {});
+            return config.tasks[task].map(function(glob){
+                return {
+                    source: path.join(buildPath.source,glob),
+                    target: buildPath.target,
+                    options: options
+                };
+            });
+        });
+        executables = executables.reduce(function(a, b) {
+            return a.concat(b);
+        });
+        return executables
     },
     configCheck : function(){
         var config = this.getConfig();
