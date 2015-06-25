@@ -8,47 +8,32 @@ var config, clean = {};
 function setTargets(buildPaths){
     var targets = [];
     buildPaths.forEach(function(pathObj, i){
-        pathObj.targets.forEach(function(target, i){
-            if (targets.indexOf(target)<0) {
-                targets.push(target);
-            }
-        });
+        if (targets.indexOf(pathObj.target)<0) {
+            targets.push(pathObj.target);
+        }
     });
     return targets;
 }
 
-function del(fileType, msg){
+function delType(fileType, msg){
     log.info(msg);
-    var promises = [];
     var targets = setTargets(config.buildPaths);
-    targets.forEach(function(target){
-        promises.push(fs.del(path.join(target, config.globs[fileType])));
+    var promises = targets.map(function(target){
+        return fs.del(path.join(target, config.globs[fileType]));
     });
     return Promise.all(promises);
 }
 
-clean.serverConfig = function serverConfig(){
-    return del('serverConfig', ' * Server config files');
-};
-
 clean.html = function html(){
-    return del('html', ' * html');
+    return delType('html', ' * html');
 };
 
 clean.styles = function styles(){
-    return del('styles', ' * Styles');
+    return delType('styles', ' * Styles');
 };
 
 clean.scripts =  function scripts(){
-    return del('scripts', ' * Scripts');
-};
-
-clean.fonts = function fonts(){
-    return del('fonts', ' * Fonts');
-};
-
-clean.images = function images(){
-    return del('images', ' * Images');
+    return delType('scripts', ' * Scripts');
 };
 
 clean.test = function test(){
@@ -65,29 +50,38 @@ clean.all = function all(){
     return Promise.all([clean.copy(), clean.build()]).catch(log.onError);
 };
 
-clean.copy = function copy(){
-    return Promise.all([clean.serverConfig(), clean.fonts(), clean.images()]).catch(log.onError);
-};
-
 clean.build = function build(){
     return Promise.all([clean.html(), clean.styles(), clean.scripts()]).catch(log.onError);
 };
 
-function exec(task, options){
+clean.copy = clean.adhoc;
+
+//pipe all task execution through here to unify task prep and config normalisation
+function exec(task, source, target, options){
     config = helper.getConfig();
-    log.info('Deleting :');
-    return clean[task](options);
+
+    //normalise the args into an array of tasks
+    if (source){  //from node API
+        tasks = [{ source: source, target: target, options: options}];
+    } else {  //from node CLI
+        tasks = helper.normaliseCopy(task, config, options || { }, 'target');
+    }
+
+    //do prep-task then do copy task
+    log.info('Cleaning :');
+    var promises = tasks.map(function(params){
+        return clean[task](params.source, params.options);
+    });
+    return Promise.all(promises).catch(log.onError);
 }
 
 module.exports = {
-    'copy': function(options){ return exec('copy', options); },
-    'build': function(options){ return exec('build', options); },
-    'server-config': function(options){ return exec('serverConfig', options); },
-    'test': function(options){ return exec('test', options); },
-    'html': function(options){ return exec('html', options); },
-    'styles': function(options){ return exec('styles', options); },
-    'scripts': function(options){ return exec('scripts', options); },
-    'fonts': function(options){ return exec('fonts', options); },
-    'images': function(options){ return exec('images', options); },
-    'all': function(options){ return exec('all', options); }
+    'adhoc': function(source, target, options){ return exec('adhoc', source, target, options); },
+    'copy': function(source, target, options){ return exec('copy', source, target, options); },
+    'build': function(source, target, options){ return exec('build', source, target, options); },
+    'test': function(source, target, options){ return exec('test', source, target, options); },
+    'html': function(source, target, options){ return exec('html', source, target, options); },
+    'styles': function(source, target, options){ return exec('styles', source, target, options); },
+    'scripts': function(source, target, options){ return exec('scripts', source, target, options); },
+    'all': function(source, target, options){ return exec('all', source, target, options); }
 };

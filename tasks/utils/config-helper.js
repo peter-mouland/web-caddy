@@ -37,20 +37,16 @@ var helper = {
         config.paths.source && config.buildPaths.push({ source: config.paths.source, targets:[config.paths.target]});
         config.paths.demo && config.buildPaths.push({ source: config.paths.demo, targets:[config.paths.target]});
     },
-    normaliseArgs : function (task, config, source, target, options){
-        if (Array.isArray(target)) { log.onError('target must be a string, is currently : ' + target); }
-        if (source){  //from node API
-            return [{ source: source, target: target, options: options}];
-        }
+    normaliseCopy : function (task, config, options, sourceOutput){
         var executables = config.buildPaths.map(function(buildPath){
             //add any other buildPath configs onto options object
             var configOptions = JSON.parse(JSON.stringify(buildPath));
             delete configOptions.target;
             delete configOptions.source;
             options = extend(configOptions || {}, options || {});
-            return config.tasks[task].map(function(glob){
+            return config.tasks.copy.map(function(glob){
                 return {
-                    source: path.join(buildPath.source,glob),
+                    source: path.join(buildPath[sourceOutput || 'source'], glob),
                     target: buildPath.target,
                     options: options
                 };
@@ -59,6 +55,36 @@ var helper = {
         executables = executables.reduce(function(a, b) {
             return a.concat(b);
         });
+        return executables
+    },
+    normaliseBuild : function (subtasks, config, source, target, options){
+        if (Array.isArray(target)) { log.onError('target must be a string, is currently : ' + target); }
+        if (!Array.isArray(subtasks)) subtasks = [subtasks];
+        var executables;
+        if (source){  //from node API
+            executables = subtasks.map(function(subtask){
+                return { subTask: subtask, source: source, target: target, options: options};
+            });
+        } else {
+            executables = config.buildPaths.map(function(buildPath){
+                //add any other buildPath configs onto options object
+                var configOptions = JSON.parse(JSON.stringify(buildPath));
+                delete configOptions.target;
+                delete configOptions.source;
+                options = extend(configOptions || {}, options || {});
+                return subtasks.map(function(subtask){
+                    return {
+                        subTask: subtask,
+                        source: path.join(buildPath.source, config.globs[subtask]),
+                        target: buildPath.target,
+                        options: options
+                    };
+                })
+            });
+            executables = executables.reduce(function(a, b) {
+                return a.concat(b);
+            });
+        }
         return executables
     },
     configCheck : function(){
@@ -82,6 +108,11 @@ var helper = {
         if (!config.buildPaths){
             error.push(' * Please ensure there is a `buildPaths` object within your caddy.config.js');
         }
+        config.buildPaths.forEach(function(buildPath){
+            if (Array.isArray(buildPath.targets)) {
+                error.push(' * Please ensure there is a `buildPaths.targets` singular and a string i.e. `buildPath.target`');
+            }
+        });
         //check copy config
         if (config.tasks && config.tasks.copy && config.tasks.copy.indexOf('server-config')>-1) {
             error.push('Please update caddy.config.js\nReplace \'server-config\' with : \'/*{CNAME,.htaccess,robots.txt,manifest.json}\'');
