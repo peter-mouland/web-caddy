@@ -15,6 +15,7 @@ function execTask(taskName, args){
         options.type = args[0].substr(1);
         options[options.type] = true;
     }
+    if (!Object.keys(options).length) options = undefined;
     if (task[command]){
         return task[command](options);
     } else if (task['adhoc']){//allows a a single parameter to passed to the adhoc function

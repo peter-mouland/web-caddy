@@ -7,7 +7,7 @@ bump.all = function all(options){
     var build = require('./build');
     var Bump = require('./utils/bump');
     var newVersion;
-    var filesToBump = config.tasks.bump || ['package.json','README.md', '*/app.json'];
+    var filesToBump = config.tasks.bump;
     return new Bump(filesToBump, options).run()
         .then(function(version){
             log.info(" * Now on " + version);
@@ -20,6 +20,7 @@ bump.all = function all(options){
 
 function exec(task, options){
     config = helper.getConfig();
+    if (!config.tasks.bump) return Promise.resolve();
     options = options || {};
     log.info('Bumping :');
     return bump[task](options);
