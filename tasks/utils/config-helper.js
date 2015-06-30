@@ -34,8 +34,8 @@ var helper = {
     createBuildPaths : function(config) {
         if (config.buildPaths || !config.paths){ return; }
         config.buildPaths = [];
-        config.paths.source && config.buildPaths.push({ source: config.paths.source, targets:[config.paths.target]});
-        config.paths.demo && config.buildPaths.push({ source: config.paths.demo, targets:[config.paths.target]});
+        config.paths.source && config.buildPaths.push({ source: config.paths.source, target:config.paths.target});
+        config.paths.demo && config.buildPaths.push({ source: config.paths.demo, target: config.paths.target});
     },
     normaliseCopy : function (task, config, options, sourceOutput){
         var executables = config.buildPaths.map(function(buildPath){
@@ -55,7 +55,7 @@ var helper = {
         executables = executables.reduce(function(a, b) {
             return a.concat(b);
         });
-        return executables
+        return executables;
     },
     normaliseBuild : function (subtasks, config, source, target, options){
         if (Array.isArray(target)) { log.onError('target must be a string, is currently : ' + target); }
@@ -79,13 +79,13 @@ var helper = {
                         target: buildPath.target,
                         options: options
                     };
-                })
+                });
             });
             executables = executables.reduce(function(a, b) {
                 return a.concat(b);
             });
         }
-        return executables
+        return executables;
     },
     configCheck : function(){
         var config = this.getConfig();

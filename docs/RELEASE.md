@@ -181,7 +181,7 @@ This will push the current files within `paths.target` to gh-pages branch (makin
 
 `caddy bump`
 
-The files `package.json`, `app.json` and `README.md` are bumped by default. To specify different files you can add a bump task i.e.
+The files `package.json`, `app.json` and `README.md` are bumped by default. This is set in the `caddy.config.js`.
 
 *caddy.config.js*
 ```javascript
@@ -201,4 +201,10 @@ It is recommended you update your package.json `scripts` object:
 
 By default, this applies a  `patch`.  Add either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.
 
-i.e. `npm run bump -- major`
+i.e. `npm run bump -- -major`
+
+If you want to bump ad-hoc files you can specify a file i.e. :
+
+```
+    caddy bump package.json -minor
+```

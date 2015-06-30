@@ -35,7 +35,7 @@ describe("Build task will compile", function() {
     it("html", function (done) {
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
         return build.html().then(function(){
-            expect(log.info).toHaveBeenCalledWith(' * HTML');
+            expect(log.info).toHaveBeenCalledWith(' * HTML: demo');
             expect(Jade.prototype.write).not.toHaveBeenCalled();
             expect(Mustache.prototype.write).toHaveBeenCalled();
             done();

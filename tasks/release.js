@@ -13,7 +13,7 @@ release.ghPages = function (options){
     var ghPages = require('gh-pages');
     log.info(" * gh-pages");
     options.message = options.message || options.tag;
-    options.basePath = options.basePath || config.buildPaths[0].targets[0];
+    options.basePath = options.basePath || config.buildPaths[0].target;
     return new Promise(function(resolve, reject){
         options.tag = false;
         ghPages.publish(options.basePath, options, function(err) {

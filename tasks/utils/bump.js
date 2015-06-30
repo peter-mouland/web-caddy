@@ -95,6 +95,9 @@ Bump.prototype.update = function update(fileObjs){
 Bump.prototype.run = function run(){
     var self = this;
     return fs.read(this.files).then(function(fileObjs){
+        if (fileObjs.length === 0 ){
+            return log.warn(' * no files found matching: ' + self.files);
+        }
         return self.update(fileObjs);
     }).then(function(){
         return self.updatedVersion;

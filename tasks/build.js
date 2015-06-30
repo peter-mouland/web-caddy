@@ -18,7 +18,7 @@ build.htmlMin = function htmlMin(source, target, options) {
 build.html = function html(source, target, options) {
     var wrapper = helper.matches(config.tasks.build, ['jade','mustache']);
     if (!wrapper) return Promise.resolve();
-    log.info(' * HTML');
+    log.info(' * HTML: ' + source);
 
     options.now = Date().split(' ').splice(0,5).join(' ');
     options.pkg = extend(config.pkg || {}, options.pkg || {}); //allow nodeAPI to be ruler of config
@@ -59,7 +59,7 @@ function exec(subtask, source, target, options){
     config = helper.getConfig();
     //get out if config does not exist && node API did not pass a source/target
     //if (!config.tasks.build && task == 'all') return Promise.resolve();
-    if (subtask == 'all' && source) log.onError('Please refrain from using `.all`. from the NodeJS script')
+    if (subtask == 'all' && source) log.onError('Please refrain from using `.all`. from the NodeJS script');
     if (!config.tasks.build && !source) return Promise.resolve();
 
     //do prep-task then do copy task
@@ -69,7 +69,7 @@ function exec(subtask, source, target, options){
         //normalise the args into an array of tasks
         var tasks = helper.normaliseBuild(subtask, config, source, target, options || { });
         var promises = tasks.map(function(params){
-            return build[params.subTask](params.source, params.target, params.options).then(params.options.reload).catch(log.warn)
+            return build[params.subTask](params.source, params.target, params.options).then(params.options.reload).catch(log.warn);
         });
         return Promise.all(promises);
     }).catch(log.onError);

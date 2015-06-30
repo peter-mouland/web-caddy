@@ -5,7 +5,13 @@ var fs = require('./utils/fs');
 var helper = require('./utils/config-helper');
 var config, clean = {};
 
-function setTargets(buildPaths){
+function setTargets(buildPaths){ //todo: use reduce
+    // return buildPaths.reduce(function(accum, current) {
+    //    if (accum.indexOf(current) < 0) {
+    //        accum.push(current);
+    //    }
+    //    return accum;
+    //}
     var targets = [];
     buildPaths.forEach(function(pathObj, i){
         if (targets.indexOf(pathObj.target)<0) {
@@ -57,12 +63,13 @@ clean.build = function build(){
 clean.copy = clean.adhoc;
 
 //pipe all task execution through here to unify task prep and config normalisation
-function exec(task, source, target, options){
+function exec(task, location, options){
+    var tasks;
     config = helper.getConfig();
 
     //normalise the args into an array of tasks
-    if (source){  //from node API
-        tasks = [{ source: source, target: target, options: options}];
+    if (location){  //from node API
+        tasks = [{ location: location, options: options}];
     } else {  //from node CLI
         tasks = helper.normaliseCopy(task, config, options || { }, 'target');
     }
@@ -76,12 +83,12 @@ function exec(task, source, target, options){
 }
 
 module.exports = {
-    'adhoc': function(source, target, options){ return exec('adhoc', source, target, options); },
-    'copy': function(source, target, options){ return exec('copy', source, target, options); },
-    'build': function(source, target, options){ return exec('build', source, target, options); },
-    'test': function(source, target, options){ return exec('test', source, target, options); },
-    'html': function(source, target, options){ return exec('html', source, target, options); },
-    'styles': function(source, target, options){ return exec('styles', source, target, options); },
-    'scripts': function(source, target, options){ return exec('scripts', source, target, options); },
-    'all': function(source, target, options){ return exec('all', source, target, options); }
+    'adhoc': function(location, options){ return exec('adhoc', location, options); },
+    'copy': function(location, options){ return exec('copy', location, options); },
+    'build': function(location, options){ return exec('build', location, options); },
+    'test': function(location, options){ return exec('test', location, options); },
+    'html': function(location, options){ return exec('html', location, options); },
+    'styles': function(location, options){ return exec('styles', location, options); },
+    'scripts': function(location, options){ return exec('scripts', location, options); },
+    'all': function(location, options){ return exec('all', location, options); }
 };

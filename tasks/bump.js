@@ -1,32 +1,31 @@
 var Promise = require('es6-promise').Promise;
+var extend = require('util')._extend;
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
 var config, bump = {};
 
-bump.all = function all(options){
+bump.all = function all(location, options){
     var build = require('./build');
     var Bump = require('./utils/bump');
-    var newVersion;
-    var filesToBump = config.tasks.bump;
+    var filesToBump = location || config.tasks.bump;
     return new Bump(filesToBump, options).run()
         .then(function(version){
+            if (!version) return;
             log.info(" * Now on " + version);
-            newVersion = version;
-            return build.html({version:version});
-        }).then(function(){
-            return newVersion;
+            return version;
         }).catch(log.onError);
 };
 
-function exec(task, options){
+function exec(subtask, location, options){
     config = helper.getConfig();
-    if (!config.tasks.bump) return Promise.resolve();
-    options = options || {};
+    if (!config.tasks.bump && !location) return Promise.resolve();
+
+    options = extend(config.bump || {}, options || {});
     log.info('Bumping :');
-    return bump[task](options);
+    return bump[subtask](location, options);
 }
 
 module.exports = {
-    all:  function(options){ return exec('all', options); },
-    adhoc:  function(type){ return exec('all', { type : type }); }
+    all:  function(location, options){ return exec('all', location, options); },
+    adhoc:  function(location, options){ return exec('all', location, options); }
 };

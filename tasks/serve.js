@@ -56,9 +56,7 @@ function startBrowserSync(options) {
 function browserifyWatch(options){
     config.buildPaths.forEach(function(pathObj, i){
         var src = path.join(pathObj.source, config.globs.scripts);
-        pathObj.targets.forEach(function(target){
-            new Browserify(src, target, options).watch(browserSync);
-        });
+        new Browserify(src, pathObj.target, options).watch(browserSync);
     });
 }
 
@@ -85,9 +83,8 @@ serve.adhoc = function (baseDir){
 
 serve.staticApp = function(options){
     if (!options.server) {
-        var targets = '';
-        config.buildPaths.forEach(function(pathObj){ targets += ',' + pathObj.targets.join(',');});
-        targets = targets.split(',').filter(function removeDuplicates(elem, pos, self) {
+        var targets = config.buildPaths.map(function(pathObj){ return pathObj.target;});
+        targets = targets.filter(function removeDuplicates(elem, pos, self) {
             return self.indexOf(elem) === pos && elem !== '';
         });
         options.server = { baseDir : targets };

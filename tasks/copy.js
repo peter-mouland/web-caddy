@@ -9,7 +9,7 @@ var config, copy = {};
 copy.files = function(source, target, options){
     log.info(' * ' + source + ' > ' + target);
     return fs.glob(source)
-        .then(function copyFilesToTargets(fileObjs){
+        .then(function copyFilesToTarget(fileObjs){
             var promises = fileObjs.map(function(fileObj){
                 var outFile = path.join(target, fileObj.relativeDir);
                 if (options.verbose){
@@ -18,7 +18,7 @@ copy.files = function(source, target, options){
                 return fs.copy(fileObj.path, outFile);
             });
             return Promise.all(promises);
-        })
+        });
 };
 
 //dummy function to ensure CLI `caddy copy` works (which uses the `all` function by default)
@@ -48,7 +48,7 @@ function exec(subTask, source, target, options){
     return (prepare[subTask] || prepare.noop)().then(function(){
         log.info('Copying :');
         var promises = tasks.map(function(params){
-            return copy[subTask](params.source, params.target, params.options)
+            return copy[subTask](params.source, params.target, params.options);
         });
         return Promise.all(promises);
     }).catch(log.onError);

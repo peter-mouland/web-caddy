@@ -58,20 +58,18 @@ Once required (`var caddy = require('web-caddy');`), you can call the following:
 CLI | Node
 --- | ----
 caddy new *project-name* | *unavailable*
-[caddy build](docs/BUILD.md) | `caddy.build.all(replacements)`<br> (optional: replacements object)
-[caddy build scripts](docs/BUILD.md#scripts) | `caddy.build.scripts(options)`<br> (optional: compiler object)
-[caddy build styles](docs/BUILD.md#styles) | `caddy.build.styles()`
-[caddy build html](docs/BUILD.md#html) | `caddy.build.html(replacements)` <br>(optional: replacements object)
-[caddy copy](docs/COPY.md#copy) | `caddy.copy.all()`
-[caddy copy server-config-files](docs/COPY.md#server-config-files) | `caddy.copy.serverConfigFiles()`
-[caddy copy images](docs/COPY.md#images) | `caddy.copy.images()`
+[caddy build](docs/BUILD.md) | `caddy.build.all(src, target, replacements)`<br> (optional: replacements object)
+[caddy build scripts](docs/BUILD.md#scripts) | `caddy.build.scripts(src, target, options)`<br> (optional: compiler object)
+[caddy build styles](docs/BUILD.md#styles) | `caddy.build.styles(src, target, options)`
+[caddy build html](docs/BUILD.md#html) | `caddy.build.html(src, target, replacements)` <br>(optional: replacements object)
+[caddy copy](docs/COPY.md#copy) | `caddy.copy.all(src, target)`<br>(mandatory: source glob, mandatory: target string)
 [caddy serve](docs/SERVE.md) | `caddy.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
 [caddy serve path/to/serve](docs/SERVE.md#adhoc-pages) | `caddy.serve.adhoc(path)` <br>(mandatory: path/to/serve)
 [caddy test](docs/TEST.md#testing) | `caddy.test.all()`
 [caddy test tdd](docs/TEST.md#tdd) | `caddy.test.tdd()`
 [caddy init bower](docs/INITIALISING.md#bower) | `caddy.init.bower()`
 [caddy init git](docs/INITIALISING.md#remote-git-repository) | `caddy.init.git(repository)` <br>(mandatory: Git URL)
-[caddy bump *Semantic Version*](docs/RELEASE.md#bump-the-version) | `caddy.bump.all(versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
+[caddy bump -*Semantic Version*](docs/RELEASE.md#bump-the-version) | `caddy.bump.all(file, versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
 [caddy release](docs/RELEASE.md#manual-deployment) | `caddy.release.all()`
 [caddy release gh-pages](docs/RELEASE.md#deploying-to-github.io) | `caddy.release.ghPages(message)` <br>(optional: commit *message*)
 [caddy release s3](docs/RELEASE.md#deploying-to-amazon-s3) | `caddy.release.s3(version)` <br>(optional: semantic *version*)
