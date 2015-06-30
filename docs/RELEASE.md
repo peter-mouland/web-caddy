@@ -1,92 +1,10 @@
-# Release Process
+# Release
 
 There are a number of use cases for release:
 
- * [Continuous deployment](#continuous-deployment)
- * [Manual deployment](#manual-deployment)
  * [Bower](#deploying-to-bower)
  * [Amazon S3](#deploying-to-amazon-s3)
  * [github.io](#deploying-to-github.io)
- * [Bump](#bump-the-version)
-
-## Continuous Deployment
-
-> This method relies on the version number being incremented manually before code is pushed to Git.
-
-**Submitting a PR**
- * Ensure all changes are made and pushed to feature branches
- * Once the feature/bug-fix is complete, rebase from master.
- * `npm test` : Run the tests
-
-**Accepting a PR**
- * Switch to the PR branch and review code
- * `npm test` : Run the tests
- * Merge the PR into master
- * `npm test` : Run the tests again
- * `npm run report` :  take a look at the code coverage report
- * `npm run bump`
-   * alternatively run `npm run bump -- [-patch|-minor|-major|-vx.x.x]`. [more info >](#bump-the-version).
- * `git push` : to kick of the deploy process
-
-CircleCI will then run your tests, and if successful:
- * Tag the version number and push to Git
- * Push the demo `site` to github.io (if configured)
- * Push the compiled assets to the S3 (if configured)
-
-Your `circle.yml` should look something like:
-
-```yml
-test:
-  pre:
-    - bower i
-  post:
-    - git config --global user.name "circleci"
-    - git config --global user.email "{{ git.email }}"
-general:
-  artifacts:
-    - test/coverage
-deployment:
-  production:
-    branch: master
-    commands:
-      - ./node_modules/web-caddy/bin/caddy release current
-machine:
-  node:
-    version: v0.10.33
-```
-
-## Manual Deployment
-
-> This method relies on the tests being run locally.
-
-`caddy release`
-
-   * [Version Bump](#version-bump) if you need to.
-   * Tag the version number and push to Git
-   * Push the demo `site` to github.io
-   * Push the compiled assets to the S3 (if configured)
-
-It is recommended you update your package.json `scripts` object to automatically run tests first (see [TESTING.md](TESTING.md)):
-
-```javascript
-  "release": "npm test && caddy release"
-```
-
-You can then run `npm run release` to release. Feel free to setup shortcuts for any other release types.
-
-Your `circle.yml` should look something like:
-
-```yml
-test:
-  pre:
-    - bower i
-general:
-  artifacts:
-    - test/coverage
-machine:
-  node:
-    version: v0.10.33
-```
 
 ## Deploying to Bower
 
@@ -173,38 +91,4 @@ This will push the current files within `paths.target` to gh-pages branch (makin
         release: ['gh-pages']
     }
 ...
-```
-
-## Version Bump
-
-> Bump the version within your app
-
-`caddy bump`
-
-The files `package.json`, `app.json` and `README.md` are bumped by default. This is set in the `caddy.config.js`.
-
-*caddy.config.js*
-```javascript
-...
-    tasks: {
-        bump: ['package.json','README.md', '*/app.json']
-    }
-...
-```
-
-It is recommended you update your package.json `scripts` object:
-
-*package.json*
-```javascript
-  "bump": "caddy bump"
-```
-
-By default, this applies a  `patch`.  Add either `patch`, `minor`, `major`, `prerelease` or even `v3.2.1` to specify the type of bump.
-
-i.e. `npm run bump -- -major`
-
-If you want to bump ad-hoc files you can specify a file i.e. :
-
-```
-    caddy bump package.json -minor
 ```

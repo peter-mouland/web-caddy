@@ -25,20 +25,14 @@ test.all = function(options){
     return all(options, true).then(log.onSuccess).catch(log.onError);
 };
 
-var prepare = {
-    all: function(){ return clean.test(); },
-    noop: function(){ return Promise.resolve(); }
-};
-
 function exec(task, options){
     var config = helper.getConfig();
     if (!config.tasks.test){        return Promise.resolve();    }
 
     options = extend(config[config.tasks.test] || {}, options);
-    return (prepare[task] || prepare.noop)().then(function() {
-        log.info('Testing :', task);
-        return test[task](options);
-    });
+
+    log.info('Testing :', task);
+    return test[task](options);
 }
 
 module.exports = {

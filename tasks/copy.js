@@ -3,10 +3,9 @@ var log = require('./utils/log');
 var fs = require('./utils/fs');
 var path = require('path');
 var helper = require('./utils/config-helper');
-var clean = require('./clean');
-var config, copy = {};
+var config;
 
-copy.files = function(source, target, options){
+function copy(source, target, options){
     log.info(' * ' + source + ' > ' + target);
     return fs.glob(source)
         .then(function copyFilesToTarget(fileObjs){
@@ -19,16 +18,7 @@ copy.files = function(source, target, options){
             });
             return Promise.all(promises);
         });
-};
-
-//dummy function to ensure CLI `caddy copy` works (which uses the `all` function by default)
-copy.all = copy.files;
-
-//individual prep-tasks. can be custom for each function
-var prepare = {
-    all: function(){ return clean.copy(); },
-    noop: function(){ return Promise.resolve(); }
-};
+}
 
 //pipe all task execution through here to unify task prep and config normalisation
 function exec(subTask, source, target, options){
@@ -44,19 +34,15 @@ function exec(subTask, source, target, options){
         tasks = helper.normaliseCopy(subTask, config, options || { });
     }
 
-    //do prep-task then do copy task
-    return (prepare[subTask] || prepare.noop)().then(function(){
-        log.info('Copying :');
-        var promises = tasks.map(function(params){
-            return copy[subTask](params.source, params.target, params.options);
-        });
-        return Promise.all(promises);
-    }).catch(log.onError);
+    log.info('Copying :');
+    var promises = tasks.map(function(params){
+        return copy(params.source, params.target, params.options);
+    });
+    return Promise.all(promises).catch(log.onError);
 }
 
 //force all function calls through exec so we can set default options + get config once.
 module.exports = {
-    adhoc:  function(source, target, options){ return exec('all', source, target, options); },
     all:  function(source, target, options){ return exec('all', source, target, options); },
     files:  function(source, target, options){ return exec('files', source, target, options); }
 };

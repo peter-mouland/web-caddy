@@ -33,49 +33,37 @@ Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://ww
 
 1. Copy the [caddy.config.js](boilerplate/caddy.config.js) into your project root
 2. Update the `tasks` object to match the jobs you need doing
-3. Update the `paths` object to match your directory structure
+3. Update the `buildPaths` object to match your directory structure
+
+## Commands
+
+> CLI and NodeJS commands
+
+The web-caddy can be run from the command line or directly from within js files (i.e. a NodeJS script or a gulpfile). 
+Once required (`var caddy = require('web-caddy');`), you can call the following:
+
+CLI | Node | Sub-tasks
+--- | ---- | ---------
+caddy new *project-name* | *unavailable* | *none*
+[caddy build](docs/BUILD.md) | `caddy.build.all()` | styles, scripts, html
+[caddy clean](docs/CLEAN.md) | `caddy.copy.all()` | styles, scripts, html, build, copy
+[caddy copy](docs/COPY.md) | `caddy.clean.all()` | *none*
+[caddy serve](docs/SERVE.md) | `caddy.serve.all()`  | *none*
+[caddy test](docs/TEST.md#testing) | `caddy.test.all()` | tdd
+[caddy init](docs/INITIALISING.md) | `caddy.init.all()` | bower, gh-pages, git
+[caddy bump](docs/BUMP.md) | `caddy.bump.all()` | *none*
+[caddy release](docs/RELEASE.md#manual-deployment) | `caddy.release.all()` | bower, gh-pages, s3
+
+**hint: add `-verbose` to the cli to see more logging**
+**hint: add `-dev` to the cli to prevent js/css minification**
+
+The CLI and Node will use the config set within [caddy.config.js](boilerplate/caddy.config.js) in your project root.
 
 ## Use Cases
 
 > Setup your project to get the most out of `caddy`
  * [Example config file](examples/caddy.config.js)
- * [Initialising](docs/INITIALISING.md) remote services (Bower, Git + github.io)
- * [Copy](docs/COPY.md) static (non-compiled) assets
- * [Building](docs/BUILD.md) code and automatically recreate the directory structure a set `target`
- * [Serving](docs/SERVE.md) static or NodeJS sites
- * [Testing](docs/TEST.md) while developing (TDD) or a single run before you release
- * [Releasing](docs/RELEASE.md) to Amazon S3, Bower, GitHub.io and Git using continuous or manual deployments 
-
-**hint: add `-verbose` to the cli to see more logging**
-**hint: add `-dev` to the cli to prevent js/css minification**
-
-## API
-
-The web-caddy can be run from the command line or directly from within NodeJS files (i.e. a gulpfile).  The tasks are almost exactly the same.
-
-Once required (`var caddy = require('web-caddy');`), you can call the following:
-
-CLI | Node
---- | ----
-caddy new *project-name* | *unavailable*
-[caddy build](docs/BUILD.md) | `caddy.build.all(src, target, replacements)`<br> (optional: replacements object)
-[caddy build scripts](docs/BUILD.md#scripts) | `caddy.build.scripts(src, target, options)`<br> (optional: compiler object)
-[caddy build styles](docs/BUILD.md#styles) | `caddy.build.styles(src, target, options)`
-[caddy build html](docs/BUILD.md#html) | `caddy.build.html(src, target, replacements)` <br>(optional: replacements object)
-[caddy copy](docs/COPY.md#copy) | `caddy.copy.all(src, target)`<br>(mandatory: source glob, mandatory: target string)
-[caddy serve](docs/SERVE.md) | `caddy.serve.all(config)` <br>(optional: [server *config*](API.md#serve))
-[caddy serve path/to/serve](docs/SERVE.md#adhoc-pages) | `caddy.serve.adhoc(path)` <br>(mandatory: path/to/serve)
-[caddy test](docs/TEST.md#testing) | `caddy.test.all()`
-[caddy test tdd](docs/TEST.md#tdd) | `caddy.test.tdd()`
-[caddy init bower](docs/INITIALISING.md#bower) | `caddy.init.bower()`
-[caddy init git](docs/INITIALISING.md#remote-git-repository) | `caddy.init.git(repository)` <br>(mandatory: Git URL)
-[caddy bump -*Semantic Version*](docs/RELEASE.md#bump-the-version) | `caddy.bump.all(file, versionType)` <br>(optional: *major*, *minor*, *patch*, *prerelease* or semantic *version*)
-[caddy release](docs/RELEASE.md#manual-deployment) | `caddy.release.all()`
-[caddy release gh-pages](docs/RELEASE.md#deploying-to-github.io) | `caddy.release.ghPages(message)` <br>(optional: commit *message*)
-[caddy release s3](docs/RELEASE.md#deploying-to-amazon-s3) | `caddy.release.s3(version)` <br>(optional: semantic *version*)
-[caddy release bower](docs/RELEASE.md#deploying-to-bower) | `caddy.release.bower(options)` <br>(optional: tag, message, branch)
-
-The CLI and Node will use the config set within [caddy.config.js](boilerplate/caddy.config.js) in your project root.
+ * [Continuous Deployment](docs/CONTINUOUS-DEPLOYMENT.md) to Amazon S3, Bower, GitHub.io and Git using continuous or manual deployments 
 
 ## Contributing to the Helper
 

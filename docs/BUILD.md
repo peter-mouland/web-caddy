@@ -23,13 +23,15 @@
 
 ## Build
 
-`caddy build`
+ * CLI: `caddy build`
+ * NodeJS: `caddy.build.all(source-glob, target-directory, options)`
 
-This will clean target directories and execute all the Build tasks with the `build` array within caddy.config.js.
+This will execute all the Build tasks within the `build` array in `caddy.config.js`.
 
 #### Styles
 
-`caddy build styles`
+ * CLI: `caddy build styles`
+ * NodeJS: `caddy.build.styles(source-glob, target-directory, options)`
 
 By default we use [Sass](http://sass-lang.com/) to compile styles, along with [AutoPrefixer](https://www.npmjs.com/package/autoprefixer).
 
@@ -49,9 +51,13 @@ As with all build tasks, add a config object to customise the build with [Sass o
 ...
 ```
 
+*NodeJS*
+ `caddy.build.styles('/{.,*}/!(_)*.{css,scss,sass}', '_site', { includePaths: 'bower_components' })`
+
 #### Scripts
 
-`caddy build scripts`
+ * CLI: `caddy build scripts`
+ * NodeJS: `caddy.build.scripts(source-glob, target-directory, options)`
 
 By default javascript is compiled using [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/).
 
@@ -69,7 +75,7 @@ This will create a compiled file for each `.js` file found in the `buildPaths so
         build: ['browserify']
     },
     browserify: {
-        insertGloabals : false,
+        insertGlobals : true,
         detectGlobals : false,
         vendorBundle: [
             { file: './bower_components/d3/d3.js', expose: 'd3'}
@@ -79,6 +85,9 @@ This will create a compiled file for each `.js` file found in the `buildPaths so
 ...
 ```
 
+*NodeJS*
+ `caddy.build.scripts('/{.,*}/!(_)*.js', '_site', { insertGlobals: 'true' })`
+ 
 For `browserify` the `vendorBundle` and `vendorTarget` option will create an external file. Ensure you have the corresponding `browser` object in your `package.json`. *(do not use `debowerify`)* 
 
 *package.json*
@@ -110,7 +119,7 @@ This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `
 
 By default, during the build it will also replace variables `{{ varName }}` that are matched within package.json.
 
-**Example 1 : mMstache** 
+**Example 1 : Mustache** 
 
 *caddy.config.js*
 ```javascript
@@ -120,6 +129,8 @@ By default, during the build it will also replace variables `{{ varName }}` that
     }
 ...
 ```
+*NodeJS*
+ `caddy.build.html('/{.,*}/!(_)*.{html,ms,mustache}', '_site', { varsToReplace: 'with text' })`
 
 **Example 2 : Jade** 
 
@@ -130,4 +141,18 @@ By default, during the build it will also replace variables `{{ varName }}` that
         build: ['jade']
     }
 ...
+```
+
+## As a build step
+
+ * 'npm run build'
+ * or 'npm run build -- styles -dev'
+
+It is recommended you update your package.json `scripts` object:
+
+*package.json*
+```javascript
+    "scripts":{ 
+        "build": "caddy build"
+    }
 ```

@@ -2,9 +2,9 @@ var Promise = require('es6-promise').Promise;
 var extend = require('util')._extend;
 var log = require('./utils/log');
 var helper = require('./utils/config-helper');
-var config, bump = {};
+var config;
 
-bump.all = function all(location, options){
+function bump(location, options){
     var build = require('./build');
     var Bump = require('./utils/bump');
     var filesToBump = location || config.tasks.bump;
@@ -14,7 +14,7 @@ bump.all = function all(location, options){
             log.info(" * Now on " + version);
             return version;
         }).catch(log.onError);
-};
+}
 
 function exec(subtask, location, options){
     config = helper.getConfig();
@@ -22,7 +22,7 @@ function exec(subtask, location, options){
 
     options = extend(config.bump || {}, options || {});
     log.info('Bumping :');
-    return bump[subtask](location, options);
+    return bump(location, options);
 }
 
 module.exports = {

@@ -47,7 +47,8 @@ describe("Build task will compile", function() {
         build.scripts().then(function(){
             expect(browserify.prototype.write.calls.count()).toEqual(2);
             expect(requirejs.prototype.write).not.toHaveBeenCalled();
-            expect(log.info).toHaveBeenCalledWith(' * Scripts');
+            expect(log.info).toHaveBeenCalledWith(' * Scripts: demo');
+            expect(log.info).toHaveBeenCalledWith(' * Scripts: src');
             done();
         }).catch(console.log);
     });
@@ -58,7 +59,8 @@ describe("Build task will compile", function() {
         build.scripts().then(function(){
             expect(browserify.prototype.write.calls.count()).toEqual(0);
             expect(requirejs.prototype.write).toHaveBeenCalled();
-            expect(log.info).toHaveBeenCalledWith(' * Scripts');
+            expect(log.info).toHaveBeenCalledWith(' * Scripts: demo');
+            expect(log.info).toHaveBeenCalledWith(' * Scripts: src');
             done();
         }).catch(console.log);
     });
@@ -67,7 +69,8 @@ describe("Build task will compile", function() {
         spyOn(helper,'getConfig').and.callFake(function(){ return config; });
         build.styles().then(function(){
             expect(sass.prototype.write.calls.count()).toEqual(2);
-            expect(log.info).toHaveBeenCalledWith(' * Styles');
+            expect(log.info).toHaveBeenCalledWith(' * Styles: demo');
+            expect(log.info).toHaveBeenCalledWith(' * Styles: src');
             done();
         }).catch(console.log);
     });

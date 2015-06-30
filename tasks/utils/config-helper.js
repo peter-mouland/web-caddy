@@ -22,13 +22,9 @@ var helper = {
     },
     createGlobs : function(config) {
         config.globs = {
-            'testCoverage':'./test/coverage/**/*',
-            'serverConfig':  '/*{CNAME,.htaccess,robots.txt,manifest.json}',
-            'html':  '/*.{html,jade,ms,mustache}',
+            'html':  '/{.,*}/!(_)*.{html,jade,ms,mustache}',
             'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
-            'scripts': '/{.,*}/*.js',
-            'fonts': '/{.,*}/*.{svg,ttf,woff,eot}',
-            'images': '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}'
+            'scripts': '/{.,*}/!(_)*.js'
         };
     },
     createBuildPaths : function(config) {
@@ -37,7 +33,7 @@ var helper = {
         config.paths.source && config.buildPaths.push({ source: config.paths.source, target:config.paths.target});
         config.paths.demo && config.buildPaths.push({ source: config.paths.demo, target: config.paths.target});
     },
-    normaliseCopy : function (task, config, options, sourceOutput){
+    normaliseCopy : function (task, config, options){
         var executables = config.buildPaths.map(function(buildPath){
             //add any other buildPath configs onto options object
             var configOptions = JSON.parse(JSON.stringify(buildPath));
@@ -46,7 +42,27 @@ var helper = {
             options = extend(configOptions || {}, options || {});
             return config.tasks.copy.map(function(glob){
                 return {
-                    source: path.join(buildPath[sourceOutput || 'source'], glob),
+                    source: path.join(buildPath.source, glob),
+                    target: buildPath.target,
+                    options: options
+                };
+            });
+        });
+        executables = executables.reduce(function(a, b) {
+            return a.concat(b);
+        });
+        return executables;
+    },
+    normaliseClean : function (globsArr, config, options){
+        var executables = config.buildPaths.map(function(buildPath){
+            //add any other buildPath configs onto options object
+            var configOptions = JSON.parse(JSON.stringify(buildPath));
+            delete configOptions.target;
+            delete configOptions.source;
+            options = extend(configOptions || {}, options || {});
+            return globsArr.map(function(glob){
+                return {
+                    source: path.join(buildPath.target, glob),
                     target: buildPath.target,
                     options: options
                 };

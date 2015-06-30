@@ -14,13 +14,13 @@
       "bump": "caddy bump",
       "release": "npm test && caddy release",
       "report": "caddy serve test/coverage/phantomjs/",
-      "start": "caddy copy && caddy build -dev && caddy serve",
+      "start": "caddy clean && caddy copy && caddy build -dev && caddy serve",
       "tdd": "caddy test tdd",
-      "test": "jshint src && caddy copy && caddy build && caddy test"
+      "test": "jshint src && caddy clean && caddy copy && caddy build && caddy test"
     },
     "devDependencies": {
       "browserify-istanbul": "^0.2.1",
-      "web-caddy" : "2.0.0-rc.7",
+      "web-caddy" : "2.0.0-rc.8",
       "jshint": "^2.6.3"
     },
     "author": "{{ git.author }}"
