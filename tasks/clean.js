@@ -42,11 +42,6 @@ clean.scripts =  function scripts(){
     return delType('scripts', ' * Scripts');
 };
 
-clean.test = function test(){
-    log.info(' * Test report');
-    return fs.del(config.globs.testCoverage);
-};
-
 clean.adhoc = function adHoc(location, options){
     log.info(' * adHoc : ' + location);
     return fs.del(location);
@@ -86,7 +81,6 @@ module.exports = {
     'adhoc': function(location, options){ return exec('adhoc', location, options); },
     'copy': function(location, options){ return exec('copy', location, options); },
     'build': function(location, options){ return exec('build', location, options); },
-    'test': function(location, options){ return exec('test', location, options); },
     'html': function(location, options){ return exec('html', location, options); },
     'styles': function(location, options){ return exec('styles', location, options); },
     'scripts': function(location, options){ return exec('scripts', location, options); },

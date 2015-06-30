@@ -22,13 +22,9 @@ var helper = {
     },
     createGlobs : function(config) {
         config.globs = {
-            'testCoverage':'./test/coverage/**/*',
-            'serverConfig':  '/*{CNAME,.htaccess,robots.txt,manifest.json}',
-            'html':  '/*.{html,jade,ms,mustache}',
+            'html':  '/{.,*}/!(_)*.{html,jade,ms,mustache}',
             'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
-            'scripts': '/{.,*}/*.js',
-            'fonts': '/{.,*}/*.{svg,ttf,woff,eot}',
-            'images': '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg}'
+            'scripts': '/{.,*}/!(_)*.js'
         };
     },
     createBuildPaths : function(config) {

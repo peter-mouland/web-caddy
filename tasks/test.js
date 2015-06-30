@@ -26,7 +26,6 @@ test.all = function(options){
 };
 
 var prepare = {
-    all: function(){ return clean.test(); },
     noop: function(){ return Promise.resolve(); }
 };
 
