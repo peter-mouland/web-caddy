@@ -7,7 +7,7 @@ var fs = require('./utils/fs');
 var bower = require('./wrappers/bower');
 var helper = require('./utils/config-helper');
 var prompt = require("prompt");
-var init = {};
+var config, init = {};
 require('colors');
 
 
@@ -107,8 +107,8 @@ init.localGit = function(){
     }).catch(log.onError);
 };
 
-init.ghPages = function(repo){
-    if (!repo) return Promise.resolve();
+init.ghPages = function(options){
+    if (!options.repo) return Promise.resolve();
     log.info(" * gh-pages");
     return git.checkout(['--orphan', 'gh-pages']).then(function(output){
         log.onSuccess(output);
@@ -136,14 +136,17 @@ init.all = function(options){
 };
 
 function run(task, options){
+    config = helper.getConfig();
+    options = options || {};
+    options.repo = options.repo || config.pkg.repository.url;
     log.info('Initialising :');
     return init[task](options);
 }
 
 module.exports = {
-    'all': function(options){ return run('all', options); },
-    'bower': function(options){ return run('bower', options); },
-    'gh-pages':  function(options){ return run('ghPages', options); },
-    localGit:  function(options){ return run('localGit', options); },
-    git:  function(options){ return run('remoteGit', options); }
+    'all': function(src, target, options){ return run('all', options); },
+    'bower': function(src, target, options){ return run('bower', options); },
+    'gh-pages':  function(src, target, options){ return run('ghPages', options); },
+    localGit:  function(src, target, options){ return run('localGit', options); },
+    git:  function(src, target, options){ return run('remoteGit', options); }
 };

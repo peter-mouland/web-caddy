@@ -60,6 +60,10 @@ function exec(subtask, source, target, options){
     log.info('Building :' );
     subtask = (subtask === 'all') ? ['html', 'styles', 'scripts'] : subtask;
     //normalise the args into an array of tasks
+    if (source && typeof source === 'object') {
+        options = source;
+        source = undefined;
+    }
     var tasks = helper.normaliseBuild(subtask, config, source, target, options || { });
     var promises = tasks.map(function(params){
         return build[params.subTask](params.source, params.target, params.options).then(params.options.reload).catch(log.warn);

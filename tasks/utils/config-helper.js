@@ -15,14 +15,16 @@ var helper = {
         if (config) return config;
         var configPath = findup('caddy.config.js');
         config = (configPath) ? require(configPath) : false;
-        config.appRoot = configPath.replace('caddy.config.js','');
-        this.createBuildPaths(config);
-        this.createGlobs(config);
+        if (config){
+            config.appRoot = configPath.replace('caddy.config.js','');
+            this.createBuildPaths(config);
+            this.createGlobs(config);
+        }
         return config;
     },
     createGlobs : function(config) {
         config.globs = {
-            'html':  '/{.,*}/!(_)*.{html,jade,ms,mustache}',
+            'html':    '/{.,*}/!(_)*.{html,jade,ms,mustache}',
             'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
             'scripts': '/{.,*}/!(_)*.js'
         };

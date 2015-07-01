@@ -14,9 +14,9 @@ function getWatchOptions(options){
         stylesPaths = [],
         scriptsPaths = [];
     config.buildPaths.forEach(function(pathObj, i){
-        htmlPaths.push(path.join(pathObj.source, config.globs.html.replace('*.{','**/*.{')));
-        stylesPaths.push(path.join(pathObj.source, config.globs.styles.replace('{.,*}','**').replace('!(_)','')));
-        scriptsPaths.push(path.join(pathObj.source, config.globs.scripts.replace('{.,*}','**')));
+        htmlPaths.push(path.join(pathObj.source,    config.globs.html.replace('{.,*}','**').replace('!(_)','')));
+        stylesPaths.push(path.join(pathObj.source,  config.globs.styles.replace('{.,*}','**').replace('!(_)','')));
+        scriptsPaths.push(path.join(pathObj.source, config.globs.scripts.replace('{.,*}','**').replace('!(_)','')));
     });
     var chokidarOptions = {
         persistent: true
