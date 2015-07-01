@@ -63,6 +63,7 @@ var helper = {
             delete configOptions.source;
             options = extend(configOptions || {}, options || {});
             return globsArr.map(function(glob){
+                if (!Array.isArray(buildPath.target)) log.onError('buildPath target must be a string.');
                 return {
                     source: path.join(buildPath.target, glob),
                     target: buildPath.target,

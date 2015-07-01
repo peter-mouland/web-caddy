@@ -5,8 +5,8 @@ var serverFilesGlob = '/*{CNAME,.htaccess,robots.txt,manifest.json}';
 module.exports = {
     pkg: pkg,
     buildPaths: [
-        {source: "./src", targets: ['./_site', './dist'], minify: true},
-        {source: "./examples", targets: ['./_site']}
+        {source: "./src", target: './_site', minify: true},
+        {source: "./examples", target: './_site'}
     ],
     tasks : {
         copy: [imagesAndFontsGlob, serverFilesGlob],

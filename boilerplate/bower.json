@@ -9,7 +9,6 @@
     "license": "BSD3",
     "ignore": [
         "**/*",
-        "!dist/**/*",
         "!src/**/*"
     ],
     "devDependencies": {
