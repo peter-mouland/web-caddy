@@ -148,8 +148,8 @@ By default, during the build it will also replace variables `{{ varName }}` that
 
 ## As a build step
 
- * 'npm run build'
- * or 'npm run build -- styles -dev'
+ * `npm run build`
+ * or `npm run build -- styles -dev`
 
 It is recommended you update your package.json `scripts` object:
 
