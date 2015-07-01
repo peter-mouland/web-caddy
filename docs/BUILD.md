@@ -52,6 +52,7 @@ As with all build tasks, add a config object to customise the build with [Sass o
 ```
 
 *NodeJS*
+
  `caddy.build.styles('/{.,*}/!(_)*.{css,scss,sass}', '_site', { includePaths: 'bower_components' })`
 
 #### Scripts
@@ -86,6 +87,7 @@ This will create a compiled file for each `.js` file found in the `buildPaths so
 ```
 
 *NodeJS*
+
  `caddy.build.scripts('/{.,*}/!(_)*.js', '_site', { insertGlobals: 'true' })`
  
 For `browserify` the `vendorBundle` and `vendorTarget` option will create an external file. Ensure you have the corresponding `browser` object in your `package.json`. *(do not use `debowerify`)* 
@@ -130,6 +132,7 @@ By default, during the build it will also replace variables `{{ varName }}` that
 ...
 ```
 *NodeJS*
+
  `caddy.build.html('/{.,*}/!(_)*.{html,ms,mustache}', '_site', { varsToReplace: 'with text' })`
 
 **Example 2 : Jade** 
