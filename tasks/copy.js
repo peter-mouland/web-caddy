@@ -21,17 +21,19 @@ function copy(source, target, options){
 }
 
 //pipe all task execution through here to unify task prep and config normalisation
-function exec(subTask, source, target, options){
+function exec(source, target, options){
     var tasks = [];
     config = helper.getConfig();
+
     //get out if config does not exist && node API did not pass a source/target
     if (!config.tasks.copy && !source) return Promise.resolve();
 
     //normalise the args into an array of tasks
-    if (source){  //from node API
-        tasks = [{ source: source, target: target, options: options|| { }}];
+    if (source && source!=='all'){  //from node API
+        if (!target) target = config.buildPaths[0].target;
+        tasks = helper.normaliseCopy([source], [{source: './', target: target}], options || { });
     } else {  //from node CLI
-        tasks = helper.normaliseCopy(subTask, config, options || { });
+        tasks = helper.normaliseCopy(config.tasks.copy, config.buildPaths, options || { });
     }
 
     log.info('Copying :');
@@ -42,7 +44,4 @@ function exec(subTask, source, target, options){
 }
 
 //force all function calls through exec so we can set default options + get config once.
-module.exports = {
-    all:  function(source, target, options){ return exec('all', source, target, options); },
-    files:  function(source, target, options){ return exec('files', source, target, options); }
-};
+module.exports = exec;

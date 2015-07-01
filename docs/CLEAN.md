@@ -7,7 +7,7 @@
     * [Styles](#styles)
     * [Scripts](#scripts)
     * [HTML](#html)
- * `options` Parameter
+ * [Options Parameter](#options-parameter)
  * [As a build step](as-a-build-step)
 
 ## Clean

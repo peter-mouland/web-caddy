@@ -5,6 +5,8 @@
     * [Styles](#styles)
     * [Scripts](#scripts)
     * [HTML](#html)
+ * [Options Parameter](#options-parameter)
+ * [As a build step](as-a-build-step)
 
 *All* tasks create compiled files for each file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories. Adding `minify: true` will also creare `.min` equivilents.
 
@@ -145,6 +147,13 @@ By default, during the build it will also replace variables `{{ varName }}` that
     }
 ...
 ```
+
+## Options Parameter
+> options that can be passed to all NodeJS calls above
+
+    * minify: [true|false] Will minify JS and CSS
+    * verbose: [true|false] Will display more details about what files are being removed
+    * anything: 'string' Add any other String/Value pair. This can then be referenced within your Jade/Mustache template
 
 ## As a build step
 

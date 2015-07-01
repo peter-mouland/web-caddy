@@ -1,7 +1,8 @@
 # Tasks
 > Copy static assets
 
-`caddy copy`
+ * CLI: `caddy copy`
+ * NodeJS: `caddy.copy()`
 
 *All* tasks will copy files found in `basePaths source` to the associated `targets` directories that match the given GLOB.
 
@@ -18,3 +19,8 @@ I.e. the following will copy an `images` and `fonts` directories with `CNAME` an
     },
 ...
 ```
+
+You can also optionally add a `glob` to specify the files to remove, as well as options. i.e.
+
+ * CLI: `caddy copy package.json -verbose`
+ * NodeJS: `caddy.copy('/{.,*}/!(_)*.{png,jpg,svg}', './_site', { verbose: true });`

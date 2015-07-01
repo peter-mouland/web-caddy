@@ -35,14 +35,14 @@ var helper = {
         config.paths.source && config.buildPaths.push({ source: config.paths.source, target:config.paths.target});
         config.paths.demo && config.buildPaths.push({ source: config.paths.demo, target: config.paths.target});
     },
-    normaliseCopy : function (task, config, options){
-        var executables = config.buildPaths.map(function(buildPath){
+    normaliseCopy : function (globsArr, buildPaths, options){
+        var executables = buildPaths.map(function(buildPath){
             //add any other buildPath configs onto options object
             var configOptions = JSON.parse(JSON.stringify(buildPath));
             delete configOptions.target;
             delete configOptions.source;
             options = extend(configOptions || {}, options || {});
-            return config.tasks.copy.map(function(glob){
+            return globsArr.map(function(glob){
                 return {
                     source: path.join(buildPath.source, glob),
                     target: buildPath.target,
@@ -55,8 +55,8 @@ var helper = {
         });
         return executables;
     },
-    normaliseClean : function (globsArr, config, options){
-        var executables = config.buildPaths.map(function(buildPath){
+    normaliseClean : function (globsArr, buildPaths, options){
+        var executables = buildPaths.map(function(buildPath){
             //add any other buildPath configs onto options object
             var configOptions = JSON.parse(JSON.stringify(buildPath));
             delete configOptions.target;

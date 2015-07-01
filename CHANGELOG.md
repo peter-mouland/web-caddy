@@ -3,10 +3,11 @@
 ## 2.0.x  Breaking change
   * Renamed to `web-caddy`
   * Speed improvements
-  * Log output improvements (easier to know what is going on!)
+  * Logging improvements
   * Added `html-min` as a separate `build` task
   * Added `bower` as a separate `release` task
   * Added `-dev` CLI option to prevent file minification and speed up build time
+  * Added `-verbose` CLI option to add even more logging
   * Added `copy` task to separate the task of copying files from compiling code
   * Added `bump` config object
   * Updated `build` to detect HTML/CSS/JS root locations and recreate within `target` with compiled code

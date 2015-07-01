@@ -16,7 +16,7 @@ function bump(location, options){
         }).catch(log.onError);
 }
 
-function exec(subtask, location, options){
+function exec(location, options){
     config = helper.getConfig();
     if (!config.tasks.bump && !location) return Promise.resolve();
 
@@ -25,7 +25,4 @@ function exec(subtask, location, options){
     return bump(location, options);
 }
 
-module.exports = {
-    all:  function(location, options){ return exec('all', location, options); },
-    adhoc:  function(location, options){ return exec('all', location, options); }
-};
+module.exports = exec;

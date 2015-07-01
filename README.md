@@ -46,12 +46,12 @@ CLI | Node | Sub-tasks
 --- | ---- | ---------
 caddy new *project-name* | *unavailable* | *none*
 [caddy build](docs/BUILD.md) | `caddy.build.all()` | styles, scripts, html
-[caddy clean](docs/CLEAN.md) | `caddy.copy.all()` | styles, scripts, html, build, copy
-[caddy copy](docs/COPY.md) | `caddy.clean.all()` | *none*
-[caddy serve](docs/SERVE.md) | `caddy.serve.all()`  | *none*
+[caddy clean](docs/CLEAN.md) | `caddy.clean.all()` | styles, scripts, html, build, copy
+[caddy copy](docs/COPY.md) | `caddy.copy()` | *none*
+[caddy serve](docs/SERVE.md) | `caddy.serve()`  | *none*
 [caddy test](docs/TEST.md#testing) | `caddy.test.all()` | tdd
 [caddy init](docs/INITIALISING.md) | `caddy.init.all()` | bower, gh-pages, git
-[caddy bump](docs/BUMP.md) | `caddy.bump.all()` | *none*
+[caddy bump](docs/BUMP.md) | `caddy.bump()` | *none*
 [caddy release](docs/RELEASE.md#manual-deployment) | `caddy.release.all()` | bower, gh-pages, s3
 
 **hint: add `-verbose` to the cli to see more logging**

@@ -28,11 +28,11 @@ function exec(subtask, location, options){
 
     //normalise the args into an array of tasks
     if (location && typeof location === 'object'){  //from node API
-        tasks = [{ location: globsArr, options: location}];
+        tasks = [{ source: globsArr, options: location}];
     } else if (location && typeof location != 'object'){  //from node API
-        tasks = [{ location: location, options: options}];
+        tasks = [{ source: location, options: options || { }}];
     } else {  //from node CLI
-        tasks = helper.normaliseClean(globsArr, config, options || { });
+        tasks = helper.normaliseClean(globsArr, config.buildPaths, options || { });
     }
 
     //do prep-task then do copy task

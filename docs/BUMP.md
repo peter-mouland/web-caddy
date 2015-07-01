@@ -3,7 +3,7 @@
 > Bump the version within your app
 
  * CLI: `caddy bump`
- * NodeJS: `caddy.bump.all(source-glob, options)`
+ * NodeJS: `caddy.bump(source-glob, options)`
 
 The files `package.json`, `app.json` and `README.md` are 'patched' by default. This is set in the `caddy.config.js`.
 
@@ -19,7 +19,7 @@ The files `package.json`, `app.json` and `README.md` are 'patched' by default. T
 You can specify which, and how, a file is bumped by adding the file name and `-patch`, `-minor`, -`major`, `-prerelease` or even `-v3.2.1`.
 
  * CLI: `caddy bump package.json -major`
- * NodeJS: `caddy.bump.all(['package.json'], {type: 'major'})`
+ * NodeJS: `caddy.bump(['package.json'], {type: 'major'})`
 
 ## As a build step
 

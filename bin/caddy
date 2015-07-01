@@ -10,7 +10,7 @@ function execTask(taskName, args){
     if (command.charAt(0) == '-') {
         options.type = command.substr(1);
         options[options.type] = true;
-        command = 'all'
+        command = 'all';
     } else if (args.length >0 && args[0].charAt(0) == '-'){
         options.type = args[0].substr(1);
         options[options.type] = true;
@@ -20,6 +20,8 @@ function execTask(taskName, args){
         return task[command](undefined, undefined, options);
     } else if (task['adhoc']){//allows a a single parameter to passed to the adhoc function
         return task['adhoc'](command, options);
+    } else if (typeof task == 'function') {
+        return task(command, undefined, options);
     } else {
         help(task, taskName);
     }

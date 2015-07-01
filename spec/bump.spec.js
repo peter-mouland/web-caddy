@@ -19,22 +19,22 @@ describe("bump", function() {
     });
 
     it("will return the updated version", function (done) {
-        return bump.all('package.json').then(function(version){
+        return bump('package.json').then(function(version){
             expect(version).toBe('11.11.12');
         }).then(done);
     });
 
     it("accepts semVer arguments", function (done) {
-        return bump.all('package.json', {type: 'prerelease'}).then(function(version){
+        return bump('package.json', {type: 'prerelease'}).then(function(version){
             expect(version).toBe('11.11.12-beta.0');
-            return bump.all('package.json','patch');
+            return bump('package.json','patch');
         }).then(function(version){
             expect(version).toBe('11.11.12');
         }).then(done);
     });
 
     it("errors with invalid arg", function (done) {
-        return bump.all('package.json',{type: 'sdsdsdsd'}).then(function(version){
+        return bump('package.json',{type: 'sdsdsdsd'}).then(function(version){
             expect(version).toBe(undefined);
             expect(log.onError).toHaveBeenCalledWith('Invalid semVer type: sdsdsdsd');
         }).then(done);

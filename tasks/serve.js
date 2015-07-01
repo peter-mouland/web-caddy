@@ -69,18 +69,6 @@ function nodeApp(options){
     });
 }
 
-serve.adhoc = function (baseDir){
-    if (baseDir.split('.').pop() === 'js'){
-        return serve.nodeApp({
-            script: baseDir
-        });
-    } else {
-        return serve.staticApp({
-            server: { baseDir : baseDir }
-        });
-    }
-};
-
 serve.staticApp = function(options){
     if (!options.server) {
         var targets = config.buildPaths.map(function(pathObj){ return pathObj.target;});
@@ -98,20 +86,29 @@ serve.nodeApp = function(options){
     return nodeApp(options).then(startBrowserSync);
 };
 
-serve.all = function (options){
-    options = extend(config[config.tasks.serve] || {}, options);
-    return serve[config.tasks.serve](options);
+serve.all = function (baseDir){
+    if (baseDir.split('.').pop() === 'js'){
+        return serve.nodeApp({
+            script: baseDir
+        });
+    } else {
+        return serve.staticApp({
+            server: { baseDir : baseDir }
+        });
+    }
 };
 
-function exec(task, options){
+function exec(options){
     config = helper.getConfig();
-    options = options || {};
     if (!config.tasks.serve) return Promise.resolve();
+
     log.info('Server :');
-    return serve[task](options);
+    if (['all','nodeApp','staticApp'].indexOf(options)<0) {
+        return serve.all(options);
+    } else {
+        options = extend(config[config.tasks.serve] || {}, options);
+        return serve[config.tasks.serve](options);
+    }
 }
 
-module.exports = {
-    adhoc: function(options){ return exec('adhoc', options); },
-    all:  function(options){ return exec('all', options); }
-};
+module.exports = exec;
