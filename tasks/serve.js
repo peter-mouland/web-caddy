@@ -14,9 +14,9 @@ function getWatchOptions(options){
         stylesPaths = [],
         scriptsPaths = [];
     config.buildPaths.forEach(function(pathObj, i){
-        htmlPaths.push(path.join(pathObj.source,    config.globs.html.replace('{.,*}','**').replace('!(_)','')));
-        stylesPaths.push(path.join(pathObj.source,  config.globs.styles.replace('{.,*}','**').replace('!(_)','')));
-        scriptsPaths.push(path.join(pathObj.source, config.globs.scripts.replace('{.,*}','**').replace('!(_)','')));
+        htmlPaths.push(path.join(pathObj.source,    '**/*.{html,jade,ms,mustache}'));
+        stylesPaths.push(path.join(pathObj.source,  '**/*.{css,scss,sass}'));
+        scriptsPaths.push(path.join(pathObj.source, '**/*.js'));
     });
     var chokidarOptions = {
         persistent: true
@@ -55,7 +55,7 @@ function startBrowserSync(options) {
 
 function browserifyWatch(options){
     config.buildPaths.forEach(function(pathObj, i){
-        var src = path.join(pathObj.source, config.globs.scripts);
+        var src = path.join(pathObj.source, config.buildGlobs.scripts);
         new Browserify(src, pathObj.target, options).watch(browserSync);
     });
 }
@@ -87,6 +87,7 @@ serve.nodeApp = function(options){
 };
 
 serve.all = function (baseDir){
+    if (!baseDir) log.onError('Please pass either a node server file or a static directtory to serve');
     if (baseDir.split('.').pop() === 'js'){
         return serve.nodeApp({
             script: baseDir

@@ -1,12 +1,15 @@
-# Tasks
+# Caddy Copy
 > Copy static assets
 
- * CLI: `caddy copy`
- * NodeJS: `caddy.copy()`
+ * [Config](#config)
+ * [Copy](#copy)
+ * [As a build step](as-a-build-step)
 
-*All* tasks will copy files found in `basePaths source` to the associated `targets` directories that match the given GLOB.
+## Config
 
-I.e. the following will copy an `images` and `fonts` directories with `CNAME` and `robots.txt` files from `./src` to `./_site`.
+For any copy to occur, you must add:
+ * A `tasks` object containing `copy` array with the appropriate sub-tasks.  
+ * A `buildPaths` array is also required to tell caddy where to search for your files.
 
 **Example from caddy.config.js**
 ```javascript
@@ -15,12 +18,32 @@ I.e. the following will copy an `images` and `fonts` directories with `CNAME` an
        {source: "./src", targets: ['./_site']}
    ],
    tasks : {
-        copy: ['images', 'fonts', '/*{CNAME,robots.txt}'],
+        copy: ['images', '/*{CNAME,robots.txt}'],
     },
 ...
 ```
 
-You can also optionally add a `glob` to specify the files to remove, as well as options. i.e.
+## Copy
+> copy all matching files from each source to the corresponding target directory
+
+ * CLI: `caddy copy`
+ * NodeJS: `caddy.copy()`
+
+You can also optionally add a `glob` to specify the files to remove, as well a `verbose` option. i.e.
 
  * CLI: `caddy copy package.json -verbose`
  * NodeJS: `caddy.copy('/{.,*}/!(_)*.{png,jpg,svg}', './_site', { verbose: true });`
+
+
+## As a build step
+
+ * 'npm run copy'
+
+It is recommended you update your package.json `scripts` object:
+
+*package.json*
+```javascript
+    "scripts":{ 
+        "copy": "caddy copy"
+    }
+```

@@ -1,20 +1,30 @@
-# Bump
+# Caddy Bump
 
-> Bump the version within your app
+> Find and bump version numbers within your app files.  
 
- * CLI: `caddy bump`
- * NodeJS: `caddy.bump(source-glob, options)`
+ * [Config](#config)
+ * [Bump](#bump)
+ * [As a build step](as-a-build-step)
 
-The files `package.json`, `app.json` and `README.md` are 'patched' by default. This is set in the `caddy.config.js`.
+## Config
 
-*caddy.config.js*
+To bump a file(s), you must add:
+ * A `tasks` object containing `bump` array containing globs or files to copy.  
+
+**Example from caddy.config.js**
 ```javascript
 ...
-    tasks: {
-        bump: ['package.json','README.md', '*/app.json']
+   tasks : {
+        bump: ['package.json','README.md', '*/app.json'],
     }
 ...
 ```
+
+## Bump
+By default files are bumped with a 'patch'
+
+ * CLI: `caddy bump`
+ * NodeJS: `caddy.bump(source-glob, options)`
 
 You can specify which, and how, a file is bumped by adding the file name and `-patch`, `-minor`, -`major`, `-prerelease` or even `-v3.2.1`.
 

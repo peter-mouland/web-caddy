@@ -1,19 +1,21 @@
 var pkg = require('./package.json');
+var imagesAndFontsGlob = '/{.,*}/*.{ico,png,jpg,jpeg,gif,svg,ttf,woff,eot}';
+var serverFilesGlob = '/*{CNAME,.htaccess,robots.txt,manifest.json}';
 
 module.exports = {
     pkg: pkg,
     buildPaths: [
-        {source: "./src", target: './_site', minify: true},
+        {source: "./src", target: './_site', minify: true, verbose: true},
         {source: "./examples", target: './_site'},
         {source: './test/fixtures', target: './_test'}
     ],
     tasks: {
-        copy: ['fonts','images','server-config'],
+        copy: [imagesAndFontsGlob, serverFilesGlob],
         build: ['sass', 'mustache', 'browserify'],
         bump: ['package.json','README.md', '*/app.json'],
         serve: 'staticApp',
         test: 'karma',
-        release: ['git', 'gh-pages', 's3', 'bower']
+        release: ['git', 'gh-pages', 's3']
     },
     browserify: {
         insertGlobals: true,

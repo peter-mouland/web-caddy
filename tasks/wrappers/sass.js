@@ -63,7 +63,7 @@ Sass.prototype.file = function(fileObj, outputStyle){
 };
 
 Sass.prototype.minify = function(files){
-    log.info(' * Minifying Styles (' + this.destination + ')');
+    log.info(' * Minifying Styles: ' + this.destination);
     var self = this;
     var promises = [];
     files.forEach(function(fileObj){
@@ -90,7 +90,7 @@ Sass.prototype.write = function() {
     }).then(function(fileObjs){
         return wait(fileObjs);
     }).then(function(fileObjs){
-        if (!self.options.minify) return Promise.resolve();
+        if (!self.options.minify || self.options.dev) return Promise.resolve();
         return self.minify(fileObjs);
     });
 };

@@ -52,7 +52,6 @@ module.exports = {
                 log.warn(msg);
             });
         }).then(function(){
-            if (options.tagged) return Promise.resolve();
             return git.push(['origin', 'master', options.tag]);
         });
     },

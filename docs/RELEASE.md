@@ -1,4 +1,4 @@
-# Release
+# Caddy Release
 
 There are a number of use cases for release:
 
@@ -8,19 +8,16 @@ There are a number of use cases for release:
 
 ## Deploying to Bower
 
-> Putting your code into Bowers registry so that other can `bower install`
+> Simply tag and push you code using git
 
-You must first initialise Bower (See [INITIALISING.md#bower](INITIALISING.md#bower)).
+Please note: we do not recommend adding a `dist` directory to git.  
+If you need a dist directory, then [deploy to the S3](#deploying-to-amazon-s3).
 
-This will make files available to bower that match the `ignore` object within your bower.json (even if they are in your .gitignore file).
-
-*caddy.config.js*
+*Creating a dist directory*
 ```javascript
-...
-    tasks: {
-        release: ['bower']
-    }
-...
+    buildPaths: [
+        { source: "./src",  "target": './dist' , minify: true}
+    ],
 ```
 
 ## Deploying to S3

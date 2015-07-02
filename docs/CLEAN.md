@@ -1,6 +1,7 @@
 # Tasks
 > Clean up files and directories
 
+ * [Config](#config)
  * [Clean](#Clean)
     * [Build](#build)
     * [Copy](#copy)
@@ -9,6 +10,28 @@
     * [HTML](#html)
  * [Options Parameter](#options-parameter)
  * [As a build step](as-a-build-step)
+
+## Config
+
+For any clean to occur, you must add:
+ * A `buildPaths` array to tell caddy where to search for your files.
+    
+Depending on the sub-task being executed, you can remove all files, or specific file-types.
+
+**Example from caddy.config.js**
+```javascript
+...
+    buildPaths: [
+        {source: "./src", targets: ['./_site', './dist'], minify: true, verbose: true},
+        {source: "./examples", targets: ['./_site']}
+    ],
+    buildGlobs : {
+        'html':    '/{.,*}/!(_)*.{html,jade,ms,mustache}',
+        'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
+        'scripts': '/{.,*}/!(_)*.js'
+    };
+...
+```
 
 ## Clean
 > Remove all files from all `basePaths targets` directories.

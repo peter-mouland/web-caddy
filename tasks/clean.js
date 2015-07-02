@@ -21,9 +21,9 @@ function exec(subtask, location, options){
     var tasks;
     config = helper.getConfig();
 
-    var globsArr = [config.globs[subtask]];
+    var globsArr = [config.buildGlobs[subtask]];
     if (subtask==='copy') globsArr = config.tasks.copy;
-    if (subtask==='build') globsArr = Object.keys(config.globs).map(function(key){ return config.globs[key]; });
+    if (subtask==='build') globsArr = Object.keys(config.buildGlobs).map(function(key){ return config.buildGlobs[key]; });
     if (subtask==='all') globsArr = ['/**'];
 
     //normalise the args into an array of tasks

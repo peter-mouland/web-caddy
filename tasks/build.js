@@ -6,6 +6,7 @@ var path = require('path');
 var config, build = {};
 
 build.htmlMin = function htmlMin(source, target, options) {
+    console.log(config.tasks);
     var htmlWrapper = helper.matches(config.tasks.build, ['html-min']);
     if (!htmlWrapper) return Promise.resolve();
     log.info(' * HTML Min');
@@ -53,7 +54,6 @@ build.styles = function styles(source, target, options){
 function exec(subtask, source, target, options){
     config = helper.getConfig();
     //get out if config does not exist && node API did not pass a source/target
-    //if (!config.tasks.build && task == 'all') return Promise.resolve();
     if (subtask == 'all' && source) log.onError('Please refrain from using `.all`. from the NodeJS script');
     if (!config.tasks.build && !source) return Promise.resolve();
 

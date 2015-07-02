@@ -160,14 +160,14 @@ Browserify.prototype.write = function(){
     }).then(function(fileObjs){
         return wait(fileObjs);
     }).then(function(fileObjs){
-        if (!self.options.minify) return Promise.resolve();
+        if (!self.options.minify || self.options.dev) return Promise.resolve();
         return self.minify(fileObjs);
     });
 };
 
 
 Browserify.prototype.minify = function(fileObjs) {
-    log.info(' * Minifying Scripts (' + this.destination + ')');
+    log.info(' * Minifying Scripts: ' + this.destination );
     var Minify = require('./uglifyjs' );
     var promises = [];
     var self = this;

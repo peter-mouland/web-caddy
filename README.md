@@ -44,13 +44,13 @@ Once required (`var caddy = require('web-caddy');`), you can call the following:
 
 CLI | Node | Sub-tasks
 --- | ---- | ---------
-caddy new *project-name* | *unavailable* | *none*
+[caddy new *project-name*](docs/NEW.md) | *unavailable* | *none*
 [caddy build](docs/BUILD.md) | `caddy.build.all()` | styles, scripts, html
 [caddy clean](docs/CLEAN.md) | `caddy.clean.all()` | styles, scripts, html, build, copy
 [caddy copy](docs/COPY.md) | `caddy.copy()` | *none*
 [caddy serve](docs/SERVE.md) | `caddy.serve()`  | *none*
 [caddy test](docs/TEST.md#testing) | `caddy.test.all()` | tdd
-[caddy init](docs/INITIALISING.md) | `caddy.init.all()` | bower, gh-pages, git
+[caddy init](docs/INIT.md) | `caddy.init.all()` | bower, gh-pages, git
 [caddy bump](docs/BUMP.md) | `caddy.bump()` | *none*
 [caddy release](docs/RELEASE.md#manual-deployment) | `caddy.release.all()` | bower, gh-pages, s3
 
@@ -63,7 +63,9 @@ The CLI and Node will use the config set within [caddy.config.js](boilerplate/ca
 
 > Setup your project to get the most out of `caddy`
  * [Example config file](examples/caddy.config.js)
- * [Continuous Deployment](docs/CONTINUOUS-DEPLOYMENT.md) to Amazon S3, Bower, GitHub.io and Git using continuous or manual deployments 
+ * [Continuous Deployment](docs/CONTINUOUS-DEPLOYMENT.md) 
+ * [Using NodeJS](docs/NODE-EXAMPLE.md) 
+ * [Using Gulp](docs/GULP-EXAMPLE.md) 
 
 ## Contributing to the Helper
 

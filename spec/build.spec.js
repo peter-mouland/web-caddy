@@ -27,7 +27,7 @@ describe("Build task will compile", function() {
         config = {
             pkg:{version:'11.11.11'},
             tasks:{build: ['sass', 'mustache', 'browserify']},
-            globs:{html:'',styles:'',scripts:''},
+            buildGlobs:{html:'',styles:'',scripts:''},
             buildPaths: [{source:'./demo',targets:['./_site']}, {source:'./src',targets:['./_site']}]
         };
     });

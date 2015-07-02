@@ -52,26 +52,8 @@ release.git = function (options){
     return git.release(options);
 };
 
-release.bower = function (options){
-    var release = helper.matches(config.tasks.release, ['bower']);
-    if (!release) return Promise.resolve();
-
-    var git = require('./utils/git');
-    var bower = require('./wrappers/bower');
-    log.info(" * Bower");
-    if (!git.checkRemote()){
-        return log.onError(['No valid Remote Git URL.',
-            'Please update your `.git/config` file or run:',
-            '$ caddy init git'].join('\n'));
-    }
-    return bower.release(options).catch(log.onError);
-};
-
 release.all = function (options){
-    return release.bower(options).then(function(){
-        options.tagged = true;
-        return release.git(options);
-    }).then(function(){
+    return release.git(options).then(function(){
         return release.ghPages(options);
     }).then(function(){
         return release.s3(options);
@@ -88,7 +70,6 @@ function exec(task, options){
 }
 
 module.exports = {
-    'bower': function(options){ return exec('bower', options); },
     'git':  function(options){  return exec('git', options); },
     'gh-pages':  function(options){ return exec('ghPages', options); },
     's3':  function(options){  return exec('s3', options); },

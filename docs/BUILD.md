@@ -1,6 +1,9 @@
-# Tasks
+# Caddy Build
 > Building the assets needed for your project
 
+The build will compile files and save them into the corresponding `target` directory.
+
+ * [Config](#config)
  * [Build](#build)
     * [Styles](#styles)
     * [Scripts](#scripts)
@@ -8,7 +11,17 @@
  * [Options Parameter](#options-parameter)
  * [As a build step](as-a-build-step)
 
-*All* tasks create compiled files for each file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories. Adding `minify: true` will also creare `.min` equivilents.
+## Config
+
+For any build to occur, you must add:
+ * A `tasks` object containing `build` array with the appropriate sub-tasks.  
+ * A `buildPaths` array is also required to tell caddy where to search for your files.
+    
+You may choose to also add:
+ * `verbose: true` onto the buildPath object (or `-verbose` on the CLI)
+ * `minify: true` onto the buildPath object (add `-dev` on the CLI to then prevent minification)
+ * `buildGlobs` object which describes how to search for 'main' files to compile and recreate in the `target` directory.
+    * The default is shown below, will match files in the `source` root and a single directory deep. 
 
 **Example from caddy.config.js**
 ```javascript
@@ -17,27 +30,28 @@
         build: ['sass', 'mustache', 'browserify'],
     },
     buildPaths: [
-        {source: "./src", targets: ['./_site', './dist'], minify: true},
+        {source: "./src", targets: ['./_site', './dist'], minify: true, verbose: true},
         {source: "./examples", targets: ['./_site']}
     ],
+    buildGlobs : {
+        'html':    '/{.,*}/!(_)*.{html,jade,ms,mustache}',
+        'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
+        'scripts': '/{.,*}/!(_)*.js'
+    };
 ...
 ```
 
 ## Build
+> execute all Build tasks within the `build` array in `caddy.config.js`.
 
  * CLI: `caddy build`
  * NodeJS: `caddy.build.all(source-glob, target-directory, options)`
 
-This will execute all the Build tasks within the `build` array in `caddy.config.js`.
-
 #### Styles
+> Use [Sass](http://sass-lang.com/) and [AutoPrefixer](https://www.npmjs.com/package/autoprefixer) to compile CSS
 
  * CLI: `caddy build styles`
  * NodeJS: `caddy.build.styles(source-glob, target-directory, options)`
-
-By default we use [Sass](http://sass-lang.com/) to compile styles, along with [AutoPrefixer](https://www.npmjs.com/package/autoprefixer).
-
-This will create a compiled file for each `.scss` file (without an underscore `_` prefix) it finds in the `buildPaths source` root directories and save them into the corresponding `targets` directories. A `.min.css` will also be created for each compiled file.
 
 As with all build tasks, add a config object to customise the build with [Sass options](https://github.com/sass/node-sass#options)
 
@@ -58,15 +72,12 @@ As with all build tasks, add a config object to customise the build with [Sass o
  `caddy.build.styles('/{.,*}/!(_)*.{css,scss,sass}', '_site', { includePaths: 'bower_components' })`
 
 #### Scripts
+> Compile CommonJS or AMD
 
  * CLI: `caddy build scripts`
  * NodeJS: `caddy.build.scripts(source-glob, target-directory, options)`
 
-By default javascript is compiled using [browserify](https://www.npmjs.com/package/browserify), you could however choose to use [requirejs](http://requirejs.org/).
-
-This will create a compiled file for each `.js` file found in the `buildPaths source` root directories and save them into the corresponding `targets` directories. Adding `minify:true` will use [uglify-js](https://www.npmjs.com/package/uglify-js) to create `.min.js` files.  To prevent minification use :
-
-`caddy build scripts -dev`
+Compile javascript using [browserify](https://www.npmjs.com/package/browserify) or [requirejs](http://requirejs.org/) and use the minify option for [uglify-js](https://www.npmjs.com/package/uglify-js) to create `.min.js` files.
 
 **Example 1 : browserify** 
 
@@ -116,12 +127,14 @@ For `browserify` the `vendorBundle` and `vendorTarget` option will create an ext
 ```
 
 #### HTML
+> Compile Mustache or Jade templates into HTML
 
-`caddy build html`
+ * CLI: `caddy build html`
+ * NodeJS: `caddy.build.html(source-glob, target-directory, options)`
 
-This will create a compiled .html file for each `.html`, `.mustache`, `.ms` or `.jade` file found in the `buildPaths source` root directories using either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) and save them into the corresponding `targets` directories.
+Use either [mustache](https://github.com/janl/mustache.js) or [jade](http://jade-lang.com/) and add variables to be replaced within your templates.
 
-By default, during the build it will also replace variables `{{ varName }}` that are matched within package.json.
+By default, during the build it will also replace variables `{{ pkg.varName }}` that are matched within package.json.
 
 **Example 1 : Mustache** 
 
@@ -130,12 +143,12 @@ By default, during the build it will also replace variables `{{ varName }}` that
 ...
     tasks: {
         build: ['mustache']
-    }
+    },
+    buildPaths: [
+        { source: "./src",  "target": './_site' , varsToReplace: 'with text'}
+    ],
 ...
 ```
-*NodeJS*
-
- `caddy.build.html('/{.,*}/!(_)*.{html,ms,mustache}', '_site', { varsToReplace: 'with text' })`
 
 **Example 2 : Jade** 
 
@@ -147,6 +160,10 @@ By default, during the build it will also replace variables `{{ varName }}` that
     }
 ...
 ```
+
+*NodeJS*
+
+ `caddy.build.html('/{.,*}/!(_)*.{html,ms,mustache}', '_site', { varsToReplace: 'with text' })`
 
 ## Options Parameter
 > options that can be passed to all NodeJS calls above

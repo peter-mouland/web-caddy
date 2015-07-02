@@ -1,4 +1,4 @@
-# Customisation Examples
+# Gulp Example
 
 This project does not use gulp, but because gulp can handle promises, it is very clean and easy to integrate with your new component.
 
@@ -17,7 +17,7 @@ gulp.task('build', function() {
 });
 
 gulp.task('serve', function() {
-    return caddy.serve.run({
+    return caddy.serve({
         script : 'src/app/server.js',
         host: 'http://localhost:3000',
         port: 3001,
@@ -26,7 +26,7 @@ gulp.task('serve', function() {
 });
 
 gulp.task('test', function(){
-    return caddy.serve.run({
+    return caddy.serve({
         script : 'src/test/testserver.js',
         host: 'http://localhost:3001',
         port: 3002,

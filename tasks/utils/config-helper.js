@@ -18,12 +18,12 @@ var helper = {
         if (config){
             config.appRoot = configPath.replace('caddy.config.js','');
             this.createBuildPaths(config);
-            this.createGlobs(config);
+            this.createBuildGlobs(config);
         }
         return config;
     },
-    createGlobs : function(config) {
-        config.globs = {
+    createBuildGlobs : function(config) {
+        config.buildGlobs = config.buildGlobs || {
             'html':    '/{.,*}/!(_)*.{html,jade,ms,mustache}',
             'styles':  '/{.,*}/!(_)*.{css,scss,sass}',
             'scripts': '/{.,*}/!(_)*.js'
@@ -63,7 +63,7 @@ var helper = {
             delete configOptions.source;
             options = extend(configOptions || {}, options || {});
             return globsArr.map(function(glob){
-                if (!Array.isArray(buildPath.target)) log.onError('buildPath target must be a string.');
+                if (Array.isArray(buildPath.target)) log.onError('buildPath target must be a string.');
                 return {
                     source: path.join(buildPath.target, glob),
                     target: buildPath.target,
@@ -94,7 +94,7 @@ var helper = {
                 return subtasks.map(function(subtask){
                     return {
                         subTask: subtask,
-                        source: path.join(buildPath.source, config.globs[subtask]),
+                        source: path.join(buildPath.source, config.buildGlobs[subtask]),
                         target: buildPath.target,
                         options: options
                     };
@@ -155,6 +155,10 @@ var helper = {
         } else if (config.tasks && config.tasks.release && config.tasks.release.indexOf('s3')>=0 && config.s3.profile &&
             (config.s3.secret || config.s3.accessKey)){
             error.push(' * Your s3 config need either `profile` OR `secret/accessKey` not all.');
+        } else if (config.tasks && config.tasks.release && config.tasks.release.indexOf('bower')>=0) {
+            error.push(['caddy release bower has been removed.',
+                ' * To release to bower please tag you git releases.',
+                ' * We recommend not adding `dist` directory to git, instead use the S3'].join('\n'));
         }
 
         if (error.length>1){

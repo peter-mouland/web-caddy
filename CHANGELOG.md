@@ -5,7 +5,6 @@
   * Speed improvements
   * Logging improvements
   * Added `html-min` as a separate `build` task
-  * Added `bower` as a separate `release` task
   * Added `-dev` CLI option to prevent file minification and speed up build time
   * Added `-verbose` CLI option to add even more logging
   * Added `copy` task to separate the task of copying files from compiling code
@@ -24,13 +23,6 @@
   * Removed `dist` path config option
   * Removed `site.xxx` from Mustache/Jade variables i.e. `site.version` becomes `version`
   
-todo:
-  * add recommendation for bower ie. not a dist but use s3 instead
-  * add watchify config to poll for osX problems
-  * test node api (all using options?)
-  * allow node api to overwrite path.src and paths.target within options obj
-  * caddy init if caddy config doesn't exist
- 
 ## 1.3.x
  * **1.3.0**
     * Updated Documents to explain more use-cases
