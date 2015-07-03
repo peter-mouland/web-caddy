@@ -22,6 +22,7 @@ function exec(location, options){
 
     options = extend(config.bump || {}, options || {});
     log.info('Bumping :');
+    if (location === 'all') location = config.tasks.bump;
     return bump(location, options);
 }
 
