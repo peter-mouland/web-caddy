@@ -20,14 +20,12 @@ describe("Config-helper ", function() {
             completeConfig = {
                 tasks: {
                     build: ['browserify'], // 'browserify' or 'requirejs'
-                    test: 'karma',
                     release: ['s3'],
                     serve: 'staticApp'
                 },
                 buildPaths:  [ ],
                 browserify: {  },
                 requirejs: { },
-                karma: [],
                 s3: { },
                 staticApp: { },
                 nodeApp: { },
@@ -71,16 +69,6 @@ describe("Config-helper ", function() {
             expect(log.onError).toHaveBeenCalled();
             expect(isCompatible).toContain('be incorrect');
             expect(isCompatible).toContain(completeConfig.tasks.build[0]);
-        });
-
-
-        it("knows if the config is incorrect: missing karma config", function () {
-            delete completeConfig.karma;
-            spyOn(helper,'getConfig').and.callFake(function(){ return completeConfig;});
-            var isCompatible = helper.configCheck();
-            expect(log.onError).toHaveBeenCalled();
-            expect(isCompatible).toContain('be incorrect');
-            expect(isCompatible).toContain(completeConfig.tasks.test);
         });
 
         it("knows if the config is incorrect: missing s3 config", function () {

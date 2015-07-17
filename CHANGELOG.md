@@ -1,6 +1,9 @@
 # Change Log
 
 ## 2.0.x  Breaking change
+ * **2.1.0**
+  * Removed `caddy test` in favor of simply `karma start test/karma.unit.js`
+ * **2.0.0**
   * Renamed to `web-caddy`
   * Speed improvements
   * Logging improvements

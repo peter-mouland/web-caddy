@@ -56,7 +56,7 @@ var commands = {
         execTask('serve', args)
     },
     test: function(args){
-        execTask('test', args)
+        console.log('Please use JSHint and Karma directly i.e.\n * `jshint src && caddy build && karma start test/karma.unit.js && karma start test/karma.functional.js`')
     },
     bump: function(args){
         execTask('bump', args)

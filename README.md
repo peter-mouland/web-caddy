@@ -48,7 +48,7 @@ CLI | Node | Sub-tasks
 [caddy build](docs/BUILD.md) | `caddy.build.all()` | styles, scripts, html
 [caddy clean](docs/CLEAN.md) | `caddy.clean.all()` | styles, scripts, html, build, copy
 [caddy copy](docs/COPY.md) | `caddy.copy()` | *none*
-[caddy serve](docs/SERVE.md) | `caddy.serve()`  | *none*
+[caddy serve](docs/SERVE.md) | *unavailable* (see [karma](https://karma-runner.github.io/0.13/dev/public-api.html)  | *none*
 [caddy test](docs/TEST.md#testing) | `caddy.test.all()` | tdd
 [caddy init](docs/INIT.md) | `caddy.init.all()` | bower, gh-pages, git
 [caddy bump](docs/BUMP.md) | `caddy.bump()` | *none*

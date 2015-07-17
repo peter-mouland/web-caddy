@@ -16,7 +16,12 @@ gulp.task('serve',  function() {
 });
 
 gulp.task('test', function(){
-    return caddy.test.all().catch(onError);
+    var Server = require('karma').Server;
+    var server = new Server({port: 9876}, function(exitCode) {
+        console.log('Karma has exited with ' + exitCode);
+        process.exit(exitCode)
+    });
+    return server;
 });
 
 gulp.task('release', function(){

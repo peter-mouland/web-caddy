@@ -141,12 +141,8 @@ var helper = {
             error.push(' * There is no scripts config object:  `requirejs:{...}`');
         }
         //check test config
-        if (config.tasks && config.tasks.test && !config[config.tasks.test]){
-            error.push(' * There is no test config object: `' + config.tasks.test + ': {...}`');
-        }
-        if (config.tasks && config.tasks.test && !Array.isArray(config.karma) && typeof config.karma!=='string'){
-            error.push(' * The karma object within caddy.config.js must now be a String or an Array containing the karma config file(s) i.e. \n ' +
-                ' karma: [\'./test/karma.unit.js\',\'./test/karma.functional.js\']');
+        if ((config.tasks && config.tasks.test) || config.karma){
+            error.push(' * Please remove test and karma objects from your caddy.config.js\n Please use karma directly see docs/test.md for help ');
         }
 
         //check release config

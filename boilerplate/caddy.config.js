@@ -13,8 +13,6 @@ module.exports = {
         bump: ['package.json','README.md', '*/app.json'],
         build: ['sass', 'mustache', 'browserify'],
         serve: 'staticApp',
-        test: 'karma',
         release: ['git', 'gh-pages']
-    },
-    karma: ['./test/karma.functional.js',  './test/karma.unit.js']
+    }
 };

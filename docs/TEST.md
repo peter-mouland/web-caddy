@@ -13,7 +13,8 @@ Using [Karma](http://karma-runner.github.io/0.12/index.html) and [Jasmine](http:
 
 > Run the complete test suite before pushing any changes to git
 
-`caddy test`
+`karma start test/karma.unit.js --single-run` 
+`karma start test/karma.functional.js --single-run`
 
 This will run through the `.spec.js` files found in `/test/` directory (unit and functional).
 A [code-coverage](#code-coverage) report will also be produced.
@@ -21,7 +22,7 @@ A [code-coverage](#code-coverage) report will also be produced.
 We recommend that your package.json `scripts` object is updated so you do not rely on a global install and to check your JS for errors, run the build, then run tests.
 
 ```javascript
-    "test": "jshint src && caddy build && caddy test",`
+    "test": "jshint src && caddy build && karma start test/karma.unit.js --single-run && karma start test/karma.functional.js --single-run",
 ```
 
 You can then use `npm test`.
@@ -30,7 +31,7 @@ You can then use `npm test`.
 
 > Automatically rerun tests while making code changes.
 
-`caddy test tdd`
+`karma start test/karma.unit.js`
 
 This will run functional and unit tests (without code-coverage) which can be viewed in the browser by going to the site specified by the Karma console output (by default: http://localhost:9876/).
 
@@ -39,10 +40,11 @@ Making changes to your tests, or your code, will cause the suite to re-run.  To 
 We recommend that your package.json `scripts` object is updated so you do not rely on a global install:
 
 ```javascript
-    "tdd": "caddy test tdd",`
+    "tdd": "karma start test/karma.unit.js",
+    "functional": "karma start test/karma.functional.js",
 ```
 
-You can then use `npm run tdd`.
+You can then use `npm run tdd` and  `npm run functional`.
 
 ## Run a Specific Test
 

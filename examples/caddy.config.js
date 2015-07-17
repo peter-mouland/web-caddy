@@ -14,7 +14,6 @@ module.exports = {
         build: ['sass', 'mustache', 'browserify'],
         bump: ['package.json','README.md', '*/app.json'],
         serve: 'staticApp',
-        test: 'karma',
         release: ['git', 'gh-pages', 's3']
     },
     browserify: {
@@ -28,7 +27,6 @@ module.exports = {
         ],
         vendorTarget: 'scripts/vendor.js'
     },
-    karma: ['./test/karma.functional.js','./test/karma.unit.js'],
     sass: {
         includePaths: 'bower_components'
     },
