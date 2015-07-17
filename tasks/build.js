@@ -6,7 +6,6 @@ var path = require('path');
 var config, build = {};
 
 build.htmlMin = function htmlMin(source, target, options) {
-    console.log(config.tasks);
     var htmlWrapper = helper.matches(config.tasks.build, ['html-min']);
     if (!htmlWrapper) return Promise.resolve();
     log.info(' * HTML Min');
@@ -31,6 +30,7 @@ build.scripts = function scripts(source, target, options){
     if (!wrapper) return Promise.resolve();
     log.info(' * Scripts: ' + source);
 
+    options = extend(options || {}, config[wrapper] || {});
     options.browserify = config.pkg.browserify;
     options.browser = config.pkg.browser;
     options["browserify-shim"] = config.pkg["browserify-shim"];
@@ -44,6 +44,7 @@ build.styles = function styles(source, target, options){
     if (!wrapper) return Promise.resolve();
     log.info(' * Styles: ' + source);
 
+    options = extend(options || {}, config[wrapper] || {});
     options.appRoot = config.appRoot;
     var Fn = require('./wrappers/' + wrapper);
     return (new Fn(source, target, options)).write().catch(log.onError);
