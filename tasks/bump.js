@@ -20,7 +20,7 @@ function exec(location, options){
     config = helper.getConfig();
     if (!config.tasks.bump && !location) return Promise.resolve();
 
-    options = extend(config.bump || {}, options || {});
+    options = extend(config.bump || {}, options || arguments[2] || {});
     log.info('Bumping :');
     if (location === 'all') location = config.tasks.bump;
     return bump(location, options);

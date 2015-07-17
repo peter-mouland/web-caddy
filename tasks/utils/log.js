@@ -2,7 +2,8 @@ var chalk = require('chalk');
 
 function onError(err) {
     if (!err) return;
-    console.log(chalk.red(err.message || err));
+    err.message && console.log(chalk.red(err.message));
+    console.log(chalk.red(err.toString() || err));
     process.exit(1);
 }
 

@@ -90,13 +90,13 @@ var helper = {
                 var configOptions = JSON.parse(JSON.stringify(buildPath));
                 delete configOptions.target;
                 delete configOptions.source;
-                options = extend(configOptions || {}, options || {});
+                var opts = extend(configOptions || {}, options || {});
                 return subtasks.map(function(subtask){
                     return {
                         subTask: subtask,
                         source: path.join(buildPath.source, config.buildGlobs[subtask]),
                         target: buildPath.target,
-                        options: options
+                        options: opts
                     };
                 });
             });
