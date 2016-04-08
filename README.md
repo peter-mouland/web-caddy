@@ -1,3 +1,6 @@
+**DEPRECATED AND NO LONGER MAINTAINED**
+> We (I) had fun and learned a lot, but the time has come to say cheerio!
+
 Web Caddy [![NPM version](http://img.shields.io/npm/v/web-caddy.svg)](https://www.npmjs.org/package/web-caddy) [![Circle CI](https://circleci.com/gh/peter-mouland/web-caddy/tree/master.svg?style=svg)](https://circleci.com/gh/peter-mouland/web-caddy/tree/master)
 ========================
 > Create, Build, Test, Serve and Release. Quickly
